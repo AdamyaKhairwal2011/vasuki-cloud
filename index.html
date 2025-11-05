@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vasuki Cloud Storage</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div>
+    <img src="./Yoga.png" alt="" class="logo">
+    <span class="logo-text">Vasuki Cloud</span>
+  </div>
+  <div class="header-actions">
+    <button id="openAuthBtn" style="background-color: black; padding: 10px 40px; border-radius: 8px;">Login →</button>
+    <button id="btnMyFiles" class="hidden" style="opacity: 0%;">My Files</button>
+  </div>
+</header>
+
+<div class="container">
+  <div id="landing">
+
+
+
+    <div class="hero">
+      <div class="hero-img-element">
+              <img src="./1001589057.jpg" alt="" class="hero-img">
+      </div>
+      <h1 class="hero-heading">
+        Keep Your Secrets On The <b>Vasuki Cloud</b>
+      </h1>
+      <p class="sub-domain-enrichment">
+        There has never been a more transformative moment in technology. The world is entering a new era where intelligence meets innovation, and possibilities expand beyond imagination. Vasuki Cloud stands at the forefront of this revolution—empowering creators, developers, and enterprises to build, scale, and evolve seamlessly in an AI-driven digital universe.
+      </p>
+      <div class="btn-div">
+        
+      <button class="class_sales-1"  id="openAuthCallToAction">Get Started For Free</button>
+      </div>
+    </div>
+
+    <div class="features">
+
+
+  <div class="heading-features">Why Vasuki?</div><br><br>
+  <div class="items">
+    <div class="1st_content item-box">
+      <h3 style="font-family: arial;">🇮🇳 Data Sovereignty</h3><br>
+      <p style="font-family: arial;">Vasuki's Data Cloud provides a autonomous data to AI platform built on BigQuery that brings your data together into one place, integrating structured and unstructured data with AI to deliver insights quickly across your data estate.</p>
+    </div>
+    <div class="2nd_content item-box">
+      <h3 style="font-family: arial;">Iron-Clad Security</h3><br>
+      <p style="font-family: arial;">Google Data Cloud is open to help you build modern, data-driven applications wherever your workloads are. With support for open source and open standards, you can build and modernize your applications with AlloyDB, a PostgreSQL compatible database for your most demanding enterprise workloads.</p>
+    </div>
+    <div class="3rd_content item-box">
+      <h3 style="font-family: arial;">Ultra-Fast Performance</h3><br>
+      <p style="font-family: arial;">Experience lightning-fast upload and download speeds with our cutting-edge infrastructure and optimized cloud-based performance technology.</p>
+    </div>
+  </div>
+</div>
+  </div>
+
+
+
+
+  <!-- AUTH MODAL (starts hidden) -->
+  <div id="authModal" class="hidden">
+    <div id="authBox">
+      <span class="heading-auth">Welcome To vCloud</span><br><br>
+      <input type="text" id="username" placeholder="Your Username" autocomplete="username">
+      <input type="password" id="password" placeholder="Your Password" autocomplete="current-password">
+      <div style="margin-top:8px;display:flex;gap:8px;justify-content:center">
+        <button onclick="signUp()">Sign Up</button>
+        <button onclick="signIn()">Login</button>
+        <button onclick="closeAuth()" style="background:#666;color:#fff">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP (hidden until login) -->
+  <div id="app" class="hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="welcome">
+        <strong class="small">Welcome Back, </strong>
+        <div id="currentUserLabel" class="small"></div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="logout" onclick="signOut()">Logout</button>
+      </div>
+    </div>
+
+<div class="upload-box">
+  <input type="hidden" id="userId">
+
+
+  <div class="drag-drop-area" id="dropZone">
+    <p>Drag & Drop or <span>Click to Upload</span></p>
+    <input type="file" id="fileInput" multiple>
+  </div>
+</div>
+
+
+
+
+
+
+    <div id="uploadProgressContainer" style="display:none; margin-top:10px; width:100%;">
+  <div id="uploadProgressBar" style="
+    height:10px;
+    width:0%;
+    background:linear-gradient(90deg, #000, #000);
+    border-radius:0px;
+    transition:width 0.2s ease;
+    margin-top: 20px;
+    margin-left: 15px;
+  "></div>
+</div>
+
+
+    <h2>Your Files</h2>
+    <div class="table-wrap">
+      <table id="filesTable">
+        <thead>
+          <tr><th>Filename</th><th>Uploaded</th><th>Size</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+<br><br>
+    <div id="previewBox">Select a file to preview</div>
+    <canvas id="fileTypeChart" width="400" height="400"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  </div>
+
+  <!-- SHARE VIEW (public) -->
+  <div id="shareView" class="hidden">
+    <h2>Shared File</h2>
+    <div id="shareInfo" class="small"></div>
+    <div id="sharePreview" style="margin-top:12px"></div>
+    <div style="margin-top:12px" id="shareActions"></div>
+  </div>
+</div>
+
+<script type="module" src="./main.js">
+
+</script>
+</body>
+</html>
