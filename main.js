@@ -474,61 +474,58 @@ async function loadFileTypeChart() {
   });
 }
 
-window.handleCredentialResponse = async function(response){
-  const jwt = response.credential;
+// GOOGLE LOGIN HANDLER
+window.handleCredentialResponse = async function(response) {
+  try {
+    // Decode JWT token returned by Google
+    const jwt = parseJwt(response.credential);
+    const email = jwt.email;
+    const name = jwt.name || email.split("@")[0];
 
-  // decode details from google credential
-  const payload = JSON.parse(atob(jwt.split(".")[1]));
-  const email = payload.email;
-  const given_name = payload.given_name || "";
-  const family_name = payload.family_name || "";
-  const fullName = `${given_name} ${family_name}`.trim();
+    console.log("Google user:", email);
 
-  // check if user exists in Supabase
-  const { data: existing } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", email)
-    .single();
+    // Check if user already exists
+    let { data: user, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("username", email)
+      .single();
 
-  if(existing){
-    // login user
-    currentUser = existing;
-    localStorage.setItem("user_id", existing.id);
+    // If not exists, auto-register them
+    if (!user) {
+      var password = prompt("Enter a password for this account")
+      const { data: newUser, error: signUpErr } = await supabase
+        .from("users")
+        .insert([{ username: email, password: password, name: name }])
+        .select()
+        .single();
+
+      if (signUpErr) return alert("Signup failed: " + signUpErr.message);
+      user = newUser;
+    }
+
+    // Login user
+    currentUser = user;
+    localStorage.setItem("user_id", currentUser.id);
+
     afterLogin();
-    return;
+
+  } catch (err) {
+    console.error(err);
+    alert("Google login failed");
   }
-
-  // NEW GOOGLE USER: ask for password
-  const pass = prompt("Set a password for your new Vasuki account:");
-
-  if(!pass){
-    alert("Password required to finish Google Signup.");
-    return;
-  }
-
-  // create new account
-  const { error } = await supabase
-    .from("users")
-    .insert([{ 
-      username: email, 
-      name: fullName, 
-      password: pass 
-    }]);
-
-  if(error){
-    alert("Signup failed: "+error.message);
-    return;
-  }
-
-  // login user
-  const { data: newUser } = await supabase
-    .from("users")
-    .select("*")
-    .eq("username", email)
-    .single();
-
-  currentUser = newUser;
-  localStorage.setItem("user_id", newUser.id);
-  afterLogin();
 };
+
+
+// decode JWT helper
+function parseJwt(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+      .join('')
+  );
+  return JSON.parse(jsonPayload);
+}
