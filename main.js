@@ -473,48 +473,69 @@ async function loadFileTypeChart() {
     }
   });
 }
+// GOOGLE LOGIN (GitHub Pages compatible)
+window.googleLogin = async function() {
+  const client = google.accounts.oauth2.initCodeClient({
+    client_id: "600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com",
+    scope: "email profile openid",
+    ux_mode: "popup",
+    callback: async (response) => {
+      // Exchange authorization code for tokens
+      const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          code: response.code,
+          client_id: "600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com",
+          client_secret: "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",
+          redirect_uri: "postmessage",
+          grant_type: "authorization_code"
+        })
+      }).then(r => r.json());
 
-// GOOGLE LOGIN HANDLER
-window.handleCredentialResponse = async function(response) {
-  try {
-    // Decode JWT token returned by Google
-    const jwt = parseJwt(response.credential);
-    const email = jwt.email;
-    const name = jwt.name || email.split("@")[0];
+      const userInfo = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: { Authorization: `Bearer ${tokenRes.access_token}` }
+      }).then(r => r.json());
 
-    console.log("Google user:", email);
+      const email = userInfo.email;
+      const name = userInfo.name;
 
-    // Check if user already exists
-    let { data: user, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("username", email)
-      .single();
-
-    // If not exists, auto-register them
-    if (!user) {
-      const { data: newUser, error: signUpErr } = await supabase
+      // Check if user exists in Supabase
+      let { data: existingUser } = await supabase
         .from("users")
-        .insert([{ username: email, password: password, name: name }])
-        .select()
+        .select("*")
+        .eq("username", email)
         .single();
 
-      if (signUpErr) return alert("Signup failed: " + signUpErr.message);
-      user = newUser;
-      var password = prompt("Enter a password for this account")
+      // If not exists, create account
+      if (!existingUser) {
+        const pass = prompt("Set a password for your new account:");
+
+        const { data: newUser } = await supabase
+          .from("users")
+          .insert([
+            {
+              username: email,
+              password: pass,
+              name: name
+            }
+          ])
+          .select()
+          .single();
+
+        existingUser = newUser;
+      }
+
+      // Login
+      currentUser = existingUser;
+      localStorage.setItem("user_id", currentUser.id);
+      afterLogin();
     }
+  });
 
-    // Login user
-    currentUser = user;
-    localStorage.setItem("user_id", currentUser.id);
-
-    afterLogin();
-
-  } catch (err) {
-    console.error(err);
-    alert("Google login failed");
-  }
+  client.requestCode(); // Open Google popup
 };
+
 
 
 // decode JWT helper
