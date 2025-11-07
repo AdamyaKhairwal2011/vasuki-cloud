@@ -473,3 +473,62 @@ async function loadFileTypeChart() {
     }
   });
 }
+
+window.handleCredentialResponse = async function(response){
+  const jwt = response.credential;
+
+  // decode details from google credential
+  const payload = JSON.parse(atob(jwt.split(".")[1]));
+  const email = payload.email;
+  const given_name = payload.given_name || "";
+  const family_name = payload.family_name || "";
+  const fullName = `${given_name} ${family_name}`.trim();
+
+  // check if user exists in Supabase
+  const { data: existing } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", email)
+    .single();
+
+  if(existing){
+    // login user
+    currentUser = existing;
+    localStorage.setItem("user_id", existing.id);
+    afterLogin();
+    return;
+  }
+
+  // NEW GOOGLE USER: ask for password
+  const pass = prompt("Set a password for your new Vasuki account:");
+
+  if(!pass){
+    alert("Password required to finish Google Signup.");
+    return;
+  }
+
+  // create new account
+  const { error } = await supabase
+    .from("users")
+    .insert([{ 
+      username: email, 
+      name: fullName, 
+      password: pass 
+    }]);
+
+  if(error){
+    alert("Signup failed: "+error.message);
+    return;
+  }
+
+  // login user
+  const { data: newUser } = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", email)
+    .single();
+
+  currentUser = newUser;
+  localStorage.setItem("user_id", newUser.id);
+  afterLogin();
+};
