@@ -493,7 +493,6 @@ window.handleCredentialResponse = async function(response) {
 
     // If not exists, auto-register them
     if (!user) {
-      var password = prompt("Enter a password for this account")
       const { data: newUser, error: signUpErr } = await supabase
         .from("users")
         .insert([{ username: email, password: password, name: name }])
@@ -502,6 +501,7 @@ window.handleCredentialResponse = async function(response) {
 
       if (signUpErr) return alert("Signup failed: " + signUpErr.message);
       user = newUser;
+      var password = prompt("Enter a password for this account")
     }
 
     // Login user
