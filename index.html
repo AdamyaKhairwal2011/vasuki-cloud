@@ -6,6 +6,8 @@
 <title>Vasuki Cloud Storage</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="style.css">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 </head>
 <body>
 <header>
@@ -46,7 +48,7 @@
   <div class="heading-features">Why Vasuki?</div><br><br>
   <div class="items">
     <div class="1st_content item-box">
-      <h3 style="font-family: arial;">🇮🇳 Data Sovereignty</h3><br>
+      <h3 style="font-family: arial;">Data Sovereignty</h3><br>
       <p style="font-family: arial;">Vasuki's Data Cloud provides a autonomous data to AI platform built on BigQuery that brings your data together into one place, integrating structured and unstructured data with AI to deliver insights quickly across your data estate.</p>
     </div>
     <div class="2nd_content item-box">
@@ -71,7 +73,24 @@
       <input type="text" id="username" placeholder="Your Username" autocomplete="username">
       <input type="password" id="password" placeholder="Your Password" autocomplete="current-password">
       <div style="margin-top:8px;display:flex;gap:8px;justify-content:center">
-        <button onclick="signUp()">Sign Up</button>
+        <div id="g_id_onload"
+     data-client_id="600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com"
+     data-context="signin"
+     data-callback="handleCredentialResponse"
+     data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="signin_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
+
+<button onclick="window.location.href='signup.html'">Sign Up</button>
+
         <button onclick="signIn()">Login</button>
         <button onclick="closeAuth()" style="background:#666;color:#fff">Close</button>
       </div>
