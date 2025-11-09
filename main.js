@@ -66,7 +66,7 @@ window.signIn = async function(){
 
 function afterLogin(){
   document.getElementById('userId').value = currentUser.id;
-  document.getElementById('currentUserLabel').textContent = currentUser.username;
+  document.getElementById('currentUserLabel').textContent = currentUser.name;
   hide(authModal); hide(landing); show(appEl); show(btnMyFiles);
   openAuthBtn.classList.add('hidden');
   loadFiles();
@@ -550,3 +550,4 @@ function parseJwt(token) {
   );
   return JSON.parse(jsonPayload);
 }
+
