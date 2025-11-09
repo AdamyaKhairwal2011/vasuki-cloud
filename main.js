@@ -24,6 +24,30 @@ function arrayBufferToBase64(buf){let bin='',bytes=new Uint8Array(buf);for(let i
 function base64ToBlob(base64,mime){const bin=atob(base64),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime});}
 function escapeHtml(s){return(s+"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));}
 
+// GLOBAL LOADER
+function showLoader() {
+  document.getElementById("globalLoader").classList.remove("hidden");
+}
+function hideLoader() {
+  document.getElementById("globalLoader").classList.add("hidden");
+}
+
+// CUSTOM ALERT BOX
+function showAlert(msg) {
+  return new Promise(resolve => {
+    document.getElementById("alertMessage").innerText = msg;
+    const alertBox = document.getElementById("alertBox");
+    alertBox.classList.remove("hidden");
+
+    const okBtn = document.getElementById("alertOkBtn");
+    okBtn.onclick = () => {
+      alertBox.classList.add("hidden");
+      resolve();
+    };
+  });
+}
+
+
 // generate a short secure token
 function genToken(len = 28) {
   const arr = new Uint8Array(len);
@@ -52,6 +76,7 @@ window.signUp = async function(){
 };
 
 window.signIn = async function(){
+  showLoader()
   const username=document.getElementById('username').value.trim();
   const password=document.getElementById('password').value;
   if(!username||!password) return alert('Enter username & password');
@@ -70,6 +95,7 @@ function afterLogin(){
   hide(authModal); hide(landing); show(appEl); show(btnMyFiles);
   openAuthBtn.classList.add('hidden');
   loadFiles();
+  hideLoader()
 }
 
 window.signOut = function(){
@@ -105,7 +131,7 @@ async function tryAutoLogin(){
   }
 })();
 
-window.signOut = function(){ currentUser=null; hide(appEl); show(landing); hide(btnMyFiles); openAuthBtn.classList.remove('hidden'); document.getElementById('currentUserLabel').textContent=''; }
+window.signOut = function(){ currentUser=null; hide(appEl); show(landing); hide(btnMyFiles); openAuthBtn.classList.remove('hidden'); document.getElementById('currentUserLabel').textContent=''; localStorage.removeItem("user_id") }
 
 window.uploadFile = async function() {
   if (!currentUser) return alert('Login first');
@@ -172,6 +198,7 @@ window.uploadFile = async function() {
 
 // --- MODIFY loadFiles() --- 
 async function loadFiles() {
+  showLoader()
   if (!currentUser) return;
   const { data, error } = await supabase
     .from(TABLE)
@@ -252,6 +279,7 @@ data.forEach(f => {
 
     e.stopPropagation();
   });
+  hideLoader()
   
 });
 
@@ -474,57 +502,98 @@ async function loadFileTypeChart() {
   });
 }
 // GOOGLE LOGIN (GitHub Pages compatible)
-window.googleLogin = async function() {
+window.googleLogin = async function () {
   const client = google.accounts.oauth2.initCodeClient({
     client_id: "600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com",
     scope: "email profile openid",
     ux_mode: "popup",
+
     callback: async (response) => {
-      // Exchange authorization code for tokens
-      const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          code: response.code,
-          client_id: "600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com",
-          client_secret: "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",
-          redirect_uri: "postmessage",
-          grant_type: "authorization_code"
-        })
-      }).then(r => r.json());
+      try {
+        showLoader();
 
-      const userInfo = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-        headers: { Authorization: `Bearer ${tokenRes.access_token}` }
-      }).then(r => r.json());
+        // Exchange authorization code for tokens
+        const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            code: response.code,
+            client_id: "600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com",
+            client_secret: "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",
+            redirect_uri: "postmessage",
+            grant_type: "authorization_code"
+          })
+        }).then(r => r.json());
 
-      const email = userInfo.email;
-      const name = userInfo.name;
+        const userInfo = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: {
+            Authorization: `Bearer ${tokenRes.access_token}`
+          }
+        }).then(r => r.json());
 
-      // Check if user exists in Supabase
-      let { data: existingUser } = await supabase
-        .from("users")
-        .select("*")
-        .eq("username", email)
-        .single();
+        const email = userInfo.email;
+        const name = userInfo.name;
 
-      // If not exists, create account
-      if (!existingUser) {
-        const pass = prompt("Set a password for your new account:");
-
-        const { data: newUser } = await supabase
+        let { data: existingUser } = await supabase
           .from("users")
-          .insert([
-            {
-              username: email,
-              password: pass,
-              name: name
-            }
-          ])
-          .select()
+          .select("*")
+          .eq("username", email)
           .single();
 
-        existingUser = newUser;
+        if (!existingUser) {
+          hideLoader();
+
+          // Replace prompt with custom alert + input box
+          const pass = await new Promise(resolve => {
+            const box = document.createElement("div");
+            box.innerHTML = `
+              <div class="alert-overlay" id="passOverlay">
+                <div class="alert-card">
+                  <div style="margin-bottom:12px;">Set Password For Your New Account</div>
+                  <input type="password" id="newPassInput" style="width:90%;padding:8px;border:1px solid #ccc;border-radius:6px;">
+                  <button id="passSubmitBtn">Continue</button>
+                </div>
+              </div>
+            `;
+            document.body.appendChild(box);
+
+            document.getElementById("passSubmitBtn").onclick = () => {
+              const v = document.getElementById("newPassInput").value.trim();
+              if (!v) return;
+              document.getElementById("passOverlay").remove();
+              resolve(v);
+            };
+          });
+
+          showLoader();
+
+          const { data: newUser } = await supabase
+            .from("users")
+            .insert([
+              { username: email, password: pass, name: name }
+            ])
+            .select()
+            .single();
+
+          existingUser = newUser;
+        }
+
+        currentUser = existingUser;
+        localStorage.setItem("user_id", currentUser.id);
+
+        hideLoader();
+        afterLogin();
+      } catch (err) {
+        hideLoader();
+        showAlert("Google Login Failed. Check console.");
+        console.error(err);
       }
+    }
+  });
+
+  client.requestCode();
+};
+
 
       // Login
       currentUser = existingUser;
@@ -550,4 +619,5 @@ function parseJwt(token) {
   );
   return JSON.parse(jsonPayload);
 }
+
 
