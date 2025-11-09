@@ -68,10 +68,10 @@ window.closeAuth = ()=>hide(authModal);
 window.signUp = async function(){
   const username=document.getElementById('username').value.trim();
   const password=document.getElementById('password').value;
-  if(!username||!password)return alert('Enter username & password');
+  if(!username||!password)return showAlert('Enter username & password');
   const { error } = await supabase.from('users').insert([{ username, password }]);
-  if(error) return alert('Signup error: '+error.message);
-  alert('Signup successful — please login.');
+  if(error) return showAlert('Signup error: '+error.message);
+  showAlert('Signup successful — please login.');
   localStorage.setItem('savedUsername', username);
 };
 
@@ -79,9 +79,9 @@ window.signIn = async function(){
   showLoader()
   const username=document.getElementById('username').value.trim();
   const password=document.getElementById('password').value;
-  if(!username||!password) return alert('Enter username & password');
+  if(!username||!password) return showAlert('Enter username & password');
   const { data, error } = await supabase.from('users').select('*').eq('username',username).eq('password',password).single();
-  if(error||!data) return alert('Invalid login');
+  if(error||!data) return showAlert('Invalid login');
 
   currentUser = data;
   localStorage.setItem('user_id', currentUser.id);  // ✅ Save user ID for auto-login
@@ -134,9 +134,9 @@ async function tryAutoLogin(){
 window.signOut = function(){ currentUser=null; hide(appEl); show(landing); hide(btnMyFiles); openAuthBtn.classList.remove('hidden'); document.getElementById('currentUserLabel').textContent=''; localStorage.removeItem("user_id") }
 
 window.uploadFile = async function() {
-  if (!currentUser) return alert('Login first');
+  if (!currentUser) return showAlert('Login first');
   const f = document.getElementById('fileInput').files[0];
-  if (!f) return alert('Select a file');
+  if (!f) return showAlert('Select a file');
   
 
   // show progress bar
@@ -170,7 +170,7 @@ window.uploadFile = async function() {
     const { error } = await supabase.from(TABLE).insert([payload]);
     
     if (error) {
-      alert('Upload failed: ' + error.message);
+      showAlert('Upload failed: ' + error.message);
       progressBar.style.background = 'red';
       progressBar.style.width = '100%';
       return;
@@ -188,7 +188,7 @@ window.uploadFile = async function() {
   };
 
   reader.onerror = () => {
-    alert('Error reading file');
+    showAlert('Error reading file');
     progressContainer.style.display = 'none';
   };
 
@@ -305,7 +305,7 @@ await loadFileTypeChart();
 window.loadFiles = loadFiles;
 
 // --- DELETE ---
-window.deleteFile = async function(id){ if(!confirm('Delete this file?')) return; const { error } = await supabase.from(TABLE).delete().eq('id',id); if(error) return alert('Delete failed: '+error.message); loadFiles(); };
+window.deleteFile = async function(id){ if(!confirm('Delete this file?')) return; const { error } = await supabase.from(TABLE).delete().eq('id',id); if(error) return showAlert('Delete failed: '+error.message); loadFiles(); };
 
 // --- PREVIEW ---
 window.previewFile = async function(id){
@@ -327,14 +327,14 @@ window.previewFile = async function(id){
 // --- DOWNLOAD ---
 window.downloadFile = async function(id){
   const { data, error } = await supabase.from(TABLE).select('filename,mime_type,data_base64').eq('id',id).single();
-  if(error||!data) return alert('Download failed');
+  if(error||!data) return showAlert('Download failed');
   const blob = base64ToBlob(data.data_base64,data.mime_type);
   const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=data.filename; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 };
 
 // --- RENAME ---
 window.promptRename = function(id,current){ const newName = prompt('Rename file:',current); if(newName===null) return; renameFile(id,newName); }
-async function renameFile(id,newName){ const { error } = await supabase.from(TABLE).update({ filename: newName, updated_at: new Date().toISOString() }).eq('id',id); if(error) return alert('Rename failed: '+error.message); loadFiles(); }
+async function renameFile(id,newName){ const { error } = await supabase.from(TABLE).update({ filename: newName, updated_at: new Date().toISOString() }).eq('id',id); if(error) return showAlert('Rename failed: '+error.message); loadFiles(); }
 
 // --- SHARE MANAGEMENT ---
 window.createShare = async function(fileId,existingToken){
@@ -343,12 +343,12 @@ window.createShare = async function(fileId,existingToken){
     const action = prompt('Share exists. Type UNSHARE to remove it, or leave blank to copy link.');
     if(action && action.toUpperCase()==='UNSHARE'){
       const { error } = await supabase.from(TABLE).update({ share_token: null, share_expires_at: null }).eq('id',fileId);
-      if(error) return alert('Failed to unshare: '+error.message);
-      alert('Unshared'); loadFiles(); return;
+      if(error) return showAlert('Failed to unshare: '+error.message);
+      showAlert('Unshared'); loadFiles(); return;
     }
     // otherwise copy link
     const link = `${location.origin}${location.pathname}?share=${existingToken}`;
-    navigator.clipboard?.writeText(link).then(()=>alert('Share link copied to clipboard'));
+    navigator.clipboard?.writeText(link).then(()=>showAlert('Share link copied to clipboard'));
     return;
   }
   // create new share token
@@ -358,9 +358,9 @@ window.createShare = async function(fileId,existingToken){
   let expires_at = null;
   if(ttl){ const hrs = parseFloat(ttl); if(!isNaN(hrs) && hrs>0) expires_at = new Date(Date.now()+hrs*3600*1000).toISOString(); }
   const { error } = await supabase.from(TABLE).update({ share_token: token, share_expires_at: expires_at }).eq('id',fileId);
-  if(error) return alert('Failed to create share: '+error.message);
+  if(error) return showAlert('Failed to create share: '+error.message);
   const link = `${location.origin}${location.pathname}?share=${token}`;
-  try{ await navigator.clipboard.writeText(link); alert('Share link created and copied to clipboard'); }catch(e){ prompt('Share link:',link); }
+  try{ await navigator.clipboard.writeText(link); showAlert('Share link created and copied to clipboard'); }catch(e){ prompt('Share link:',link); }
   loadFiles();
 }
 
@@ -619,5 +619,6 @@ function parseJwt(token) {
   );
   return JSON.parse(jsonPayload);
 }
+
 
 
