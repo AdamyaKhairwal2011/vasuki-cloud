@@ -581,6 +581,11 @@ window.googleLogin = async function () {
         currentUser = existingUser;
         localStorage.setItem("user_id", currentUser.id);
 
+              // Login
+      currentUser = existingUser;
+      localStorage.setItem("user_id", currentUser.id);
+      afterLogin();
+    
         hideLoader();
         afterLogin();
       } catch (err) {
@@ -595,12 +600,7 @@ window.googleLogin = async function () {
 };
 
 
-      // Login
-      currentUser = existingUser;
-      localStorage.setItem("user_id", currentUser.id);
-      afterLogin();
-    }
-  });
+
 
   client.requestCode(); // Open Google popup
 };
@@ -619,6 +619,7 @@ function parseJwt(token) {
   );
   return JSON.parse(jsonPayload);
 }
+
 
 
 
