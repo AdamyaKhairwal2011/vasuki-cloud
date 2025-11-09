@@ -601,12 +601,6 @@ window.googleLogin = async function () {
 
 
 
-
-  client.requestCode(); // Open Google popup
-};
-
-
-
 // decode JWT helper
 function parseJwt(token) {
   const base64Url = token.split('.')[1];
@@ -619,6 +613,7 @@ function parseJwt(token) {
   );
   return JSON.parse(jsonPayload);
 }
+
 
 
 
