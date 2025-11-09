@@ -17,6 +17,73 @@ z-index:50}
 .header-actions button{background:rgba(255,255,255,0.12);color:#fff;padding:8px 32px;border-radius:1px;font-weight:600}
 
 
+/* GLOBAL LOADER */
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+}
+
+.loader {
+  width: 55px;
+  height: 55px;
+  border: 6px solid #fff;
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+/* HIDE */
+.hidden { display: none !important; }
+
+/* ALERT BOX */
+.alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 989999;
+}
+
+.alert-card {
+  background: white;
+  padding: 24px;
+  width: 320px;
+  border-radius: 12px;
+  text-align: center;
+  font-family: Inter;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.alert-card button {
+  margin-top: 18px;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  background: black;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+
 .logo {
     height: 60px;
     border-radius: 100%;
@@ -457,4 +524,5 @@ canvas {
 
 #fileInput {
   display: none;
+
 }
