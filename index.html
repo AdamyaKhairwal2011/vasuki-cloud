@@ -12,12 +12,12 @@
 <body>
 <header>
   <div>
-    <img src="./Yoga.png" alt="" class="logo">
-    <span class="logo-text">Vasuki Cloud</span>
+    <img src="./logo-final.png" alt="" class="logo">
   </div>
   <div class="header-actions">
     <button id="openAuthBtn" style="background-color: black; padding: 10px 40px; border-radius: 8px;">Login →</button>
     <button id="btnMyFiles" class="hidden" style="opacity: 0%;">My Files</button>
+    <button class="logout" onclick="signOut()">Logout</button>
   </div>
 </header>
 
@@ -93,9 +93,6 @@
         <strong class="small">Welcome Back, </strong>
         <div id="currentUserLabel" class="small"></div>
       </div>
-      <div style="display:flex;gap:10px">
-        <button class="logout" onclick="signOut()">Logout</button>
-      </div>
     </div>
 
 <div class="upload-box">
@@ -170,4 +167,5 @@
 </script>
 </body>
 </html>
+
 
