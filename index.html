@@ -7,29 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="style.css">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<meta name="title" content="Vasuki Cloud — The Next-Gen AI Workspace">
-<meta name="description" content="Vasuki Cloud is an intelligent cloud workspace that blends AI and productivity. Create, write, analyze, and automate — all in one futuristic environment built for creators and developers.">
-
-<!-- Keywords -->
-<meta name="keywords" content="Vasuki Cloud, Vasuki workspace, AI cloud workspace, futuristic workspace, AI productivity, Vasuki AI, Vasuki app, cloud editor, AI assistant, online workspace, Vasuki AI workspace, Vasuki Docs, Vasuki Sheets, Vasuki tools, Vasuki platform, AI powered workspace, virtual workspace, Vasuki cloud app, Vasuki cloud AI, smart workspace, Vasuki innovation">
-
-<!-- Robots -->
-<meta name="robots" content="index, follow">
-<meta name="googlebot" content="index, follow">
-
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://vasuki.cloud/">
-<meta property="og:title" content="Vasuki Cloud — The Next-Gen AI Workspace">
-<meta property="og:description" content="Experience the future of productivity with Vasuki Cloud — your AI-powered, all-in-one workspace.">
-<meta property="og:image" content="https://vasuki.cloud/preview.png">
-
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://vasuki.cloud/">
-<meta property="twitter:title" content="Vasuki Cloud — The Next-Gen AI Workspace">
-<meta property="twitter:description" content="Experience the future of productivity with Vasuki Cloud — your AI-powered, all-in-one workspace.">
-<meta property="twitter:image" content="https://vasuki.cloud/preview.png">
 
 </head>
 <body>
@@ -49,40 +26,135 @@
 
 
     <div class="hero">
-      <div class="hero-img-element">
-              <img src="./1001589057.jpg" alt="" class="hero-img">
+      <div class="text-content">
+        <h1>Where Technology Meets
+          <br><span class="luxury">Timeless Luxury</span>
+        </h1>
+        <p>
+          Vasuki isn’t just code — it’s consciousness in motion. Born from digital dreams and forged in the fire of innovation, Vasuki bends logic and light to serve your will. It learns, adapts, and evolves — a golden serpent of intelligence, whispering power into every keystroke you command.
+        </p>
       </div>
-      <h1 class="hero-heading">
-        Keep Your Secrets On The <b>Vasuki Cloud</b>
-      </h1>
-      <p class="sub-domain-enrichment">
-        There has never been a more transformative moment in technology. The world is entering a new era where intelligence meets innovation, and possibilities expand beyond imagination. Vasuki Cloud stands at the forefront of this revolution—empowering creators, developers, and enterprises to build, scale, and evolve seamlessly in an AI-driven digital universe.
-      </p>
-      <div class="btn-div">
-        
-      <button class="class_sales-1"  id="openAuthCallToAction">Get Started For Free</button>
-      </div>
+      <svg id="wave-svg"></svg>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const svg = document.getElementById('wave-svg');
+            
+            // Viewport setup
+            const width = 1000;
+            const height = 500;
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+            svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+
+            // --- Wave Configuration ---
+            const numWaves = 5;
+            const colors = ["#FFEB3B", "#FFD700", "#FDB813", "#B8860B", "#8B4513"];
+            const paths = [];
+            let time = 0;
+
+            // --- INTERACTIVITY & DYNAMICS ---
+            let mouseTargetY = 0.5; // Target mouse Y (normalized)
+            let currentMouseY = 0.5; // Eased mouse Y for smooth lag
+
+            window.addEventListener('mousemove', (e) => {
+                mouseTargetY = e.clientY / window.innerHeight;
+            }, { passive: true }); // passive for better scroll performance
+
+            // Create path elements
+            for (let i = 0; i < numWaves; i++) {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke', colors[i % colors.length]);
+                path.setAttribute('stroke-width', 1);
+                path.setAttribute('stroke-opacity', 0.6 - i * 0.05);
+                path.setAttribute('stroke-linecap', 'round');
+                path.setAttribute('stroke-linejoin', 'round');
+                svg.appendChild(path);
+                paths.push(path);
+            }
+
+            /**
+             * Generates the SVG 'd' attribute string
+             */
+            function generateWavePath(index, time) {
+                const segments = 50;
+                const segmentWidth = width / segments;
+
+                // --- Define wave physics ---
+                
+                // 1. DYNAMIC BASE AMPLITUDE (The "Breathing")
+                // Waves will now pulse slowly on their own
+                const baseAmplitude = 20 + index * 5;
+                const breathing = 20 * Math.sin(time * 0.5 + index * 0.4);
+                
+                // 2. DYNAMIC MOUSE INTERACTION
+                // Invert and scale mouse position for a "push/pull" effect
+                // (0.5 - currentMouseY) is 0 at center, positive at top, negative at bottom
+                const mouseAmplitude = (0.5 - currentMouseY) * 120;
+                
+                // Combine all physics into a final amplitude
+                const amplitude = baseAmplitude + breathing + mouseAmplitude;
+
+                // Each wave has a different frequency and phase
+                const frequency = 0.015 + index * 0.001;
+                const phase = time + index * 0.7;
+                const verticalOffset = height * 0.4 + index * 15; // Stack them
+
+                let d = "";
+
+                for (let x = -10; x <= width + 10; x += segmentWidth) {
+                    // Combine two sine waves for a more natural, complex motion
+                    const y1 = amplitude * Math.sin(x * frequency + phase);
+                    const y2 = (amplitude * 0.4) * Math.sin(x * (frequency * 0.8) + phase * 1.2);
+                    
+                    const y = y1 + y2 + verticalOffset;
+
+                    if (d === "") {
+                        d = `M ${x} ${y}`;
+                    } else {
+                        // Using Quadratic Bezier curves ('Q') for a much smoother line
+                        // We'll use the previous point to find a midpoint for the control point
+                        const prevX = (x - segmentWidth);
+                        const prevY = parseFloat(d.split(' ').pop()); // A bit hacky, but works
+                        
+                        const cpx = (prevX + x) / 2;
+                        const cpy = (prevY + y) / 2;
+
+                        // Instead of L, we use Q
+                        d += ` Q ${cpx} ${cpy} ${x} ${y}`;
+                    }
+                }
+                return d;
+            }
+
+            /**
+             * The main animation loop
+             */
+            function animate() {
+                // Increment time
+                time += 0.02;
+
+                // 3. EASED (LERPED) MOUSE MOVEMENT
+                // This makes the wave reaction smooth and "watery"
+                // instead of instant and jerky.
+                currentMouseY += (mouseTargetY - currentMouseY) * 0.08;
+
+                // Update each path
+                paths.forEach((path, i) => {
+                    const d = generateWavePath(i, time);
+                    path.setAttribute('d', d);
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation!
+            animate();
+        });
+    </script>
     </div>
 
-    <div class="features">
-
-
-  <div class="heading-features">Why Vasuki?</div><br><br>
-  <div class="items">
-    <div class="1st_content item-box">
-      <h3 style="font-family: arial;">Data Sovereignty</h3><br>
-      <p style="font-family: arial;">Vasuki's Data Cloud provides a autonomous data to AI platform built on BigQuery that brings your data together into one place, integrating structured and unstructured data with AI to deliver insights quickly across your data estate.</p>
-    </div>
-    <div class="2nd_content item-box">
-      <h3 style="font-family: arial;">Iron-Clad Security</h3><br>
-      <p style="font-family: arial;">Google Data Cloud is open to help you build modern, data-driven applications wherever your workloads are. With support for open source and open standards, you can build and modernize your applications with AlloyDB, a PostgreSQL compatible database for your most demanding enterprise workloads.</p>
-    </div>
-    <div class="3rd_content item-box">
-      <h3 style="font-family: arial;">Ultra-Fast Performance</h3><br>
-      <p style="font-family: arial;">Experience lightning-fast upload and download speeds with our cutting-edge infrastructure and optimized cloud-based performance technology.</p>
-    </div>
-  </div>
-</div>
+    
   </div>
 
 
@@ -124,7 +196,7 @@
 
 
   <div class="drag-drop-area" id="dropZone">
-    <p>Drag & Drop or <span>Click to Upload</span></p>
+    <p style="color: #fff;">Drag & Drop or <span style="color: gold;">Click to Upload</span></p>
     <input type="file" id="fileInput" multiple>
   </div>
 </div>
@@ -191,7 +263,6 @@
 </script>
 </body>
 </html>
-
 
 
 
