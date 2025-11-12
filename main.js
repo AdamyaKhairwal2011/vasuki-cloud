@@ -20,7 +20,6 @@ const filesTbody = document.querySelector('#filesTable tbody');
 function show(el){el.classList.remove('hidden')}
 function hide(el){el.classList.add('hidden')}
 function formatBytes(bytes){if(bytes===0)return'0 B';const k=1024,s=['B','KB','MB','GB'],i=Math.floor(Math.log(bytes)/Math.log(k));return(parseFloat((bytes/Math.pow(k,i)).toFixed(2)))+' '+s[i];}
-function arrayBufferToBase64(buf){let bin='',bytes=new Uint8Array(buf);for(let i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin);} 
 function base64ToBlob(base64,mime){const bin=atob(base64),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime});}
 function escapeHtml(s){return(s+"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m]));}
 
@@ -61,7 +60,7 @@ function genToken(len = 28) {
 
 // --- AUTH UI ---
 openAuthBtn.addEventListener('click',()=>show(authModal));
-openAuthCallToAction.addEventListener('click',()=>show(authModal));
+
 window.closeAuth = ()=>hide(authModal);
 
 // --- AUTH LOGIC ---
@@ -137,63 +136,87 @@ window.uploadFile = async function() {
   if (!currentUser) return showAlert('Login first');
   const f = document.getElementById('fileInput').files[0];
   if (!f) return showAlert('Select a file');
-  
 
-  // show progress bar
   const progressContainer = document.getElementById('uploadProgressContainer');
   const progressBar = document.getElementById('uploadProgressBar');
   progressContainer.style.display = 'block';
   progressBar.style.width = '0%';
+  progressBar.style.background = 'linear-gradient(90deg, #00ff9d, #00bfff)';
 
-  // read file as ArrayBuffer and simulate progress
+  const CHUNK_SIZE = 5 * 1024 * 1024; // 5 MB chunks (adjustable)
+  const totalChunks = Math.ceil(f.size / CHUNK_SIZE);
+  const fileId = crypto.randomUUID();
+
+  // create an empty placeholder row first
+  const { error: createErr } = await supabase.from(TABLE).insert([{
+    id: fileId,
+    user_id: currentUser.id,
+    filename: f.name,
+    mime_type: f.type || 'application/octet-stream',
+    data_base64: '', // start empty, will append
+    size_bytes: f.size,
+    uploaded_at: new Date().toISOString(),
+  }]);
+
+  if (createErr) return showAlert('Error initializing upload: ' + createErr.message);
+
+  let uploadedBytes = 0;
   const reader = new FileReader();
-  reader.onloadstart = () => { progressBar.style.width = '5%'; };
-  reader.onprogress = (e) => {
-    if (e.lengthComputable) {
-      const percent = Math.min(95, Math.round((e.loaded / e.total) * 95));
-      progressBar.style.width = percent + '%';
-    }
-  };
-  
-  reader.onload = async () => {
-    const buf = reader.result;
-    const base64 = arrayBufferToBase64(buf);
-    const payload = {
-      user_id: currentUser.id,
-      filename: f.name,
-      mime_type: f.type || 'application/octet-stream',
-      data_base64: base64,
-      size_bytes: f.size,
-      uploaded_at: new Date().toISOString(),
-    };
-    
-    const { error } = await supabase.from(TABLE).insert([payload]);
-    
-    if (error) {
-      showAlert('Upload failed: ' + error.message);
+
+  let currentChunk = 0;
+
+  const uploadNextChunk = async () => {
+    const start = currentChunk * CHUNK_SIZE;
+    const end = Math.min(f.size, start + CHUNK_SIZE);
+    const blob = f.slice(start, end);
+
+    const chunkBuf = await blob.arrayBuffer();
+    const chunkBase64 = arrayBufferToBase64(chunkBuf);
+
+    // append to existing base64 in the DB
+    const { error: updateErr } = await supabase
+      .from(TABLE)
+      .update({ data_base64: chunkBase64 })
+      .eq('id', fileId);
+
+    if (updateErr) {
+      console.error(updateErr);
+      showAlert('Chunk upload failed: ' + updateErr.message);
       progressBar.style.background = 'red';
-      progressBar.style.width = '100%';
       return;
     }
 
-    // Complete progress visually
-    progressBar.style.width = '98%';
-    progressBar.style.background = 'linear-gradient(90deg, #000000ff, #000)';
-    setTimeout(() => {
-      progressContainer.style.display = 'none';
-    }, 800);
+    uploadedBytes += (end - start);
+    const percent = Math.min(95, Math.round((uploadedBytes / f.size) * 95));
+    progressBar.style.width = percent + '%';
 
-    document.getElementById('fileInput').value = '';
-    await loadFiles();
+    currentChunk++;
+    if (currentChunk < totalChunks) {
+      setTimeout(uploadNextChunk, 100); // slight delay to prevent timeout
+    } else {
+      progressBar.style.width = '100%';
+      progressBar.style.background = 'linear-gradient(90deg, rgba(255, 208, 0, 0.66), rgba(255, 208, 0, 0.66))';
+      showAlert('Upload complete');
+      setTimeout(() => progressContainer.style.display = 'none', 800);
+      document.getElementById('fileInput').value = '';
+      await loadFiles();
+    }
   };
 
-  reader.onerror = () => {
-    showAlert('Error reading file');
-    progressContainer.style.display = 'none';
-  };
-
-  reader.readAsArrayBuffer(f);
+  uploadNextChunk();
 };
+
+// helper
+function arrayBufferToBase64(buffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000; // prevent memory blowup
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const subarray = bytes.subarray(i, i + chunkSize);
+    binary += String.fromCharCode.apply(null, subarray);
+  }
+  return btoa(binary);
+}
 
 
 // --- MODIFY loadFiles() --- 
