@@ -325,75 +325,38 @@ function splitIntoChunks(str, chunkSize = 1024 * 1024) {
 
 async function uploadFile(file) {
   const user = localStorage.getItem("userid");
-  const project_id = getParam("project_id");
+  const reader = new FileReader();
 
   const progressBox = document.getElementById("uploadProgress");
   const progressBar = document.getElementById("uploadBar");
-  const uploadText = document.getElementById("uploadText");
 
   progressBox.classList.remove("hidden");
-
-  const totalSize = file.size;
-  let uploadedBytes = 0;
-
-  uploadText.innerText = `0 MB / ${(totalSize / (1024 * 1024)).toFixed(2)} MB uploaded`;
   progressBar.style.width = "0%";
 
-  const CHUNK_SIZE = 1024 * 1024 * 7; // 2MB per chunk
-  const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-
-  const arrayBuffer = await file.arrayBuffer();
-
-  // 🧱 STEP 1: INSERT EMPTY ROW
-  let { data: row, error: insertErr } = await supabase.from("cloud").insert([
-    {
-      user_id: user,
-      filename: file.name,
-      mime_type: file.type,
-      data_base64: "",     // empty for now
-      size_bytes: file.size,
-      file_project_id: project_id
+  reader.onprogress = (e) => {
+    if (e.lengthComputable) {
+      progressBar.style.width = `${(e.loaded / e.total) * 100}%`;
     }
-  ]).select().single();
+  };
 
-  if (insertErr) {
-    console.error(insertErr);
-    alert("Upload failed (DB insert error)");
-    return;
-  }
+  reader.onload = async () => {
+    progressBar.style.width = "100%";
+    const base64 = reader.result.split(",")[1];
 
-  const fileId = row.id;
-
-  // --------------------------
-  // PROCESS EACH CHUNK
-  // --------------------------
-  for (let i = 0; i < totalChunks; i++) {
-    const start = i * CHUNK_SIZE;
-    const end = Math.min(start + CHUNK_SIZE, file.size);
-
-    // slice buffer → encode to base64
-    const chunk = arrayBuffer.slice(start, end);
-    const base64Chunk = arrayBufferToBase64(chunk);
-
-    // append chunk to database → *UPDATE NOT INSERT*
-    await supabase.rpc("append_chunk", {
-      file_id: fileId,
-      chunk_text: base64Chunk
+    await supabase.from(CLOUD_TABLE).insert({
+      user_id: user,
+      file_project_id: project_id,
+      filename: file.name,
+      mime_type: file.type || "application/octet-stream",
+      data_base64: base64,
+      size_bytes: file.size,
     });
 
-    uploadedBytes = end;
-    const uploadedMB = (uploadedBytes / (1024 * 1024)).toFixed(2);
-    const totalMB = (totalSize / (1024 * 1024)).toFixed(2);
+    loadFiles();
+    setTimeout(() => progressBox.classList.add("hidden"), 600);
+  };
 
-    uploadText.innerText = `${uploadedMB} MB / ${totalMB} MB uploaded`;
-    progressBar.style.width = `${((i + 1) / totalChunks) * 100}%`;
-  }
-
-  setTimeout(() => {
-    progressBox.classList.add("hidden");
-  }, 1000);
-
-  loadFiles();
+  reader.readAsDataURL(file);
 }
 
 
@@ -485,6 +448,7 @@ window.generateShareLink = function generateShareLink() {
   alert("Share link copied to clipboard!");
   window.open(url, "_blank");
 }
+
 
 
 
