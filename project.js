@@ -339,7 +339,7 @@ async function uploadFile(file) {
   uploadText.innerText = `0 MB / ${(totalSize / (1024 * 1024)).toFixed(2)} MB uploaded`;
   progressBar.style.width = "0%";
 
-  const CHUNK_SIZE = 1024 * 1024 * 2; // 2MB per chunk
+  const CHUNK_SIZE = 1024 * 1024 * 7; // 2MB per chunk
   const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
 
   const arrayBuffer = await file.arrayBuffer();
@@ -485,6 +485,7 @@ window.generateShareLink = function generateShareLink() {
   alert("Share link copied to clipboard!");
   window.open(url, "_blank");
 }
+
 
 
 
