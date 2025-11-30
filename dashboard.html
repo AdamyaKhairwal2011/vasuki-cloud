@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vasuki Workspace</title>
+
+    <!-- Tailwind -->
+    <script src="./tailwind.js"></script>
+    <script src="./gsap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      body {
+        animation: fadeIn 0.8s ease-out forwards;
+        opacity: 0;
+      }
+      @keyframes fadeIn { to { opacity: 1; } }
+
+      #storageGraph {
+        width: 100% !important;
+        height: 100% !important;
+      }
+    </style>
+</head>
+
+<body class="bg-[#050505] text-white antialiased overflow-x-hidden relative">
+
+<!-- Background grid -->
+<div class="absolute inset-0 pointer-events-none">
+  <div class="w-full h-full bg-[linear-gradient(to_right,#1a1d29_1px,transparent_1px),linear-gradient(to_bottom,#1a1d29_1px,transparent_1px)] bg-[size:80px_80px] opacity-40"></div>
+
+  <div class="absolute left-0 top-0 bottom-0 w-28 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.2)_0,rgba(255,255,255,0.3)_0.5px,transparent_1px,transparent_16px)] opacity-10"></div>
+  <div class="absolute right-0 top-0 bottom-0 w-60 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.2)_0,rgba(255,255,255,0.3)_0.5px,transparent_1px,transparent_16px)] opacity-10"></div>
+</div>
+
+
+<!-- APPLE HEADER -->
+<header id="siteHeader" class="fixed top-0 left-0 right-0 z-[1200] bg-black/80 backdrop-blur-xl border-b border-white/10">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+    <span class="text-[30px] font-semibold tracking-tight bg-gradient-to-r from-white to-white/40 bg-clip-text text-transparent select-none">
+      Vāsuki
+    </span>
+
+  </div>
+</header>
+
+
+
+<!-- HERO -->
+<section class="pt-[130px] pb-[40px] px-6 md:px-10 relative">
+  <div class="max-w-7xl mx-auto fade-up">
+
+    <h1 class="text-[42px] md:text-[46px] font-semibold leading-[1.15] bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent tracking-tight flex items-center gap-3 flex-wrap">
+
+      Welcome, <span id="user_name"></span>
+
+      <!-- Name Loader -->
+      <span id="nameLoader" class="inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+
+    </h1>
+
+  </div>
+</section>
+
+
+
+<!-- LABEL: CLOUD STATS -->
+<div class="max-w-7xl mx-auto px-6 md:px-10 mb-6 fade-up">
+  <div class="flex items-center gap-4">
+    <div class="h-[1px] w-10 bg-white/20"></div>
+    <span class="uppercase tracking-widest text-white/40 text-sm font-semibold">Cloud Statistics</span>
+    <div class="h-[1px] flex-1 bg-white/10"></div>
+  </div>
+</div>
+
+<!-- Chart Loader -->
+<div id="chartLoader" class="flex justify-center py-10 fade-up">
+  <div class="w-7 h-7 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+</div>
+
+<!-- Chart canvas -->
+<div class="w-full max-w-4xl mx-auto px-6 fade-up">
+  <div class="relative h-[260px]">
+    <canvas id="storageGraph"></canvas>
+  </div>
+</div>
+
+<br><br>
+
+
+
+<!-- LABEL: PROJECTS -->
+<div class="max-w-7xl mx-auto px-6 md:px-10 mb-6 fade-up">
+  <div class="flex items-center gap-4">
+    <div class="h-[1px] w-10 bg-white/20"></div>
+
+    <span class="uppercase tracking-widest text-white/40 text-sm font-semibold">Your Projects</span>
+
+    <div class="h-[1px] flex-1 bg-white/10"></div>
+
+    <button id="createProjectBtn" onclick="window.location.href = '/newProject.html'"
+      class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 transition font-semibold">
+      Create New Project
+    </button>
+
+  </div>
+</div>
+
+
+<!-- Projects Loader -->
+<div id="projectsLoader" class="w-full flex justify-center py-12 fade-up">
+  <div class="w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+</div>
+
+
+<!-- GRID -->
+<div id="projectsContainer"
+     class="w-full max-w-7xl mx-auto px-6 md:px-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 pb-28 relative fade-up">
+
+</div>
+
+
+
+
+<!-- FULLSCREEN OVERLAY MENU -->
+<div id="menuOverlay"
+  class="fixed inset-0 bg-black/80 backdrop-blur-2xl opacity-0 scale-95 pointer-events-none transition-all duration-500 z-[999]">
+
+  <nav class="h-full flex flex-col items-center justify-center gap-10 text-4xl font-semibold text-white/90">
+    <a class="hover:text-white transition">About</a>
+    <a class="hover:text-white transition">Services</a>
+    <a class="hover:text-white transition">Courses</a>
+    <a class="hover:text-white transition">Blog</a>
+    <a class="hover:text-white transition">Contact</a>
+
+    <button class="mt-6 px-10 py-4 rounded-full bg-gradient-to-r from-[#87ffc4] to-[#47b0ff] text-black text-2xl font-semibold shadow-xl hover:scale-105 transition-transform">
+      Get Started
+    </button>
+  </nav>
+
+</div>
+
+
+
+<!-- JS -->
+<script src="./dashboard.js" type="module"></script>
+
+<!-- GSAP Page Animations -->
+<script>
+  gsap.utils.toArray(".fade-up").forEach((el, i) => {
+    gsap.from(el, {
+      opacity: 0,
+      y: 24,
+      duration: 1,
+      delay: 0.1 + i * 0.1,
+      ease: "power3.out"
+    });
+  });
+</script>
+
+</body>
+</html>

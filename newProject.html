@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Create New Project — Vasuki Workspace</title>
+
+  <!-- Tailwind -->
+  <script src="./tailwind.js"></script>
+
+  <!-- Supabase -->
+</head>
+
+<body class="bg-black text-white font-sans">
+
+  <div class="max-w-lg mx-auto mt-20 bg-[#111] border border-white/10 p-8 rounded-2xl shadow-xl">
+
+    <h1 class="text-3xl font-bold mb-6 text-center">Create New Project</h1>
+
+    <form id="projectForm" class="flex flex-col gap-6">
+
+      <div>
+        <label class="block mb-2 text-gray-300">Project Name</label>
+        <input
+          id="projectName"
+          type="text"
+          class="w-full p-3 bg-black border border-white/20 rounded-xl"
+          placeholder="Enter project name"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="block mb-2 text-gray-300">Project Description</label>
+        <textarea
+          id="projectDescription"
+          class="w-full p-3 bg-black border border-white/20 rounded-xl h-32"
+          placeholder="Describe your project..."
+        ></textarea>
+      </div>
+
+      <div>
+        <label class="block mb-2 text-gray-300">Organization (optional)</label>
+        <input
+          id="organization"
+          type="text"
+          class="w-full p-3 bg-black border border-white/20 rounded-xl"
+          placeholder="Company or Team name"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 transition p-3 rounded-xl text-lg font-semibold"
+      >
+        Create Project
+      </button>
+
+    </form>
+
+    <p id="status" class="text-center mt-5 text-gray-400"></p>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function generateUUID() {
+      return crypto.randomUUID();
+    }
+
+    const form = document.getElementById("projectForm");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status.textContent = "Creating project...";
+
+      const name = document.getElementById("projectName").value.trim();
+      const desc = document.getElementById("projectDescription").value.trim();
+      const org = document.getElementById("organization").value.trim();
+
+      const user_id = localStorage.getItem("userid");
+      if (!user_id) {
+        alert("User not logged in");
+        return;
+      }
+
+      const project_id = generateUUID();
+
+      const { data, error } = await supabase
+        .from("projects")
+        .insert([
+          {
+            id: project_id,
+            user_id: user_id,
+            project_name: name,
+            project_description: desc,
+            organization: org,
+            logo_favicon_base64: null
+          },
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        status.textContent = "Failed to create project.";
+        console.error(error);
+      } else {
+        status.textContent = "Project created! Redirecting...";
+
+        setTimeout(() => {
+          window.location.href = `project-details.html?project_id=${project_id}`;
+        }, 1000);
+      }
+    });
+  </script>
+
+</body>
+</html>

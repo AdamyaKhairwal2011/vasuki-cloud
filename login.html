@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./tailwind.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
+
+
+
+</head>
+<body class="bg-black text-white antialiased overflow-x-hidden">
+  <!-- Background Grid + Patterns -->
+  <div class="absolute inset-0">
+    <div class="w-full h-full bg-[linear-gradient(to_right,#1a1d29_1px,transparent_1px),linear-gradient(to_bottom,#1a1d29_1px,transparent_1px)] bg-[size:80px_80px] opacity-40"></div>
+
+    <!-- Diagonal patterns -->
+    <div class="absolute left-0 top-0 bottom-0 w-32 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.3)_0,rgba(255,255,255,0.5)_0.5px,transparent_1px,transparent_17px)] opacity-20"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-72 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.3)_0,rgba(255,255,255,0.5)_0.5px,transparent_1px,transparent_17px)] opacity-20"></div>
+  </div>
+
+  <!-- Center Login Card -->
+  <div class="min-h-screen flex items-center justify-center z-100 absolute w-full h-full px-6">
+    <div class="backdrop-blur-xl bg-[radial-gradient(circle_at_bottom,rgba(255,255,255,0.08),transparent_70%)]
+ border border-white/10 shadow-2xl w-full max-w-md p-8 rounded-2xl">
+
+      <h1 class="text-4xl font-semibold text-center mb-8 tracking-wide">Welcome Back</h1>
+<!-- Google Login Button -->
+<button id="googleLoginBtn"
+  class="w-full py-3 bg-white text-black font-semibold rounded-xl mt-4 hover:bg-gray-200 transition">
+  Continue with Google
+</button>
+
+<div class="flex items-center my-6">
+  <div class="flex-1 h-px bg-white/10"></div>
+  <span class="px-3 text-gray-400">OR</span>
+  <div class="flex-1 h-px bg-white/10"></div>
+</div>
+
+      <!-- Email Input -->
+      <div class="mb-6">
+        <label class="block mb-2 text-gray-300">Email</label>
+        <input 
+          type="email"
+          class="w-full bg-black/40 border border-white/10 focus:border-white/30 focus:ring-0 outline-none px-4 py-3 rounded-xl text-white placeholder-gray-500"
+          placeholder="Enter your email"
+          id="email" />
+      </div>
+
+      <!-- Password Input -->
+      <div class="mb-6">
+        <label class="block mb-2 text-gray-300">Password</label>
+        <input 
+          type="password"
+          class="w-full bg-black/40 border border-white/10 focus:border-white/30 focus:ring-0 outline-none px-4 py-3 rounded-xl text-white placeholder-gray-500"
+          placeholder="Enter your password"
+          id="password" />
+      </div>
+
+      <!-- Button -->
+      <button class="w-full py-3 bg-white/10 hover:bg-white/20 transition rounded-xl border border-white/20 text-white font-medium tracking-wide" id="loginBtn">
+        Login
+      </button>
+
+      <!-- Extra Link -->
+      <p class="text-center text-gray-400 text-sm mt-6">
+        Don’t have an account? 
+        <a href="./signup.html" class="text-white/80 hover:text-white underline">Register</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script src="./login.js" type="module"></script>
+</body>
+
+</html>

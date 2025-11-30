@@ -1,0 +1,41 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Glow -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix type="matrix"
+        values="0 0 0 0 0.0
+                0 0 0 0 0.72
+                0 0 0 0 1.0
+                0 0 0 1 0" result="blueGlow"/>
+      <feMerge>
+        <feMergeNode in="blueGlow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <linearGradient id="glass" x1="0" y1="0" x2="180" y2="180">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.28)" />
+      <stop offset="100%" stop-color="rgba(255,255,255,0.05)" />
+    </linearGradient>
+  </defs>
+
+  <!-- Glass Circle -->
+  <circle cx="90" cy="90" r="80"
+          fill="url(#glass)"
+          stroke="rgba(255,255,255,0.25)"
+          stroke-width="3"
+          filter="url(#glow)" />
+
+  <!-- Filled Head -->
+  <circle cx="90" cy="72" r="30"
+          fill="white"
+          opacity="0.95" />
+
+  <!-- Filled Shoulders -->
+  <path d="M45 135c0-26 23-38 45-38s45 12 45 38v10H45v-10z"
+        fill="white"
+        opacity="0.95" />
+
+</svg>

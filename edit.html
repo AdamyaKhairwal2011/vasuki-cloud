@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vasuki Cloud – File Editor</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-docx-js/dist/html-docx.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <style>
+        body { background: #0d0d0d; color: white; font-family: Arial; margin: 0; padding: 20px; }
+        h1 { margin: 10px 0 20px; }
+        #userList { margin-bottom: 10px; color: #aaa; }
+        textarea {
+            width: 100%; height: 70vh; background: #000; color: #0f0; padding: 15px;
+            border-radius: 10px; font-size: 16px; outline: none; resize: none; display: none;
+        }
+        .btn {
+            padding: 10px 20px; margin-top: 20px; background: #0a84ff; color: white;
+            border: none; border-radius: 8px; cursor: pointer; font-size: 15px;
+        }
+        #previewBtn { background: #15c25f; margin-left: 10px; }
+        #previewBox, #docxContent, #pptSlides, #xlsxContainer, #imgViewer {
+            background: #111; color: white; padding: 15px; border-radius: 10px;
+            height: 75vh; overflow-y: auto; display: none;
+        }
+        #docxContent { background: white; color: #000; }
+        img.slideImg { width: 100%; border-radius: 10px; margin-bottom: 15px; }
+        table { border: 1px solid #333; border-collapse: collapse; }
+        td, th { border: 1px solid #555; padding: 8px; min-width: 80px; color: white; }
+    </style>
+</head>
+
+<body>
+    <h1>Vasuki Cloud Editor</h1>
+    <h3 id="filename">Loading file...</h3>
+    <div id="userList"></div>
+
+    <textarea id="textEditor"></textarea>
+    <div id="previewBox"></div>
+
+    <div id="docxContent" contenteditable="true"></div>
+
+    <div id="pptSlides"></div>
+
+    <div id="xlsxContainer"></div>
+
+    <div id="imgViewer">
+        <img id="imgTag" style="max-width:100%; border-radius:10px;">
+    </div>
+
+    <br>
+    <p>Autsave is there</p>
+    <button class="btn" id="previewBtn" onclick="togglePreview()">Preview</button>
+
+    <script type="module">
+        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+        const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const params = new URLSearchParams(window.location.search);
+        const fileId = params.get("file_id");
+
+        document.getElementById("filename").innerText = "Loading...";
+        let currentExt = "";
+        let editor, channel, username;
+
+        username = "User_" + Math.floor(Math.random() * 10000);
+
+        function getExt(name) { return name.split(".").pop().toLowerCase(); }
+        function b64ToArray(base64) { 
+            const binary = atob(base64); 
+            const bytes = new Uint8Array(binary.length); 
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i); 
+            return bytes; 
+        }
+
+        async function loadFile() {
+            const { data, error } = await supabase.from("cloud").select("filename, data_base64").eq("id", fileId).single();
+            if (error) { 
+                console.error("Supabase Error:", error);
+                alert("Error loading file. Check console for details."); 
+                return; 
+            }
+
+            const filename = data.filename;
+            currentExt = getExt(filename);
+            const base64 = data.data_base64;
+            document.getElementById("filename").innerText = filename;
+
+            if (["txt","md","html","css","js","json"].includes(currentExt)) { 
+                showTextEditor(base64); 
+                setupCollab();
+            }
+            else if (["png","jpg","jpeg","webp"].includes(currentExt)) { 
+                showImage(base64); 
+            }
+            else if (currentExt === "docx") { 
+                await showDocx(base64); 
+                setupCollab();
+            }
+            else if (currentExt === "pptx") { 
+                await showPptx(base64); 
+            }
+            else if (currentExt === "xlsx") { 
+                await showXlsx(base64); 
+            }
+            else { alert("Unsupported file type for this editor."); }
+        }
+
+        function showTextEditor(b64) {
+            const text = decodeURIComponent(escape(atob(b64)));
+            editor = document.getElementById("textEditor");
+            editor.value = text;
+            editor.style.display = "block";
+        }
+
+        function showImage(b64) {
+            document.getElementById("imgTag").src = "data:image/*;base64," + b64;
+            document.getElementById("imgViewer").style.display = "block";
+        }
+
+        async function showDocx(b64) {
+            document.getElementById("docxContent").style.display = "block";
+            editor = document.getElementById("docxContent");
+            try {
+                const zip = await JSZip.loadAsync(b64, { base64: true });
+                const xml = await zip.file("word/document.xml").async("string");
+                const text = xml.replace(/<w:p[^>]*>/g, "\n").replace(/<[^>]+>/g, "");
+                editor.innerText = text;
+            } catch (e) {
+                console.error("Error loading DOCX:", e);
+                editor.innerText = "Error loading document content.";
+            }
+        }
+
+        async function showPptx(b64) {
+            document.getElementById("pptSlides").style.display = "block";
+        }
+
+        async function showXlsx(b64) {
+            const bytes = b64ToArray(b64);
+            const workbook = XLSX.read(bytes, { type: "array" });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            const html = XLSX.utils.sheet_to_html(sheet);
+            const container = document.getElementById("xlsxContainer");
+            container.innerHTML = html;
+            container.style.display = "block";
+            editor = container.querySelector("table");
+            if(editor) editor.querySelectorAll('td').forEach(cell => cell.setAttribute('contenteditable','true'));
+        }
+
+        window.togglePreview = function () {
+            if (!["md","txt","html"].includes(currentExt)) return;
+            const preview = document.getElementById("previewBox");
+            const btn = document.getElementById("previewBtn");
+            const textEditor = document.getElementById("textEditor");
+
+            if (preview.style.display === "none" || preview.style.display === "") {
+                preview.innerHTML = currentExt === "md" ? marked.parse(textEditor.value) : textEditor.value;
+                preview.style.display = "block";
+                textEditor.style.display = "none";
+                btn.innerText = "Back to Editor";
+            } else {
+                preview.style.display = "none";
+                textEditor.style.display = "block";
+                btn.innerText = "Preview";
+            }
+        };
+
+        // -------------------- REAL-TIME COLLAB --------------------
+        function setupCollab() {
+            if (!editor) return;
+
+            channel = supabase.channel(`cloud-file-${fileId}`, { config: { broadcast: { self: false } } });
+            channel.subscribe(async (status) => {
+                if (status === 'SUBSCRIBED') await channel.track({ user: username });
+            });
+
+            // Receive updates
+            channel.on('broadcast', { event: 'text_update' }, payload => {
+                const data = payload.payload;
+                if (!data || data.user === username) return;
+                if (!["txt","md","html","css","js","json"].includes(currentExt)) return;
+
+                const cursorPos = editor.selectionStart;
+                editor.value = data.content;
+                editor.selectionStart = editor.selectionEnd = cursorPos;
+            });
+
+            // Presence updates
+            channel.on('presence', { event: 'sync' }, () => {
+                const state = channel.presenceState();
+                const users = Object.values(state).map(trackers => trackers[0].user).join(", ");
+                document.getElementById("userList").innerText = "Online: " + users;
+            });
+
+            // Broadcast on input
+            let timeout;
+            editor.addEventListener("input", () => {
+                if (!["txt","md","html","css","js","json"].includes(currentExt)) return;
+
+                clearTimeout(timeout);
+                channel.send({ type: "broadcast", event: "text_update", payload: { content: editor.value, user: username } });
+                timeout = setTimeout(autoSave, 3000);
+            });
+        }
+
+        async function saveFile() {
+            let newBase64 = "";
+            if (["txt","md","html","css","js","json"].includes(currentExt)) {
+                newBase64 = btoa(unescape(encodeURIComponent(editor.value)));
+            }
+            else if (currentExt === "docx") {
+                const blob = window.htmlDocx.asBlob(editor.innerHTML);
+                const reader = new FileReader();
+                await new Promise(resolve => { reader.onload = () => { newBase64 = reader.result.split(",")[1]; resolve(); }; reader.readAsDataURL(blob); });
+            }
+            else if (currentExt === "xlsx") {
+                const wb = XLSX.utils.table_to_book(editor);
+                newBase64 = XLSX.write(wb, { bookType: "xlsx", type: "base64" });
+            } else { alert("Cannot edit this file type."); return; }
+
+            const { error } = await supabase.from("cloud").update({ data_base64: newBase64, updated_at: new Date() }).eq("id", fileId);
+            if (error) console.error("Save Error:", error);
+        }
+
+        function autoSave() { saveFile(); }
+        loadFile();
+    </script>
+</body>
+</html>
+
