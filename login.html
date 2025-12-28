@@ -104,6 +104,19 @@
             from { opacity: 0; transform: translateY(20px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
+
+        .signup-btn {
+    margin-top: 14px;
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+}
+
+.signup-btn:hover {
+    background: rgba(0,113,227,0.08);
+    transform: scale(1.02);
+}
+
     </style>
 </head>
 <body>
@@ -116,6 +129,11 @@
         <input type="email" id="emailInput" placeholder="name@company.com">
         <input type="password" id="passwordInput" placeholder="Enter your password">
         <button onclick="handleLogin()">Continue</button>
+        <button onclick="handleLogin()">Continue</button>
+        <button class="signup-btn" onclick="goToSignup()">
+            Go to Signup
+        </button>
+
     </div>
 
     <script type="module">
@@ -158,6 +176,11 @@
             }
         }
 
+        window.goToSignup = function () {
+            window.location.href = "signup.html";
+        };
+
     </script>
 </body>
 </html>
+
