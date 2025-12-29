@@ -6,16 +6,19 @@
     <title>Neem | Vasuki iTech</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.81/build/spline-viewer.js"></script>
     <style>
         :root {
             --sidebar-w: 280px;
-            --bg: #F5F5F7; /* Apple-style light gray */
-            --card-bg: #FFFFFF;
-            --accent: #007AFF; /* Metallic Blue */
-            --text-main: #1D1D1F;
-            --text-sec: #86868B;
-            --glass-border: rgba(0, 0, 0, 0.08);
-            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --bg: #0a0a0c; 
+            --accent: #0071e3;
+            --text-main: #ffffff;
+            --text-sec: #86868b;
+            /* Frosted Glass Effect */
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: blur(16px) saturate(180%);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { box-sizing: border-box; outline: none; }
@@ -28,45 +31,32 @@
             height: 100vh;
             color: var(--text-main);
             overflow: hidden;
+                        background: linear-gradient(135deg, #12123a, #21395a);;
+
+        }
+
+        /* --- BACKGROUND SPLINE --- */
+        #splineViewer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none; /* Allows clicking through to UI */
         }
 
         /* --- SIDEBAR --- */
         aside {
             width: var(--sidebar-w);
-            background: var(--card-bg);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
             border-right: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
             padding: 40px 24px;
-            z-index: 2000;
+            z-index: 1000;
             transition: var(--transition);
-        }
-
-        /* Mobile Sidebar Logic */
-        @media (max-width: 1000px) {
-            aside {
-                position: fixed;
-                left: calc(-1 * var(--sidebar-w));
-                height: 100%;
-                box-shadow: 20px 0 50px rgba(0,0,0,0.05);
-            }
-            aside.open {
-                left: 0;
-            }
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(0,0,0,0.3);
-                backdrop-filter: blur(4px);
-                z-index: 1500;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-            .sidebar-overlay.active {
-                display: block;
-                opacity: 1;
-            }
         }
 
         .brand {
@@ -76,20 +66,11 @@
             margin-bottom: 50px;
         }
 
-        .logo-sm {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .brand-name {
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             letter-spacing: -0.5px;
-            color: var(--text-main);
+            color: #fff;
         }
 
         .nav-item {
@@ -105,8 +86,9 @@
         }
 
         .nav-item.active {
-            background: rgba(0, 122, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             color: var(--accent);
+            border: 1px solid var(--glass-border);
         }
 
         /* --- MAIN CONTENT --- */
@@ -114,7 +96,8 @@
             flex: 1;
             padding: 40px;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            z-index: 1000;
+            position: relative;
         }
 
         .header-bar {
@@ -124,39 +107,22 @@
             margin-bottom: 40px;
         }
 
-        .menu-toggle {
-            display: none;
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        @media (max-width: 1000px) {
-            .menu-toggle { display: block; }
-            main { padding: 25px; }
-            h1 { font-size: 1.6rem !important; }
-
-            .stat-box { display: none ;}
-        }
-
         h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
             letter-spacing: -1px;
             margin: 0;
+            color: #fff;
         }
 
         .user-pill {
-            background: var(--card-bg);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 100px;
             font-size: 0.85rem;
             color: var(--text-sec);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
         /* --- BENTO STATS --- */
@@ -168,7 +134,8 @@
         }
 
         .stat-box {
-            background: var(--card-bg);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
             padding: 24px;
             border-radius: 24px;
@@ -180,45 +147,59 @@
             font-weight: 700;
             margin-top: 8px;
             display: block;
+            color: #fff;
         }
 
-        /* --- CARDS & TABLES --- */
+        /* --- GLASS CARDS --- */
         .glass-card {
-            background: var(--card-bg);
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
             border-radius: 32px;
             border: 1px solid var(--glass-border);
             padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
         }
 
         .upload-zone {
-            border: 2px dashed #D2D2D7;
-            background: #FAFAFA;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
             border-radius: 20px;
             padding: 40px;
             text-align: center;
             transition: var(--transition);
             margin-bottom: 30px;
             cursor: pointer;
+            color: var(--text-sec);
         }
 
         .upload-zone:hover {
             border-color: var(--accent);
-            background: rgba(0, 122, 255, 0.02);
+            background: rgba(0, 113, 227, 0.05);
+            color: #fff;
         }
 
+        /* --- TABLE STYLE --- */
         table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        th { color: var(--text-sec); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; padding: 15px 10px; border-bottom: 1px solid var(--glass-border); }
+        th { 
+            color: var(--text-sec); 
+            text-transform: uppercase; 
+            font-size: 0.7rem; 
+            letter-spacing: 1px; 
+            padding: 15px 10px; 
+            border-bottom: 1px solid var(--glass-border); 
+            text-align: left;
+        }
         td { 
             padding: 16px 10px; 
-            border-bottom: 1px solid #F2F2F2;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .btn-action {
-            background: #F5F5F7;
-            color: var(--text-main);
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid var(--glass-border);
             padding: 8px 14px;
             border-radius: 8px;
             font-weight: 600;
@@ -227,11 +208,11 @@
             transition: 0.2s;
         }
 
-        .btn-action:hover { background: var(--accent); color: white; }
+        .btn-action:hover { background: var(--accent); border-color: var(--accent); }
 
         #toast {
-            background: #1D1D1F;
-            color: #fff;
+            background: #fff;
+            color: #000;
             padding: 12px 24px;
             border-radius: 50px;
             position: fixed;
@@ -240,31 +221,35 @@
             transform: translateX(-50%);
             z-index: 5000;
             display: none;
-            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        @keyframes slideUp { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+        /* Chart Customization */
+        #storageChart { filter: drop-shadow(0 0 10px rgba(0, 113, 227, 0.3)); }
+
+        @media (max-width: 1000px) {
+            aside { position: fixed; left: -280px; height: 100%; }
+            main { padding: 20px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
 
 <aside id="sidebar">
     <div class="brand">
-        <div class="logo-sm">
-            <img src="./logo.png" width="28" height="28" alt="V">
-        </div>
+        <img src="./logo-wht.png" width="35" alt="V">
         <div class="brand-name">Vasuki iTech</div>
     </div>
     <nav>
-        <a href="#" class="nav-item active">📁 All Files</a>
+        <a href="#" class="nav-item active">📁 All Assets</a>
     </nav>
-    <div style="margin-top:auto; background: #FBFBFD; padding: 20px; border-radius: 20px; border: 1px solid var(--glass-border);">
-        <h4 style="margin:0 0 15px 0; font-size:0.65rem; color:var(--text-sec); letter-spacing:1px; text-transform: uppercase;">Storage Used</h4>
-        <div style="height: 100px;"><canvas id="storageChart"></canvas></div>
+    <div style="margin-top:auto; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 24px; border: 1px solid var(--glass-border);">
+        <h4 style="margin:0 0 15px 0; font-size:0.65rem; color:var(--text-sec); letter-spacing:1px; text-transform: uppercase;">Cloud Storage</h4>
+        <div style="height: 120px;"><canvas id="storageChart"></canvas></div>
         <div style="text-align: center; margin-top: 10px;">
-            <span id="usageText" style="font-weight: 700; color: var(--text-main);">0 MB</span>
+            <span id="usageText" style="font-weight: 700; color: #fff;">0 MB</span>
             <span style="color:var(--text-sec); font-size:0.75rem;"> / 500 MB</span>
         </div>
     </div>
@@ -272,10 +257,7 @@
 
 <main>
     <div class="header-bar">
-        <div style="display:flex; align-items:center; gap:15px;">
-            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-            <h1>Vasuki <span style="font-weight:300; color:var(--text-sec);">Neem</span></h1>
-        </div>
+        <h1>Vasuki <span style="font-weight:300; color:var(--text-sec);">Neem</span></h1>
         <div class="user-pill">
             <span id="userDisplay">Loading...</span>
         </div>
@@ -287,30 +269,30 @@
             <span id="fileCount" class="stat-val">0</span>
         </div>
         <div class="stat-box">
-            <small style="color:var(--text-sec); font-weight:600; text-transform:uppercase; font-size:0.65rem;">Status</small>
-            <span class="stat-val" style="color: #34C759;">Protected</span>
+            <small style="color:var(--text-sec); font-weight:600; text-transform:uppercase; font-size:0.65rem;">Security</small>
+            <span class="stat-val" style="color: #34C759;">Active</span>
         </div>
         <div class="stat-box">
-            <small style="color:var(--text-sec); font-weight:600; text-transform:uppercase; font-size:0.65rem;">Protocol</small>
-            <span class="stat-val" style="color: var(--accent);">AES-256</span>
+            <small style="color:var(--text-sec); font-weight:600; text-transform:uppercase; font-size:0.65rem;">Encryption</small>
+            <span class="stat-val" style="color: var(--accent);">End-to-End</span>
         </div>
     </div>
 
     <div class="glass-card">
         <div class="upload-zone" id="dropZone" onclick="document.getElementById('files').click()">
             <input type="file" id="files" multiple style="display:none" onchange="uploadFiles()">
-            <div style="font-size: 2rem; margin-bottom: 10px;">📤</div>
-            <div style="font-weight: 600;">Upload Resources</div>
-            <div style="color: var(--text-sec); font-size: 0.8rem;">Tap to browse or drag files here</div>
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">☁️</div>
+            <div style="font-weight: 600; color:#fff;">Deploy New Resource</div>
+            <div style="font-size: 0.8rem;">Drag and drop or click to upload</div>
         </div>
 
         <div style="overflow-x: auto;">
             <table>
                 <thead>
                     <tr>
-                        <th align="left">Name</th>
-                        <th align="left">Size</th>
-                        <th align="right">Actions</th>
+                        <th>Resource Name</th>
+                        <th>Size</th>
+                        <th style="text-align:right">Management</th>
                     </tr>
                 </thead>
                 <tbody id="fileList"></tbody>
@@ -319,25 +301,35 @@
     </div>
 </main>
 
-<div id="toast"></div>
+<div id="shareModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(12px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
+    <div style="background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(25px) saturate(180%); padding:35px; border-radius:32px; max-width:440px; width:100%; box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+        
+        <h2 style="margin-top:0; color: #fff; font-weight: 700; letter-spacing: -0.5px;">Secure Share</h2>
+        <p style="color: var(--text-sec); font-size: 0.85rem; margin-top: -10px; margin-bottom: 25px;">Select resources to generate an encrypted link.</p>
+        
+        <div id="fileSelection" style="max-height:220px; overflow-y:auto; margin:20px 0; padding-right: 5px;">
+            </div>
 
-<div id="shareModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); backdrop-filter:blur(8px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
-    <div style="background:#fff; padding:30px; border-radius:24px; max-width:400px; width:100%; box-shadow: 0 20px 60px rgba(0,0,0,0.1);">
-        <h3 style="margin-top:0;">Secure Share</h3>
-        <div id="fileSelection" style="max-height:180px; overflow-y:auto; margin:20px 0;"></div>
-        <div style="margin-bottom:20px;">
-            <label style="display:block; margin-bottom:8px; font-size:0.75rem; color:var(--text-sec); font-weight:700;">PERMISSION</label>
-            <select id="sharePerm" style="width:100%; padding:12px; border:1px solid #E5E5E7; border-radius:10px;">
-                <option value="read">View Only</option>
-                <option value="download">Download</option>
+        <div style="margin-bottom:25px;">
+            <label style="display:block; margin-bottom:10px; font-size:0.65rem; color:var(--text-sec); font-weight:700; letter-spacing: 1px; text-transform: uppercase;">Access Permission</label>
+            <select id="sharePerm" style="width:100%; padding:14px; background: rgba(255,255,255,0.05); color: #fff; border:1px solid rgba(255,255,255,0.1); border-radius:14px; font-family: inherit; outline: none; cursor: pointer;">
+                <option value="read" style="background: #1a1a1a;">View Only (Restricted)</option>
+                <option value="download" style="background: #1a1a1a;">Download Access</option>
             </select>
         </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-            <button onclick="doShare()" style="background:var(--accent); color:white; border:none; padding:12px; border-radius:10px; font-weight:600; cursor:pointer;">Copy Link</button>
-            <button onclick="closeShareModal()" style="background:#F5F5F7; border:none; padding:12px; border-radius:10px; font-weight:600; cursor:pointer;">Cancel</button>
+
+        <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:12px;">
+            <button onclick="doShare()" style="background:var(--accent); color:white; border:none; padding:15px; border-radius:14px; font-weight:700; cursor:pointer; transition: transform 0.2s ease;">
+                Generate & Copy Link
+            </button>
+            <button onclick="closeShareModal()" style="background: rgba(255,255,255,0.1); color: #fff; border:none; padding:15px; border-radius:14px; font-weight:600; cursor:pointer;">
+                Cancel
+            </button>
         </div>
     </div>
 </div>
+
+<div id="toast"></div>
 
 <script>
 const BASE_URL = "https://vasuki-cloud-backend-production.up.railway.app";
@@ -434,7 +426,7 @@ function openShareModal() {
     const modal = document.getElementById('shareModal');
     const fileSel = document.getElementById('fileSelection');
     fileSel.innerHTML = allFiles.map(f => `
-        <label style="display:flex; align-items:center; background:#F5F5F7; padding:10px; border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:0.85rem;">
+        <label style="display:flex; align-items:center; background:#162c41; padding:10px; border-radius:10px; margin-bottom:8px; cursor:pointer; font-size:0.85rem;">
             <input type="checkbox" value="${f.name}" style="margin-right:12px; accent-color:var(--accent);"> ${f.name}
         </label>
     `).join('');
