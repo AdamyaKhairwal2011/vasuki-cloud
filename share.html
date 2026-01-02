@@ -207,64 +207,70 @@
     Protected by Vasuki Cloud Encryption. All access is logged.
 </div>
 
+
 <script>
-    const params = new URLSearchParams(window.location.search);
-    const user = params.get("user");
-    const files = params.get("files")?.split(",");
-    const perm = params.get("perm");
+const BASE_URL = "http://localhost:3000";
+const params = new URLSearchParams(window.location.search);
+const token = params.get("token");
 
-    if (!user || !files || !perm) {
-        document.body.innerHTML = `
-            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh;">
-                <h1 style="font-size:4rem;">🔒</h1>
-                <p style="color:#86868b; font-weight:500;">Access Denied. This link is invalid or has expired.</p>
-            </div>
-        `;
-        throw new Error("Invalid link");
-    }
+if (!token) {
+  document.body.innerHTML = "Invalid share link";
+  throw new Error("No token");
+}
 
-    const isReadOnly = perm === "read";
-    
-    if (isReadOnly) {
-        document.addEventListener("contextmenu", e => e.preventDefault());
-        document.getElementById("permBadge").innerHTML = '<div class="status-dot" style="background:#FF9500; box-shadow: 0 0 8px #FF9500;"></div> Read Only Mode';
-        document.getElementById("note").innerText = "This is a secure read-only preview. Downloading is disabled.";
-    }
+async function loadShare() {
+  const res = await fetch(`${BASE_URL}/shared-info/${token}`);
+  if (!res.ok) {
+    document.body.innerHTML = "Link expired or invalid";
+    return;
+  }
+  const data = await res.json();
+  renderFiles(data);
+}
 
-    const grid = document.getElementById("grid");
+function renderFiles({ user, files, perm }) {
+  const container = document.getElementById("grid");
+  container.innerHTML = "";
 
-    files.forEach(file => {
-        const imgURL = `https://vasuki-cloud-backend-production.up.railway.app/download/${user}/${file}`;
+  // Update badge
+  document.getElementById("permBadge").innerHTML =
+    perm === "read"
+      ? `<div class="status-dot"></div> View Only`
+      : `<div class="status-dot"></div> Download Enabled`;
 
-        const card = document.createElement("div");
-        card.className = "card";
+  files.forEach(f => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-        card.innerHTML = `
-            <div class="preview-wrapper">
-                ${isReadOnly ? '<div class="read-only-shield">Protected</div>' : ''}
-                <img src="${imgURL}" ${isReadOnly ? 'style="pointer-events:none"' : ''} onerror="this.src='https://cdn-icons-png.flaticon.com/512/124/124837.png'; this.style.padding='40px';">
-            </div>
-            <div class="file-info">
-                <div class="file-name" title="${file}">${file}</div>
-                ${!isReadOnly ? `
-                    <button class="download-btn">
-                        <span>Download</span>
-                    </button>
-                ` : ``}
-            </div>
-        `;
+    const isImage = /\.(png|jpg|jpeg|webp|gif)$/i.test(f);
 
-        if (!isReadOnly) {
-            card.querySelector("button").onclick = () => {
-                const a = document.createElement("a");
-                a.href = imgURL;
-                a.download = file;
-                a.click();
-            };
+    card.innerHTML = `
+      ${perm === "read" ? `<div class="read-only-shield">Read only</div>` : ""}
+      <div class="preview-wrapper">
+        ${isImage
+          ? `<img src="${BASE_URL}/shared-file/${token}/${f}" />`
+          : `<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;">📄</div>`
         }
+      </div>
+      <div class="file-info">
+        <div class="file-name">${f}</div>
+        ${
+          perm === "download"
+            ? `<button class="download-btn" onclick="downloadFile('${f}')">⬇ Download</button>`
+            : `<div style="font-size:.75rem;color:#86868B;text-align:center">View only</div>`
+        }
+      </div>
+    `;
 
-        grid.appendChild(card);
-    });
+    container.appendChild(card);
+  });
+}
+
+function downloadFile(file) {
+  window.open(`${BASE_URL}/shared-file/${token}/${file}`, "_blank");
+}
+
+loadShare();
 </script>
 
 </body>
