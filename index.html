@@ -146,7 +146,7 @@ tr.selected{background:rgba(0,113,227,.3)}
 </div>
 
 <script>
-const BASE_URL="https://vasuki-cloud-backend-production.up.railway.app";
+const BASE_URL="http://localhost:3000";
 const params=new URLSearchParams(location.search);
 const userEmail=params.get("email") || "demo@vasuki.ai";
 const MAX_MB = 500;
@@ -234,6 +234,11 @@ async function listFiles(){
   });
 
   updateStorage(usedBytes/1024/1024);
+}
+
+if (!params.get("email")){
+    window.location.href = "login.html";
+
 }
 
 /* SELECTION */
@@ -345,5 +350,3 @@ listFiles();
 
 </body>
 </html>
-
-
