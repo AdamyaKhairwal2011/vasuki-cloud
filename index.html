@@ -2,193 +2,509 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Vasuki Neem</title>
+<title>Vasuki Neem | Premium Cloud</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-:root{
-  --bg:#0b0f1a;
-  --glass:rgba(255,255,255,.08);
-  --border:rgba(255,255,255,.15);
-  --accent:#0071e3;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  min-height:100vh;
-  font-family:Inter,sans-serif;
-  background:linear-gradient(135deg,#0b0f1a,#121a2f);
-  color:#fff;
-  display:flex;
-}
-aside{
-  width:260px;
-  padding:25px;
-  background:var(--glass);
-  border-right:1px solid var(--border);
-  display:flex;
-  flex-direction:column;
-  gap:15px;
-}
-main{
-  flex:1;
-  padding:25px;
-  overflow:auto;
-}
-button{
-  background:var(--glass);
-  border:1px solid var(--border);
-  color:white;
-  padding:10px 14px;
-  border-radius:10px;
-  cursor:pointer;
-}
-button:hover{background:var(--accent)}
-.upload{
-  border:2px dashed var(--border);
-  border-radius:16px;
-  padding:30px;
-  text-align:center;
-  cursor:pointer;
-  margin-bottom:20px;
-}
-table{width:100%;border-collapse:collapse}
-th,td{padding:12px;border-bottom:1px solid rgba(255,255,255,.08)}
-tr.selected{background:rgba(0,113,227,.3)}
-.folder{font-weight:600;cursor:pointer}
-.folder:hover{color:var(--accent)}
-.actions button{margin-left:6px;font-size:.75rem}
-.path{opacity:.7;margin-bottom:10px}
-
-/* STORAGE */
-.storage-card{
-  background:rgba(255,255,255,.05);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:15px;
-  margin-top:auto;
-}
-.storage-text{
-  text-align:center;
-  font-size:.8rem;
-  margin-top:8px;
-  opacity:.8;
+:root {
+  --bg: #ffffff;
+  --sidebar-bg: #f8f9fa;
+  --accent: #0071e3;
+  --accent-light: #e8f2ff;
+  --text-main: #1d1d1f;
+  --text-dim: #6e6e73;
+  --border: #e5e5e5;
+  --card-bg: #ffffff;
+  --shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* MOBILE */
-@media(max-width:900px){
-  body{flex-direction:column}
-  aside{
-    width:100%;
-    flex-direction:row;
-    align-items:center;
-    gap:10px;
+* { box-sizing: border-box; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+  display: flex;
+}
+
+/* SIDEBAR RESPONSIVENESS */
+aside {
+  width: 280px;
+  padding: 32px 24px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+}
+
+/* HAMBURGER & MOBILE HEADER */
+.mobile-top-bar {
+  display: none;
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.close-sidebar {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+}
+
+/* EXISTING STYLES - MAINTAINED */
+aside h2 { font-weight: 700; letter-spacing: -1px; margin-top: 0; margin-bottom: 40px; font-size: 1.5rem; }
+.nav-group { display: flex; flex-direction: column; gap: 8px; }
+.path-container { background: white; padding: 12px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
+.path { font-size: 0.85rem; font-weight: 500; color: var(--accent); word-break: break-all; }
+
+button { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-main); padding: 12px 16px; border-radius: 12px; cursor: pointer; font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+button:hover { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+#shareBtn { background: var(--accent); color: white; border: none; box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3); }
+.btn-focus { background: #000; color: #fff; border: none; margin-top: 10px; }
+
+main { flex: 1; padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
+.header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 15px; }
+
+.upload { border: 2px dashed var(--border); border-radius: 20px; padding: 40px; text-align: center; cursor: pointer; margin-bottom: 32px; background: var(--sidebar-bg); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; padding: 16px; position: relative; cursor: pointer; box-shadow: var(--shadow); }
+.preview { height: 110px; border-radius: 12px; background: #f1f1f2; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 12px; }
+.preview img { width: 100%; height: 100%; object-fit: cover; }
+
+/* MOBILE BREAKPOINTS */
+@media (max-width: 850px) {
+  body { flex-direction: column; }
+  aside {
+    position: fixed;
+    left: -280px;
+    transition: 0.3s ease-in-out;
   }
-  aside h2{display:none}
-  .storage-card{display:none}
+  aside.active { left: 0; }
+  .sidebar-overlay.active { display: block; }
+  .mobile-top-bar { display: flex; }
+  .close-sidebar { display: block; }
+  main { padding: 20px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .header-actions h1 { font-size: 1.5rem; }
+}
+
+/* FOCUS OVERLAY FIX FOR MOBILE */
+#focusContent { max-width: 95%; max-height: 60vh; }
+.focus-nav { width: 90%; justify-content: space-around; }
+
+/* MODAL FIX */
+.modal-content { width: 90%; max-width: 380px; }
+
+
+aside h2 {
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-size: 1.5rem;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.path-container {
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.path {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--accent);
+  word-break: break-all;
+}
+
+/* BUTTONS */
+button {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 12px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+button:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+#shareBtn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3);
+}
+
+#shareBtn:hover { background: #005bb5; color: white; }
+
+/* FOCUS MODE BUTTON */
+.btn-focus {
+    background: #000;
+    color: #fff;
+    border: none;
+    margin-top: 10px;
+}
+.btn-focus:hover {
+    background: #333;
+    color: #fff;
+}
+
+/* MAIN CONTENT */
+main {
+  flex: 1;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.upload {
+  border: 2px dashed var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 32px;
+  background: var(--sidebar-bg);
+}
+
+.upload:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.upload h3 { margin: 0; font-weight: 600; color: var(--text-dim); }
+
+/* GRID & CARDS */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  border-color: var(--accent);
+}
+
+.card.selected {
+  outline: 2px solid var(--accent);
+  background: var(--accent-light);
+}
+
+.preview {
+  height: 130px;
+  border-radius: 12px;
+  background: #f1f1f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.preview img { width: 100%; height: 100%; object-fit: cover; }
+
+.icon { font-size: 48px; }
+
+.name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.size { font-size: 0.75rem; color: var(--text-dim); }
+
+/* MENU */
+.menu-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  border-radius: 8px;
+  z-index: 5;
+}
+
+.menu {
+  position: absolute;
+  right: 10px;
+  top: 45px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: none;
+  z-index: 20;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  overflow: hidden;
+  min-width: 120px;
+}
+
+.menu button {
+  width: 100%;
+  border: none;
+  padding: 10px 16px;
+  text-align: left;
+  border-radius: 0;
+  font-size: 0.85rem;
+}
+
+.menu button:hover { background: var(--sidebar-bg); color: var(--accent); }
+
+/* STORAGE CARD */
+.storage-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: auto;
+  box-shadow: var(--shadow);
+}
+
+.storage-text {
+  text-align: center;
+  font-size: 0.8rem;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+/* MODAL & FOCUS OVERLAY */
+.modal-content {
+  background: white;
+  padding: 32px;
+  border-radius: 24px;
+  width: 380px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+#focusOverlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+#focusContent {
+    max-width: 80%;
+    max-height: 70vh;
+    border-radius: 12px;
+    box-shadow: 0 0 50px rgba(255,255,255,0.1);
+}
+
+.focus-nav {
+    position: absolute;
+    bottom: 40px;
+    display: flex;
+    gap: 20px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  font-family: inherit;
 }
 </style>
-</head>
 
 <body>
 
-<aside>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<div class="mobile-top-bar">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <h3 style="margin:0; font-size:1.1rem;">Vasuki Neem</h3>
+    <div style="width: 30px;"></div> </div>
+
+<aside id="sidebar">
+  <button class="close-sidebar" onclick="toggleSidebar()">✕</button>
   <h2>Vasuki Neem</h2>
-  <button onclick="goBack()">⬅</button>
-  <div class="path" id="path">/</div>
-  <button id="shareBtn" onclick="openShare()" style="display:none">🔗 Share</button>
+  
+  <div class="nav-group">
+    <button onclick="goBack(); toggleSidebar();">Back to Root</button>
+    <div class="path-container">
+        <div class="path" id="path">/</div>
+    </div>
+    <button id="shareBtn" onclick="openShare()" style="display:none">🔗 Share Selection</button>
+  </div>
 
   <div class="storage-card">
     <canvas id="storageChart" height="120"></canvas>
     <div class="storage-text">
-      <span id="usedText">0 MB</span> / 500 MB
+      <span id="usedText" style="color:var(--accent)">0 MB</span> <span style="color:var(--text-dim)">/ 500 MB</span>
     </div>
   </div>
 </aside>
 
 <main>
+  <div class="header-actions">
+    <h1 style="margin:0; font-weight:700; letter-spacing:-1px;">My Files</h1>
+    <button onclick="createFolder()" style="background:var(--text-main); color:white; border:none;">
+        <span style="font-size:1.2rem">+</span> New Folder
+    </button>
+  </div>
 
-<div class="upload" onclick="fileInput.click()">
-  <input type="file" id="fileInput" multiple hidden onchange="uploadFiles()">
-  <h3>Upload Files</h3>
-</div>
+  <div class="upload" onclick="fileInput.click()">
+    <input type="file" id="fileInput" multiple hidden onchange="uploadFiles()">
+    <div style="font-size: 2rem; margin-bottom:10px;">☁️</div>
+    <h3>Drop files here or click to upload</h3>
+    <p style="color:var(--text-dim); font-size:0.85rem;">Max 500MB total storage</p>
+  </div>
 
-<button onclick="createFolder()">➕ New Folder</button>
-
-<table>
-<thead>
-<tr>
-  <th>Name</th>
-  <th>Size</th>
-  <th align="right">Actions</th>
-</tr>
-</thead>
-<tbody id="list"></tbody>
-</table>
-
+  <div class="grid" id="list"></div>
 </main>
 
-<!-- SHARE MODAL -->
-<div id="shareModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);align-items:center;justify-content:center">
-  <div style="background:#0b1324;padding:25px;border-radius:18px;width:340px">
-    <h3>Share Files</h3>
-    <select id="sharePerm" style="width:100%;padding:10px;margin:15px 0">
-      <option value="read">Read only</option>
-      <option value="download">Download</option>
+<div id="shareModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:100">
+  <div class="modal-content">
+    <h3 style="margin-top:0">Share Selected</h3>
+    <p style="color:var(--text-dim); font-size:0.85rem;">Set permissions and generate a secure link.</p>
+    
+    <label style="font-size:0.8rem; font-weight:600;">Access Level</label>
+    <select id="sharePerm">
+      <option value="read">View Only</option>
+      <option value="download">Can Download</option>
     </select>
-    <input id="shareLink" readonly style="width:100%;padding:10px;margin-bottom:10px">
-    <button onclick="generateShare()">Generate Link</button>
-    <button onclick="closeShare()">Close</button>
+    
+    <label style="font-size:0.8rem; font-weight:600;">Secure Link</label>
+    <input id="shareLink" readonly placeholder="Link will appear here...">
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <button onclick="generateShare()" style="background:var(--accent); color:white; border:none;">Generate</button>
+        <button onclick="closeShare()">Cancel</button>
+    </div>
   </div>
 </div>
 
 <script>
 const BASE_URL="https://vasuki-cloud-backend-production.up.railway.app";
 const params=new URLSearchParams(location.search);
-const userEmail=params.get("email") || "demo@vasuki.ai";
-const MAX_MB = 500;
+const userEmail=params.get("email")||"demo@vasuki.ai";
+const MAX_MB=500;
 
 let currentFolder="";
 let selectedFiles=new Set();
 let storageChart;
+let allFiles = []; // Track files for focus mode
+let focusIndex = 0;
 
-/* STORAGE CHART */
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+}
+
 function initChart(){
-  const ctx=document.getElementById("storageChart");
-  storageChart=new Chart(ctx,{
+  storageChart=new Chart(storageChartEl,{
     type:"doughnut",
-    data:{
-      labels:["Used","Free"],
-      datasets:[{
-        data:[0,MAX_MB],
-        backgroundColor:["#0071e3","#1c274a"],
-        borderWidth:0
-      }]
-    },
-    options:{
-      cutout:"75%",
-      plugins:{legend:{display:false}}
-    }
+    data:{datasets:[{data:[0,MAX_MB],backgroundColor:["#0071e3","#f1f1f2"],borderWidth:0}]},
+    options:{cutout:"82%",plugins:{legend:{display:false}}, animation: {animateRotate: true}}
   });
 }
+const storageChartEl=document.getElementById("storageChart");
 initChart();
 
-function updateStorage(usedMB){
-  usedMB=Math.min(usedMB,MAX_MB);
-  storageChart.data.datasets[0].data=[usedMB,MAX_MB-usedMB];
+function updateStorage(mb){
+  mb=Math.min(mb,MAX_MB);
+  storageChart.data.datasets[0].data=[mb,MAX_MB-mb];
   storageChart.update();
-  document.getElementById("usedText").textContent=usedMB.toFixed(1)+" MB";
+  usedText.textContent=mb.toFixed(1)+" MB";
 }
 
-function updateShareButton(){
-  document.getElementById("shareBtn").style.display =
-    selectedFiles.size ? "block":"none";
+function iconFor(name){
+  if(/\.(pdf)$/i.test(name))return "📕";
+  if(/\.(zip|rar)$/i.test(name))return "📦";
+  if(/\.(mp3)$/i.test(name))return "🎵";
+  if(/\.(mp4)$/i.test(name))return "🎬";
+  return "📄";
 }
 
-/* LIST FILES */
 async function listFiles(){
   const res=await fetch(`${BASE_URL}/list-files`,{
     method:"POST",
@@ -196,75 +512,121 @@ async function listFiles(){
     body:JSON.stringify({email:userEmail,folder:currentFolder})
   });
   const {files}=await res.json();
-
-  document.getElementById("path").textContent="/"+currentFolder;
-  const tbody=document.getElementById("list");
-  tbody.innerHTML="";
-
-  let usedBytes=0;
+  allFiles = files.filter(f => !f.isFolder); // Store for presentation
+  path.textContent="/"+currentFolder;
+  list.innerHTML="";
+  let used=0;
 
   files.forEach(f=>{
-    if(!f.isFolder) usedBytes+=f.size;
+    if(!f.isFolder)used+=f.size;
+    const card=document.createElement("div");
+    card.className="card"+(selectedFiles.has(f.name)?" selected":"");
 
-    const tr=document.createElement("tr");
-    if(selectedFiles.has(f.name))tr.classList.add("selected");
+    card.onclick=()=>toggleSelect(f.name);
 
-    tr.onclick=e=>toggleSelect(f.name,e);
+    const isImg=/\.(png|jpg|jpeg|webp|gif)$/i.test(f.name);
+    const src=`${BASE_URL}/download/${userEmail}/${currentFolder}/${f.name}`;
 
-    tr.innerHTML=`
-      <td class="${f.isFolder?"folder":""}">
-        ${f.isFolder?"📁":"📄"} ${f.name}
-      </td>
-      <td>${f.isFolder?"-":(f.size/1024).toFixed(1)+" KB"}</td>
-      <td class="actions" align="right">
-        ${!f.isFolder?`<button onclick="event.stopPropagation();downloadFile('${f.name}')">Get</button>`:""}
-        <button onclick="event.stopPropagation();renameItem('${f.name}')">Rename</button>
-        <button onclick="event.stopPropagation();deleteItem('${f.name}')">Delete</button>
-      </td>
+    card.innerHTML=`
+      <button class="menu-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+      <div class="menu">
+        ${!f.isFolder?`<button onclick="downloadFile('${f.name}')">Download</button>`:""}
+        <button onclick="renameItem('${f.name}')">Rename</button>
+        <button onclick="deleteItem('${f.name}')">Delete</button>
+      </div>
+      <div class="preview">
+        ${
+          f.isFolder ? `<div class="icon">📁</div>` :
+          isImg ? `<img src="${src}">` :
+          `<div class="icon">${iconFor(f.name)}</div>`
+        }
+      </div>
+      <div class="name">${f.name}</div>
+      <div class="size">${f.isFolder?"Folder":(f.size/1024).toFixed(1)+" KB"}</div>
     `;
 
     if(f.isFolder){
-      tr.querySelector("td").onclick=e=>{
-        e.stopPropagation();
-        openFolder(f.name);
-      };
+      card.ondblclick=()=>openFolder(f.name);
     }
 
-    tbody.appendChild(tr);
+    list.appendChild(card);
   });
 
-  updateStorage(usedBytes/1024/1024);
+  updateStorage(used/1024/1024);
 }
 
-if (!params.get("email")){
-    window.location.href = "login.html";
-
+/* NEW FEATURE: FOCUS MODE LOGIC */
+function startFocusMode() {
+    if(allFiles.length === 0) return alert("No files to present in this folder.");
+    focusIndex = 0;
+    document.getElementById('focusOverlay').style.display = 'flex';
+    renderFocusItem();
 }
 
-/* SELECTION */
-function toggleSelect(name,e){
-  if(e.target.tagName==="BUTTON")return;
+function closeFocus() {
+    document.getElementById('focusOverlay').style.display = 'none';
+    document.getElementById('focusMediaContainer').innerHTML = '';
+}
+
+function renderFocusItem() {
+    const file = allFiles[focusIndex];
+    const src = `${BASE_URL}/download/${userEmail}/${currentFolder}/${file.name}`;
+    const container = document.getElementById('focusMediaContainer');
+    const isImg = /\.(png|jpg|jpeg|webp|gif)$/i.test(file.name);
+    
+    document.getElementById('focusTitle').textContent = file.name;
+    document.getElementById('focusCounter').textContent = `${focusIndex + 1} / ${allFiles.length}`;
+    
+    if(isImg) {
+        container.innerHTML = `<img src="${src}" id="focusContent">`;
+    } else {
+        container.innerHTML = `<div style="font-size:10rem">${iconFor(file.name)}</div>`;
+    }
+}
+
+function nextFocus() {
+    focusIndex = (focusIndex + 1) % allFiles.length;
+    renderFocusItem();
+}
+
+function prevFocus() {
+    focusIndex = (focusIndex - 1 + allFiles.length) % allFiles.length;
+    renderFocusItem();
+}
+
+// Global Keyboard Listeners for Focus Mode
+document.addEventListener('keydown', (e) => {
+    if(document.getElementById('focusOverlay').style.display === 'flex') {
+        if(e.key === 'ArrowRight') nextFocus();
+        if(e.key === 'ArrowLeft') prevFocus();
+        if(e.key === 'Escape') closeFocus();
+    }
+});
+
+/* EXISTING LOGIC */
+function toggleMenu(btn){
+  const m=btn.nextElementSibling;
+  const isVisible = m.style.display === "block";
+  document.querySelectorAll(".menu").forEach(x=>x.style.display="none");
+  m.style.display= isVisible ? "none" : "block";
+}
+
+function toggleSelect(name){
   selectedFiles.has(name)?selectedFiles.delete(name):selectedFiles.add(name);
-  updateShareButton();
+  shareBtn.style.display=selectedFiles.size?"flex":"none";
   listFiles();
 }
 
-/* NAV */
-function openFolder(name){
-  currentFolder=currentFolder?`${currentFolder}/${name}`:name;
-  selectedFiles.clear();
-  updateShareButton();
-  listFiles();
+function openFolder(n){
+  currentFolder=currentFolder?`${currentFolder}/${n}`:n;
+  selectedFiles.clear();listFiles();
 }
 function goBack(){
-  if(!currentFolder)return;
-  currentFolder=currentFolder.split("/").slice(0,-1).join("/");
-  selectedFiles.clear();
-  updateShareButton();
-  listFiles();
+  if(!currentFolder) { currentFolder = ""; } 
+  else { currentFolder=currentFolder.split("/").slice(0,-1).join("/"); }
+  selectedFiles.clear();listFiles();
 }
 
-/* CREATE */
 async function createFolder(){
   const name=prompt("Folder name");
   if(!name)return;
@@ -276,7 +638,6 @@ async function createFolder(){
   listFiles();
 }
 
-/* UPLOAD */
 async function uploadFiles(){
   const fd=new FormData();
   fd.append("email",userEmail);
@@ -286,68 +647,54 @@ async function uploadFiles(){
   listFiles();
 }
 
-/* DELETE */
-async function deleteItem(name){
+function downloadFile(n){
+  window.open(`${BASE_URL}/download/${userEmail}/${currentFolder}/${n}`);
+}
+
+async function deleteItem(n){
   if(!confirm("Delete permanently?"))return;
   await fetch(`${BASE_URL}/delete-file`,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      email:userEmail,
-      path:currentFolder?`${currentFolder}/${name}`:name
-    })
+    body:JSON.stringify({email:userEmail,path:currentFolder?`${currentFolder}/${n}`:n})
   });
-  selectedFiles.delete(name);
-  updateShareButton();
-  listFiles();
+  selectedFiles.delete(n);listFiles();
 }
 
-/* RENAME */
-async function renameItem(oldName){
-  const newName=prompt("New name",oldName);
-  if(!newName)return;
+async function renameItem(old){
+  const n=prompt("New name",old);
+  if(!n)return;
   await fetch(`${BASE_URL}/rename-file`,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
       email:userEmail,
-      oldPath:currentFolder?`${currentFolder}/${oldName}`:oldName,
-      newName
+      oldPath:currentFolder?`${currentFolder}/${old}`:old,
+      newName:n
     })
   });
   listFiles();
 }
 
-/* DOWNLOAD */
-function downloadFile(name){
-  window.open(`${BASE_URL}/download/${userEmail}/${currentFolder}/${name}`);
-}
-
-/* SHARE */
-function openShare(){
-  document.getElementById("shareModal").style.display="flex";
-}
-function closeShare(){
-  document.getElementById("shareModal").style.display="none";
-}
+function openShare(){shareModal.style.display="flex"}
+function closeShare(){shareModal.style.display="none"}
 async function generateShare(){
-  const perm=document.getElementById("sharePerm").value;
+  const perm=sharePerm.value;
   const files=[...selectedFiles].map(f=>currentFolder?`${currentFolder}/${f}`:f);
-
   const res=await fetch(`${BASE_URL}/share`,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({email:userEmail,files,permission:perm})
   });
-
-  const data=await res.json();
-  shareLink.value=data.url;
-  navigator.clipboard.writeText(data.url);
+  const d=await res.json();
+  shareLink.value=d.url;
+  navigator.clipboard.writeText(d.url);
+  alert("Link copied to clipboard!");
 }
 
+if(!params.get("email"))location.href="login.html";
 listFiles();
 </script>
 
 </body>
 </html>
-
