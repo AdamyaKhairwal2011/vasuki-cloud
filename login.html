@@ -5,163 +5,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Vasuki Cloud</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.81/build/spline-viewer.js"></script>
     <style>
         @font-face {
             font-family: 'CustomFont';
             src: url('font.ttf') format('truetype');
         }
+
         :root {
-            --bg: #f5f5f7;
-            --accent: #0071e3;
-            --text-main: #1d1d1f;
-            --text-sec: #86868b;
-            --card-bg: rgba(255,255,255,0.85);
+            --bg: #000000; /* Deep black background */
+            --card-bg: #000000;
+            --accent: #ffffff; /* White accents */
+            --text-main: #ffffff;
+            --text-sec: #888888;
+            --border: #222222; /* Subtle borders */
         }
 
         body {
             font-family: 'CustomFont', 'Inter', sans-serif;
-            background: linear-gradient(135deg, #12123a, #21395a);;
+            background-color: var(--bg);
             color: var(--text-main);
             margin: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             height: 100vh;
+            overflow: hidden;
         }
 
         .login-card {
             width: 100%;
-            max-width: 400px;
+            max-width: 360px;
             padding: 40px;
             text-align: center;
-            background: #ffffff13;
-            border-radius: 24px;
-            animation: fadeIn 1s ease;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px; /* Sharper, more professional corners */
+            animation: fadeIn 0.8s ease-out;
             z-index: 1000;
-            backdrop-filter: blur(8px);
         }
 
         .logo-icon {
-            width: 60px;
-            height: 60px;
-            color: #fff;
-            border-radius: 12px;
-            margin: 0 auto 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.5rem;
+            margin: 0 auto 32px;
+            filter: grayscale(1) brightness(2); /* Ensures logo is pure white */
         }
 
         h1 {
-            font-size: 2.7rem;
-            font-weight: 600;
-            margin-bottom: 1px;
-            letter-spacing: -0.03em;
-            color: #e7f1ff;
-            animation: type 5s linear forwards;
-            transition: 0.1s;
-            position: relative;
-            overflow: hidden;
-            width: 0;
-            white-space: nowrap;
-            display: inline-block;
-        }
-
-        @keyframes type {
-            0% {
-                width: 0%;
-            }
-            100% {
-                width: 100%;
-            }
-        }
-
-        p {
-            color: var(--text-sec);
-            margin-bottom: 32px;
-            font-size: 0.95rem;
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 40px;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+            /* Removed the typing animation for a more static, stable "minimal" feel */
         }
 
         input {
             width: 100%;
-            padding: 16px;
-            background: #ffffff00;
+            padding: 14px 0;
+            background: transparent;
             border: none;
-            border-bottom: 1px solid #e5e5e7;
-            border-radius: 2px;
+            border-bottom: 1px solid var(--border);
             color: var(--text-main);
-            font-size: 1rem;
-            margin-bottom: 16px;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
             box-sizing: border-box;
             outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            color: #fff;
+            transition: border-color 0.3s;
+        }
+
+        input::placeholder {
+            color: #444;
         }
 
         input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
+            border-bottom-color: var(--accent);
         }
 
         button {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: var(--accent);
-            color: #fff;
+            color: #000; /* Contrast text */
             border: none;
-            border-radius: 12px;
+            border-radius: 6px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
+            transition: opacity 0.2s;
+            margin-top: 10px;
         }
 
         button:hover {
-            transform: scale(1.02);
-            background: #005ecb;
-        }
-
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(20px); } 
-            to { opacity: 1; transform: translateY(0); } 
+            opacity: 0.9;
         }
 
         .signup-btn {
-    margin-top: 14px;
-    background: transparent;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-}
+            margin-top: 12px;
+            background: transparent;
+            color: var(--text-sec);
+            border: 1px solid var(--border);
+        }
 
-.signup-btn:hover {
-    background: rgba(0,113,227,0.08);
-    transform: scale(1.02);
-}
+        .signup-btn:hover {
+            border-color: var(--text-sec);
+            color: var(--text-main);
+            background: transparent;
+        }
 
-#splineViewer {
-    position: absolute;
-    z-index: 1;
-}
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
+        /* Subtle noise overlay for texture (optional) */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.05;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
     
-<div class="login-card">
+    <div class="login-card">
         <div class="logo-icon">
-            <img src="./logo-wht.png" alt="" width="70px">
+            <img src="./logo-wht.png" alt="Vasuki" width="50px">
         </div>
         <h1>Vasuki Cloud</h1>
-        <input type="email" id="emailInput" placeholder="name@company.com">
-        <input type="password" id="passwordInput" placeholder="Enter your password">
-        <button onclick="handleLogin()">Continue</button>
-        <button class="signup-btn" onclick="goToSignup()">
-            Go to Signup
-        </button>
-
+        
+        <input type="email" id="emailInput" placeholder="Email address">
+        <input type="password" id="passwordInput" placeholder="Password">
+        
+        <button onclick="handleLogin()">Sign In</button>
+        <button class="signup-btn" onclick="goToSignup()">Create Account</button>
     </div>
 
     <script type="module">
@@ -172,17 +150,9 @@
 
         window.handleLogin = async function handleLogin() {
             try {
-                const { data, error } = await supabase
-                    .from("users")
-                    .select("*");
+                const { data, error } = await supabase.from("users").select("*");
 
-                if (error) {
-                    console.error(error);
-                    alert("Failed to fetch users. Try again later.");
-                    return;
-                }
-
-                console.log(data)
+                if (error) throw error;
 
                 const email = document.getElementById('emailInput').value.toLowerCase();
                 const password = document.getElementById('passwordInput').value;
@@ -190,25 +160,18 @@
                 if (email && password) {
                     const user = data.find(user => user.username.toLowerCase() === email && user.password === password);
                     if (user) {
-                        alert("Login successful!");
                         window.location.href = `index.html?email=${encodeURIComponent(email)}`;
                     } else {
-                        alert("Invalid email or password");
+                        alert("Invalid credentials");
                     }
-                } else {
-                    alert("Please enter an email and password");
                 }
             } catch (err) {
                 console.error(err);
-                alert("Something went wrong. Try again.");
+                alert("Login failed");
             }
         }
 
-        window.goToSignup = function () {
-            window.location.href = "signup.html";
-        };
-
+        window.goToSignup = () => window.location.href = "signup.html";
     </script>
 </body>
 </html>
-
