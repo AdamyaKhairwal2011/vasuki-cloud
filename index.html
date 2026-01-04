@@ -391,9 +391,56 @@ input, select {
   margin-bottom: 16px;
   font-family: inherit;
 }
+
+/* ===== TOAST (NEW) ===== */
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 320px;
+  background: #111;
+  color: #fff;
+  padding: 16px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.4);
+  z-index: 5000;
+  animation: slideUp .35s ease;
+}
+.toast.hidden { display:none }
+.toast-title { font-weight:600; margin-bottom:8px }
+.toast-progress {
+  height:6px;
+  background:#333;
+  border-radius:10px;
+  overflow:hidden;
+}
+.toast-bar {
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#0071e3,#4da3ff);
+  transition:width .2s ease;
+}
+.toast-percent {
+  font-size:.75rem;
+  margin-top:6px;
+  color:#aaa;
+}
+
+@keyframes slideUp {
+  from { transform:translateY(20px); opacity:0 }
+  to { transform:translateY(0); opacity:1 }
+}
 </style>
 
 <body>
+
+<div id="uploadToast" class="toast hidden">
+  <div class="toast-title" id="toastTitle">Uploading files</div>
+  <div class="toast-progress">
+    <div class="toast-bar" id="toastBar"></div>
+  </div>
+  <div class="toast-percent" id="toastPercent">0%</div>
+</div>
 
 <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
@@ -638,13 +685,59 @@ async function createFolder(){
   listFiles();
 }
 
-async function uploadFiles(){
+/* ===== TOAST HELPERS (NEW) ===== */
+const toast = document.getElementById("uploadToast");
+const toastBar = document.getElementById("toastBar");
+const toastPercent = document.getElementById("toastPercent");
+const toastTitle = document.getElementById("toastTitle");
+
+function showToast() {
+  toast.classList.remove("hidden");
+  toastBar.style.width="0%";
+  toastPercent.textContent="0%";
+  toastTitle.textContent="Uploading files…";
+}
+function updateToast(p) {
+  toastBar.style.width=p+"%";
+  toastPercent.textContent=p+"%";
+}
+function finishToast(success=true){
+  toastTitle.textContent = success ? "Upload complete ✅" : "Upload failed ❌";
+  toastBar.style.width="100%";
+  toastPercent.textContent="100%";
+  setTimeout(()=>toast.classList.add("hidden"),1500);
+}
+
+/* ===== REPLACED uploadFiles ONLY (LOGIC SAME) ===== */
+function uploadFiles(){
   const fd=new FormData();
   fd.append("email",userEmail);
   fd.append("folder",currentFolder);
-  for(const f of fileInput.files)fd.append("files",f);
-  await fetch(`${BASE_URL}/upload`,{method:"POST",body:fd});
-  listFiles();
+  for(const f of fileInput.files) fd.append("files",f);
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST",`${BASE_URL}/upload`);
+
+  showToast();
+
+  xhr.upload.onprogress = (e)=>{
+    if(e.lengthComputable){
+      const percent = Math.round((e.loaded/e.total)*100);
+      updateToast(percent);
+    }
+  };
+
+  xhr.onload = ()=>{
+    if(xhr.status===200){
+      finishToast(true);
+      listFiles();
+    } else {
+      finishToast(false);
+    }
+  };
+
+  xhr.onerror = ()=>finishToast(false);
+  xhr.send(fd);
 }
 
 function downloadFile(n){
