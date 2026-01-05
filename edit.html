@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit File | Vasuki Cloud</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body { margin: 0; font-family: Inter, sans-serif; background: #f5f6f8; }
+    .topbar {
+      padding: 14px 20px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .buttons button {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+    .save { background: #0071e3; color: #fff; }
+    .preview { background: #28a745; color: #fff; }
+    .back { background: #6c757d; color: #fff; }
+    #editor { width: 100%; height: calc(100vh - 60px); }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div id="filePath">Loading...</div>
+  <div class="buttons">
+    <button class="save" onclick="saveFile()">Save</button>
+    <button class="preview" onclick="previewFile()">Preview</button>
+    <button class="back" onclick="goBack()">Back</button>
+  </div>
+</div>
+
+<div id="editor"></div>
+
+<script>
+const BASE_URL = "https://vasuki-cloud-backend-production.up.railway.app";
+const params = new URLSearchParams(location.search);
+const email = params.get("email");
+const file = params.get("file");
+
+if (!email || !file) location.href = "index.html";
+document.getElementById("filePath").textContent = file;
+
+let editor;
+let previewWindow = null;
+
+/* LANGUAGE DETECTION */
+function getLanguage(f) {
+  if (f.endsWith(".html")) return "html";
+  if (f.endsWith(".css")) return "css";
+  if (f.endsWith(".js")) return "javascript";
+  if (f.endsWith(".json")) return "json";
+  return "plaintext";
+}
+
+/* LOAD FILE */
+async function loadFile() {
+  const r = await fetch(`${BASE_URL}/get-file-content`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ email, path: file })
+  });
+  const d = await r.json();
+  editor.setValue(d.content || "");
+}
+
+/* SAVE → INSTANT RELOAD */
+async function saveFile() {
+  const content = editor.getValue();
+
+  await fetch(`${BASE_URL}/save-file-content`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ email, path: file, content })
+  });
+
+  // ⚡ INSTANT RELOAD SIGNAL
+  if (previewWindow && !previewWindow.closed) {
+    previewWindow.postMessage("VASUKI_RELOAD", "*");
+  }
+}
+
+/* PREVIEW */
+async function previewFile() {
+  const content = editor.getValue();
+  const baseUrl = `${BASE_URL}/download/${email}/${file.split("/").slice(0,-1).join("/")}/`;
+
+  const r = await fetch(`${BASE_URL}/preview-html`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ content, baseUrl })
+  });
+
+  const d = await r.json();
+  previewWindow = window.open(d.url, "_blank");
+}
+
+/* BACK */
+function goBack() {
+  location.href = `index.html?email=${encodeURIComponent(email)}`;
+}
+
+/* MONACO INIT */
+require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs" } });
+
+require(["vs/editor/editor.main"], () => {
+  editor = monaco.editor.create(document.getElementById("editor"), {
+    value: "",
+    language: getLanguage(file),
+    theme: "vs-dark",
+    automaticLayout: true,
+    fontSize: 14,
+    minimap: { enabled: false },
+    wordWrap: "on",
+    autoClosingBrackets: "always",
+    autoClosingQuotes: "always",
+    formatOnType: true,
+    formatOnPaste: true,
+    quickSuggestions: true
+  });
+
+  loadFile();
+});
+</script>
+
+</body>
+</html>
