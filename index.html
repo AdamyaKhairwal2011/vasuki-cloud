@@ -86,6 +86,21 @@ aside {
   font-size: 1.2rem;
 }
 
+#fileName {
+  max-width: 80%;
+  float: left;
+}
+
+#fileExt {
+  max-width: 15%;
+  float: left;
+}
+
+#dot {
+  float: left;
+  height: 100%;
+}
+
 /* EXISTING STYLES - MAINTAINED */
 aside h2 { font-weight: 700; letter-spacing: -1px; margin-top: 0; margin-bottom: 40px; font-size: 1.5rem; }
 .nav-group { display: flex; flex-direction: column; gap: 8px; }
@@ -398,8 +413,8 @@ input, select {
   right: 24px;
   bottom: 24px;
   width: 320px;
-  background: #111;
-  color: #fff;
+  background: #f1f1f1;
+  color: #131313;
   padding: 16px;
   border-radius: 16px;
   box-shadow: 0 20px 40px rgba(0,0,0,.4);
@@ -1052,10 +1067,9 @@ listFiles();
     </div>
 
     <div id="fileFields" style="display:none;">
-      <label>Name</label>
-      <input id="fileName" placeholder="index">
-      <label>Extension</label>
-      <input id="fileExt" placeholder="html">
+      <input id="fileName" placeholder="notes" width="80%">
+      <span id="dot">&nbsp;.&nbsp;</span>
+      <input id="fileExt" placeholder="txt" width="15%"><br><br>
     </div>
 
     <div id="folderFields" style="display:none;">
