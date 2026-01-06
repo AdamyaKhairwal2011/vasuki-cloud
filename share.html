@@ -228,40 +228,37 @@ async function loadShare() {
   renderFiles(data);
 }
 
-function renderFiles({ user, files, perm }) {
+function renderFiles({ email, files, permission }) {
   const container = document.getElementById("grid");
   container.innerHTML = "";
 
-  // Update badge
   document.getElementById("permBadge").innerHTML =
-    perm === "read"
+    permission === "read"
       ? `<div class="status-dot"></div> View Only`
       : `<div class="status-dot"></div> Download Enabled`;
 
   files.forEach(f => {
     const card = document.createElement("div");
-    card.className = "card";
-
     const isImage = /\.(png|jpg|jpeg|webp|gif)$/i.test(f);
 
+    card.className = "card";
     card.innerHTML = `
-      ${perm === "read" ? `<div class="read-only-shield">Read only</div>` : ""}
+      ${permission === "read" ? `<div class="read-only-shield">Read only</div>` : ""}
       <div class="preview-wrapper">
         ${isImage
-          ? `<img src="${BASE_URL}/shared-file/${token}/${f}" />`
+          ? `<img src="${BASE_URL}/shared-file/${token}/${f}">`
           : `<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;">📄</div>`
         }
       </div>
       <div class="file-info">
         <div class="file-name">${f}</div>
         ${
-          perm === "download"
+          permission === "download"
             ? `<button class="download-btn" onclick="downloadFile('${f}')">⬇ Download</button>`
             : `<div style="font-size:.75rem;color:#86868B;text-align:center">View only</div>`
         }
       </div>
     `;
-
     container.appendChild(card);
   });
 }
