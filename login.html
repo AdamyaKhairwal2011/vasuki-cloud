@@ -160,7 +160,7 @@
                 if (email && password) {
                     const user = data.find(user => user.username.toLowerCase() === email && user.password === password);
                     if (user) {
-                        window.location.href = `index.html?email=${encodeURIComponent(email)}`;
+                        window.location.href = `dash.html?email=${encodeURIComponent(email)}`;
                     } else {
                         alert("Invalid credentials");
                     }
@@ -175,4 +175,5 @@
     </script>
 </body>
 </html>
+
 
