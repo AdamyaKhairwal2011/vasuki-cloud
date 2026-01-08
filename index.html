@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vasuki Itech | Premium AI Datasets And Cloud Platforms</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VASUKI ITECH | CINEMATIC ECLIPSE</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&family=Syncopate:wght@400;700&display=swap');
 
@@ -11,6 +12,8 @@
             --accent: #ffffff;
             --glass: rgba(255, 255, 255, 0.02);
             --border: rgba(255, 255, 255, 0.1);
+            /* Fluid spacing variable */
+            --space-unit: clamp(20px, 5vw, 60px);
         }
 
         body {
@@ -20,189 +23,343 @@
             color: #fff;
             font-family: 'Rajdhani', sans-serif;
             height: 1200vh;
-            cursor: none; /* Custom cursor required for Awwwards style */
+            cursor: none;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Cinematic Noise Overlay */
         body::after {
             content: "";
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: url('https://grainy-gradients.vercel.app/noise.svg');
             opacity: 0.05;
             pointer-events: none;
             z-index: 9998;
         }
 
-        canvas { position: fixed; top: 0; left: 0; z-index: 1; }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            touch-action: none;
+        }
 
-        /* HUD elements */
         #cursor-ring {
-            width: 30px; height: 30px; border: 1px solid var(--accent);
-            border-radius: 50%; position: fixed; pointer-events: none;
-            z-index: 9999; transition: transform 0.1s ease-out, width 0.3s, height 0.3s;
-            display: flex; align-items: center; justify-content: center;
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease-out, width 0.3s, height 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             mix-blend-mode: difference;
         }
 
-        #overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            z-index: 100; pointer-events: none;
-            padding: 40px; box-sizing: border-box;
-            display: flex; flex-direction: column; justify-content: space-between;
+        /* Hide custom cursor on touch devices */
+        @media (pointer: coarse) {
+            #cursor-ring {
+                display: none;
+            }
+
+            body {
+                cursor: auto;
+            }
         }
 
-        .nav-top, .nav-bottom { display: flex; justify-content: space-between; pointer-events: all; }
-        .nav-link { 
-            font-family: 'Syncopate'; font-size: 10px; letter-spacing: 5px; 
-            text-decoration: none; color: #fff; opacity: 0.5; transition: 0.4s;
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100dvh;
+            z-index: 100;
+            pointer-events: none;
+            padding: clamp(20px, 4vw, 40px);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .nav-link:hover { opacity: 1; letter-spacing: 8px; }
+
+        .nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: all;
+            width: 100%;
+        }
+
+        .nav-link {
+            font-family: 'Syncopate';
+            font-size: clamp(8px, 1.5vw, 10px);
+            letter-spacing: clamp(2px, 1vw, 5px);
+            text-decoration: none;
+            color: #fff;
+            opacity: 0.5;
+            transition: 0.4s;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            letter-spacing: 8px;
+        }
+
+        .logo-text {
+            font-family: 'Syncopate';
+            font-weight: 700;
+            letter-spacing: clamp(5px, 2vw, 15px);
+            font-size: clamp(12px, 3vw, 18px);
+        }
 
         #vasuki-logo {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
-            font-family: 'Syncopate'; font-weight: 700; font-size: clamp(2rem, 10vw, 8rem);
-            letter-spacing: 30px; z-index: 5; color: #fff; pointer-events: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-family: 'Syncopate';
+            font-weight: 700;
+            font-size: clamp(3rem, 15vw, 10rem);
+            letter-spacing: clamp(10px, 5vw, 40px);
+            z-index: 5;
+            color: #fff;
+            pointer-events: none;
             transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
             opacity: 0;
+            white-space: nowrap;
         }
-        #vasuki-logo.active { transform: translate(-50%, -50%) scale(1); opacity: 0.1; }
 
-        /* Content Sections */
+        #vasuki-logo.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.1;
+        }
+
+        /* Content Sections Responsive Fixes */
         .content-section {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 0 10%; box-sizing: border-box; z-index: 10;
-            opacity: 0; transform: translateY(20px); pointer-events: none; transition: 1s cubic-bezier(0.23, 1, 0.32, 1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 8%;
+            box-sizing: border-box;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(30px);
+            pointer-events: none;
+            transition: 1s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .active-sec { opacity: 1; transform: translateY(0); pointer-events: all; }
+        .active-sec {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
 
         .glass-card {
-            background: var(--glass); backdrop-filter: blur(25px);
-            border: 1px solid var(--border); padding: 60px; border-radius: 4px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            padding: var(--space-unit);
+            border-radius: 4px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        .grid-layout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; width: 100%; }
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
 
-        .tier-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
-        .tier-table th { text-align: left; padding: 20px; border-bottom: 1px solid #fff; font-family: 'Syncopate'; font-size: 0.6rem; opacity: 0.5; }
-        .tier-table td { padding: 25px 20px; border-bottom: 1px solid var(--border); font-size: 1.1rem; }
+        .tier-table-container {
+            overflow-x: auto;
+            width: 100%;
+        }
 
-        h2 { font-family: 'Syncopate'; letter-spacing: 15px; text-transform: uppercase; margin-bottom: 20px; }
-        .label { font-family: 'Syncopate'; font-size: 9px; color: #888; letter-spacing: 6px; display: block; margin-bottom: 10px; }
+        .tier-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            min-width: 500px;
+        }
+
+        .tier-table th {
+            text-align: left;
+            padding: 15px;
+            border-bottom: 1px solid #fff;
+            font-family: 'Syncopate';
+            font-size: 0.6rem;
+            opacity: 0.5;
+        }
+
+        .tier-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid var(--border);
+            font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+        }
+
+        h2 {
+            font-family: 'Syncopate';
+            letter-spacing: clamp(5px, 2vw, 15px);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-size: clamp(1.2rem, 4vw, 2.5rem);
+            line-height: 1.2;
+        }
+
+        h3 {
+            font-family: 'Syncopate';
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            letter-spacing: 3px;
+        }
+
+        .label {
+            font-family: 'Syncopate';
+            font-size: 8px;
+            color: #888;
+            letter-spacing: 4px;
+            display: block;
+            margin-bottom: 15px;
+        }
 
         .btn-initiate {
-            background: white; color: black; border: none; padding: 20px 50px; 
-            font-family: 'Syncopate'; font-size: 10px; cursor: none; transition: 0.4s;
+            background: white;
+            color: black;
+            border: 1px solid white;
+            padding: 18px 40px;
+            font-family: 'Syncopate';
+            font-size: clamp(8px, 1.5vw, 10px);
+            cursor: pointer;
+            transition: 0.4s;
+            width: fit-content;
         }
-        .btn-initiate:hover { letter-spacing: 3px; background: transparent; color: white; border: 1px solid white; }
 
-        @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } .nav-top { font-size: 8px; } }
+        .btn-initiate:hover {
+            letter-spacing: 3px;
+            background: transparent;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .nav-top .logo-text {
+                letter-spacing: 4px;
+            }
+
+            .glass-card {
+                padding: 30px 20px;
+            }
+
+            #sec-contact h2 {
+                font-size: clamp(1.5rem, 8vw, 3rem);
+                letter-spacing: 10px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
-<div id="cursor-ring"><div style="width:4px; height:4px; background:white; border-radius:50%;"></div></div>
-
-<div id="overlay">
-    <div class="nav-top">
-        <a href="./login.html" class="nav-link">Login</a>
-        <div style="font-family:'Syncopate'; font-weight:700; letter-spacing:10px;">VASUKI</div>
-        <a href="mailto:codeclutch.adamyarao@gmail.com" class="nav-link">Contact</a>
+    <div id="cursor-ring">
+        <div style="width:4px; height:4px; background:white; border-radius:50%;"></div>
     </div>
-</div>
 
-<div id="vasuki-logo">VASUKI</div>
-<section class="content-section" id="sec-mission">
-    <div style="max-width: 800px; text-align: center;">
-        <span class="label">00 // VISION_PROTOCOL</span>
-        <h2>ENGINEERING THE FUTURE</h2>
-        <p style="line-height: 2; font-size: 1.1rem; font-weight: 300; opacity: 0.7;">
-            Vasuki iTech architects next-generation digital systems that merge cloud infrastructure, artificial intelligence, and human-centric design. We build scalable, secure, and immersive technologies for the modern digital civilization.
-        </p>
-    </div>
-</section>
-
-<section class="content-section" id="sec-features">
-    <span class="label">01 // CORE_SYSTEMS</span>
-    <div class="grid-layout">
-        <div class="glass-card" style="padding: 40px;">
-            <h3>VASUKI CLOUD</h3>
-            <p style="opacity: 0.6; font-weight: 300;">
-                High-performance cloud storage and compute architecture with real-time synchronization, secure access control, and global scalability.
-            </p>
-        </div>
-        <div class="glass-card" style="padding: 40px;">
-            <h3>INTELLIGENT AI</h3>
-            <p style="opacity: 0.6; font-weight: 300;">
-                Custom artificial intelligence systems designed for automation, data intelligence, decision support, and adaptive user experiences.
-            </p>
-        </div>
-        <div class="glass-card" style="padding: 40px;">
-            <h3>DIGITAL INFRASTRUCTURE</h3>
-            <p style="opacity: 0.6; font-weight: 300;">
-                End-to-end software engineering covering backend systems, secure APIs, modern interfaces, and enterprise-grade performance.
-            </p>
+    <div id="overlay">
+        <div class="nav-top">
+            <a href="./login.html" class="nav-link">LOGIN</a>
+            <div class="logo-text">VASUKI</div>
+            <a href="mailto:codeclutch.adamyarao@gmail.com" class="nav-link">CONTACT</a>
         </div>
     </div>
-</section>
 
-<section class="content-section" id="sec-pricing">
-    <div class="glass-card" style="width: 100%; max-width: 900px;">
-        <span class="label">02 // SERVICE_ACCESS</span>
-        <h2>DEPLOYMENT TIERS</h2>
+    <div id="vasuki-logo">VASUKI</div>
 
-        <table class="tier-table">
-            <tr>
-                <th>PROGRAM</th>
-                <th>SCOPE</th>
-                <th>ACCESS</th>
-            </tr>
+    <section class="content-section" id="sec-mission">
+        <div style="max-width: 800px; text-align: center;">
+            <span class="label">00 // ARCHITECTURE</span>
+            <h2>Breaking The Race</h2>
+            <p style="line-height: 1.8; font-size: clamp(0.9rem, 1.5vw, 1.1rem); font-weight: 300; opacity: 0.7;">
+                We stand far away from corporate race of assuming a client as ATM for money, we care for you, providing forever free cloud storage for individuals or startups.
+            </p>
+        </div>
+    </section>
 
-            <tr>
-                <td>QUALITY ASSURANCE DATASET</td>
-                <td>
-                    30,000 validated input–output pairs engineered for
-                    enterprise-grade quality assurance, system verification,
-                    behavioral consistency checks, and reliability benchmarking.
-                </td>
-                <td>$20,000 / YEAR</td>
-            </tr>
+    <section class="content-section" id="sec-features">
+        <span class="label">01 // CORE_CAPABILITIES</span>
+        <div class="grid-layout">
+            <div class="glass-card">
+                <h3>Unlimited Storage</h3>
+                <p style="opacity: 0.6; font-weight: 300; font-size: 0.9rem;">Store a image asset or a multi-TB app, it's forever free.</p>
+            </div>
+            <div class="glass-card">
+                <h3>Clients Demo / Temporary Hosting</h3>
+                <p style="opacity: 0.6; font-weight: 300; font-size: 0.9rem;">
+                    Share a photography or website demo to clients without sending them the whole zips, just a URL and that's it!
+                </p>
+            </div>
+            <div class="glass-card">
+                <h3>Cloud Editing</h3>
+                <p style="opacity: 0.6; font-weight: 300; font-size: 0.9rem;">Make Full Stack apps and edit them, anytime, anywhere.</p>
+            </div>
+        </div>
+    </section>
 
-            <tr>
-                <td>CUSTOM RESEARCH DATASET</td>
-                <td>
-                    Bespoke AI research datasets designed for proprietary model
-                    training, experimentation, and advanced intelligence workflows.
-                </td>
-                <td>
-                    <button class="btn-initiate"
-                        onclick="window.location.href='mailto:codeclutch.adamyarao@gmail.com?subject=Custom Research Dataset Inquiry'">
-                        CONTACT VIA EMAIL
-                    </button>
-                </td>
-            </tr>
-        </table>
-    </div>
-</section>
+    <section class="content-section" id="sec-pricing">
+        <div class="glass-card" style="max-width: 900px;">
+            <span class="label">02 // DATA_LEASING</span>
+            <h2>TIERED ACCESS</h2>
+            <div class="tier-table-container">
+                <table class="tier-table">
+                    <thead>
+                        <tr>
+                            <th>MODULE</th>
+                            <th>CAPACITY</th>
+                            <th>PRICING</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Silver Dataset</td>
+                            <td>30,000+ pairs of quality assertion and reasons for model training</td>
+                            <td>$20,000</td>
+                        </tr>
+                        <tr>
+                            <td>Enterprise Licence</td>
+                            <td>Unlimited Cloud And Free Hosting</td>
+                            <td>$5,800</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 
+    <section class="content-section" id="sec-contact">
+        <div style="text-align: center; width: 100%;">
+            <span class="label">03 // DIRECT_CHANNEL</span>
+            <h2 style="letter-spacing: clamp(10px, 4vw, 25px);">ADAMYA KHAIRWAL</h2>
+            <p style="font-family:'Syncopate'; font-size: 0.7rem; margin-bottom: 40px; opacity: 0.8;">CEO | VASUKI iTECH
+            </p>
+            <button class="btn-initiate">INITIATE PROJECT</button>
+        </div>
+    </section>
 
-<section class="content-section" id="sec-contact">
-    <div style="text-align: center;">
-        <span class="label">03 // COMMAND_NODE</span>
-        <h2 style="font-size: 3rem; letter-spacing: 18px;">ADAMYA KHAIRWAL</h2>
-        <p style="font-family:'Syncopate'; font-size: 0.8rem; margin-bottom: 40px;">
-            Founder & CEO — VASUKI iTECH
-        </p>
-        <a href = "https://www.linkedin.com/in/adamya-khairwal-8b51b235b/"><button class="btn-initiate" >INITIATE COLLABORATION</button></a>
-    </div>
-</section>
-
-
-<script type="importmap">
-{
+    <script type="importmap">
+        {
     "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
         "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
@@ -210,8 +367,8 @@
 }
 </script>
 
-<script type="module">
-import * as THREE from "three";
+    <script type="module">
+        import * as THREE from "three";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
@@ -219,8 +376,16 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
 // --- BOILERPLATE & SCENE SETUP ---
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.01, 5000);
-camera.position.set(0, 0, 25);
-const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+
+// Adjust camera Z based on aspect ratio (further back on mobile)
+const updateCameraPos = () => {
+    const aspect = window.innerWidth / window.innerHeight;
+    camera.position.z = aspect < 1 ? 40 : 25; 
+};
+updateCameraPos();
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance", alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limit pixel ratio for performance
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 document.body.appendChild(renderer.domElement);
@@ -239,7 +404,6 @@ window.addEventListener('mousemove', (e) => {
     mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
     ring.style.transform = `translate(${e.clientX - 15}px, ${e.clientY - 15}px)`;
     
-    // Interaction check for cursor
     if(e.target.closest('a') || e.target.closest('button') || e.target.closest('.glass-card')) {
         ring.style.width = '60px'; ring.style.height = '60px';
     } else {
@@ -247,7 +411,13 @@ window.addEventListener('mousemove', (e) => {
     }
 });
 
-// --- ELEMENTS (ORIGINAL GRAPHICS UNTOUCHED) ---
+// Handle touch for mobile interaction
+window.addEventListener('touchmove', (e) => {
+    mouse.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+}, { passive: true });
+
+// --- ELEMENTS ---
 const sunMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 });
 const sun = new THREE.Mesh(new THREE.SphereGeometry(4.5, 64, 64), sunMat);
 sun.position.set(0, 0, -12); scene.add(sun);
@@ -295,7 +465,6 @@ function animate() {
     const elapsed = clock.getElapsedTime();
     const scroll = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
 
-    // --- SCROLL ANIMATIONS ---
     if (exploded) {
         sun.position.z = -12 + (scroll * 13);
         sun.scale.setScalar(1 + (scroll * 80));
@@ -310,12 +479,10 @@ function animate() {
             else el.classList.remove('active-sec');
         });
         
-        // Logo visibility on scroll
         if(scroll > 0.05) document.getElementById('vasuki-logo').classList.add('active');
         else document.getElementById('vasuki-logo').classList.remove('active');
     }
 
-    // --- ORIGINAL CORE BLAST LOGIC ---
     if (!exploded) {
         solidBoulder.rotation.y += delta * 0.4;
         if (elapsed > 1) {
@@ -328,7 +495,11 @@ function animate() {
             camera.position.x = (Math.random()-0.5)*shakeIntensity;
             camera.position.y = (Math.random()-0.5)*shakeIntensity;
             shakeIntensity *= 0.94;
-        } else { camera.position.set(0,0,25); }
+        } else { 
+            // Return to aspect-aware Z
+            const aspect = window.innerWidth / window.innerHeight;
+            camera.position.set(0, 0, aspect < 1 ? 40 : 25); 
+        }
 
         raycaster.setFromCamera(mouse, camera);
         const mouseWorldPos = new THREE.Vector3();
@@ -353,9 +524,13 @@ function animate() {
 animate();
 
 window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight); composer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    updateCameraPos();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
 });
-</script>
+    </script>
 </body>
+
 </html>
