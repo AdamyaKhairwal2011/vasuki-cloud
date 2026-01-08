@@ -7,216 +7,139 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    :root {
-        --bg: #F5F5F7;
-        --card-bg: #FFFFFF;
-        --accent: #007AFF;
-        --text-main: #1D1D1F;
-        --text-sec: #86868B;
-        --glass-border: rgba(0, 0, 0, 0.08);
-        --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+:root {
+    --bg:#F5F5F7;
+    --card-bg:#fff;
+    --accent:#007AFF;
+    --text-main:#1D1D1F;
+    --text-sec:#86868B;
+    --glass-border:rgba(0,0,0,.08);
+}
 
-    body {
-        margin: 0;
-        font-family: 'Inter', -apple-system, sans-serif;
-        background: var(--bg);
-        color: var(--text-main);
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-    }
+body {
+    margin:0;
+    font-family:Inter,-apple-system,sans-serif;
+    background:var(--bg);
+    color:var(--text-main);
+    user-select:none;
+}
 
-    /* --- HEADER --- */
-    header {
-        width: 100%;
-        max-width: 1000px;
-        padding: 60px 30px 40px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-    }
+header {
+    max-width:1000px;
+    margin:auto;
+    padding:60px 30px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+}
 
-    .brand-area h2 {
-        margin: 0;
-        font-size: 2rem;
-        font-weight: 700;
-        letter-spacing: -1px;
-    }
+.container {
+    max-width:1000px;
+    margin:auto;
+    padding:0 30px 60px;
+}
 
-    .status-badge {
-        background: var(--card-bg);
-        border: 1px solid var(--glass-border);
-        padding: 6px 14px;
-        border-radius: 100px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--text-sec);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
+.grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:24px;
+}
 
-    .status-dot {
-        width: 8px;
-        height: 8px;
-        background: #34C759;
-        border-radius: 50%;
-        box-shadow: 0 0 8px #34C759;
-    }
+.card {
+    background:var(--card-bg);
+    border-radius:24px;
+    padding:16px;
+    border:1px solid var(--glass-border);
+    position:relative;
+}
 
-    /* --- GRID --- */
-    .container {
-        width: 100%;
-        max-width: 1000px;
-        padding: 0 30px 60px;
-    }
+.preview-wrapper {
+    height:180px;
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+}
 
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 24px;
-    }
+.preview-wrapper img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    pointer-events:none;
+    -webkit-user-drag:none;
+}
 
-    .card {
-        background: var(--card-bg);
-        border-radius: 24px;
-        padding: 16px;
-        border: 1px solid var(--glass-border);
-        transition: var(--transition);
-        position: relative;
-        overflow: hidden;
-    }
+.block-layer {
+    position:absolute;
+    inset:0;
+    z-index:5;
+}
 
-    .card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.06);
-        border-color: var(--accent);
-    }
+.file-info {
+    padding:15px 5px 5px;
+}
 
-    .preview-wrapper {
-        width: 100%;
-        height: 180px;
-        background: #fdfdfd;
-        border-radius: 16px;
-        overflow: hidden;
-        position: relative;
-        cursor: none;
-    }
+.file-name {
+    font-size:.9rem;
+    font-weight:600;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
 
-    .card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s ease;
-        user-select: none;
-        -webkit-user-drag: none;
-    }
+.download-btn {
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:12px;
+    background:var(--accent);
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+}
 
-    .card:hover img {
-        transform: scale(1.05);
-    }
+.read-only-shield {
+    position:absolute;
+    top:10px;
+    right:10px;
+    font-size:.6rem;
+    font-weight:700;
+    padding:4px 8px;
+    border-radius:8px;
+    background:rgba(255,255,255,.9);
+}
 
-    .file-info {
-        padding: 15px 5px 5px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .file-name {
-        font-size: 0.9rem;
-        font-weight: 600;
-        color: var(--text-main);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .download-btn {
-        width: 100%;
-        padding: 10px;
-        border-radius: 12px;
-        border: none;
-        background: var(--accent);
-        color: #fff;
-        font-size: 0.85rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .download-btn:hover {
-        background: #0056b3;
-    }
-
-    .read-only-shield {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: rgba(255,255,255,0.9);
-        backdrop-filter: blur(4px);
-        padding: 4px 8px;
-        border-radius: 8px;
-        font-size: 0.6rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: var(--text-sec);
-        border: 1px solid var(--glass-border);
-    }
-
-    .footer-note {
-        margin-top: 40px;
-        text-align: center;
-        color: var(--text-sec);
-        font-size: 0.8rem;
-        padding: 20px;
-        border-top: 1px solid var(--glass-border);
-        width: 100%;
-    }
-
-    @media (max-width: 600px) {
-        header { padding-top: 40px; flex-direction: column; align-items: flex-start; gap: 15px; }
-        .grid { grid-template-columns: 1fr; }
-    }
+.footer-note {
+    text-align:center;
+    padding:20px;
+    font-size:.8rem;
+    color:var(--text-sec);
+}
 </style>
 </head>
+
 <body>
 
 <header>
-    <div class="brand-area">
-        <div style="color: var(--accent); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Vasuki iTech Vault</div>
-        <h2>Shared Assets</h2>
-    </div>
-    <div class="status-badge" id="permBadge">
-        <div class="status-dot"></div>
-        Secure Link Active
-    </div>
+  <div>
+    <div style="color:#007AFF;font-size:.75rem;font-weight:700;letter-spacing:2px">VASUKI ITECH VAULT</div>
+    <h2>Shared Assets</h2>
+  </div>
+  <div id="permBadge">Secure Link Active</div>
 </header>
 
 <div class="container">
-    <div class="grid" id="grid"></div>
+  <div class="grid" id="grid"></div>
 </div>
 
-<div class="footer-note" id="note">
-    Protected by Vasuki Cloud Encryption. All access is logged.
-</div>
-
+<div class="footer-note">Protected by Vasuki Cloud Encryption</div>
 
 <script>
 const BASE_URL = "https://vasuki-cloud-backend-production.up.railway.app";
-const params = new URLSearchParams(window.location.search);
-const token = params.get("token");
+const token = new URLSearchParams(location.search).get("token");
 
 if (!token) {
   document.body.innerHTML = "Invalid share link";
-  throw new Error("No token");
+  throw "";
 }
 
 async function loadShare() {
@@ -225,47 +148,53 @@ async function loadShare() {
     document.body.innerHTML = "Link expired or invalid";
     return;
   }
-  const data = await res.json();
-  renderFiles(data);
+  renderFiles(await res.json());
 }
 
-function renderFiles({ email, files, permission }) {
-  const container = document.getElementById("grid");
-  container.innerHTML = "";
+function renderFiles({ files, permission }) {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
 
-  document.getElementById("permBadge").innerHTML =
-    permission === "read"
-      ? `<div class="status-dot"></div> View Only`
-      : `<div class="status-dot"></div> Download Enabled`;
+  if (permission === "read") {
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("dragstart", e => e.preventDefault());
+    document.addEventListener("keydown", e => {
+      if ((e.ctrlKey || e.metaKey) && ["s","u","p"].includes(e.key.toLowerCase()))
+        e.preventDefault();
+    });
+  }
 
   files.forEach(f => {
-    const card = document.createElement("div");
-    const isImage = /\.(png|jpg|jpeg|webp|gif)$/i.test(f);
+    const isImage = /\.(png|jpg|jpeg|gif|webp)$/i.test(f);
 
+    const card = document.createElement("div");
     card.className = "card";
+
     card.innerHTML = `
-      ${permission === "read" ? `<div class="read-only-shield">Read only</div>` : ""}
+      ${permission === "read" ? `<div class="read-only-shield">VIEW ONLY</div>` : ""}
       <div class="preview-wrapper">
         ${isImage
           ? `<img src="${BASE_URL}/shared-file/${token}/${f}">`
-          : `<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;">📄</div>`
+          : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:3rem">📄</div>`
         }
+        ${permission === "read" ? `<div class="block-layer"></div>` : ""}
       </div>
       <div class="file-info">
         <div class="file-name">${f}</div>
         ${
           permission === "download"
-            ? `<button class="download-btn" onclick="downloadFile('${f}')">⬇ Download</button>`
-            : `<div style="font-size:.75rem;color:#86868B;text-align:center">View only</div>`
+          ? `<button class="download-btn" onclick="downloadFile('${f}')">⬇ Download</button>`
+          : `<div style="text-align:center;font-size:.75rem;color:#86868B">View only</div>`
         }
       </div>
     `;
-    container.appendChild(card);
+
+    grid.appendChild(card);
   });
 }
 
-function downloadFile(file) {
-  window.open(`${BASE_URL}/shared-file/${token}/${file}`, "_blank");
+function downloadFile(f) {
+  window.open(`${BASE_URL}/shared-file/${token}/${f}`, "_blank");
 }
 
 loadShare();
