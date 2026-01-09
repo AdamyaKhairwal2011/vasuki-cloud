@@ -785,7 +785,7 @@ async function listFiles(){
     card.innerHTML=`
       <button class="menu-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
       <div class="menu">
-         ${/\.(txt|html|css|js|json|csv)$/i.test(f.name) ? `<button onclick="editFile('${f.name}')">Edit</button>` : ""}
+         ${/\.(txt|html|css|js|py|json|csv)$/i.test(f.name) ? `<button onclick="editFile('${f.name}')">Edit</button>` : ""}
         ${!f.isFolder?`<button onclick="downloadFile('${f.name}')">Download</button>`:""}
         <button onclick="renameItem('${f.name}')">Rename</button>
         <button onclick="deleteItem('${f.name}')">Delete</button>
@@ -1087,3 +1087,4 @@ listFiles();
 
 </body>
 </html>
+
