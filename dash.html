@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vasuki Neem | Premium Cloud</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+  --bg: #fafafa;
+  --sidebar-bg: #ffffff;
+  --accent: #e39b00;
+  --accent-light: #fff9e8;
+  --text-main: #1d1d1f;
+  --text-dim: #6e6e73;
+  --border: #e9e9e9;
+  --card-bg: #fafafa;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0);
+}
+
+* { box-sizing: border-box; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+  display: flex;
+}
+
+/* SIDEBAR RESPONSIVENESS */
+aside {
+  width: 280px;
+  padding: 32px 24px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+}
+
+/* HAMBURGER & MOBILE HEADER */
+.mobile-top-bar {
+  display: none;
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border);
+  z-index: 1000;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.close-sidebar {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+}
+
+#fileName {
+  max-width: 80%;
+  float: left;
+}
+
+#fileExt {
+  max-width: 15%;
+  float: left;
+}
+
+#dot {
+  float: left;
+  height: 100%;
+}
+
+/* EXISTING STYLES - MAINTAINED */
+aside h2 { font-weight: 100; letter-spacing: -1px; margin-top: 0; margin-bottom: 40px; font-size: 1.5rem; }
+.nav-group { display: flex; flex-direction: column; gap: 8px; }
+.path-container { background: white; padding: 12px; border-radius: 2px; border: 1px solid var(--border); margin-bottom: 20px; }
+.path { font-size: 0.85rem; font-weight: 100; color: var(--accent); word-break: break-all; }
+
+button { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-main); padding: 12px 16px; border-radius: 2px; cursor: pointer; font-weight: 100; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+button:hover { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+#shareBtn { background: var(--accent); color: white; border: none; box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3); }
+.btn-focus { background: #000; color: #fff; border: none; margin-top: 10px; }
+
+main { flex: 1; padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
+.header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 15px; }
+
+.upload { border: 2px dashed var(--border); border-radius: 2px; padding: 40px; text-align: center; cursor: pointer; margin-bottom: 32px; background: var(--sidebar-bg); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 2px; padding: 16px; position: relative; cursor: pointer; box-shadow: var(--shadow); }
+.preview { height: 110px; border-radius: 2px; background: #f1f1f2; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 12px; }
+.preview img { width: 100%; height: 100%; object-fit: cover; }
+
+/* MOBILE BREAKPOINTS */
+@media (max-width: 850px) {
+  body { flex-direction: column; }
+  aside {
+    position: fixed;
+    left: -280px;
+    transition: 0.3s ease-in-out;
+  }
+  aside.active { left: 0; }
+  .sidebar-overlay.active { display: block; }
+  .mobile-top-bar { display: flex; }
+  .close-sidebar { display: block; }
+  main { padding: 20px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .header-actions h1 { font-size: 1.5rem; }
+}
+
+/* FOCUS OVERLAY FIX FOR MOBILE */
+#focusContent { max-width: 95%; max-height: 60vh; }
+.focus-nav { width: 90%; justify-content: space-around; }
+
+/* MODAL FIX */
+.modal-content { width: 90%; max-width: 380px; }
+
+
+aside h2 {
+  font-weight: 100;
+  letter-spacing: -1px;
+  margin-top: 0;
+  margin-bottom: 40px;
+  font-size: 1.5rem;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.path-container {
+  background: white;
+  padding: 12px;
+  border-radius: 2px;
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.path {
+  font-size: 0.85rem;
+  font-weight: 100;
+  color: var(--accent);
+  word-break: break-all;
+}
+
+/* BUTTONS */
+button {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 12px 16px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: 100;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+button:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+#shareBtn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 14px rgba(227, 174, 0, 0.3);
+}
+
+#shareBtn:hover { background: #b58500; color: white; }
+
+/* FOCUS MODE BUTTON */
+.btn-focus {
+    background: #000;
+    color: #fff;
+    border: none;
+    margin-top: 10px;
+}
+.btn-focus:hover {
+    background: #333;
+    color: #fff;
+}
+
+/* MAIN CONTENT */
+main {
+  flex: 1;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.upload {
+  border: 2px dashed var(--border);
+  border-radius: 2px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 32px;
+  background: var(--bg);
+}
+
+.upload:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.upload h3 { margin: 0; font-weight: 100; color: var(--text-dim); }
+
+/* GRID & CARDS */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 16px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+.card.selected {
+  outline: 2px solid var(--accent);
+  background: var(--accent-light);
+}
+
+.preview {
+  height: 130px;
+  border-radius: 2px;
+  background: #f1f1f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.preview img { width: 100%; height: 100%; object-fit: cover; }
+
+.icon { font-size: 48px; }
+
+.name {
+  font-weight: 100;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.size { font-size: 0.75rem; color: var(--text-dim); }
+
+/* MENU */
+.menu-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  border-radius: 2px;
+  z-index: 5;
+}
+
+.menu {
+  position: absolute;
+  right: 10px;
+  top: 45px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  display: none;
+  z-index: 20;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  overflow: hidden;
+  min-width: 120px;
+}
+
+.menu button {
+  width: 100%;
+  border: none;
+  padding: 10px 16px;
+  text-align: left;
+  border-radius: 0;
+  font-size: 0.85rem;
+}
+
+.menu button:hover { background: var(--sidebar-bg); color: var(--accent); }
+
+/* STORAGE CARD */
+.storage-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 20px;
+  margin-top: auto;
+}
+
+.storage-text {
+  text-align: center;
+  font-size: 0.8rem;
+  margin-top: 12px;
+  font-weight: 100;
+}
+
+/* MODAL & FOCUS OVERLAY */
+.modal-content {
+  background: white;
+  padding: 32px;
+  border-radius: 2px;
+  width: 380px;
+}
+
+#focusOverlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+#focusContent {
+    max-width: 80%;
+    max-height: 70vh;
+    border-radius: 2px;
+}
+
+.focus-nav {
+    position: absolute;
+    bottom: 40px;
+    display: flex;
+    gap: 20px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(15px);
+    padding: 15px 30px;
+    border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 2px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  font-family: inherit;
+}
+
+/* ===== TOAST (NEW) ===== */
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 320px;
+  background: #f1f1f1;
+  color: #131313;
+  padding: 16px;
+  border-radius: 2px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.4);
+  z-index: 5000;
+  animation: slideUp .35s ease;
+}
+.toast.hidden { display:none }
+.toast-title { font-weight:100; margin-bottom:8px }
+.toast-progress {
+  height:6px;
+  background:#333;
+  border-radius:2px;
+  overflow:hidden;
+}
+.toast-bar {
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#e39400,#ffde4d);
+  transition:width .2s ease;
+}
+.toast-percent {
+  font-size:.75rem;
+  margin-top:6px;
+  color:#aaa;
+}
+
+@keyframes slideUp {
+  from { transform:translateY(20px); opacity:0 }
+  to { transform:translateY(0); opacity:1 }
+}
+</style>
+
+<body>
+
+<div id="uploadToast" class="toast hidden">
+  <div class="toast-title" id="toastTitle">Uploading files</div>
+  <div class="toast-progress">
+    <div class="toast-bar" id="toastBar"></div>
+  </div>
+  <div class="toast-percent" id="toastPercent">0%</div>
+</div>
+
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<div class="mobile-top-bar">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <img src="./logo.png" width="50px" height="50px" alt="" class="logo">
+    <div style="width: 30px;"></div> </div>
+
+<aside id="sidebar">
+  <button class="close-sidebar" onclick="toggleSidebar()">✕</button>
+      <img src="./logo.png" width="50px" height="50px" alt="" class="logo">
+<br><br>
+  
+  <div class="nav-group">
+    <button onclick="goBack(); toggleSidebar();">Back to Root</button>
+    <div class="path-container">
+        <div class="path" id="path">/</div>
+    </div>
+  </div>
+
+  <div class="storage-card">
+    <canvas id="storageChart" height="120"></canvas>
+    <div class="storage-text">
+      <span id="usedText" style="color:var(--accent)">0 MB</span> <span style="color:var(--text-dim)">/ 500 MB</span>
+    </div>
+  </div>
+</aside>
+
+<main>
+<div class="header-actions">
+  <h1 style="margin:0; font-weight:100; letter-spacing:-1px;">Vasuki Neem Storage</h1>
+
+  <div style="display:flex; gap:10px;">
+    <button id="downloadSelectedBtn" style="display:none" onclick="downloadSelected()">⬇ Download</button>
+    <button id="deleteSelectedBtn" style="display:none; background:#ff3b30; color:white;" onclick="deleteSelected()">🗑 Delete</button>
+    <button id="shareBtn" onclick="openShare()" style="display:none">🔗 Share Selection</button>
+    <div id="shareModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:100">
+  <div class="modal-content">
+    <h3 style="margin-top:0">Share Selected</h3>
+    <p style="color:var(--text-dim); font-size:0.85rem;">Set permissions and generate a secure link.</p>
+    
+    <label style="font-size:0.8rem; font-weight:600;">Access Level</label>
+    <select id="sharePerm">
+      <option value="read">View Only</option>
+      <option value="download">Can Download</option>
+    </select>
+    
+    <label style="font-size:0.8rem; font-weight:600;">Secure Link</label>
+    <input id="shareLink" readonly placeholder="Link will appear here...">
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <button onclick="generateShare()" style="background:var(--accent); color:white; border:none;">Generate</button>
+        <button onclick="closeShare()">Cancel</button>
+    </div>
+  </div>
+</div>
+    <button onclick="openCreateMenu()">＋</button>
+  </div>
+</div>
+
+  <div class="upload" onclick="fileInput.click()">
+    <input type="file" id="fileInput" multiple hidden onchange="uploadFiles()">
+    <h3>Drop files here or click to upload</h3>
+    <p style="color:var(--text-dim); font-size:0.85rem;">Max 500MB total storage</p>
+  </div>
+
+  <!-- FILE TYPE COMPOSITION BAR -->
+<div id="typeBar" style="margin-bottom:28px;">
+  <div id="typeBarInner" style="
+    height:14px;
+    width:100%;
+    border-radius:2px;
+    overflow:hidden;
+    display:flex;
+    background:#eee;
+  "></div>
+
+  <div id="typeLegend" style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:10px;
+    font-size:0.75rem;
+    color:var(--text-dim);
+  "></div>
+</div>
+
+
+  <div class="grid" id="list"></div>
+</main>
+
+
+
+<script>
+const BASE_URL="https://vasuki-cloud-backend-production.up.railway.app";
+const params=new URLSearchParams(location.search);
+const userEmail=params.get("email")||"demo@vasuki.ai";
+const MAX_MB=500;
+
+let currentFolder="";
+let selectedFiles=new Set();
+let storageChart;
+let allFiles = []; // Track files for focus mode
+let focusIndex = 0;
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    sidebar.classList.toggle('active');
+    overlay.classList.toggle('active');
+}
+
+function initChart(){
+  storageChart=new Chart(storageChartEl,{
+    type:"doughnut",
+    data:{datasets:[{data:[0,MAX_MB],backgroundColor:["#0071e3","#f1f1f2"],borderWidth:0}]},
+    options:{cutout:"82%",plugins:{legend:{display:false}}, animation: {animateRotate: true}}
+  });
+}
+const storageChartEl=document.getElementById("storageChart");
+initChart();
+
+function updateStorage(mb){
+  mb=Math.min(mb,MAX_MB);
+  storageChart.data.datasets[0].data=[mb,MAX_MB-mb];
+  storageChart.update();
+  usedText.textContent=mb.toFixed(1)+" MB";
+}
+
+let createType = null;
+
+function openCreateMenu() {
+  createType = null;
+  fileFields.style.display = "none";
+  folderFields.style.display = "none";
+  createModal.style.display = "flex";
+}
+
+function closeCreate() {
+  createModal.style.display = "none";
+  fileName.value = "";
+  fileExt.value = "";
+  folderName.value = "";
+}
+
+const FILE_TYPES = {
+  code:   { color: "#0071e3", match: /\.(html|css|js|json|ts|py|java)$/i },
+  docs:   { color: "#4da3ff", match: /\.(pdf|docx?|pptx?|xlsx?)$/i },
+  images: { color: "#a1a1a1", match: /\.(png|jpg|jpeg|gif|webp)$/i },
+  videos: { color: "#8e8e93", match: /\.(mp4|mov|avi|mkv)$/i },
+  audio:  { color: "#5c7cfa", match: /\.(mp3|wav|ogg)$/i },
+  zip:    { color: "#3a3f55", match: /\.(zip|rar|7z)$/i },
+  other:  { color: "#1f2937", match: /.*/ }
+};
+
+
+function renderTypeBar(files) {
+  const bar = document.getElementById("typeBarInner");
+  const legend = document.getElementById("typeLegend");
+
+  bar.innerHTML = "";
+  legend.innerHTML = "";
+
+  let totalSize = 0;
+  const stats = {};
+
+  files.forEach(f => {
+    if (f.isFolder) return;
+    totalSize += f.size;
+
+    for (const key in FILE_TYPES) {
+      if (FILE_TYPES[key].match.test(f.name)) {
+        stats[key] = (stats[key] || 0) + f.size;
+        break;
+      }
+    }
+  });
+
+  /* EMPTY STATE */
+  if (!totalSize) {
+    bar.innerHTML = `
+      <div style="
+        flex:1;
+        background:#292929;
+        border-radius:2px;
+      "></div>
+    `;
+    legend.innerHTML = `
+      <span style="color:#292929">No files in this folder</span>
+    `;
+    return;
+  }
+
+  /* BAR SEGMENTS */
+  for (const key in stats) {
+    const percent = (stats[key] / totalSize) * 100;
+    const color = FILE_TYPES[key].color;
+
+    const seg = document.createElement("div");
+    seg.style.width = percent + "%";
+    seg.style.background = color;
+    seg.style.transition = "width 0.4s ease";
+    bar.appendChild(seg);
+
+    const label = document.createElement("div");
+    label.style.display = "flex";
+    label.style.alignItems = "center";
+    label.style.gap = "6px";
+    label.style.color = "#292929";
+
+    label.innerHTML = `
+      <span style="
+        width:10px;
+        height:10px;
+        background:${color};
+        border-radius:50%;
+        display:inline-block;
+      "></span>
+      ${key.toUpperCase()}
+      <span style="opacity:.6">
+        (${(stats[key] / 1024).toFixed(1)} KB)
+      </span>
+    `;
+
+    legend.appendChild(label);
+  }
+}
+
+
+
+function selectCreateType(type) {
+  createType = type;
+  fileFields.style.display = type === "file" ? "block" : "none";
+  folderFields.style.display = type === "folder" ? "block" : "none";
+  createTitle.textContent = type === "file" ? "Create File" : "Create Folder";
+}
+
+async function createConfirm() {
+  if (createType === "file") {
+    const name = fileName.value.trim();
+    const extension = fileExt.value.trim();
+    if (!name || !extension) return alert("Fill all fields");
+
+    await fetch(`${BASE_URL}/create-file`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: userEmail,
+        folder: currentFolder,
+        name,
+        extension
+      })
+    });
+  }
+
+  if (createType === "folder") {
+    const name = folderName.value.trim();
+    if (!name) return alert("Enter folder name");
+
+    await fetch(`${BASE_URL}/create-folder`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: userEmail,
+        folder: currentFolder,
+        name
+      })
+    });
+  }
+
+  closeCreate();
+  listFiles(); // instant refresh
+}
+
+
+
+async function createFolder() {
+  const name = prompt("Folder name");
+  if (!name) return;
+
+  await fetch(`${BASE_URL}/create-folder`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userEmail,
+      folder: file.split("/").slice(0, -1).join("/"),
+      name
+    })
+  });
+
+  location.reload(); // instant refresh
+}
+
+
+function iconFor(name){
+  if(/\.(pdf)$/i.test(name))return "📕";
+  if(/\.(zip|rar)$/i.test(name))return "📦";
+  if(/\.(mp3)$/i.test(name))return "🎵";
+  if(/\.(mp4)$/i.test(name))return "🎬";
+  return "📄";
+}
+
+async function listFiles(){
+  const res=await fetch(`${BASE_URL}/list-files`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email:userEmail,folder:currentFolder})
+  });
+  const {files}=await res.json();
+  renderTypeBar(files);
+
+  allFiles = files.filter(f => !f.isFolder); // Store for presentation
+  path.textContent="/"+currentFolder;
+  list.innerHTML="";
+  let used=0;
+
+  files.forEach(f=>{
+    if(!f.isFolder)used+=f.size;
+    const card=document.createElement("div");
+    card.className="card"+(selectedFiles.has(f.name)?" selected":"");
+
+    card.onclick=()=>toggleSelect(f.name);
+
+    const isImg=/\.(png|jpg|jpeg|webp|gif)$/i.test(f.name);
+    const src=`${BASE_URL}/download/${userEmail}/${currentFolder}/${f.name}`;
+
+    card.innerHTML=`
+      <button class="menu-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+      <div class="menu">
+         ${/\.(txt|html|css|js|py|json|csv)$/i.test(f.name) ? `<button onclick="editFile('${f.name}')">Edit</button>` : ""}
+        ${!f.isFolder?`<button onclick="downloadFile('${f.name}')">Download</button>`:""}
+        <button onclick="renameItem('${f.name}')">Rename</button>
+        <button onclick="deleteItem('${f.name}')">Delete</button>
+      </div>
+      <div class="preview">
+        ${
+          f.isFolder ? `<div class="icon">📁</div>` :
+          isImg ? `<img src="${src}">` :
+          `<div class="icon">${iconFor(f.name)}</div>`
+        }
+      </div>
+      <div class="name">${f.name}</div>
+      <div class="size">${f.isFolder?"Folder":(f.size/1024).toFixed(1)+" KB"}</div>
+    `;
+
+
+
+    if(f.isFolder){
+      card.ondblclick=()=>openFolder(f.name);
+    }
+
+    list.appendChild(card);
+  });
+
+  updateStorage(used/1024/1024);
+}
+
+function editFile(name) {
+  const path = currentFolder ? `${currentFolder}/${name}` : name;
+  window.location.href = `edit.html?email=${encodeURIComponent(userEmail)}&file=${encodeURIComponent(path)}`;
+}
+
+/* NEW FEATURE: FOCUS MODE LOGIC */
+function startFocusMode() {
+    if(allFiles.length === 0) return alert("No files to present in this folder.");
+    focusIndex = 0;
+    document.getElementById('focusOverlay').style.display = 'flex';
+    renderFocusItem();
+}
+
+function closeFocus() {
+    document.getElementById('focusOverlay').style.display = 'none';
+    document.getElementById('focusMediaContainer').innerHTML = '';
+}
+
+function renderFocusItem() {
+    const file = allFiles[focusIndex];
+    const src = `${BASE_URL}/download/${userEmail}/${currentFolder}/${file.name}`;
+    const container = document.getElementById('focusMediaContainer');
+    const isImg = /\.(png|jpg|jpeg|webp|gif)$/i.test(file.name);
+    
+    document.getElementById('focusTitle').textContent = file.name;
+    document.getElementById('focusCounter').textContent = `${focusIndex + 1} / ${allFiles.length}`;
+    
+    if(isImg) {
+        container.innerHTML = `<img src="${src}" id="focusContent">`;
+    } else {
+        container.innerHTML = `<div style="font-size:10rem">${iconFor(file.name)}</div>`;
+    }
+}
+
+function nextFocus() {
+    focusIndex = (focusIndex + 1) % allFiles.length;
+    renderFocusItem();
+}
+
+function prevFocus() {
+    focusIndex = (focusIndex - 1 + allFiles.length) % allFiles.length;
+    renderFocusItem();
+}
+
+// Global Keyboard Listeners for Focus Mode
+document.addEventListener('keydown', (e) => {
+    if(document.getElementById('focusOverlay').style.display === 'flex') {
+        if(e.key === 'ArrowRight') nextFocus();
+        if(e.key === 'ArrowLeft') prevFocus();
+        if(e.key === 'Escape') closeFocus();
+    }
+});
+
+/* EXISTING LOGIC */
+function toggleMenu(btn){
+  const m=btn.nextElementSibling;
+  const isVisible = m.style.display === "block";
+  document.querySelectorAll(".menu").forEach(x=>x.style.display="none");
+  m.style.display= isVisible ? "none" : "block";
+}
+
+function toggleSelect(name){
+  selectedFiles.has(name)
+    ? selectedFiles.delete(name)
+    : selectedFiles.add(name);
+
+  const hasSelection = selectedFiles.size > 0;
+
+  shareBtn.style.display = hasSelection ? "flex" : "none";
+  downloadSelectedBtn.style.display = hasSelection ? "flex" : "none";
+  deleteSelectedBtn.style.display = hasSelection ? "flex" : "none";
+
+  listFiles();
+}
+
+async function deleteSelected() {
+  if (!selectedFiles.size) return;
+  if (!confirm(`Delete ${selectedFiles.size} items permanently?`)) return;
+
+  for (const name of selectedFiles) {
+    const path = currentFolder ? `${currentFolder}/${name}` : name;
+
+    await fetch(`${BASE_URL}/delete-file`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: userEmail, path })
+    });
+  }
+
+  selectedFiles.clear();
+  listFiles();
+}
+
+
+function downloadSelected() {
+  if (!selectedFiles.size) return;
+
+  selectedFiles.forEach(name => {
+    const url = `${BASE_URL}/download/${userEmail}/${currentFolder}/${name}`;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+}
+
+
+
+function openFolder(n){
+  currentFolder=currentFolder?`${currentFolder}/${n}`:n;
+  selectedFiles.clear();listFiles();
+}
+function goBack(){
+  if(!currentFolder) { currentFolder = ""; } 
+  else { currentFolder=currentFolder.split("/").slice(0,-1).join("/"); }
+  selectedFiles.clear();listFiles();
+}
+
+
+async function createFolder() {
+  const name = prompt("Folder name");
+  if (!name) return;
+
+  await fetch(`${BASE_URL}/create-folder`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: userEmail,
+      folder: currentFolder,
+      name
+    })
+  });
+
+  listFiles();
+}
+
+
+/* ===== TOAST HELPERS (NEW) ===== */
+const toast = document.getElementById("uploadToast");
+const toastBar = document.getElementById("toastBar");
+const toastPercent = document.getElementById("toastPercent");
+const toastTitle = document.getElementById("toastTitle");
+
+function showToast() {
+  toast.classList.remove("hidden");
+  toastBar.style.width="0%";
+  toastPercent.textContent="0%";
+  toastTitle.textContent="Uploading files…";
+}
+function updateToast(p) {
+  toastBar.style.width=p+"%";
+  toastPercent.textContent=p+"%";
+}
+function finishToast(success=true){
+  toastTitle.textContent = success ? "Upload complete" : "Upload failed";
+  toastBar.style.width="100%";
+  toastPercent.textContent="100%";
+  setTimeout(()=>toast.classList.add("hidden"),1500);
+}
+
+/* ===== REPLACED uploadFiles ONLY (LOGIC SAME) ===== */
+function uploadFiles(){
+  const fd=new FormData();
+  fd.append("email",userEmail);
+  fd.append("folder",currentFolder);
+  for(const f of fileInput.files) fd.append("files",f);
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST",`${BASE_URL}/upload`);
+
+  showToast();
+
+  xhr.upload.onprogress = (e)=>{
+    if(e.lengthComputable){
+      const percent = Math.round((e.loaded/e.total)*100);
+      updateToast(percent);
+    }
+  };
+
+  xhr.onload = ()=>{
+    if(xhr.status===200){
+      finishToast(true);
+      listFiles();
+    } else {
+      finishToast(false);
+    }
+  };
+
+  xhr.onerror = ()=>finishToast(false);
+  xhr.send(fd);
+}
+
+function downloadFile(n){
+  window.open(`${BASE_URL}/download/${userEmail}/${currentFolder}/${n}`);
+}
+
+async function deleteItem(n){
+  if(!confirm("Delete permanently?"))return;
+  await fetch(`${BASE_URL}/delete-file`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email:userEmail,path:currentFolder?`${currentFolder}/${n}`:n})
+  });
+  selectedFiles.delete(n);listFiles();
+}
+
+async function renameItem(old){
+  const n=prompt("New name",old);
+  if(!n)return;
+  await fetch(`${BASE_URL}/rename-file`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email:userEmail,
+      oldPath:currentFolder?`${currentFolder}/${old}`:old,
+      newName:n
+    })
+  });
+  listFiles();
+}
+
+function openShare(){shareModal.style.display="flex"}
+function closeShare(){shareModal.style.display="none"}
+async function generateShare(){
+  const perm=sharePerm.value;
+  const files=[...selectedFiles].map(f=>currentFolder?`${currentFolder}/${f}`:f);
+  const res=await fetch(`${BASE_URL}/share`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email:userEmail,files,permission:perm})
+  });
+  const d=await res.json();
+  shareLink.value=d.url;
+  navigator.clipboard.writeText(d.url);
+  alert("Link copied to clipboard!");
+}
+
+if(!params.get("email"))location.href="login.html";
+listFiles();
+</script>
+
+<!-- CREATE FILE / FOLDER MODAL -->
+<div id="createModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(8px);z-index:2000;align-items:center;justify-content:center;">
+  <div class="modal-content">
+    <h3 id="createTitle">Create</h3>
+
+    <div style="display:flex; gap:10px; margin-bottom:20px;">
+      <button onclick="selectCreateType('file')" id="fileBtn">File</button>
+      <button onclick="selectCreateType('folder')" id="folderBtn">Folder</button>
+    </div>
+
+    <div id="fileFields" style="display:none;">
+      <input id="fileName" placeholder="notes" width="80%">
+      <span id="dot">&nbsp;.&nbsp;</span>
+      <input id="fileExt" placeholder="txt" width="15%"><br><br>
+    </div>
+
+    <div id="folderFields" style="display:none;">
+      <label>Folder Name</label>
+      <input id="folderName" placeholder="assets">
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px;">
+      <button onclick="createConfirm()" style="background:var(--accent);color:white;border:none;">Create</button>
+      <button onclick="closeCreate()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
+

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Create Account</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  
+        font-family: 'Google Sans', 'Inter', sans-serif;
+}
+
+body {
+  background: #f6f5f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.signup-wrapper {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.signup-box {
+  background: #ffffff;
+  width: 100%;
+  max-width: 420px;
+  padding: 38px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.signup-box h2 {
+  font-size: 26px;
+  margin-bottom: 6px;
+  font-weight: 700;
+  color: #111;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 22px;
+}
+
+.input-group {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.signup-box input {
+  width: 100%;
+  padding: 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.signup-box input:focus {
+  border-color: #eba625;
+  box-shadow: 0 0 0 3px rgba(235, 166, 37, 0.2);
+}
+
+.btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  background: #b67719;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #997617;
+}
+
+.bottom-text {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #444;
+}
+
+.bottom-text a {
+  color: #ebac25;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.bottom-text a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .signup-box {
+    padding: 28px;
+  }
+
+  .signup-box h2 {
+    font-size: 22px;
+  }
+}
+
+.logo {
+  width: 70px;
+  height: 70px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="signup-wrapper">
+  <div class="signup-box">
+
+    <img src="./logo.png" alt="" class="logo">
+
+    <h2>Create Your Account</h2>
+    <p class="subtitle">Join Vasuki Cloud and start building magic</p>
+
+    <div class="input-group">
+      <input type="text" id="firstName" placeholder="First Name" />
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="lastName" placeholder="Last Name" />
+    </div>
+
+    <div class="input-group">
+      <input type="email" id="email" placeholder="Email" />
+    </div>
+
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Password" />
+    </div>
+
+    <button class="btn" onclick="submitSignup()">Sign Up</button>
+
+    <p class="bottom-text">
+      Already have an account? <a href="login.html">Login</a>
+    </p>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+window.submitSignup = async () => {
+  const first = document.getElementById("firstName").value.trim();
+  const last = document.getElementById("lastName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!first || !last || !email || !password) {
+    return alert("Fill all fields");
+  }
+
+  const name = `${first} ${last}`;
+
+  const { error } = await supabase
+    .from("users")
+    .insert([
+      {
+        username: email,
+        name,
+        password
+      }
+    ]);
+
+  if (error) {
+    alert("Signup failed: " + error.message);
+  } else {
+    alert("Account created. You can login now.");
+    window.location.href = "login.html";
+  }
+};
+</script>
+
+</body>
+</html>

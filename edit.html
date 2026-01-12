@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Edit File | Vasuki Cloud</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Monaco -->
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+
+<!-- Skulpt -->
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background: #0d1117;
+  color: #fff;
+}
+
+.topbar {
+  padding: 14px 20px;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttons button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.save { background: #0071e3; color: #fff; }
+.run { background: #2ea043; color: #fff; }
+.back { background: #6c757d; color: #fff; }
+
+#editor {
+  width: 100%;
+  height: calc(100vh - 260px);
+}
+
+#terminal {
+  height: 200px;
+  background: #010409;
+  color: #c9d1d9;
+  font-family: monospace;
+  padding: 12px;
+  overflow-y: auto;
+  border-top: 1px solid #30363d;
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div id="filePath">Loading...</div>
+  <div class="buttons">
+    <button class="save" onclick="saveFile()">Save</button>
+    <button class="run" onclick="handleRun()">Run</button>
+    <button class="back" onclick="goBack()">Back</button>
+  </div>
+</div>
+
+<div id="editor"></div>
+<div id="terminal"></div>
+
+<script>
+const BASE_URL = "https://vasuki-cloud-backend-production.up.railway.app";
+
+const params = new URLSearchParams(location.search);
+const email = params.get("email");
+const file = params.get("file");
+
+if (!email || !file) location.href = "index.html";
+document.getElementById("filePath").textContent = file;
+
+let editor;
+let previewWindow = null;
+
+/* LANGUAGE DETECTION */
+function getLanguage(f) {
+  if (f.endsWith(".html")) return "html";
+  if (f.endsWith(".css")) return "css";
+  if (f.endsWith(".js")) return "javascript";
+  if (f.endsWith(".json")) return "json";
+  if (f.endsWith(".py")) return "python";
+  return "plaintext";
+}
+
+/* LOAD FILE */
+async function loadFile() {
+  const r = await fetch(`${BASE_URL}/get-file-content`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ email, path: file })
+  });
+  const d = await r.json();
+  editor.setValue(d.content || "");
+}
+
+/* SAVE */
+async function saveFile() {
+  const content = editor.getValue();
+  await fetch(`${BASE_URL}/save-file-content`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ email, path: file, content })
+  });
+}
+
+/* BACK */
+function goBack() {
+  location.href = `dash.html?email=${encodeURIComponent(email)}`;
+}
+
+/* PREVIEW HTML */
+async function previewFile() {
+  const content = editor.getValue();
+  const baseUrl = `${BASE_URL}/download/${email}/${file.split("/").slice(0,-1).join("/")}/`;
+
+  const r = await fetch(`${BASE_URL}/preview-html`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ content, baseUrl })
+  });
+
+  const d = await r.json();
+  previewWindow = window.open(d.url, "_blank");
+}
+
+/* PYTHON ENGINE */
+function builtinRead(x) {
+  if (!Sk.builtinFiles || !Sk.builtinFiles["files"][x])
+    throw "File not found: " + x;
+  return Sk.builtinFiles["files"][x];
+}
+
+function runPython(code) {
+  const term = document.getElementById("terminal");
+  term.style.display = "block";
+  term.innerHTML = "";
+
+  Sk.configure({
+    output: t => term.innerHTML += t + "<br>",
+    read: builtinRead,
+    execLimit: 10000,
+    __future__: Sk.python3
+  });
+
+  /* ML + DL helper preload */
+  Sk.builtins.ml = Sk.ffi.remapToPy({
+    linear_regression(x, y) {
+      const n = x.length;
+      let sx=0, sy=0, sxy=0, sx2=0;
+      for (let i=0;i<n;i++){
+        sx+=x[i]; sy+=y[i];
+        sxy+=x[i]*y[i];
+        sx2+=x[i]*x[i];
+      }
+      return {
+        slope:(n*sxy-sx*sy)/(n*sx2-sx*sx),
+        intercept:(sy-( (n*sxy-sx*sy)/(n*sx2-sx*sx) )*sx)/n
+      };
+    },
+    array(a){ return a; },
+    mean(a){ return a.reduce((s,v)=>s+v,0)/a.length; }
+  });
+
+  Sk.misceval.asyncToPromise(() =>
+    Sk.importMainWithBody("<stdin>", false, code, true)
+  ).catch(err => {
+    term.innerHTML += `<span style="color:#ff5555">${err.toString()}</span>`;
+  });
+}
+
+/* RUN HANDLER */
+function handleRun() {
+  const code = editor.getValue();
+  if (file.endsWith(".py")) runPython(code);
+  else previewFile();
+}
+
+/* MONACO INIT */
+require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs" } });
+
+require(["vs/editor/editor.main"], () => {
+  editor = monaco.editor.create(document.getElementById("editor"), {
+    value: "",
+    language: getLanguage(file),
+    theme: "vs-dark",
+    automaticLayout: true,
+    fontSize: 14,
+    minimap: { enabled: false },
+    wordWrap: "on"
+  });
+  loadFile();
+});
+</script>
+
+</body>
+</html>

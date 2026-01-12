@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shared Assets | Vasuki Cloud</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg:#F5F5F7;
+    --card-bg:#fff;
+    --accent:#007AFF;
+    --text-main:#1D1D1F;
+    --text-sec:#86868B;
+    --glass-border:rgba(0,0,0,.08);
+}
+
+body {
+    margin:0;
+    font-family:Inter,-apple-system,sans-serif;
+    background:var(--bg);
+    color:var(--text-main);
+    user-select:none;
+}
+
+header {
+    max-width:1000px;
+    margin:auto;
+    padding:60px 30px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+}
+
+.container {
+    max-width:1000px;
+    margin:auto;
+    padding:0 30px 60px;
+}
+
+.grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:24px;
+}
+
+.card {
+    background:var(--card-bg);
+    border-radius:24px;
+    padding:16px;
+    border:1px solid var(--glass-border);
+    position:relative;
+}
+
+.preview-wrapper {
+    height:180px;
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+}
+
+.preview-wrapper img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    pointer-events:none;
+    -webkit-user-drag:none;
+}
+
+.block-layer {
+    position:absolute;
+    inset:0;
+    z-index:5;
+}
+
+.file-info {
+    padding:15px 5px 5px;
+}
+
+.file-name {
+    font-size:.9rem;
+    font-weight:600;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+.download-btn {
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:12px;
+    background:var(--accent);
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.read-only-shield {
+    position:absolute;
+    top:10px;
+    right:10px;
+    font-size:.6rem;
+    font-weight:700;
+    padding:4px 8px;
+    border-radius:8px;
+    background:rgba(255,255,255,.9);
+}
+
+.footer-note {
+    text-align:center;
+    padding:20px;
+    font-size:.8rem;
+    color:var(--text-sec);
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <div style="color:#007AFF;font-size:.75rem;font-weight:700;letter-spacing:2px">VASUKI ITECH VAULT</div>
+    <h2>Shared Assets</h2>
+  </div>
+  <div id="permBadge">Secure Link Active</div>
+</header>
+
+<div class="container">
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="footer-note">Protected by Vasuki Cloud Encryption</div>
+
+<script>
+const BASE_URL = "https://vasuki-cloud-backend-production.up.railway.app";
+const token = new URLSearchParams(location.search).get("token");
+
+if (!token) {
+  document.body.innerHTML = "Invalid share link";
+  throw "";
+}
+
+async function loadShare() {
+  const res = await fetch(`${BASE_URL}/shared-info/${token}`);
+  if (!res.ok) {
+    document.body.innerHTML = "Link expired or invalid";
+    return;
+  }
+  renderFiles(await res.json());
+}
+
+function renderFiles({ files, permission }) {
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+
+  if (permission === "read") {
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("dragstart", e => e.preventDefault());
+    document.addEventListener("keydown", e => {
+      if ((e.ctrlKey || e.metaKey) && ["s","u","p"].includes(e.key.toLowerCase()))
+        e.preventDefault();
+    });
+  }
+
+  files.forEach(f => {
+    const isImage = /\.(png|jpg|jpeg|gif|webp)$/i.test(f);
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      ${permission === "read" ? `<div class="read-only-shield">VIEW ONLY</div>` : ""}
+      <div class="preview-wrapper">
+        ${isImage
+          ? `<img src="${BASE_URL}/shared-file/${token}/${f}">`
+          : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:3rem">📄</div>`
+        }
+        ${permission === "read" ? `<div class="block-layer"></div>` : ""}
+      </div>
+      <div class="file-info">
+        <div class="file-name">${f}</div>
+        ${
+          permission === "download"
+          ? `<button class="download-btn" onclick="downloadFile('${f}')">⬇ Download</button>`
+          : `<div style="text-align:center;font-size:.75rem;color:#86868B">View only</div>`
+        }
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+function downloadFile(f) {
+  window.open(`${BASE_URL}/shared-file/${token}/${f}`, "_blank");
+}
+
+loadShare();
+</script>
+
+</body>
+</html>
