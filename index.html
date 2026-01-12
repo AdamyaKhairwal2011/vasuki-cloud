@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neem | Vasuki iTech Cloud</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-gold: #bd8317;
+            --brand-gold-hover: #9e701b;
+            --text-main: #3c4043;
+            --text-light: #70757a;
+            --border: #dadce0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+
+        body {
+            font-family: 'Google Sans', 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: var(--text-main);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            height: 64px;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 20px;
+            color: #68655f;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            height: 60px;
+            width: 60px;
+            transform: translateY(-5px);
+            margin-right: 0.85vw;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 24px;
+        }
+
+        .nav-links {
+            position: absolute;
+            right: 2vw;
+        }
+
+        /* Hero Container */
+        .hero-wrap {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f1f3f4 100%);
+        }
+
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            padding: 0 20px;
+            pointer-events: none; /* Allows mouse to hit canvas behind text */
+        }
+
+        .hero-content * { pointer-events: auto; }
+
+        .hero-content span {
+            color: var(--brand-gold);
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: clamp(32px, 6vw, 56px);
+            font-weight: 500;
+            color: #202124;
+            line-height: 1.2;
+            margin-bottom: 24px;
+        }
+
+        .btn-pill {
+            display: inline-block;
+            background-color: var(--brand-gold);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 100px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            padding: 32px;
+            border-radius: 16px;
+            background: white;
+        }
+
+        .heading-logo {
+            font-size: 21px;
+            font-weight: 600;
+            float: left;
+        }
+
+        .card h3 { margin-bottom: 12px; font-weight: 500; }
+        .card p { color: var(--text-light); font-size: 15px; }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 0px 50px 0px 10px;
+
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <img src="./logo.png" alt="" class="logo">
+        <span class="heading-logo">
+            Vasuki Cloud
+        </span>
+        <div class="nav-links">
+            <a href="./login.html">Login</a>
+            <a href="mailto:codeclutch.adamyarao@gmail.com">Support</a>
+        </div>
+    </nav>
+
+    <div class="hero-wrap">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <span>Vasuki Neem</span>
+            <h1>Simple, scalable cloud storage for everyone.</h1>
+            <p style="margin-bottom: 30px; color: var(--text-light);">Prioritizing startups and individual creators with forever-free storage.</p>
+            <a href="./signup.html" class="btn-pill">Get Started for Free</a>
+        </div>
+    </div>
+
+    <section class="features">
+        <div class="card">
+            <h3>Unlimited Life</h3>
+            <p>From simple image assets to complex multi-terabyte application backends, Bringing life into your files, one leaf of Neem at a time.</p>
+        </div>
+        <div class="card">
+            <h3>Permission Based Sharing</h3>
+            <p>Deploy client demos or photography portfolios instantly. Share a URL and select permission for user who views.</p>
+        </div>
+        <div class="card">
+            <h3>Cloud Editing</h3>
+            <p>Develop and manage your full-stack applications directly in the cloud environment, accessible anywhere.</p>
+        </div>
+    </section>
+
+    <script>
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        let points = [];
+        const mouse = { x: -1000, y: -1000 };
+        let width, height;
+
+        function init() {
+            width = canvas.width = canvas.offsetWidth;
+            height = canvas.height = canvas.offsetHeight;
+            points = [];
+            
+            const count = 155; // Number of points across the sphere
+            const radius = Math.min(width, height) * 0.35;
+
+            // Create points in a spherical distribution
+            for (let i = 0; i < count; i++) {
+                let lat = Math.acos(-1 + (2 * i) / count);
+                let lon = Math.sqrt(count * Math.PI) * lat;
+
+                points.push({
+                    x: radius * Math.sin(lat) * Math.cos(lon),
+                    y: radius * Math.sin(lat) * Math.sin(lon),
+                    z: radius * Math.cos(lat),
+                    baseRadius: radius
+                });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.save();
+            ctx.translate(width / 2, height / 2);
+
+            const rotationSpeed = Date.now() * 0.0005;
+
+            points.forEach(p => {
+                // Basic 3D rotation
+                let x1 = p.x * Math.cos(rotationSpeed) - p.z * Math.sin(rotationSpeed);
+                let z1 = p.z * Math.cos(rotationSpeed) + p.x * Math.sin(rotationSpeed);
+                
+                let y2 = p.y * Math.cos(rotationSpeed * 0.5) - z1 * Math.sin(rotationSpeed * 0.5);
+                let z2 = z1 * Math.cos(rotationSpeed * 0.5) + p.y * Math.sin(rotationSpeed * 0.5);
+
+                // Perspective projection
+                let perspective = 600 / (600 + z2);
+                let drawX = x1 * perspective;
+                let drawY = y2 * perspective;
+
+                // Bulge logic
+                let dx = (mouse.x - width / 2) - drawX;
+                let dy = (mouse.y - height / 2) - drawY;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < 150) {
+                    let push = (150 - dist) * 0.15;
+                    drawX -= (dx / dist) * push;
+                    drawY -= (dy / dist) * push;
+                }
+
+                // Draw Dot
+                let opacity = (z2 + p.baseRadius) / (2 * p.baseRadius);
+                ctx.fillStyle = `rgba(189, 131, 23, ${opacity * 0.6})`;
+                ctx.beginPath();
+                ctx.arc(drawX, drawY, 2.5 * perspective, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            ctx.restore();
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+
+        window.addEventListener('resize', init);
+        init();
+        draw();
+    </script>
+</body>
+</html>
