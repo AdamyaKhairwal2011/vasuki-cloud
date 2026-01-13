@@ -4,142 +4,291 @@
 <meta charset="UTF-8">
 <title>Guppt | Vasuki iTech Cloud</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
+  /* Heading Typography */
+  @font-face {
+    font-family: 'VasukiCustom';
+    src: url('custom.ttf') format('truetype');
+    font-display: swap;
+  }
+
   :root {
     --brand-gold: #bd8317;
-    --brand-gold-hover: #9e701b;
+    --brand-gold-dark: #332818;
     --text-main: #3c4043;
     --text-light: #70757a;
     --border: #dadce0;
-    --bg-light: #ffffff;
-    --bg-alt: #f8f9fa;
-    --error: #d93025;
+    --bg-white: #ffffff;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', arial, sans-serif; background: var(--bg-light); color: var(--text-main); line-height: 1.5; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg-white); color: var(--text-main); overflow-x: hidden; }
 
-  nav { height: 64px; display: flex; align-items: center; padding: 0 40px; background: white; border-bottom: 1px solid #f1f3f4; position: sticky; top: 0; z-index: 100; }
-  .nav-title { font-weight: 500; font-size: 18px; color: #5f6368; margin-left: 10px; font-family: 'Google Sans', sans-serif; }
+  /* Interactive Background */
+  #hero-wrap {
+    position: relative;
+    height: 600px;
+    background: linear-gradient(to bottom, #745d3c, #5a462a);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    z-index: 1;
+    transition: all 0.5s ease;
+  }
 
-  .container { max-width: 1000px; margin: 40px auto; padding: 0 24px; }
-  .center-vh { height: calc(100vh - 64px); display: flex; align-items: center; justify-content: center; padding: 20px; }
+  #dotCanvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+  }
 
-  .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 32px; width: 100%; max-width: 400px; box-shadow: 0 1px 3px rgba(60,64,67,0.2); }
-  h2 { font-family: 'Google Sans', sans-serif; font-weight: 500; margin-bottom: 8px; font-size: 24px; color: #202124; display: flex; align-items: center; gap: 10px; }
-  .desc { color: var(--text-light); font-size: 14px; margin-bottom: 24px; }
+  /* Navigation */
+  nav {
+    position: absolute;
+    top: 0; width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 60px;
+    z-index: 10;
+  }
+  .logo { font-family: 'VasukiCustom', sans-serif; font-size: 24px; color: white; text-decoration: none; }
 
-  input { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; margin-bottom: 16px; transition: border-color 0.2s; }
-  input:focus { outline: none; border-color: var(--brand-gold); }
+  /* Hero Content */
+  .hero-tag { text-transform: uppercase; letter-spacing: 3px; font-size: 12px; margin-bottom: 20px; opacity: 0.9; }
+  .hero-title { 
+    font-family: 'VasukiCustom', sans-serif; 
+    font-size: clamp(32px, 8vw, 72px); 
+    line-height: 1.1; 
+    margin-bottom: 24px; 
+    padding: 0 20px;
+  }
+  .hero-p { font-size: 18px; max-width: 600px; opacity: 0.8; margin-bottom: 40px; padding: 0 20px; }
 
-  button { cursor: pointer; border-radius: 4px; font-size: 14px; font-family: 'Google Sans', sans-serif; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-  
-  .btn-primary { background: var(--brand-gold); color: white; border: none; padding: 10px 24px; }
-  .btn-primary:hover { background: var(--brand-gold-hover); }
-  .btn-outline { background: white; border: 1px solid var(--border); color: var(--text-main); padding: 8px 16px; }
-  .btn-outline:hover { background: var(--bg-alt); }
+  .btn-primary-lux {
+    background: var(--brand-gold-dark);
+    color: white;
+    padding: 16px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary-lux:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
 
-  .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
-  .add-box { background: var(--bg-alt); border-radius: 12px; padding: 24px; display: grid; grid-template-columns: 1fr 1fr 150px; gap: 16px; margin-bottom: 30px; border: 1px solid var(--border); align-items: end; }
-  .add-box input { margin-bottom: 0; background: white; }
+  /* Main Sections */
+  .section-card {
+    max-width: 1000px;
+    margin: -60px auto 100px;
+    background: white;
+    border-radius: 16px;
+    padding: 48px;
+    position: relative;
+    z-index: 5;
+    transition: opacity 0.5s ease;
+  }
 
-  .list-container { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .row { display: grid; grid-template-columns: 1fr 1fr 48px 48px 48px; gap: 8px; padding: 12px 16px; border-bottom: 1px solid #f1f3f4; align-items: center; }
-  .row:last-child { border-bottom: none; }
-  .row:hover { background: #fafafa; }
-  .row input { margin-bottom: 0; padding: 8px 12px; font-size: 13px; background: transparent; border-color: transparent; }
-  .row input:focus { background: white; border-color: var(--border); }
+  .login-card { max-width: 450px; text-align: center; }
 
-  .btn-icon { background: none; border: none; padding: 10px; color: var(--text-light); border-radius: 50%; width: 40px; height: 40px; }
-  .btn-icon:hover { background: #f1f3f4; color: var(--text-main); }
-  .btn-del:hover { color: var(--error); background: #fdeaea; }
+  /* Vault UI */
+  .vault-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+  .vault-header h2 { font-family: 'VasukiCustom', sans-serif; font-size: 32px; }
 
-  #toast-wrap { position: fixed; bottom: 24px; left: 24px; z-index: 1000; }
-  .toast { background: #323232; color: white; padding: 12px 24px; border-radius: 4px; font-size: 14px; margin-top: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); animation: slideUp 0.3s cubic-bezier(0,0,0.2,1); }
-  
-  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .add-secret-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 180px;
+    gap: 16px;
+    background: #f8f9fa;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 32px;
+    border: 1px solid var(--border);
+  }
+
+  input { width: 100%; padding: 14px 18px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; transition: border 0.2s; }
+  input:focus { border-color: var(--brand-gold); }
+
+  .secret-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 44px 44px 44px;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+  }
+  .secret-row:hover { background: #fafafa; }
+  .secret-row input { border-color: transparent; background: transparent; padding: 8px; }
+  .secret-row input:focus { border-color: var(--border); background: white; }
+
+  .icon-btn { 
+    background: none; border: none; cursor: pointer; color: var(--text-light); 
+    padding: 10px; border-radius: 50%; transition: 0.2s; display: flex; align-items: center; justify-content: center;
+  }
+  .icon-btn:hover { background: #eee; color: var(--brand-gold); }
+  .btn-del:hover { color: #d93025; background: #fff1f0; }
+
+  /* Dashboard Adjustments */
+  #dashboardSection.active { margin-top: 100px; }
+
+  /* Utility */
+  #toast-wrap { position: fixed; bottom: 30px; left: 30px; z-index: 9999; }
+  .toast { background: #1a1a1a; color: white; padding: 14px 28px; border-radius: 8px; margin-top: 10px; font-size: 14px; }
   .hidden { display: none !important; }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    nav { padding: 0 24px; }
+    .section-card { padding: 24px; margin-left: 15px; margin-right: 15px; }
+    .add-secret-bar { grid-template-columns: 1fr; }
+    .secret-row { 
+      grid-template-columns: 1fr 1fr; 
+      gap: 8px;
+    }
+    .secret-row .icon-btn { grid-row: 2; justify-self: center; }
+    .vault-header h2 { font-size: 24px; }
+  }
 </style>
 </head>
-
 <body>
-
-<nav id="navbar">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--brand-gold)">
-    <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 16.9c-3.11-.9-5.50-4.38-5.50-8.20V6.30l5.50-2.06 5.50 2.06v4.40c0 3.82-2.39 7.30-5.50 8.20z"/>
-  </svg>
-  <span class="nav-title">Vasuki Guppt</span>
-</nav>
 
 <div id="toast-wrap"></div>
 
-<div class="center-vh" id="login">
-  <div class="card">
-    <h2>Sign in</h2>
-    <p class="desc">Access your encrypted secrets</p>
-    <input id="emailField" type="email" placeholder="Email or username">
-    <input id="passwordField" type="password" placeholder="Password">
-    <div style="display:flex; justify-content: flex-end; margin-top: 10px;">
-      <button class="btn-primary" id="loginBtn" onclick="login()">Continue</button>
+<nav id="mainNav">
+  <a href="#" class="logo" id="navLogo">Vasuki Guppt</a>
+</nav>
+
+<div id="landingView">
+  <div id="hero-wrap">
+    <canvas id="dotCanvas"></canvas>
+    <div id="hero-content">
+      <p class="hero-tag">Enterprise Security</p>
+      <h1 class="hero-title">Simple, secure cloud<br>secrets for everyone.</h1>
+      <p class="hero-p">Prioritizing Vasuki iTech projects with encrypted, real-time secret management and API access.</p>
+      <button class="btn-primary-lux" onclick="document.getElementById('emailField').focus()">Get Started for Free</button>
     </div>
+  </div>
+
+  <div id="loginSection" class="section-card login-card">
+    <h2 style="font-family: 'VasukiCustom'; margin-bottom: 10px;">Sign In</h2>
+    <p style="color: var(--text-light); margin-bottom: 30px; font-size: 14px;">Access your encrypted vault</p>
+    <input id="emailField" type="email" placeholder="CEO Email / Username"><br><br>
+    <input id="passwordField" type="password" placeholder="Master Password"><br><br>
+    <button class="btn-primary-lux" style="width: 100%; justify-content: center;" id="loginBtn" onclick="login()">Enter Vault</button>
   </div>
 </div>
 
-<div id="GupptUI" class="container hidden">
-  <div class="header-flex">
-    <div>
-      <h2>Secure Vault</h2>
-      <p class="desc" style="margin-bottom:0">Manage your protected endpoints</p>
-    </div>
-    <button class="btn-outline" onclick="exportJSON()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-      Export JSON
+<div id="dashboardSection" class="section-card hidden">
+  <div class="vault-header">
+    <h2>Secure Vault</h2>
+    <button class="icon-btn" onclick="exportJSON()" title="Export Vault">
+       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
     </button>
   </div>
 
-  <div class="add-box">
-    <div>
-      <p style="font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--text-light)">IDENTIFIER</p>
-      <input id="newKey" placeholder="e.g. STRIPE_PROD">
-    </div>
-    <div>
-      <p style="font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--text-light)">SECRET VALUE</p>
-      <input id="newValue" placeholder="••••••••••••">
-    </div>
-    <button class="btn-primary" onclick="add()">Add Secret</button>
+  <div class="add-secret-bar">
+    <input id="newKey" placeholder="Identifier (e.g. STRIPE_KEY)">
+    <input id="newValue" placeholder="Secret Value" type="password">
+    <button class="btn-primary-lux" onclick="addSecret()">Add Secret</button>
   </div>
 
-  <div id="list" class="list-container"></div>
+  <div id="vaultList"></div>
+  <center style="margin-top: 40px;">
+    <button class="btn-primary-lux" style="background:transparent; color: var(--text-light); border: 1px solid var(--border);" onclick="location.reload()">Logout</button>
+  </center>
 </div>
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const params = new URLSearchParams(window.location.search);
-const apiEmail = params.get("email");
-const apiKey = params.get("key");
-
+/* CONFIG */
 const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
-const API = "https://vasuki-cloud-backend-production.up.railway.app";
+const API_BASE = "https://vasuki-cloud-backend-production.up.railway.app";
 const PATH = "user_config_vasuki/Guppt.json";
 const SECRET_KEY = "VASUKI_Guppt_MASTER_KEY_2025";
 const DOMAIN = "https://vasuki.cloud/guppt/";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUserEmail = "";
-let GupptData = {};
+let currentUser = "";
+let vaultData = {};
+
+/* INTERACTIVE DOTS */
+const canvas = document.getElementById('dotCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const mouse = { x: null, y: null, radius: 120 };
+
+window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+
+class Particle {
+  constructor(x, y) {
+    this.x = x; this.y = y;
+    this.baseX = x; this.baseY = y;
+    this.size = 1.5;
+    this.density = (Math.random() * 30) + 1;
+  }
+  draw() {
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  update() {
+    let dx = mouse.x - this.x;
+    let dy = mouse.y - this.y;
+    let distance = Math.sqrt(dx*dx + dy*dy);
+    if (distance < mouse.radius) {
+      let force = (mouse.radius - distance) / mouse.radius;
+      this.x -= (dx / distance) * force * this.density;
+      this.y -= (dy / distance) * force * this.density;
+    } else {
+      if (this.x !== this.baseX) this.x -= (this.x - this.baseX) / 15;
+      if (this.y !== this.baseY) this.y -= (this.y - this.baseY) / 15;
+    }
+  }
+}
+
+function init() {
+  canvas.width = window.innerWidth;
+  canvas.height = 600;
+  particles = [];
+  for (let i = 0; i < (canvas.width * canvas.height) / 5000; i++) {
+    particles.push(new Particle(Math.random()*canvas.width, Math.random()*canvas.height));
+  }
+}
+function animate() {
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animate);
+}
+init(); animate();
+window.addEventListener('resize', init);
+
+/* VAULT LOGIC */
+const params = new URLSearchParams(window.location.search);
+const apiEmail = params.get("email");
+const apiKey = params.get("key");
 
 function notify(msg) {
   const wrap = document.getElementById('toast-wrap');
   const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
   wrap.appendChild(t);
-  setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 3000);
+  setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(), 400); }, 3000);
 }
 
-/* CRYPTO CORE */
 async function getCryptoKey(){
   const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(SECRET_KEY));
   return crypto.subtle.importKey("raw", hash, "AES-GCM", false, ["encrypt","decrypt"]);
@@ -161,162 +310,104 @@ async function decrypt(data){
   } catch(e) { return "{}"; }
 }
 
-/* API MODE HANDLER */
-async function runAPIMode() {
-  document.body.innerHTML = "Loading JSON...";
-  try {
-    const r = await fetch(API + "/get-file-content", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: apiEmail, path: PATH })
-    });
-    const res = await r.json();
-    if (!res.content) throw "Vault not found";
-
-    const decrypted = await decrypt(res.content);
-    const vault = JSON.parse(decrypted);
-
-    if (!vault[apiKey]) throw "Key not found in vault";
-
-    const output = {
-      key: apiKey,
-      value: vault[apiKey].value || vault[apiKey], // Handles both new and old formats
-      owner: apiEmail,
-      status: "success",
-      ts: Date.now()
-    };
-
-    document.open();
-    document.write(`<pre style="word-wrap: break-word; white-space: pre-wrap;">${JSON.stringify(output, null, 2)}</pre>`);
-    document.close();
-  } catch (e) {
-    document.open();
-    document.write(JSON.stringify({ error: String(e), status: "failed" }));
-    document.close();
-  }
-}
-
-/* AUTH & VAULT UI */
 window.login = async function(){
-  const e=document.getElementById("emailField").value.trim().toLowerCase();
-  const p=document.getElementById("passwordField").value;
-  if(!e||!p) return notify("Enter credentials");
+  const e = document.getElementById("emailField").value.trim().toLowerCase();
+  const p = document.getElementById("passwordField").value;
+  const btn = document.getElementById("loginBtn");
+  if(!e || !p) return notify("Enter credentials");
+  
+  btn.innerText = "Verifying...";
+  const { data } = await supabase.from("users").select("*");
+  const user = data?.find(u => u.username.toLowerCase() === e && u.password === p);
 
-  const btn=document.getElementById("loginBtn");
-  btn.disabled=true; btn.textContent="Verifying...";
-
-  try {
-    const { data, error } = await supabase.from("users").select("*");
-    if(error) throw error;
-    const user = data.find(u => u.username.toLowerCase() === e && u.password === p);
-    
-    if(!user){ 
-      notify("Invalid credentials"); 
-      btn.disabled=false; btn.textContent="Continue"; 
-      return;
-    }
-
-    currentUserEmail = e; 
-    document.getElementById("login").classList.add("hidden"); 
-    document.getElementById("GupptUI").classList.remove("hidden");
+  if(user){
+    currentUser = e;
+    document.getElementById("landingView").classList.add("hidden");
+    document.getElementById("navLogo").style.color = "var(--brand-gold)";
+    document.getElementById("mainNav").style.position = "relative";
+    document.getElementById("dashboardSection").classList.remove("hidden");
+    document.getElementById("dashboardSection").classList.add("active");
     loadVault();
-  } catch(err) {
-    notify("Auth Error"); 
-    btn.disabled=false; 
+  } else {
+    notify("Auth Failed");
+    btn.innerText = "Enter Vault";
   }
 };
 
 async function loadVault(){
-  try {
-    const r = await fetch(API+"/get-file-content", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email: currentUserEmail, path:PATH})});
-    const res = await r.json();
-    if(res.content) {
-      const dec = await decrypt(res.content);
-      GupptData = JSON.parse(dec);
-    }
-  } catch(e) { GupptData = {}; }
-  render();
+  const r = await fetch(API_BASE+"/get-file-content", {
+    method:"POST", headers:{"Content-Type":"application/json"}, 
+    body:JSON.stringify({email: currentUser, path:PATH})
+  });
+  const res = await r.json();
+  if(res.content) vaultData = JSON.parse(await decrypt(res.content));
+  renderVault();
 }
 
-async function saveVault(){
-  const enc = await encrypt(JSON.stringify(GupptData));
-  await fetch(API+"/save-file-content", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email: currentUserEmail, path:PATH, content:enc})});
-  notify("Vault Synced");
-  render();
+async function syncVault(){
+  const enc = await encrypt(JSON.stringify(vaultData));
+  await fetch(API_BASE+"/save-file-content", {
+    method:"POST", headers:{"Content-Type":"application/json"}, 
+    body:JSON.stringify({email: currentUser, path:PATH, content:enc})
+  });
+  notify("Cloud Synced");
+  renderVault();
 }
 
-function render(){
-  const list = document.getElementById("list"); 
+function renderVault(){
+  const list = document.getElementById("vaultList");
   list.innerHTML = "";
-  const keys = Object.keys(GupptData);
-
-  if(!keys.length){
-    list.innerHTML = "<div style='padding:60px; text-align:center; color:var(--text-light);'>Vault is empty.</div>";
-    return;
-  }
-
-  keys.forEach(key => {
-    const row = document.createElement("div"); row.className = "row";
-    const valObj = GupptData[key];
-    const actualValue = (typeof valObj === 'object') ? valObj.value : valObj;
-
-    const kInput = document.createElement("input"); kInput.value = key;
-    const vInput = document.createElement("input"); vInput.value = actualValue; vInput.type = "password";
-    vInput.onfocus = () => vInput.type = "text";
-    vInput.onblur = () => vInput.type = "password";
-
-    const saveBtn = document.createElement("button"); saveBtn.className="btn-icon"; 
-    saveBtn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`;
-
-    const copyBtn = document.createElement("button"); copyBtn.className="btn-icon"; 
-    copyBtn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
-
-    const delBtn = document.createElement("button"); delBtn.className="btn-icon btn-del"; 
-    delBtn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
-
-    saveBtn.onclick = async () => {
-      const newKeyName = kInput.value.trim();
-      if(!newKeyName) return;
-      delete GupptData[key];
-      GupptData[newKeyName] = { value: vInput.value };
-      await saveVault();
-    };
-
-    copyBtn.onclick = () => {
-      const apiUrl = `${DOMAIN}?email=${encodeURIComponent(currentUserEmail)}&key=${encodeURIComponent(key)}`;
-      navigator.clipboard.writeText(apiUrl);
-      notify("API URL Copied");
-    };
-
-    delBtn.onclick = async () => {
-      if(confirm("Delete secret?")) { delete GupptData[key]; await saveVault(); }
-    };
-
-    row.append(kInput, vInput, saveBtn, copyBtn, delBtn); 
+  Object.keys(vaultData).forEach(key => {
+    const val = vaultData[key]?.value || vaultData[key];
+    const row = document.createElement("div");
+    row.className = "secret-row";
+    row.innerHTML = `
+      <input value="${key}" id="k-${key}">
+      <input value="${val}" type="password" id="v-${key}" onfocus="this.type='text'" onblur="this.type='password'">
+      <button class="icon-btn" onclick="updateSecret('${key}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg></button>
+      <button class="icon-btn" onclick="copyApi('${key}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+      <button class="icon-btn btn-del" onclick="deleteSecret('${key}')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+    `;
     list.appendChild(row);
   });
 }
 
-window.add = async () => {
+window.addSecret = () => {
   const k = document.getElementById("newKey").value.trim();
   const v = document.getElementById("newValue").value;
-  if(!k) return notify("Key name required");
-  GupptData[k] = { value: v };
-  document.getElementById("newKey").value = "";
-  document.getElementById("newValue").value = "";
-  await saveVault();
+  if(k) { vaultData[k] = { value: v }; syncVault(); }
+};
+
+window.updateSecret = (oldKey) => {
+  const newK = document.getElementById(`k-${oldKey}`).value;
+  const newV = document.getElementById(`v-${oldKey}`).value;
+  delete vaultData[oldKey]; vaultData[newK] = { value: newV };
+  syncVault();
+};
+
+window.deleteSecret = (k) => { if(confirm(`Delete ${k}?`)) { delete vaultData[k]; syncVault(); } };
+
+window.copyApi = (k) => {
+  navigator.clipboard.writeText(`${DOMAIN}?email=${encodeURIComponent(currentUser)}&key=${encodeURIComponent(k)}`);
+  notify("Copied API Link");
 };
 
 window.exportJSON = () => {
-  navigator.clipboard.writeText(JSON.stringify(GupptData, null, 2));
-  notify("Exported to clipboard");
+  navigator.clipboard.writeText(JSON.stringify(vaultData, null, 2));
+  notify("JSON Copied");
 };
 
-// Start logic
-if (apiKey) {
-  runAPIMode();
+/* API REDIRECT */
+if (apiKey && apiEmail) {
+  document.body.innerHTML = "<div style='color:#745d3c; padding:20px;'>Fetching...</div>";
+  (async () => {
+    try {
+      const r = await fetch(API_BASE + "/get-file-content", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: apiEmail, path: PATH }) });
+      const vault = JSON.parse(await decrypt((await r.json()).content));
+      document.body.innerHTML = `<pre style="padding:20px;">${JSON.stringify({ key: apiKey, value: vault[apiKey]?.value || vault[apiKey], status: "success" }, null, 2)}</pre>`;
+    } catch (e) { document.body.innerHTML = '{"error": "Unauthorized"}'; }
+  })();
 }
 </script>
-
 </body>
 </html>
