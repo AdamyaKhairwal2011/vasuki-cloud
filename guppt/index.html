@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Guppt | Vasuki iTech Cloud</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --brand-gold: #bd8317;
+    --brand-gold-hover: #9e701b;
+    --text-main: #3c4043;
+    --text-light: #70757a;
+    --border: #dadce0;
+    --bg-light: #ffffff;
+    --bg-alt: #f8f9fa;
+    --error: #d93025;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', arial, sans-serif; background: var(--bg-light); color: var(--text-main); line-height: 1.5; }
+
+  /* Navigation */
+  nav { height: 64px; display: flex; align-items: center; padding: 0 40px; background: white; border-bottom: 1px solid #f1f3f4; position: sticky; top: 0; z-index: 100; }
+  .nav-title { font-weight: 500; font-size: 18px; color: #5f6368; margin-left: 10px; font-family: 'Google Sans', sans-serif; }
+
+  /* Layout */
+  .container { max-width: 1000px; margin: 40px auto; padding: 0 24px; }
+  .center-vh { height: calc(100vh - 64px); display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+  /* Card & Forms */
+  .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 32px; width: 100%; max-width: 400px; box-shadow: 0 1px 3px rgba(60,64,67,0.2); }
+  h2 { font-family: 'Google Sans', sans-serif; font-weight: 500; margin-bottom: 8px; font-size: 24px; color: #202124; display: flex; align-items: center; gap: 10px; }
+  .desc { color: var(--text-light); font-size: 14px; margin-bottom: 24px; }
+
+  input { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 4px; font-size: 14px; margin-bottom: 16px; transition: border-color 0.2s; }
+  input:focus { outline: none; border-color: var(--brand-gold); }
+
+  button { cursor: pointer; border-radius: 4px; font-size: 14px; font-family: 'Google Sans', sans-serif; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  
+  .btn-primary { background: var(--brand-gold); color: white; border: none; padding: 10px 24px; }
+  .btn-primary:hover { background: var(--brand-gold-hover); }
+  .btn-outline { background: white; border: 1px solid var(--border); color: var(--text-main); padding: 8px 16px; }
+  .btn-outline:hover { background: var(--bg-alt); }
+
+  /* Guppt UI Specifics */
+  .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
+  .add-box { background: var(--bg-alt); border-radius: 12px; padding: 24px; display: grid; grid-template-columns: 1fr 1fr 150px; gap: 16px; margin-bottom: 30px; border: 1px solid var(--border); align-items: end; }
+  .add-box input { margin-bottom: 0; background: white; }
+
+  .list-container { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .row { display: grid; grid-template-columns: 1fr 1fr 48px 48px 48px; gap: 8px; padding: 12px 16px; border-bottom: 1px solid #f1f3f4; align-items: center; }
+  .row:last-child { border-bottom: none; }
+  .row:hover { background: #fafafa; }
+  .row input { margin-bottom: 0; padding: 8px 12px; font-size: 13px; background: transparent; border-color: transparent; }
+  .row input:focus { background: white; border-color: var(--border); }
+
+  .btn-icon { background: none; border: none; padding: 10px; color: var(--text-light); border-radius: 50%; width: 40px; height: 40px; }
+  .btn-icon:hover { background: #f1f3f4; color: var(--text-main); }
+  .btn-del:hover { color: var(--error); background: #fdeaea; }
+
+  /* Toast Messages */
+  #toast-wrap { position: fixed; bottom: 24px; left: 24px; z-index: 1000; }
+  .toast { background: #323232; color: white; padding: 12px 24px; border-radius: 4px; font-size: 14px; margin-top: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); animation: slideUp 0.3s cubic-bezier(0,0,0.2,1); }
+  
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .hidden { display: none !important; }
+</style>
+</head>
+
+<body>
+
+<nav>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--brand-gold)">
+    <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 16.9c-3.11-.9-5.50-4.38-5.50-8.20V6.30l5.50-2.06 5.50 2.06v4.40c0 3.82-2.39 7.30-5.50 8.20z"/>
+  </svg>
+  <span class="nav-title">Vasuki Guppt</span>
+</nav>
+
+<div id="toast-wrap"></div>
+
+<div class="center-vh" id="login">
+  <div class="card">
+    <h2>Sign in</h2>
+    <p class="desc">Access your encrypted secrets</p>
+    <input id="email" type="email" placeholder="Email or username">
+    <input id="password" type="password" placeholder="Password">
+    <div style="display:flex; justify-content: flex-end; margin-top: 10px;">
+      <button class="btn-primary" id="loginBtn" onclick="login()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<div id="GupptUI" class="container hidden">
+  <div class="header-flex">
+    <div>
+      <h2>Secure Vault</h2>
+      <p class="desc" style="margin-bottom:0">Manage your protected endpoints</p>
+    </div>
+    <button class="btn-outline" onclick="exportJSON()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      Export JSON
+    </button>
+  </div>
+
+  <div class="add-box">
+    <div>
+      <p style="font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--text-light)">IDENTIFIER</p>
+      <input id="newKey" placeholder="e.g. STRIPE_PROD">
+    </div>
+    <div>
+      <p style="font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--text-light)">SECRET VALUE</p>
+      <input id="newValue" placeholder="••••••••••••">
+    </div>
+    <button class="btn-primary" onclick="add()">Add Secret</button>
+  </div>
+
+  <div id="list" class="list-container"></div>
+</div>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
+const API = "https://vasuki-cloud-backend-production.up.railway.app";
+const PATH = "user_config_vasuki/Guppt.json";
+const SECRET_KEY = "VASUKI_Guppt_MASTER_KEY_2025";
+const DOMAIN = "https://vasuki.cloud/guppt/";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+let email = "";
+let Guppt = {};
+
+function notify(msg) {
+  const wrap = document.getElementById('toast-wrap');
+  const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 3000);
+}
+
+/* AUTH */
+window.login = async function(){
+  const e=document.getElementById("email").value.trim().toLowerCase();
+  const p=document.getElementById("password").value;
+  if(!e||!p) return notify("Enter credentials");
+
+  const btn=document.getElementById("loginBtn");
+  btn.disabled=true; btn.textContent="Verifying...";
+
+  try {
+    const { data, error } = await supabase.from("users").select("*");
+    if(error) throw error;
+    const user = data.find(u => u.username.toLowerCase() === e && u.password === p);
+    
+    if(!user){ 
+      notify("Invalid credentials"); 
+      btn.disabled=false; btn.textContent="Continue"; 
+      return;
+    }
+
+    email = e; 
+    document.getElementById("login").classList.add("hidden"); 
+    document.getElementById("GupptUI").classList.remove("hidden");
+    loadGuppt();
+  } catch(err) {
+    notify("Authentication failed"); 
+    btn.disabled=false; 
+    btn.textContent="Continue";
+  }
+};
+
+/* CRYPTO */
+async function getKey(){
+  const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(SECRET_KEY));
+  return crypto.subtle.importKey("raw", hash, "AES-GCM", false, ["encrypt","decrypt"]);
+}
+async function encrypt(text){
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await getKey();
+  const enc = await crypto.subtle.encrypt({name:"AES-GCM",iv}, key, new TextEncoder().encode(text));
+  return btoa(String.fromCharCode(...iv))+"."+btoa(String.fromCharCode(...new Uint8Array(enc)));
+}
+async function decrypt(data){
+  try {
+    const [ivB, encB] = data.split(".");
+    const iv = Uint8Array.from(atob(ivB), c=>c.charCodeAt(0));
+    const enc = Uint8Array.from(atob(encB), c=>c.charCodeAt(0));
+    const key = await getKey();
+    const dec = await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, enc);
+    return new TextDecoder().decode(dec);
+  } catch(e) { return "{}"; }
+}
+
+/* STORAGE */
+async function ensure(){
+  await fetch(API+"/create-folder", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email, name:"user_config_vasuki"})});
+  await fetch(API+"/create-file", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email, folder:"user_config_vasuki", name:"Guppt", extension:"json"})});
+}
+
+async function loadGuppt(){
+  await ensure();
+  try {
+    const r = await fetch(API+"/get-file-content", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email, path:PATH})});
+    const res = await r.json();
+    if(res.content) {
+      const dec = await decrypt(res.content);
+      Guppt = JSON.parse(dec);
+    } else {
+      Guppt = {};
+    }
+  } catch(e) { Guppt = {}; }
+  render();
+}
+
+async function save(){
+  const enc = await encrypt(JSON.stringify(Guppt));
+  await fetch(API+"/save-file-content", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email, path:PATH, content:enc})});
+  notify("Vault Synced");
+  render();
+}
+
+/* RENDERING */
+function render(){
+  const list = document.getElementById("list"); 
+  list.innerHTML = "";
+  const keys = Object.keys(Guppt);
+
+  if(!keys.length){
+    list.innerHTML = "<div style='padding:60px; text-align:center; color:var(--text-light); font-size:14px;'>Your vault is currently empty.</div>";
+    return;
+  }
+
+  keys.forEach(key => {
+    const row = document.createElement("div"); row.className = "row";
+    
+    const k = document.createElement("input"); k.value = key; k.placeholder = "Key";
+    const v = document.createElement("input"); v.value = Guppt[key].value; v.type = "password"; v.placeholder = "Value";
+    v.onfocus = () => v.type = "text";
+    v.onblur = () => v.type = "password";
+
+    const saveBtn = document.createElement("button"); saveBtn.className="btn-icon"; 
+    saveBtn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`;
+    saveBtn.title = "Save Changes";
+
+    const copyBtn = document.createElement("button"); copyBtn.className="btn-icon"; 
+    copyBtn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+    copyBtn.title = "Copy Guppt URL";
+
+    const delBtn = document.createElement("button"); delBtn.className="btn-icon btn-del"; 
+    delBtn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+    delBtn.title = "Delete";
+
+    saveBtn.onclick = async () => {
+      const nK = k.value.trim(); 
+      if(!nK) return notify("Key name cannot be empty");
+      const token = Guppt[key].token;
+      delete Guppt[key];
+      Guppt[nK] = { value: v.value, token }; 
+      await save();
+    };
+
+    copyBtn.onclick = () => {
+      const token = Guppt[key].token;
+      const url = `${DOMAIN}?email=${encodeURIComponent(email)}&key=${encodeURIComponent(key)}&token=${encodeURIComponent(token)}`;
+      navigator.clipboard.writeText(url);
+      notify("Guppt URL copied to clipboard");
+    };
+
+    delBtn.onclick = async () => {
+      if(confirm(`Delete "${key}"?`)) {
+        delete Guppt[key];
+        await save();
+      }
+    };
+
+    row.append(k, v, saveBtn, copyBtn, delBtn); 
+    list.appendChild(row);
+  });
+}
+
+window.add = async () => {
+  const kI = document.getElementById("newKey"), vI = document.getElementById("newValue");
+  const k = kI.value.trim();
+  if(!k) return notify("Key identifier required");
+  
+  const token = crypto.randomUUID();
+  Guppt[k] = { value: vI.value, token };
+  
+  kI.value = ""; vI.value = "";
+  await save();
+};
+
+window.exportJSON = () => {
+  navigator.clipboard.writeText(JSON.stringify(Guppt, null, 2));
+  notify("JSON data copied to clipboard");
+};
+</script>
+
+</body>
+</html>
