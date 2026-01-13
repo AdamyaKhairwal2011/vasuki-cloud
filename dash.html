@@ -483,33 +483,9 @@ input, select {
 <main>
 <div class="header-actions">
   <h1 style="margin:0; font-weight:100; letter-spacing:-1px;">Vasuki Neem Storage</h1>
-
-  <div style="display:flex; gap:10px;">
-    <button id="downloadSelectedBtn" style="display:none" onclick="downloadSelected()">⬇ Download</button>
-    <button id="deleteSelectedBtn" style="display:none; background:#ff3b30; color:white;" onclick="deleteSelected()">🗑 Delete</button>
-    <button id="shareBtn" onclick="openShare()" style="display:none">🔗 Share Selection</button>
-    <div id="shareModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:100">
-  <div class="modal-content">
-    <h3 style="margin-top:0">Share Selected</h3>
-    <p style="color:var(--text-dim); font-size:0.85rem;">Set permissions and generate a secure link.</p>
-    
-    <label style="font-size:0.8rem; font-weight:600;">Access Level</label>
-    <select id="sharePerm">
-      <option value="read">View Only</option>
-      <option value="download">Can Download</option>
-    </select>
-    
-    <label style="font-size:0.8rem; font-weight:600;">Secure Link</label>
-    <input id="shareLink" readonly placeholder="Link will appear here...">
-    
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-        <button onclick="generateShare()" style="background:var(--accent); color:white; border:none;">Generate</button>
-        <button onclick="closeShare()">Cancel</button>
-    </div>
-  </div>
-</div>
     <button onclick="openCreateMenu()">＋</button>
-  </div>
+
+
 </div>
 
   <div class="upload" onclick="fileInput.click()">
@@ -538,6 +514,35 @@ input, select {
     color:var(--text-dim);
   "></div>
 </div>
+
+<br><br>
+  <div style="display:flex; gap:10px;">
+    <button id="downloadSelectedBtn" style="display:none" onclick="downloadSelected()">⬇ Download</button>
+    <button id="deleteSelectedBtn" style="display:none; background:#ff3b30; color:white;" onclick="deleteSelected()">🗑 Delete</button>
+    <button id="shareBtn" onclick="openShare()" style="display:none">🔗 Share Selection</button>
+    <div id="shareModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:100">
+  <div class="modal-content">
+    <h3 style="margin-top:0">Share Selected</h3>
+    <p style="color:var(--text-dim); font-size:0.85rem;">Set permissions and generate a secure link.</p>
+    
+    <label style="font-size:0.8rem; font-weight:600;">Access Level</label>
+    <select id="sharePerm">
+      <option value="read">View Only</option>
+      <option value="download">Can Download</option>
+    </select>
+    
+    <label style="font-size:0.8rem; font-weight:600;">Secure Link</label>
+    <input id="shareLink" readonly placeholder="Link will appear here...">
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+        <button onclick="generateShare()" style="background:var(--accent); color:white; border:none;">Generate</button>
+        <button onclick="closeShare()">Cancel</button>
+    </div>
+  </div>
+</div>
+  </div>
+
+  <br><br>
 
 
   <div class="grid" id="list"></div>
