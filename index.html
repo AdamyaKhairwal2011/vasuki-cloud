@@ -1,5 +1,5 @@
-<!DOCTYPE html> 
-<html lang="en">    
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,10 +20,14 @@
             box-sizing: border-box;
         }
 
+        @font-face {
+            font-family: "CustomFont";
+            src: url("./custom.ttf") format("truetype");
+        }
 
 
         body {
-            font-family: 'Google Sans', 'Inter', sans-serif;
+            font-family: arial;
             background-color: #ffffff;
             color: var(--text-main);
             line-height: 1.5;
@@ -51,8 +55,8 @@
             color: #68655f;
             text-decoration: none;
             letter-spacing: -0.5px;
-            height: 60px;
-            width: 60px;
+            height: 50px;
+            width: 50px;
             transform: translateY(-5px);
             margin-right: 0.85vw;
         }
@@ -74,13 +78,13 @@
         .hero-wrap {
             position: relative;
             width: 100%;
-            height: 80vh;
+            height: 60vh;
             min-height: 600px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f1f3f4 100%);
+            background: radial-gradient(circle at 50% 50%, #775e41 100%, #cfb184 100%);
         }
 
         #hero-canvas {
@@ -104,7 +108,7 @@
         .hero-content * { pointer-events: auto; }
 
         .hero-content span {
-            color: var(--brand-gold);
+            color: #fdf0d6;
             font-weight: 700;
             font-size: 12px;
             text-transform: uppercase;
@@ -116,14 +120,15 @@
         h1 {
             font-size: clamp(32px, 6vw, 56px);
             font-weight: 500;
-            color: #202124;
+            color: #f7f6f5;
             line-height: 1.2;
             margin-bottom: 24px;
+            font-family: CustomFont;
         }
 
         .btn-pill {
             display: inline-block;
-            background-color: var(--brand-gold);
+            background-color: #3d2d0e;
             color: white;
             padding: 14px 28px;
             border-radius: 100px;
@@ -131,6 +136,7 @@
             font-weight: 500;
             text-decoration: none;
             transition: background 0.2s;
+            font-family: 'Google Sans', 'Inter', sans-serif;
         }
 
         /* Features Section */
@@ -151,7 +157,7 @@
         }
 
         .heading-logo {
-            font-size: 21px;
+            font-size: 19px;
             font-weight: 600;
             float: left;
         }
@@ -185,8 +191,8 @@
         <div class="hero-content">
             <span>Vasuki Neem</span>
             <h1>Simple, scalable cloud storage for everyone.</h1>
-            <p style="margin-bottom: 30px; color: var(--text-light);">Prioritizing startups and individual creators with forever-free storage.</p>
-            <a href="./signup.html" class="btn-pill">Get Started for Free</a>
+            <p style="margin-bottom: 30px; color: #ececec; letter-spacing: 1.5px;">Prioritizing startups and individual creators with forever-free storage.</p>
+            <a href="./signup.html" class="btn-pill">Get Started for Free ⇲</a>
         </div>
     </div>
 
@@ -267,7 +273,7 @@
 
                 // Draw Dot
                 let opacity = (z2 + p.baseRadius) / (2 * p.baseRadius);
-                ctx.fillStyle = `rgba(189, 131, 23, ${opacity * 0.6})`;
+                ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.3})`;
                 ctx.beginPath();
                 ctx.arc(drawX, drawY, 2.5 * perspective, 0, Math.PI * 2);
                 ctx.fill();
