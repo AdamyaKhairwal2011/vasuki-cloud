@@ -21,15 +21,12 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', arial, sans-serif; background: var(--bg-light); color: var(--text-main); line-height: 1.5; }
 
-  /* Navigation */
   nav { height: 64px; display: flex; align-items: center; padding: 0 40px; background: white; border-bottom: 1px solid #f1f3f4; position: sticky; top: 0; z-index: 100; }
   .nav-title { font-weight: 500; font-size: 18px; color: #5f6368; margin-left: 10px; font-family: 'Google Sans', sans-serif; }
 
-  /* Layout */
   .container { max-width: 1000px; margin: 40px auto; padding: 0 24px; }
   .center-vh { height: calc(100vh - 64px); display: flex; align-items: center; justify-content: center; padding: 20px; }
 
-  /* Card & Forms */
   .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 32px; width: 100%; max-width: 400px; box-shadow: 0 1px 3px rgba(60,64,67,0.2); }
   h2 { font-family: 'Google Sans', sans-serif; font-weight: 500; margin-bottom: 8px; font-size: 24px; color: #202124; display: flex; align-items: center; gap: 10px; }
   .desc { color: var(--text-light); font-size: 14px; margin-bottom: 24px; }
@@ -44,7 +41,6 @@
   .btn-outline { background: white; border: 1px solid var(--border); color: var(--text-main); padding: 8px 16px; }
   .btn-outline:hover { background: var(--bg-alt); }
 
-  /* Guppt UI Specifics */
   .header-flex { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
   .add-box { background: var(--bg-alt); border-radius: 12px; padding: 24px; display: grid; grid-template-columns: 1fr 1fr 150px; gap: 16px; margin-bottom: 30px; border: 1px solid var(--border); align-items: end; }
   .add-box input { margin-bottom: 0; background: white; }
@@ -60,7 +56,6 @@
   .btn-icon:hover { background: #f1f3f4; color: var(--text-main); }
   .btn-del:hover { color: var(--error); background: #fdeaea; }
 
-  /* Toast Messages */
   #toast-wrap { position: fixed; bottom: 24px; left: 24px; z-index: 1000; }
   .toast { background: #323232; color: white; padding: 12px 24px; border-radius: 4px; font-size: 14px; margin-top: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); animation: slideUp 0.3s cubic-bezier(0,0,0.2,1); }
   
@@ -71,7 +66,7 @@
 
 <body>
 
-<nav>
+<nav id="navbar">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--brand-gold)">
     <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm0 16.9c-3.11-.9-5.50-4.38-5.50-8.20V6.30l5.50-2.06 5.50 2.06v4.40c0 3.82-2.39 7.30-5.50 8.20z"/>
   </svg>
@@ -84,8 +79,8 @@
   <div class="card">
     <h2>Sign in</h2>
     <p class="desc">Access your encrypted secrets</p>
-    <input id="email" type="email" placeholder="Email or username">
-    <input id="password" type="password" placeholder="Password">
+    <input id="emailField" type="email" placeholder="Email or username">
+    <input id="passwordField" type="password" placeholder="Password">
     <div style="display:flex; justify-content: flex-end; margin-top: 10px;">
       <button class="btn-primary" id="loginBtn" onclick="login()">Continue</button>
     </div>
@@ -122,15 +117,9 @@
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const url = new URL(window.location.href);
-const apiEmail = url.searchParams.get("email");
-const apiKey = url.searchParams.get("key");
-const apiToken = url.searchParams.get("token");
-
-const isAPI = apiEmail && apiKey && apiToken;
-
-
-
+const params = new URLSearchParams(window.location.search);
+const apiEmail = params.get("email");
+const apiKey = params.get("key");
 
 const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
@@ -140,8 +129,8 @@ const SECRET_KEY = "VASUKI_Guppt_MASTER_KEY_2025";
 const DOMAIN = "https://vasuki.cloud/guppt/";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-let email = "";
-let Guppt = {};
+let currentUserEmail = "";
+let GupptData = {};
 
 function notify(msg) {
   const wrap = document.getElementById('toast-wrap');
@@ -150,50 +139,67 @@ function notify(msg) {
   setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 3000);
 }
 
+/* CRYPTO CORE */
+async function getCryptoKey(){
+  const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(SECRET_KEY));
+  return crypto.subtle.importKey("raw", hash, "AES-GCM", false, ["encrypt","decrypt"]);
+}
+async function encrypt(text){
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await getCryptoKey();
+  const enc = await crypto.subtle.encrypt({name:"AES-GCM",iv}, key, new TextEncoder().encode(text));
+  return btoa(String.fromCharCode(...iv))+"."+btoa(String.fromCharCode(...new Uint8Array(enc)));
+}
+async function decrypt(data){
+  try {
+    const [ivB, encB] = data.split(".");
+    const iv = Uint8Array.from(atob(ivB), c=>c.charCodeAt(0));
+    const enc = Uint8Array.from(atob(encB), c=>c.charCodeAt(0));
+    const key = await getCryptoKey();
+    const dec = await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, enc);
+    return new TextDecoder().decode(dec);
+  } catch(e) { return "{}"; }
+}
+
+/* API MODE HANDLER */
 async function runAPIMode() {
+  document.body.innerHTML = "Loading JSON...";
   try {
     const r = await fetch(API + "/get-file-content", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: apiEmail,
-        path: PATH
-      })
+      body: JSON.stringify({ email: apiEmail, path: PATH })
     });
+    const res = await r.json();
+    if (!res.content) throw "Vault not found";
 
-    const data = await r.json();
-    if (!data.content) throw "Empty vault";
-
-    const decrypted = await decrypt(data.content);
+    const decrypted = await decrypt(res.content);
     const vault = JSON.parse(decrypted);
 
-    if (!vault[apiKey]) throw "Key not found";
-    if (vault[apiKey].token !== apiToken) throw "Invalid token";
+    if (!vault[apiKey]) throw "Key not found in vault";
 
     const output = {
       key: apiKey,
-      value: vault[apiKey].value,
+      value: vault[apiKey].value || vault[apiKey], // Handles both new and old formats
       owner: apiEmail,
-      source: "Vasuki Guppt",
+      status: "success",
       ts: Date.now()
     };
 
-    // Return pure JSON instead of HTML
     document.open();
-    document.write(JSON.stringify(output, null, 2));
+    document.write(`<pre style="word-wrap: break-word; white-space: pre-wrap;">${JSON.stringify(output, null, 2)}</pre>`);
     document.close();
   } catch (e) {
     document.open();
-    document.write(JSON.stringify({ error: String(e) }));
+    document.write(JSON.stringify({ error: String(e), status: "failed" }));
     document.close();
   }
 }
 
-
-/* AUTH */
+/* AUTH & VAULT UI */
 window.login = async function(){
-  const e=document.getElementById("email").value.trim().toLowerCase();
-  const p=document.getElementById("password").value;
+  const e=document.getElementById("emailField").value.trim().toLowerCase();
+  const p=document.getElementById("passwordField").value;
   if(!e||!p) return notify("Enter credentials");
 
   const btn=document.getElementById("loginBtn");
@@ -210,147 +216,106 @@ window.login = async function(){
       return;
     }
 
-    email = e; 
+    currentUserEmail = e; 
     document.getElementById("login").classList.add("hidden"); 
     document.getElementById("GupptUI").classList.remove("hidden");
-    loadGuppt();
+    loadVault();
   } catch(err) {
-    notify("Authentication failed"); 
+    notify("Auth Error"); 
     btn.disabled=false; 
-    btn.textContent="Continue";
   }
 };
 
-/* CRYPTO */
-async function getKey(){
-  const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(SECRET_KEY));
-  return crypto.subtle.importKey("raw", hash, "AES-GCM", false, ["encrypt","decrypt"]);
-}
-async function encrypt(text){
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const key = await getKey();
-  const enc = await crypto.subtle.encrypt({name:"AES-GCM",iv}, key, new TextEncoder().encode(text));
-  return btoa(String.fromCharCode(...iv))+"."+btoa(String.fromCharCode(...new Uint8Array(enc)));
-}
-async function decrypt(data){
+async function loadVault(){
   try {
-    const [ivB, encB] = data.split(".");
-    const iv = Uint8Array.from(atob(ivB), c=>c.charCodeAt(0));
-    const enc = Uint8Array.from(atob(encB), c=>c.charCodeAt(0));
-    const key = await getKey();
-    const dec = await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, enc);
-    return new TextDecoder().decode(dec);
-  } catch(e) { return "{}"; }
-}
-
-/* STORAGE */
-async function ensure(){
-  await fetch(API+"/create-folder", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email, name:"user_config_vasuki"})});
-  await fetch(API+"/create-file", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email, folder:"user_config_vasuki", name:"Guppt", extension:"json"})});
-}
-
-async function loadGuppt(){
-  await ensure();
-  try {
-    const r = await fetch(API+"/get-file-content", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email, path:PATH})});
+    const r = await fetch(API+"/get-file-content", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email: currentUserEmail, path:PATH})});
     const res = await r.json();
     if(res.content) {
       const dec = await decrypt(res.content);
-      Guppt = JSON.parse(dec);
-    } else {
-      Guppt = {};
+      GupptData = JSON.parse(dec);
     }
-  } catch(e) { Guppt = {}; }
+  } catch(e) { GupptData = {}; }
   render();
 }
 
-async function save(){
-  const enc = await encrypt(JSON.stringify(Guppt));
-  await fetch(API+"/save-file-content", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email, path:PATH, content:enc})});
+async function saveVault(){
+  const enc = await encrypt(JSON.stringify(GupptData));
+  await fetch(API+"/save-file-content", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email: currentUserEmail, path:PATH, content:enc})});
   notify("Vault Synced");
   render();
 }
 
-/* RENDERING */
 function render(){
   const list = document.getElementById("list"); 
   list.innerHTML = "";
-  const keys = Object.keys(Guppt);
+  const keys = Object.keys(GupptData);
 
   if(!keys.length){
-    list.innerHTML = "<div style='padding:60px; text-align:center; color:var(--text-light); font-size:14px;'>Your vault is currently empty.</div>";
+    list.innerHTML = "<div style='padding:60px; text-align:center; color:var(--text-light);'>Vault is empty.</div>";
     return;
   }
 
   keys.forEach(key => {
     const row = document.createElement("div"); row.className = "row";
-    
-    const k = document.createElement("input"); k.value = key; k.placeholder = "Key";
-    const v = document.createElement("input"); v.value = Guppt[key].value; v.type = "password"; v.placeholder = "Value";
-    v.onfocus = () => v.type = "text";
-    v.onblur = () => v.type = "password";
+    const valObj = GupptData[key];
+    const actualValue = (typeof valObj === 'object') ? valObj.value : valObj;
+
+    const kInput = document.createElement("input"); kInput.value = key;
+    const vInput = document.createElement("input"); vInput.value = actualValue; vInput.type = "password";
+    vInput.onfocus = () => vInput.type = "text";
+    vInput.onblur = () => vInput.type = "password";
 
     const saveBtn = document.createElement("button"); saveBtn.className="btn-icon"; 
     saveBtn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>`;
-    saveBtn.title = "Save Changes";
 
     const copyBtn = document.createElement("button"); copyBtn.className="btn-icon"; 
     copyBtn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
-    copyBtn.title = "Copy Guppt URL";
 
     const delBtn = document.createElement("button"); delBtn.className="btn-icon btn-del"; 
     delBtn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
-    delBtn.title = "Delete";
 
     saveBtn.onclick = async () => {
-      const nK = k.value.trim(); 
-      if(!nK) return notify("Key name cannot be empty");
-      const token = Guppt[key].token;
-      delete Guppt[key];
-      Guppt[nK] = { value: v.value, token }; 
-      await save();
+      const newKeyName = kInput.value.trim();
+      if(!newKeyName) return;
+      delete GupptData[key];
+      GupptData[newKeyName] = { value: vInput.value };
+      await saveVault();
     };
 
     copyBtn.onclick = () => {
-      const token = Guppt[key].token;
-      const url = `${DOMAIN}?email=${encodeURIComponent(email)}&key=${encodeURIComponent(key)}&token=${encodeURIComponent(token)}`;
-      navigator.clipboard.writeText(url);
-      notify("Guppt URL copied to clipboard");
+      const apiUrl = `${DOMAIN}?email=${encodeURIComponent(currentUserEmail)}&key=${encodeURIComponent(key)}`;
+      navigator.clipboard.writeText(apiUrl);
+      notify("API URL Copied");
     };
 
     delBtn.onclick = async () => {
-      if(confirm(`Delete "${key}"?`)) {
-        delete Guppt[key];
-        await save();
-      }
+      if(confirm("Delete secret?")) { delete GupptData[key]; await saveVault(); }
     };
 
-    row.append(k, v, saveBtn, copyBtn, delBtn); 
+    row.append(kInput, vInput, saveBtn, copyBtn, delBtn); 
     list.appendChild(row);
   });
 }
 
 window.add = async () => {
-  const kI = document.getElementById("newKey"), vI = document.getElementById("newValue");
-  const k = kI.value.trim();
-  if(!k) return notify("Key identifier required");
-  
-  const token = crypto.randomUUID();
-  Guppt[k] = { value: vI.value, token };
-  
-  kI.value = ""; vI.value = "";
-  await save();
+  const k = document.getElementById("newKey").value.trim();
+  const v = document.getElementById("newValue").value;
+  if(!k) return notify("Key name required");
+  GupptData[k] = { value: v };
+  document.getElementById("newKey").value = "";
+  document.getElementById("newValue").value = "";
+  await saveVault();
 };
 
 window.exportJSON = () => {
-  navigator.clipboard.writeText(JSON.stringify(Guppt, null, 2));
-  notify("JSON data copied to clipboard");
+  navigator.clipboard.writeText(JSON.stringify(GupptData, null, 2));
+  notify("Exported to clipboard");
 };
 
-if (isAPI) {
+// Start logic
+if (apiKey) {
   runAPIMode();
 }
-
 </script>
 
 </body>
