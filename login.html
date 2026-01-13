@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Unlimited Free Cloud Services And Storage - Vasuki Neem Cloud</title>
+    <title>Unlimited Free Cloud Services And Storage - Vasuki Neem Cloud</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         @font-face {
@@ -12,16 +12,16 @@
         }
 
         :root {
-            --bg: #f3f3f3; /* Deep black background */
+            --bg: #f3f3f3;
             --card-bg: #f5f5f5;
-            --accent: #ffffff; /* White accents */
+            --accent: #bd8317;
             --text-main: #3f3f3f;
             --text-sec: #888888;
-            --border: #bebebe; /* Subtle borders */
+            --border: #bebebe;
         }
 
         body {
-        font-family: 'Google Sans', 'Inter', sans-serif;
+            font-family: 'Google Sans', 'Inter', sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             margin: 0;
@@ -32,6 +32,7 @@
             overflow: hidden;
         }
 
+        /* Login Card */
         .login-card {
             width: 100%;
             max-width: 360px;
@@ -39,23 +40,18 @@
             text-align: center;
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 5px; /* Sharper, more professional corners */
+            border-radius: 5px;
             animation: fadeIn 0.8s ease-out;
-            z-index: 1000;
+            z-index: 10;
         }
 
-        .logo-icon {
-            margin: 0 auto 32px;
-            filter: grayscale(1) brightness(2); /* Ensures logo is pure white */
-        }
+        .logo { width: 70px; height: 70px; margin-bottom: 10px; }
 
         h1 {
             font-size: 1.8rem;
             font-weight: 500;
             margin-bottom: 40px;
             letter-spacing: -0.02em;
-            color: var(--text-main);
-            /* Removed the typing animation for a more static, stable "minimal" feel */
         }
 
         input {
@@ -67,36 +63,24 @@
             color: var(--text-main);
             font-size: 0.95rem;
             margin-bottom: 24px;
-            box-sizing: border-box;
             outline: none;
             transition: border-color 0.3s;
         }
 
-        input::placeholder {
-            color: #444;
-        }
-
-        input:focus {
-            border-bottom-color: var(--accent);
-        }
+        input:focus { border-bottom-color: var(--accent); }
 
         button {
             width: 100%;
             padding: 14px;
-            background: rgb(214, 129, 17);
-            color: #f1f1f1; /* Contrast text */
+            background-color: #3d2d0e;
+            color: #f1f1f1;
             border: none;
             border-radius: 6px;
             font-weight: 600;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: opacity 0.2s;
-            font-family: 'Google Sans', 'Inter', sans-serif;
             margin-top: 10px;
-        }
-
-        button:hover {
-            opacity: 0.9;
+            font-family: inherit;
         }
 
         .signup-btn {
@@ -106,10 +90,51 @@
             border: 1px solid var(--border);
         }
 
-        .signup-btn:hover {
-            border-color: var(--text-sec);
-            color: var(--text-main);
-            background: transparent;
+        /* MPIN Full Screen Overlay */
+        #mpin-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(243, 243, 243, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .mpin-container {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .mpin-input {
+            width: 50px;
+            height: 60px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            background: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .mpin-input:focus {
+            border: 2px solid var(--accent);
+            background: #fffdf9;
+        }
+
+        .forgot-link {
+            color: var(--text-sec);
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 20px;
         }
 
         @keyframes fadeIn { 
@@ -117,7 +142,6 @@
             to { opacity: 1; transform: translateY(0); } 
         }
 
-        /* Subtle noise overlay for texture (optional) */
         body::before {
             content: "";
             position: absolute;
@@ -126,16 +150,28 @@
             opacity: 0.05;
             pointer-events: none;
         }
-        .logo {
-  width: 70px;
-  height: 70px;
-}
     </style>
 </head>
 <body>
     
+    <div id="mpin-screen">
+        <img src="./logo.png" alt="" class="logo">
+        <h2 id="mpin-title">Enter MPIN</h2>
+        <p id="mpin-subtitle" style="color: var(--text-sec);">Enter your 4-digit security code</p>
+        
+        <div class="mpin-container">
+            <input type="password" maxlength="1" class="mpin-input" id="m1">
+            <input type="password" maxlength="1" class="mpin-input" id="m2">
+            <input type="password" maxlength="1" class="mpin-input" id="m3">
+            <input type="password" maxlength="1" class="mpin-input" id="m4">
+        </div>
+
+        <button style="max-width: 200px;" onclick="verifyOrSetMPIN()" id="mpin-btn">Unlock</button>
+        <span class="forgot-link" onclick="forgotMPIN()">Forgot MPIN / Switch User</span>
+    </div>
+
     <div class="login-card">
-    <img src="./logo.png" alt="" class="logo">
+        <img src="./logo.png" alt="" class="logo">
         <h1>Welcome To vCloud</h1>
         
         <input type="email" id="emailInput" placeholder="Email address">
@@ -151,10 +187,41 @@
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        const mpinScreen = document.getElementById('mpin-screen');
+        const mpinInputs = document.querySelectorAll('.mpin-input');
+        const mpinTitle = document.getElementById('mpin-title');
+        const mpinBtn = document.getElementById('mpin-btn');
+
+        let isSettingMode = false;
+        let tempUserEmail = "";
+
+        // Check for existing MPIN on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedMPIN = localStorage.getItem('vcloud_mpin');
+            const savedEmail = localStorage.getItem('vcloud_user');
+            
+            if (savedMPIN && savedEmail) {
+                tempUserEmail = savedEmail;
+                mpinScreen.style.display = 'flex';
+                mpinInputs[0].focus();
+            }
+        });
+
+        // Handle MPIN auto-focus flow
+        mpinInputs.forEach((input, index) => {
+            input.addEventListener('keyup', (e) => {
+                if (e.key >= 0 && e.key <= 9) {
+                    if (index < 3) mpinInputs[index + 1].focus();
+                } else if (e.key === 'Backspace') {
+                    if (index > 0) mpinInputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Main Login Logic
         window.handleLogin = async function handleLogin() {
             try {
                 const { data, error } = await supabase.from("users").select("*");
-
                 if (error) throw error;
 
                 const email = document.getElementById('emailInput').value.toLowerCase();
@@ -163,7 +230,20 @@
                 if (email && password) {
                     const user = data.find(user => user.username.toLowerCase() === email && user.password === password);
                     if (user) {
-                        window.location.href = `dash.html?email=${encodeURIComponent(email)}`;
+                        tempUserEmail = email;
+                        const hasMPIN = localStorage.getItem('vcloud_mpin');
+                        
+                        if (!hasMPIN) {
+                            // First time login - Trigger MPIN Creation
+                            isSettingMode = true;
+                            mpinTitle.innerText = "Setup New MPIN";
+                            mpinBtn.innerText = "Set MPIN";
+                            mpinScreen.style.display = 'flex';
+                            mpinInputs[0].focus();
+                        } else {
+                            // Move to dashboard
+                            window.location.href = `dash.html?email=${encodeURIComponent(email)}`;
+                        }
                     } else {
                         alert("Invalid credentials");
                     }
@@ -174,9 +254,43 @@
             }
         }
 
+        window.verifyOrSetMPIN = function() {
+            let mpinValue = "";
+            mpinInputs.forEach(input => mpinValue += input.value);
+
+            if (mpinValue.length < 4) {
+                alert("Please enter a 4-digit code");
+                return;
+            }
+
+            if (isSettingMode) {
+                // Save new MPIN
+                localStorage.setItem('vcloud_mpin', mpinValue);
+                localStorage.setItem('vcloud_user', tempUserEmail);
+                window.location.href = `dash.html?email=${encodeURIComponent(tempUserEmail)}`;
+            } else {
+                // Verify existing MPIN
+                const savedMPIN = localStorage.getItem('vcloud_mpin');
+                const savedEmail = localStorage.getItem('vcloud_user');
+                if (mpinValue === savedMPIN) {
+                    window.location.href = `dash.html?email=${encodeURIComponent(savedEmail)}`;
+                } else {
+                    alert("Incorrect MPIN");
+                    mpinInputs.forEach(i => i.value = "");
+                    mpinInputs[0].focus();
+                }
+            }
+        }
+
+        window.forgotMPIN = function() {
+            // If they forget, we hide the MPIN screen and let them use normal login
+            mpinScreen.style.display = 'none';
+            mpinInputs.forEach(i => i.value = "");
+            // Optionally clear storage if you want to force re-setup after login
+            // localStorage.removeItem('vcloud_mpin'); 
+        }
+
         window.goToSignup = () => window.location.href = "signup.html";
     </script>
 </body>
 </html>
-
-
