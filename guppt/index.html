@@ -122,6 +122,16 @@
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+const url = new URL(window.location.href);
+const apiEmail = url.searchParams.get("email");
+const apiKey = url.searchParams.get("key");
+const apiToken = url.searchParams.get("token");
+
+const isAPI = apiEmail && apiKey && apiToken;
+
+
+
+
 const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
 const API = "https://vasuki-cloud-backend-production.up.railway.app";
@@ -139,6 +149,46 @@ function notify(msg) {
   wrap.appendChild(t);
   setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 3000);
 }
+
+async function runAPIMode() {
+  try {
+    const r = await fetch(API + "/get-file-content", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: apiEmail,
+        path: PATH
+      })
+    });
+
+    const data = await r.json();
+    if (!data.content) throw "Empty vault";
+
+    const decrypted = await decrypt(data.content);
+    const vault = JSON.parse(decrypted);
+
+    if (!vault[apiKey]) throw "Key not found";
+    if (vault[apiKey].token !== apiToken) throw "Invalid token";
+
+    const output = {
+      key: apiKey,
+      value: vault[apiKey].value,
+      owner: apiEmail,
+      source: "Vasuki Guppt",
+      ts: Date.now()
+    };
+
+    // Return pure JSON instead of HTML
+    document.open();
+    document.write(JSON.stringify(output, null, 2));
+    document.close();
+  } catch (e) {
+    document.open();
+    document.write(JSON.stringify({ error: String(e) }));
+    document.close();
+  }
+}
+
 
 /* AUTH */
 window.login = async function(){
@@ -296,6 +346,11 @@ window.exportJSON = () => {
   navigator.clipboard.writeText(JSON.stringify(Guppt, null, 2));
   notify("JSON data copied to clipboard");
 };
+
+if (isAPI) {
+  runAPIMode();
+}
+
 </script>
 
 </body>
