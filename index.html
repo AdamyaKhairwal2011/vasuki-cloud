@@ -12,6 +12,7 @@
             --text-main: #3c4043;
             --text-light: #70757a;
             --border: #dadce0;
+            --nav-bg: rgba(255, 255, 255, 0.95);
         }
 
         * {
@@ -24,7 +25,6 @@
             font-family: "CustomFont";
             src: url("./custom.ttf") format("truetype");
         }
-
 
         body {
             font-family: arial;
@@ -40,13 +40,20 @@
             display: flex;
             align-items: center;
             padding: 0 40px;
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--nav-bg);
             backdrop-filter: blur(10px);
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
             border-bottom: 1px solid #f1f3f4;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            z-index: 1001;
         }
 
         .logo {
@@ -58,7 +65,17 @@
             height: 50px;
             width: 50px;
             transform: translateY(-5px);
-            margin-right: 0.85vw;
+            margin-right: 12px;
+        }
+
+        .heading-logo {
+            font-size: 19px;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
         }
 
         .nav-links a {
@@ -67,11 +84,29 @@
             font-size: 14px;
             font-weight: 500;
             margin-left: 24px;
+            transition: color 0.2s;
         }
 
-        .nav-links {
-            position: absolute;
-            right: 2vw;
+        .nav-links a:hover {
+            color: var(--brand-gold);
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 10px;
+            border: none;
+            background: none;
+        }
+
+        .hamburger div {
+            width: 22px;
+            height: 2px;
+            background-color: var(--text-main);
+            margin: 5px 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Hero Container */
@@ -102,7 +137,7 @@
             text-align: center;
             max-width: 800px;
             padding: 0 20px;
-            pointer-events: none; /* Allows mouse to hit canvas behind text */
+            pointer-events: none;
         }
 
         .hero-content * { pointer-events: auto; }
@@ -135,8 +170,13 @@
             font-size: 16px;
             font-weight: 500;
             text-decoration: none;
-            transition: background 0.2s;
+            transition: transform 0.2s, background 0.2s;
             font-family: 'Google Sans', 'Inter', sans-serif;
+        }
+
+        .btn-pill:hover {
+            transform: translateY(-2px);
+            background-color: #4d3a12;
         }
 
         /* Features Section */
@@ -154,37 +194,87 @@
             padding: 32px;
             border-radius: 16px;
             background: white;
+            transition: transform 0.3s ease;
         }
 
-        .heading-logo {
-            font-size: 19px;
-            font-weight: 600;
-            float: left;
+        .card:hover {
+            transform: translateY(-5px);
         }
 
         .card h3 { margin-bottom: 12px; font-weight: 500; }
         .card p { color: var(--text-light); font-size: 15px; }
 
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
             nav {
-                padding: 0px 50px 0px 10px;
-
+                padding: 0 20px;
             }
+
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 70%;
+                background: white;
+                flex-direction: column;
+                justify-content: center;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                margin: 20px 0;
+                font-size: 18px;
+                opacity: 0;
+                transform: translateX(20px);
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active a {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            /* Delay link animations */
+            .nav-links.active a:nth-child(1) { transition-delay: 0.1s; }
+            .nav-links.active a:nth-child(2) { transition-delay: 0.2s; }
+            .nav-links.active a:nth-child(3) { transition-delay: 0.3s; }
+
+            /* Hamburger Animation */
+            .hamburger.toggle .line1 { transform: rotate(-45deg) translate(-5px, 5px); }
+            .hamburger.toggle .line2 { opacity: 0; }
+            .hamburger.toggle .line3 { transform: rotate(45deg) translate(-5px, -5px); }
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <img src="./logo.png" alt="" class="logo">
-        <span class="heading-logo">
-            Vasuki Cloud
-        </span>
-        <div class="nav-links">
+        <div class="nav-brand">
+            <img src="./logo.png" alt="" class="logo">
+            <span class="heading-logo">Vasuki Cloud</span>
+        </div>
+        
+        <div class="nav-links" id="nav-links">
             <a href="./login.html">Login</a>
             <a href="mailto:codeclutch.adamyarao@gmail.com">Support</a>
             <a href="./guppt/">Guppt</a>
         </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </button>
     </nav>
 
     <div class="hero-wrap">
@@ -213,6 +303,25 @@
     </section>
 
     <script>
+        // --- Navigation Logic ---
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('toggle');
+        });
+
+        // Close menu when link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('toggle');
+            });
+        });
+
+
+        // --- Canvas Logic (Original) ---
         const canvas = document.getElementById('hero-canvas');
         const ctx = canvas.getContext('2d');
         let points = [];
@@ -224,10 +333,9 @@
             height = canvas.height = canvas.offsetHeight;
             points = [];
             
-            const count = 155; // Number of points across the sphere
+            const count = 155; 
             const radius = Math.min(width, height) * 0.35;
 
-            // Create points in a spherical distribution
             for (let i = 0; i < count; i++) {
                 let lat = Math.acos(-1 + (2 * i) / count);
                 let lon = Math.sqrt(count * Math.PI) * lat;
@@ -249,19 +357,16 @@
             const rotationSpeed = Date.now() * 0.0005;
 
             points.forEach(p => {
-                // Basic 3D rotation
                 let x1 = p.x * Math.cos(rotationSpeed) - p.z * Math.sin(rotationSpeed);
                 let z1 = p.z * Math.cos(rotationSpeed) + p.x * Math.sin(rotationSpeed);
                 
                 let y2 = p.y * Math.cos(rotationSpeed * 0.5) - z1 * Math.sin(rotationSpeed * 0.5);
                 let z2 = z1 * Math.cos(rotationSpeed * 0.5) + p.y * Math.sin(rotationSpeed * 0.5);
 
-                // Perspective projection
                 let perspective = 600 / (600 + z2);
                 let drawX = x1 * perspective;
                 let drawY = y2 * perspective;
 
-                // Bulge logic
                 let dx = (mouse.x - width / 2) - drawX;
                 let dy = (mouse.y - height / 2) - drawY;
                 let dist = Math.sqrt(dx * dx + dy * dy);
@@ -272,7 +377,6 @@
                     drawY -= (dy / dist) * push;
                 }
 
-                // Draw Dot
                 let opacity = (z2 + p.baseRadius) / (2 * p.baseRadius);
                 ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.3})`;
                 ctx.beginPath();
