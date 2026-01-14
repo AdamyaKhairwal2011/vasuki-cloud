@@ -53,7 +53,7 @@
     padding: 0 5%;
     z-index: 10;
   }
-  .logo { font-family: 'VasukiCustom', sans-serif; font-size: 24px; color: white; text-decoration: none; }
+  .logo { font-family: 'VasukiCustom', sans-serif; font-size: 24px; color: rgb(49, 32, 9); text-decoration: none; }
 
   /* Hero Content */
   .hero-title { 
@@ -79,7 +79,8 @@
     background: white;
     border-radius: 16px;
     padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+
+    margin-top: 5vh;
     position: relative;
     z-index: 5;
   }
@@ -190,14 +191,14 @@
 
 <nav id="mainNav">
   <a href="#" class="logo" id="navLogo">Vasuki Guppt</a>
-</nav> <br><br><br>
+</nav> <br><br><br><br>
 
 <div id="landingView">
   <div id="hero-wrap">
     <canvas id="dotCanvas"></canvas>
     <div id="hero-content">
-      <h1 class="hero-title">Manage Your Passwords<br>On The Cloud</h1>
-      <p class="hero-p">Encrypted real-time secret keys management system</p>
+      <h1 class="hero-title">Secure Vault for<br>Vasuki Projects</h1>
+      <p class="hero-p">Encrypted real-time secret management for Adamya Khairwal's ecosystem.</p>
       <button class="btn-primary-lux" onclick="document.getElementById('emailField').focus()">Access Secrets</button>
     </div>
   </div>
@@ -300,7 +301,6 @@ function enterDashboard() {
     document.getElementById('mpin-screen').style.display = 'none';
     document.getElementById("landingView").classList.add("hidden");
     document.getElementById("navLogo").style.color = "var(--brand-gold)";
-    document.getElementById("mainNav").style.position = "relative";
     document.getElementById("dashboardSection").classList.remove("hidden");
     document.getElementById("dashboardSection").classList.add("active");
     loadVault();
@@ -430,7 +430,7 @@ let dots = [];
 function initParticles() {
   canvas.width = window.innerWidth; canvas.height = window.innerHeight;
   dots = [];
-  for(let i=0; i<50; i++) dots.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: 1});
+  for(let i=0; i<250; i++) dots.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: 1});
 }
 function animate() {
   ctx.clearRect(0,0,canvas.width, canvas.height);
