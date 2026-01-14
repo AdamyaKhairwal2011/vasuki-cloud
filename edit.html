@@ -18,36 +18,53 @@
 body {
   margin: 0;
   font-family: Inter, sans-serif;
-  background: #0d1117;
-  color: #fff;
+  background: #ffffff;
+  color: #352b16;
 }
 
 .topbar {
   padding: 14px 20px;
-  background: #161b22;
-  border-bottom: 1px solid #30363d;
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.buttons button {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  margin-left: 8px;
-}
+.buttons {
+    display: flex;
+    gap: 10px;
+  }
 
-.save { background: #0071e3; color: #fff; }
-.run { background: #2ea043; color: #fff; }
-.back { background: #6c757d; color: #fff; }
+  .buttons button {
+    padding: 8px; /* Adjusted for icons */
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s;
+    /* Dark Burnt Sienna Background */
+    background: #7D3C1B; 
+    color: #fff;
+  }
 
-#editor {
-  width: 100%;
-  height: calc(100vh - 260px);
-}
+  .buttons button:hover {
+    opacity: 0.8;
+  }
+
+  .buttons svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  /* Keep existing layout for editor and terminal */
+  #editor {
+    width: 100%;
+    height: calc(100vh - 260px);
+  }
 
 #terminal {
   height: 200px;
@@ -67,12 +84,18 @@ body {
 <div class="topbar">
   <div id="filePath">Loading...</div>
   <div class="buttons">
-    <button class="save" onclick="saveFile()">Save</button>
-    <button class="run" onclick="handleRun()">Run</button>
-    <button class="back" onclick="goBack()">Back</button>
+    <button class="save" onclick="saveFile()" title="Save">
+      <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+    </button>
+    <button class="run" onclick="handleRun()" title="Run">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <button class="back" onclick="goBack()" title="Back">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </button>
   </div>
 </div>
-
+<br><br>
 <div id="editor"></div>
 <div id="terminal"></div>
 
@@ -199,7 +222,7 @@ require(["vs/editor/editor.main"], () => {
   editor = monaco.editor.create(document.getElementById("editor"), {
     value: "",
     language: getLanguage(file),
-    theme: "vs-dark",
+    theme: "vs-light",
     automaticLayout: true,
     fontSize: 14,
     minimap: { enabled: false },
