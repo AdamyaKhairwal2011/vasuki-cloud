@@ -304,10 +304,7 @@
         try {
             const up = await fetch(`${BACKEND}/upload`, { method: "POST", body: form });
             if(up.ok) {
-                notify("Registration Stored. Opening Payment...");
-                setTimeout(() => {
-                    window.location.href = "upi://pay?pa=raomaheshwarimegha-4@okhdfcbank&pn=Vasuki%20iTech&am=399&cu=INR";
-                }, 1500);
+                notify("Registration Stored.");
             } else throw Error();
         } catch (e) {
             notify("Network error. Please try again later.");
