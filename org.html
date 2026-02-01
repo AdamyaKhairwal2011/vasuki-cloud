@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Showcase | Vasuki</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const supabase = createClient(
+  "https://aitckloahlwemlekaour.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA"
+);
+
+const orgId = new URLSearchParams(location.search).get("org");
+
+async function loadOrg(){
+  if(!orgId){ document.body.innerHTML="<div class='error'>404 Not Found</div>"; return; }
+  const { data, error } = await supabase.from("startups").select("*").eq("id", orgId);
+  if(error || !data[0]){ document.body.innerHTML="<div class='error'>Profile Not Found</div>"; return; }
+  renderOrg(data[0]);
+}
+
+function renderOrg(org){
+  // Map theme color to CSS variable
+  document.documentElement.style.setProperty("--brand-color", org.theme_color || "#0A66C2");
+
+  document.body.innerHTML = `
+<style>
+:root {
+  --brand-color: #0A66C2;
+  --bg-page: #F3F2EF; /* LinkedIn Light Grey */
+  --bg-card: #FFFFFF;
+  --text-primary: #191919;
+  --text-secondary: #666666;
+  --border: #EBEBEB;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.showcase-container {
+  max-width: 1128px; /* LinkedIn's container width */
+  margin: 0 auto;
+  padding: 20px 0 60px;
+}
+
+/* --- COVER & HEADER --- */
+.profile-header {
+  background: var(--bg-card);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.cover-image {
+  height: 200px;
+  background: var(--brand-color);
+  background: var(--brand-color);
+  width: 100%;
+}
+
+.header-content {
+  padding: 0 24px 24px;
+  position: relative;
+}
+
+.logo-container {
+  width: 152px;
+  height: 152px;
+  background: #fff;
+  border: 4px solid #fff;
+  border-radius: 4px; /* LinkedIn uses square-ish icons for companies */
+  position: absolute;
+  top: -110px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+}
+
+.logo-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-details {
+  margin-top: 50px;
+}
+
+.header-details h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  position: relative;
+}
+
+.header-details .tagline {
+  font-size: 16px;
+  color: var(--text-primary);
+  margin-top: 4px;
+}
+
+.header-details .subline {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.action-bar {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.btn-primary {
+  background-color: var(--brand-color);
+  color: white;
+  padding: 6px 16px;
+  border-radius: 1600px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-secondary {
+  border: 1px solid var(--brand-color);
+  color: var(--brand-color);
+  padding: 6px 16px;
+  border-radius: 1600px;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+/* --- CONTENT GRID --- */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+}
+
+@media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.card h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.about-text {
+  font-size: 14px;
+  color: rgba(0,0,0,0.9);
+  white-space: pre-wrap;
+}
+
+.info-item {
+  margin-bottom: 16px;
+}
+
+.info-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.info-value, .info-value a {
+  font-size: 14px;
+  color: var(--brand-color);
+  text-decoration: none;
+}
+
+.service-chip {
+  display: inline-block;
+  background: #f3f2ef;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  margin: 0 8px 8px 0;
+  border: 1px solid var(--border);
+}
+</style>
+
+<div class="showcase-container">
+  <div class="profile-header">
+    <div class="cover-image"></div>
+    <div class="header-content">
+      <div class="logo-container">
+        <img src="${org.logo_base64 || "https://cdn-icons-png.flaticon.com/512/847/847969.png"}">
+      </div>
+      <div class="header-details">
+       <br><br><br>
+        <h1>${org.name}</h1>
+        <div class="tagline">${org.tagline || ""}</div>
+        <div class="subline">Technology & Services • Vasuki iTech Network</div>
+        
+        <div class="action-bar">
+          ${(org.buttons || []).map(b => 
+            `<a href="${b.url}" target="_blank" class="btn-primary">${b.label}</a>`
+          ).join("")}
+          <a href="mailto:${org.contacts?.email || ""}" class="btn-secondary">Contact</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="left-col">
+      <div class="card">
+        <h2>About</h2>
+        <div class="about-text">${org.about || "No description provided."}</div>
+      </div>
+
+      ${org.services?.length ? `
+      <div class="card">
+        <h2>Specialties</h2>
+        <div>
+          ${org.services.map(s => `<span class="service-chip">${s}</span>`).join("")}
+        </div>
+      </div>` : ""}
+    </div>
+
+    <div class="right-col">
+      <div class="card">
+        <h2>Organization Info</h2>
+        
+        ${org.contacts?.website ? `
+        <div class="info-item">
+          <div class="info-label">Website</div>
+          <div class="info-value"><a href="https://${org.contacts.website}" target="_blank">${org.contacts.website.replace('https://','')}</a></div>
+        </div>` : ""}
+
+        ${org.contacts?.email ? `
+        <div class="info-item">
+          <div class="info-label">Industry</div>
+          <div class="info-value" style="color:var(--text-secondary)">Information Technology</div>
+        </div>` : ""}
+
+        <div class="info-item">
+          <div class="info-label">Contact Support</div>
+          <div class="info-value"><a href="mailto:${org.contacts?.email || ""}">${org.contacts?.email || "N/A"}</a></div>
+        </div>
+
+        ${org.contacts?.linkedin ? `
+        <div class="info-item">
+          <div class="info-label">LinkedIn</div>
+          <div class="info-value"><a href="https://${org.contacts.linkedin}" target="_blank">View profile</a></div>
+        </div>` : ""}
+      </div>
+    </div>
+  </div>
+</div>
+`;
+}
+
+loadOrg();
+</script>
+</head>
+<body></body>
+</html>
