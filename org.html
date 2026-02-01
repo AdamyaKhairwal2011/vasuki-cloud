@@ -94,6 +94,47 @@
         background: #fff;
     }
 
+        /* --- SERVICES --- */
+.services {
+  margin-top: 40px;
+}
+
+.services h3 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+}
+
+.service-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px 14px;
+  border: 1px solid rgba(0,0,0,0.06);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.service-card b {
+  display: block;
+  font-size: 14px;
+}
+
+.service-card span {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
     /* --- CONTENT SECTION --- */
     .main-content {
         max-width: 600px;
@@ -264,6 +305,30 @@ ${(() => {
 })()}
 
 
+${(() => {
+  let services = [];
+  try {
+    services = typeof org.services === "string"
+      ? JSON.parse(org.services)
+      : (org.services || []);
+  } catch(e){}
+
+  if (!services.length) return "";
+
+  return `
+  <section class="services">
+    <h3>Services</h3>
+    <div class="services-grid">
+      ${services.map(s => `
+        <div class="service-card">
+          <b>${s}</b>
+        </div>
+      `).join("")}
+    </div>
+  </section>
+  `;
+})()}
+
 </main>
 
 <footer style="margin-top: 60px; padding: 20px; opacity: 0.3; font-size: 12px; text-align: center;">
@@ -277,6 +342,7 @@ ${(() => {
 </head>
 <body></body>
 </html>
+
 
 
 
