@@ -1,256 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vasuki Forms</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vasuki Forms | Eco-System</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
 
-<style>
-:root{
-  --bg:#f0ebf8;
-  --card:#fff;
-  --primary:#253c68;
-  --text:#202124;
-  --text-secondary:#70757a;
-  --border:#dadce0;
-}
-*{box-sizing:border-box}
-body{
-  font-family:Segoe UI,Roboto,Arial,sans-serif;
-  background:var(--bg);
-  margin:0;
-  padding:20px 10px;
-  display:flex;
-  justify-content:center;
-  color:var(--text);
-}
-.container{width:100%;max-width:640px}
-.form-card{
-  background:var(--card);
-  border-radius:8px;
-  border:1px solid var(--border);
-  padding:24px;
-  margin-bottom:12px;
-}
-.form-header{border-top:10px solid var(--primary)}
-h1{margin:0 0 10px;font-size:32px}
-.description{color:var(--text-secondary)}
-.required-notice{color:#d93025;font-size:14px}
-.field-group{
-  margin-bottom:24px;
-  padding:20px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  background-color: var(--card);
-}
-.field-label{
-  display:block;
-  font-size:16px;
-  font-weight:500;
-  margin-bottom:15px;
-}
-.input-text,.input-textarea,.input-select{
-  width:100%;
-  border:none;
-  border-bottom:1px solid var(--border);
-  padding:8px 0;
-  outline:none;
-  font-size:14px;
-}
-.input-text:focus,.input-textarea:focus{
-  border-bottom:2px solid var(--primary);
-}
-.option-item{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:10px;
-  cursor:pointer;
-}
-.btn-submit{
-  background:var(--primary);
-  color:#fff;
-  padding:10px 24px;
-  border:none;
-  border-radius:4px;
-  cursor:pointer;
-}
-.btn-submit:hover{background:#512da8}
-#loading{text-align:center;padding:50px;font-weight:500}
-.error-msg{color:#d93025;text-align:center;margin-top:50px}
-</style>
+    <style>
+        :root {
+            --brand: #000000; /* Default Primary */
+            --bg: #FDF8F6;
+            --card: #FFFFFF;
+            --text: #2D2D2D;
+            --text-secondary: #757575;
+            --border: rgba(0,0,0,0.08);
+            --shadow: 0 20px 40px rgba(0,0,0,0.04);
+        }
+
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+        }
+
+        /* --- WAVY HEADER --- */
+        .header-hero {
+            position: relative;
+            background: var(--brand);
+            height: 200px;
+            width: 100%;
+        }
+
+        .wave-container {
+            position: absolute;
+            bottom: -2px;
+            width: 100%;
+            line-height: 0;
+        }
+
+        .wave-container svg {
+            fill: var(--bg);
+            width: 100%;
+            height: 60px;
+        }
+
+        /* --- FORM CONTAINER --- */
+        .container {
+            max-width: 600px;
+            margin: -60px auto 40px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .form-card {
+            background: var(--card);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-header-card {
+            text-align: center;
+            border-top: 8px solid var(--brand);
+        }
+
+        h1 { margin: 0 0 10px; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+        .description { color: var(--text-secondary); font-size: 15px; line-height: 1.5; }
+
+        /* --- FIELD GROUPS --- */
+        .field-group {
+            margin-bottom: 20px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .input-text, .input-textarea, .input-select {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            outline: none;
+            font-family: inherit;
+            font-size: 15px;
+            background: #fdfdfd;
+            transition: all 0.2s ease;
+        }
+
+        .input-text:focus, .input-textarea:focus {
+            border-color: var(--brand);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(0,0,0,0.03);
+        }
+
+        /* --- OPTIONS (Checkboxes/Radios) --- */
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            background: #fafafa;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .option-item:hover { background: #fff; border-color: var(--brand); }
+        .option-item input { width: 18px; height: 18px; accent-color: var(--brand); }
+
+        /* --- BUTTONS --- */
+        .btn-submit {
+            background: var(--brand);
+            color: #fff;
+            padding: 14px 40px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); opacity: 0.9; }
+
+        #loading { text-align: center; padding: 100px; font-weight: 600; color: var(--text-secondary); }
+    </style>
 </head>
 
 <body>
-<div class="container">
-  <div id="loading">Loading form...</div>
 
-  <div id="form-container" style="display:none">
-    <form id="publicForm">
-      <div class="form-card form-header">
-        <h1 id="displayTitle">Untitled Form</h1>
-        <div class="description">Submit your response via Vasuki Cloud ATN.</div>
-        <div class="required-notice">* Indicates required question</div>
-      </div>
+    <section class="header-hero" id="formHero">
+        <div class="wave-container">
+            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+                <path d="M0,160L80,176C160,192,320,224,480,213.3C640,203,800,149,960,138.7C1120,128,1280,160,1360,176L1440,192L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+            </svg>
+        </div>
+    </section>
 
-      <div id="fieldsList"></div>
+    <div class="container">
+        <div id="loading">Initialising Vasuki Node...</div>
 
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <button type="submit" class="btn-submit">Submit</button>
-        <button type="button" onclick="location.reload()"
-          style="background:none;border:none;color:var(--text-secondary);cursor:pointer">
-          Clear form
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+        <div id="form-container" style="display:none">
+            <form id="publicForm">
+                <div class="form-card form-header-card">
+                    <h1 id="displayTitle">Loading...</h1>
+                    <div class="description" id="displayDesc">Secure form transmission enabled.</div>
+                </div>
 
-<!-- ====================== SCRIPT ====================== -->
+                <div id="fieldsList"></div>
+
+                <button type="submit" class="btn-submit">Submit Response</button>
+                
+                <p onclick="location.reload()" style="text-align:center; color:var(--text-secondary); font-size:12px; margin-top:20px; cursor:pointer;">
+                    Clear form and restart
+                </p>
+            </form>
+        </div>
+    </div>
+
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-
-
-window.supabase = createClient(
+const supabase = createClient(
   "https://aitckloahlwemlekaour.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA"
 );
 
-/* ---------- URL ---------- */
 const params = new URLSearchParams(location.search);
 const formId = params.get("id");
 let currentFields = [];
 
-/* ---------- LOAD FORM ---------- */
+
+
 async function loadForm(){
-  if(!formId){
-    document.body.innerHTML='<h2 class="error-msg">Invalid Form Link</h2>';
-    return;
-  }
-
-  try{
-    const {data,error} = await supabase
-      .from("forms")
-      .select("*")
-      .eq("id",formId)
-      .single();
-
-    if(error || !data) throw error;
-    renderForm(data);
-
-  }catch(e){
-    console.error(e);
-    document.body.innerHTML='<h2 class="error-msg">Form not found.</h2>';
-  }
+    if(!formId) return;
+    const {data, error} = await supabase.from("forms").select("*").eq("id", formId).single();
+    if(!error && data) renderForm(data);
 }
 
-/* ---------- RENDER ---------- */
 function renderForm(form){
-  document.getElementById("loading").style.display="none";
-  document.getElementById("form-container").style.display="block";
-  document.getElementById("displayTitle").textContent=form.title;
+    document.getElementById("loading").style.display="none";
+    document.getElementById("form-container").style.display="block";
+    document.getElementById("displayTitle").textContent = form.title;
+    
+    // Set brand color if available in a parent org or default
+    if(form.theme_color) document.documentElement.style.setProperty("--brand", form.theme_color);
 
-  currentFields=form.fields||[];
-  const wrap=document.getElementById("fieldsList");
+    currentFields = form.fields || [];
+    const wrap = document.getElementById("fieldsList");
 
-  wrap.innerHTML=currentFields.map(f=>{
-    let input="";
-    const req=f.required?'required':'';
+    wrap.innerHTML = currentFields.map(f => {
+        let input = "";
+        const req = f.required ? 'required' : '';
 
-    switch(f.type){
-      case "textarea":
-        input=`<textarea class="input-textarea" name="${f.id}" rows="3" ${req}></textarea>`;
-        break;
+        switch(f.type){
+            case "textarea":
+                input = `<textarea class="input-textarea" name="${f.id}" rows="4" ${req} placeholder="Your answer"></textarea>`;
+                break;
+            case "select":
+                input = `<select class="input-select" name="${f.id}" ${req}>
+                    <option value="">Choose an option</option>
+                    ${f.options.map(o => `<option value="${o}">${o}</option>`).join("")}
+                </select>`;
+                break;
+            case "radio":
+                input = f.options.map(o => `
+                    <label class="option-item">
+                        <input type="radio" name="${f.id}" value="${o}" ${req}>
+                        <span>${o}</span>
+                    </label>`).join("");
+                break;
+            case "checkbox":
+                input = f.options.map(o => `
+                    <label class="option-item">
+                        <input type="checkbox" name="${f.id}" value="${o}">
+                        <span>${o}</span>
+                    </label>`).join("");
+                break;
+            default:
+                input = `<input class="input-text" type="${f.type}" name="${f.id}" ${req} placeholder="Your answer">`;
+        }
 
-      case "select":
-        input=`<select class="input-select" name="${f.id}" ${req}>
-          <option value="">Choose</option>
-          ${f.options.map(o=>`<option value="${o}">${o}</option>`).join("")}
-        </select>`;
-        break;
-
-      case "radio":
-        input=f.options.map(o=>`
-          <label class="option-item">
-            <input type="radio" name="${f.id}" value="${o}" ${req}>
-            <span>${o}</span>
-          </label>`).join("");
-        break;
-
-      case "checkbox":
-        input=f.options.map(o=>`
-          <label class="option-item">
-            <input type="checkbox" name="${f.id}" value="${o}">
-            <span>${o}</span>
-          </label>`).join("");
-        break;
-
-      default:
-        input=`<input class="input-text" type="${f.type}" name="${f.id}" ${req}>`;
-    }
-
-    return`
-      <div class="field-group">
-        <label class="field-label">
-          ${f.label} ${f.required?'<span style="color:red">*</span>':''}
-        </label>
-        ${input}
-      </div>`;
-  }).join("");
+        return `
+            <div class="form-card">
+                <label class="field-label">
+                    ${f.label} ${f.required ? '<span style="color:#d93025">*</span>' : ''}
+                </label>
+                ${input}
+            </div>`;
+    }).join("");
 }
 
-/* ---------- SUBMIT ---------- */
-document.getElementById("publicForm").addEventListener("submit",async e=>{
-  e.preventDefault();
+document.getElementById("publicForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const payload = {};
+    fd.forEach((v, k) => {
+        if(payload[k]){
+            if(!Array.isArray(payload[k])) payload[k] = [payload[k]];
+            payload[k].push(v);
+        } else payload[k] = v;
+    });
 
-  /* checkbox required validation */
-  for(const f of currentFields){
-    if(f.required && f.type==="checkbox"){
-      const checked=document.querySelectorAll(`input[name="${f.id}"]:checked`);
-      if(!checked.length){
-        alert(`Please select at least one option for "${f.label}"`);
-        return;
-      }
+    const {error} = await supabase.from("form_responses").insert({
+        form_id: formId,
+        submission: payload,
+        created_at: new Date().toISOString()
+    });
+
+    if(!error) {
+        document.getElementById("form-container").innerHTML = `
+            <div class="form-card form-header-card">
+                <h1>Thank You</h1>
+                <p class="description">Your response has been successfully recorded in the Vasuki Network.</p>
+                <button onclick="location.reload()" class="btn-submit" style="margin-top:20px">Submit New</button>
+            </div>`;
     }
-  }
-
-  const fd=new FormData(e.target);
-  const payload={};
-
-  fd.forEach((v,k)=>{
-    if(payload[k]){
-      if(!Array.isArray(payload[k])) payload[k]=[payload[k]];
-      payload[k].push(v);
-    }else payload[k]=v;
-  });
-
-  try{
-    const {error}=await supabase
-      .from("form_responses")
-      .insert({
-        form_id:formId,
-        submission:payload,
-        created_at:new Date().toISOString()
-      });
-
-    if(error) throw error;
-
-    document.getElementById("form-container").innerHTML=`
-      <div class="form-card">
-        <h1>${document.getElementById("displayTitle").textContent}</h1>
-        <p>Your response has been recorded.</p>
-        <a href="#" onclick="location.reload()" style="color:var(--primary)">
-          Submit another response
-        </a>
-      </div>`;
-  }catch(err){
-    alert("Submission failed: "+err.message);
-  }
 });
+
 
 loadForm();
 </script>
 </body>
 </html>
-
