@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neem | Vasuki iTech Cloud</title>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,800&amp;family=Plus+Jakarta+Sans:wght@300;400;600&amp;family=Great+Vibes&amp;display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-gold: #bd8317;
-            --brand-gold-hover: #9e701b;
+            --brand-gold: #23648f;
+            --brand-gold-hover: #0f3b58;
             --text-main: #3c4043;
             --text-light: #70757a;
             --border: #dadce0;
@@ -69,8 +70,8 @@
         }
 
         .heading-logo {
-            font-size: 19px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 100;
         }
 
         .nav-links {
@@ -119,7 +120,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: radial-gradient(circle at 50% 50%, #775e41 100%, #cfb184 100%);
+            background: rgb(247, 251, 255);
         }
 
         #hero-canvas {
@@ -143,7 +144,7 @@
         .hero-content * { pointer-events: auto; }
 
         .hero-content span {
-            color: #fdf0d6;
+            color: #426894;
             font-weight: 700;
             font-size: 12px;
             text-transform: uppercase;
@@ -155,15 +156,15 @@
         h1 {
             font-size: clamp(32px, 6vw, 56px);
             font-weight: 500;
-            color: #f7f6f5;
+            color: #204466;
             line-height: 1.2;
             margin-bottom: 24px;
-            font-family: CustomFont;
+            font-family: 'bodoni moda', serif;
         }
 
         .btn-pill {
             display: inline-block;
-            background-color: #3d2d0e;
+            background-color: #0e243d;
             color: white;
             padding: 14px 28px;
             border-radius: 100px;
@@ -176,7 +177,7 @@
 
         .btn-pill:hover {
             transform: translateY(-2px);
-            background-color: #4d3a12;
+            background-color: #12354d;
         }
 
         /* Features Section */
@@ -260,7 +261,6 @@
 
     <nav>
         <div class="nav-brand">
-            <img src="./logo.png" alt="" class="logo">
             <span class="heading-logo">Vasuki Cloud</span>
         </div>
         
@@ -268,8 +268,7 @@
             <a href="./login.html">Login</a>
             <a href="mailto:codeclutch.adamyarao@gmail.com">Support</a>
             <a href="./guppt/">Guppt</a>
-            <a href = "./workshop">Workshops</a>
-            <a href = "./argon/">Vasuki Argon</a>
+            <a href="./argon/">Argon</a>
         </div>
 
         <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -284,7 +283,7 @@
         <div class="hero-content">
             <span>Vasuki Neem</span>
             <h1>Simple, scalable cloud storage for everyone.</h1>
-            <p style="margin-bottom: 30px; color: #ececec; letter-spacing: 1.5px;">Prioritizing startups and individual creators with forever-free storage.</p>
+            <p style="margin-bottom: 30px; color: #3d5770; letter-spacing: 1.5px;">Prioritizing startups and individual creators with forever-free storage.</p>
             <a href="./signup.html" class="btn-pill">Get Started for Free ⇲</a>
         </div>
     </div>
@@ -380,7 +379,7 @@
                 }
 
                 let opacity = (z2 + p.baseRadius) / (2 * p.baseRadius);
-                ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.3})`;
+                ctx.fillStyle = `#cfe0fa`;
                 ctx.beginPath();
                 ctx.arc(drawX, drawY, 2.5 * perspective, 0, Math.PI * 2);
                 ctx.fill();
