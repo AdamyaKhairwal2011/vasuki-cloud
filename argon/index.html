@@ -2,254 +2,292 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VASUKI ARGON | Sovereign Operating System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,800&family=Plus+Jakarta+Sans:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VASUKI ARGON | Enterprise Sovereignty</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ivory: #ffffff;
-            --silver: #f8fafc;
-            --charcoal: #0a0a0a;
-            --mercedes-grey: #64748b;
-            --accent: #e2e8f0;
-            --transition: 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+            --bg: #ffffff;
+            --text: #050505;
+            --dim: #71717a;
+            --accent: #18181b;
+            --border: rgba(0,0,0,0.08);
+            --transition: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
         
         body { 
-            background: var(--ivory); 
-            color: var(--charcoal); 
+            background: var(--bg); 
+            color: var(--text); 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             overflow: hidden;
-            line-height: 1.5;
+            height: 100vh;
         }
 
-        /* --- GEOMETRIC BACKGROUND --- */
-        .bg-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; opacity: 0.4; pointer-events: none;
+        .bg-grid {
+            position: fixed; inset: 0;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -1;
+            mask-image: radial-gradient(circle at center, black, transparent 90%);
         }
 
-        /* --- CINEMATIC TRANSITION --- */
-        #page-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--charcoal); z-index: 2000;
-            clip-path: circle(0% at 50% 50%);
-            transition: var(--transition);
+        #loader {
+            position: fixed; inset: 0; background: var(--accent); 
+            z-index: 3000; transform: translateY(100%);
+            transition: transform 0.7s var(--transition);
         }
 
         /* --- NAVIGATION --- */
-        nav {
-            position: fixed; top: 0; width: 100%; height: 120px;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 5%; z-index: 1000;
-        }
-        .logo { 
-            font-family: 'Bodoni Moda'; font-weight: 800; font-size: 1.6rem; 
-            letter-spacing: 4px; cursor: pointer; 
-            padding-left: 15px;
-        }
+nav {
+    position: fixed; 
+    top: 0; 
+    width: 100%; 
+    height: 90px;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    padding: 0 6%; 
+    z-index: 1500;       /* below hamburger, above content */
+}
+
+        .logo img { height: 22px; width: auto; letter-spacing: 2px; }
         
-        .nav-links { display: flex; gap: 40px; }
+        .nav-links { display: flex; gap: 32px; }
         .nav-item { 
-            font-size: 0.65rem; letter-spacing: 3px; font-weight: 600; 
-            color: var(--mercedes-grey); cursor: pointer; text-transform: uppercase;
-            position: relative; transition: 0.3s;
+            font-size: 11px; letter-spacing: 0.15em; font-weight: 500; 
+            color: var(--dim); cursor: pointer; text-transform: uppercase;
+            transition: color 0.3s ease;
         }
-        .nav-item:hover, .nav-item.active { color: var(--charcoal); }
-        .nav-item.active::after {
-            content: ''; position: absolute; bottom: -8px; left: 0; width: 20px; height: 1px; background: var(--charcoal);
+        .nav-item:hover { color: var(--text); }
+        .nav-item.active { color: var(--text); border-bottom: 1px solid var(--text); }
+
+/* --- REFINED HAMBURGER --- */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    position: fixed;      /* IMPORTANT */
+    top: 30px;            /* adjust if needed */
+    right: 6%;            /* match nav padding */
+    z-index: 9999;        /* always above menu */
+}
+
+        
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 1.5px;
+            background: var(--text);
+            transition: transform 0.4s var(--transition), background 0.4s;
+            position: absolute;
         }
 
-        /* --- MOBILE HAMBURGER --- */
-        .hamburger {
-            display: none; flex-direction: column; gap: 8px; cursor: pointer; z-index: 1100;
-        }
-        .hamburger span { width: 30px; height: 1px; background: var(--charcoal); transition: 0.4s; }
+        #bar1 { transform: translateY(-4px); }
+        #bar2 { transform: translateY(4px); }
 
-        /* --- PAGE STRUCTURE --- */
+        /* The X Transformation */
+        .hamburger.active #bar1 { transform: translateY(0) rotate(45deg); }
+        .hamburger.active #bar2 { transform: translateY(0) rotate(-45deg); }
+
+        /* --- MOBILE MENU --- */
+.mobile-menu {
+    position: fixed; 
+    inset: 0;
+    background: var(--bg);
+    z-index: 2000;        /* below hamburger */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    transform: translateX(100%);
+    transition: transform 0.6s var(--transition);
+}
+
+.mobile-menu.open { 
+    transform: translateX(0); 
+}
+
+
+        .mobile-menu .nav-item { 
+            font-size: 1.5rem; 
+            letter-spacing: 0.2em; 
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        /* --- LAYOUT LOGIC --- */
         .page {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
-            padding: 120px 10% 0; display: none;
-            opacity: 0; transform: scale(0.98);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            position: absolute; inset: 0;
+            padding: 120px 6% 60px;
+            display: none; opacity: 0;
+            flex-direction: column; justify-content: center;
             overflow-y: auto;
         }
-        .page.active { display: flex; opacity: 1; transform: scale(1); flex-direction: column; justify-content: center; }
+        .page.active { display: flex; opacity: 1; animation: reveal 1s var(--transition) forwards; }
 
-        /* --- CONTENT COMPONENTS --- */
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .hero-title { 
-            font-family: 'Bodoni Moda'; font-size: clamp(3rem, 10vw, 7.5rem); 
-            line-height: 0.85; margin-bottom: 30px; letter-spacing: -2px;
+            font-family: 'Bodoni Moda'; font-size: clamp(3rem, 10vw, 6.5rem); 
+            font-weight: 400; line-height: 0.85; margin-bottom: 25px; letter-spacing: -0.03em;
         }
         .hero-sub { 
-            max-width: 450px; font-size: 1.1rem; color: var(--mercedes-grey); 
-            border-left: 1px solid var(--accent); padding-left: 25px;
+            max-width: 480px; font-size: 1rem; color: var(--dim); 
+            margin-bottom: 40px; line-height: 1.6; font-weight: 300;
         }
 
-        .vision-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 100px; align-items: start; }
-        .manifesto { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 300; color: #1a1a1a; line-height: 1.3; }
-        
-        /* BENTO GRID REFINED */
-        .bento-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; 
-            padding: 20px 0 60px;
-        }
-        .bento-item {
-            background: var(--silver); padding: 40px; border-radius: 2px;
-            border: 1px solid transparent; transition: 0.4s;
-            display: flex; flex-direction: column; justify-content: space-between;
-            min-height: 280px;
-        }
-        .bento-item:hover { border-color: var(--charcoal); background: #fff; }
-        .bento-item h3 { font-family: 'Bodoni Moda'; font-size: 1.5rem; font-weight: 400; }
-        .bento-item p { font-size: 0.85rem; color: var(--mercedes-grey); margin-top: 15px; }
-
-        .btn-gold {
-            background: var(--charcoal); color: white; padding: 22px 45px;
+        .btn-premium {
+            background: var(--accent); color: #fff; padding: 20px 40px;
             text-decoration: none; display: inline-block;
-            font-size: 0.75rem; font-weight: 700; letter-spacing: 3px;
-            text-transform: uppercase; margin-top: 40px; transition: 0.4s;
+            font-size: 12px; font-weight: 600; letter-spacing: 0.2em;
+            text-transform: uppercase; transition: all 0.4s var(--transition);
+            border: 1px solid var(--accent);
+            width: max-content;
         }
-        .btn-gold:hover { padding-right: 60px; }
+        .btn-premium:hover { background: transparent; color: var(--text); }
 
-        /* --- UTILITY SVGS --- */
-        .geo-shape { position: absolute; fill: none; stroke: var(--accent); stroke-width: 1; }
+        .bento { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 40px; }
+        .bento-card {
+            background: #ffffff; border: 1px solid var(--border);
+            padding: 40px; border-radius: 2px;
+            transition: border-color 0.3s ease;
+        }
+        .bento-card:hover { border-color: #000; }
+        .bento-card h3 { font-family: 'Bodoni Moda'; font-size: 1.75rem; font-weight: 400; margin-bottom: 12px; }
+        .bento-card p { font-size: 0.9rem; color: var(--dim); line-height: 1.5; }
 
-        /* --- MOBILE ADAPTATION --- */
-        @media (max-width: 992px) {
-            nav { height: 90px; }
-            .nav-links {
-                position: fixed; top: 0; right: -100%; width: 100%; height: 100vh;
-                background: #fff; flex-direction: column; justify-content: center;
-                align-items: center; transition: 0.6s var(--transition);
-            }
-            .nav-links.open { right: 0; }
+        .sig-box { margin-top: 60px; border-top: 1px solid var(--border); padding-top: 25px; max-width: 250px; }
+        .sig-box img { height: 45px; margin-bottom: 10px; }
+
+        @media (min-width: 768px) {
+            .bento { grid-template-columns: repeat(2, 1fr); }
+            .page { padding: 0 10%; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
             .hamburger { display: flex; }
-            .vision-grid { grid-template-columns: 1fr; gap: 50px; }
-            .bento-grid { grid-template-columns: 1fr; }
-            .private-office { display: none; }
-            .hero-title { margin-top: 40px; }
+            .hero-title { font-size: 3.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-overlay">
-        <svg width="100%" height="100%">
-            <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-                <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
-            </pattern>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-            <circle cx="90%" cy="20%" r="150" class="geo-shape" />
-            <path d="M-50 400 L200 600" class="geo-shape" />
-        </svg>
-    </div>
-
-    <div id="page-loader"></div>
+    <div class="bg-grid"></div>
+    <div id="loader"></div>
 
     <nav>
-        <div class="logo" onclick="navigateTo('home')"><img src="./argon.png" width="150" alt="Argon Logo"></div>
-        
-        <div class="nav-links" id="navLinks">
-            <span class="nav-item active" onclick="navigateTo('home')" id="nav-home">01. Home</span>
-            <span class="nav-item" onclick="navigateTo('vision')" id="nav-vision">02. Vision</span>
-            <span class="nav-item" onclick="navigateTo('ecosystem')" id="nav-ecosystem">03. Ecosystem</span>
-            <span class="nav-item" onclick="navigateTo('investment')" id="nav-investment">04. Investment</span>
+        <div class="logo" onclick="navigateTo('home')" style="cursor:pointer">
+            <img src="./argon.png" alt="VASUKI ARGON">
         </div>
-
-        <div class="hamburger" onclick="toggleMenu()" id="burger">
-            <span></span><span></span>
+        <div class="nav-links">
+            <span class="nav-item active" onclick="navigateTo('home')" id="nav-home">Overview</span>
+            <span class="nav-item" onclick="navigateTo('ecosystem')" id="nav-ecosystem">Infrastructure</span>
+            <span class="nav-item" onclick="navigateTo('investment')" id="nav-investment">Acquisition</span>
         </div>
-
-        <div class="nav-item private-office" style="color: var(--charcoal); font-weight: 800;">
-            EST. 2024 — PRIVATE ACCESS
+        <div class="hamburger" onclick="toggleMenu()">
+            <span id="bar1"></span>
+            <span id="bar2"></span>
         </div>
     </nav>
 
-    <section id="page-home" class="page active">
-        <span class="hero-title">Architecting <br> Digital Sovereignty.</span>
-        <p class="hero-sub">Where Startups Are Built For Longevity And Purpose Of Being The 1%.</p>
-        <div><a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" class="btn-gold">Initiate Protocol</a></div>
-    </section>
+    <div class="mobile-menu" id="mobileMenu">
+        <span class="nav-item" onclick="mobileNavigate('home')">Overview</span>
+        <span class="nav-item" onclick="mobileNavigate('ecosystem')">Infrastructure</span>
+        <span class="nav-item" onclick="mobileNavigate('investment')">Acquisition</span>
+    </div>
 
-    <section id="page-vision" class="page">
-        <div class="vision-grid">
-            <div class="manifesto">
-                "We don't build apps. We build <strong>Sovereign Systems</strong>. In a world of fleeting subscriptions, we provide permanent digital dominance."
-            </div>
-            <div class="signature-block">
-                <div style="font-family: 'Great Vibes'; font-size: 3.5rem;">
-                    <img src="./signature.png" alt="" width="300">
-                </div>
-                <div style="letter-spacing: 5px; font-size: 0.6rem; color: var(--mercedes-grey); margin-bottom: 20px;">CHIEF EXECUTIVE OFFICER</div>
-                <div style="width: 40px; height: 1px; background: var(--charcoal); margin-bottom: 20px;"></div>
-                <p style="font-size: 0.9rem; color: var(--mercedes-grey);">
-                    At <strong>Vasuki iTech</strong>, we've transitioned from service-level engineering to fundamental architectural governance.
-                </p>
-            </div>
+    <section id="page-home" class="page active">
+        <h1 class="hero-title">Architectural<br>Sovereignty.</h1>
+        <p class="hero-sub">Providing the high-performance framework necessary for visionary founders to scale without technical friction.</p>
+        <div><a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" class="btn-premium">Request Deployment</a></div>
+        <div class="sig-box">
+            <img src="./signature.png" alt="Signature">
+            <p style="font-size: 9px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase;">Office of the CEO</p>
         </div>
     </section>
 
     <section id="page-ecosystem" class="page">
-        <div class="bento-grid">
-            <div class="bento-item" style="grid-column: span 2;">
-                <h3>01 / DataBase Management</h3>
-                <p>Manage Your Servers, Securely.</p>
-                <svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" stroke="black" fill="none"/></svg>
+        <h1 class="hero-title">Core Assets.</h1>
+        <div class="bento">
+            <div class="bento-card">
+                <h3>Data Governance</h3>
+                <p>Enterprise-grade server management with end-to-end encryption protocols.</p>
             </div>
-            <div class="bento-item">
-                <h3>02 / Digital Campaigns</h3>
-                <p>Run Form Submissions, Directly On Your Digital Card.</p>
+            <div class="bento-card">
+                <h3>Strategic Outreach</h3>
+                <p>Direct digital conversion assets designed for high-stakes networking.</p>
             </div>
-            <div class="bento-item">
-                <h3>03 / Cloud Management</h3>
-                <p>Manage Cloud Sources As Easily As Managing Folders.</p>
+            <div class="bento-card">
+                <h3>Cloud Logic</h3>
+                <p>Modular, folder-based asset management for seamless institutional scaling.</p>
             </div>
-            <div class="bento-item" style="grid-column: span 4; background: var(--charcoal); color: white; min-height: 150px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3>Standing Out With Digital Visitng Cards</h3>
-                    <span style="font-size: 0.7rem; letter-spacing: 2px;">Create Something That Leaves An Impression.</span>
-                </div>
+            <div class="bento-card" style="background: var(--accent); color: #fff;">
+                <h3>Digital Identity</h3>
+                <p>Sophisticated digital visiting cards that establish immediate authority.</p>
             </div>
         </div>
     </section>
 
-    <section id="page-investment" class="page">
-        <div style="text-align: center;">
-            <div style="letter-spacing: 10px; font-size: 0.7rem; color: var(--mercedes-grey); margin-bottom: 20px;">PERPETUAL ASSET ACQUISITION</div>
-            <div class="hero-title" style="font-size: clamp(3rem, 15vw, 10rem);">₹299 /-</div>
-            <p style="max-width: 500px; margin: 0 auto; color: var(--mercedes-grey); font-size: 0.9rem;">
-                Something Which Gives You Actual Access And Ease Of Startup. Absolute ownership of the Argon kernel for your enterprise.
-            </p>
-            <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" class="btn-gold">Commission Your Access</a>
+    <section id="page-investment" class="page" style="text-align: center;">
+        <p style="letter-spacing: 6px; font-size: 11px; color: var(--dim); margin-bottom: 15px; text-transform: uppercase;">Private Acquisition</p>
+        <h1 class="hero-title">₹299</h1>
+        <p class="hero-sub" style="margin: 0 auto 40px;">Unrestricted perpetual ownership of the Argon infrastructure. Zero recurring liabilities.</p>
+        <div style="width: 100%; text-align: center;">        
+            <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" class="btn-premium">Secure Access</a>
         </div>
     </section>
 
     <script>
-        function toggleMenu() {
-            const nav = document.getElementById('navLinks');
-            nav.classList.toggle('open');
+function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const hamburger = document.querySelector('.hamburger');
+            
+            menu.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        }
+
+        function mobileNavigate(pageId) {
+            toggleMenu(); // Closes menu and resets hamburger
+            setTimeout(() => navigateTo(pageId), 300);
         }
 
         function navigateTo(pageId) {
-            document.getElementById('navLinks').classList.remove('open');
-            const loader = document.getElementById('page-loader');
-            
-            loader.style.clipPath = "circle(150% at 50% 50%)";
+            const loader = document.getElementById('loader');
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage.classList.contains('active')) return;
+
+            loader.style.transform = "translateY(0%)";
             
             setTimeout(() => {
-                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-                document.getElementById('page-' + pageId).classList.add('active');
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                targetPage.classList.add('active');
                 
-                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-                const activeNav = document.getElementById('nav-' + pageId);
-                if(activeNav) activeNav.classList.add('active');
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                const desktopNav = document.getElementById('nav-' + pageId);
+                if(desktopNav) desktopNav.classList.add('active');
 
-                loader.style.clipPath = "circle(0% at 50% 50%)";
-            }, 600);
+                loader.style.transform = "translateY(-100%)";
+                
+                setTimeout(() => {
+                    loader.style.transition = "none";
+                    loader.style.transform = "translateY(100%)";
+                    setTimeout(() => loader.style.transition = "transform 0.7s var(--transition)", 50);
+                }, 700);
+            }, 700);
         }
+
+        document.addEventListener('touchstart', function() {}, {passive: true});
     </script>
 </body>
 </html>
