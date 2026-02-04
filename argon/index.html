@@ -3,297 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VASUKI ARGON | Sovereign Operating System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,800&family=Plus+Jakarta+Sans:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <title>Vasuki Argon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --ivory: #ffffff;
-            --silver: #f8fafc;
-            --charcoal: #0a0a0a;
-            --mercedes-grey: #64748b;
-            --accent: #e2e8f0;
-            --transition: 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+            --primary-blue: #1a73e8;
+            --text-dark: #202124;
+            --text-light: #5f6368;
+            --bg-gradient: radial-gradient(circle at center, #ffffff 0%, #f1f3f4 100%);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            background: var(--ivory); 
-            color: var(--charcoal); 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            overflow: hidden; 
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Google Sans', sans-serif;
+            color: var(--text-dark);
+            background: var(--bg-gradient);
+            height: 100%;
         }
 
-        /* --- BACKGROUND & LOADER --- */
-        .bg-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; opacity: 0.4; pointer-events: none;
-        }
-
-        #page-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--charcoal); z-index: 2000;
-            clip-path: circle(0% at 50% 50%);
-            transition: var(--transition);
-            pointer-events: none;
-        }
-
-        /* --- NAVIGATION --- */
         nav {
-            position: fixed; top: 0; width: 100%; height: clamp(80px, 10vh, 120px);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 5%; z-index: 1000;
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(10px);
-        }
-        .logo { cursor: pointer; display: flex; align-items: center; }
-        .logo img { width: clamp(100px, 15vw, 150px); height: auto; }
-        
-        .nav-links { display: flex; gap: clamp(15px, 3vw, 40px); }
-        .nav-item { 
-            font-size: clamp(0.55rem, 1vw, 0.65rem); letter-spacing: 2px; font-weight: 600; 
-            color: var(--mercedes-grey); cursor: pointer; text-transform: uppercase;
-            position: relative; transition: 0.3s; white-space: nowrap;
-        }
-        .nav-item:hover, .nav-item.active { color: var(--charcoal); }
-        .nav-item.active::after {
-            content: ''; position: absolute; bottom: -8px; left: 0; width: 20px; height: 1px; background: var(--charcoal);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
         }
 
-        .hamburger {
-            display: none; flex-direction: column; gap: 6px; cursor: pointer; z-index: 1900; padding: 10px;
-        }
-        .hamburger span { width: 25px; height: 1px; background: var(--charcoal); transition: 0.4s; }
-
-        /* --- PAGE STRUCTURE --- */
-        .page {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
-            padding: clamp(100px, 15vh, 140px) 7% 60px; display: none;
-            opacity: 0; transform: translateY(10px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-            overflow-y: auto; overflow-x: hidden;
-            margin-top: 17vh;
-        }
-        .page.active { display: flex; opacity: 1; transform: translateY(0); flex-direction: column; }
-
-        /* --- HERO SECTION --- */
-        .hero-title { 
-            font-family: 'Bodoni Moda'; font-size: clamp(2.5rem, 8vw, 7.5rem); 
-            line-height: 0.9; margin-bottom: 30px; letter-spacing: -2px;
-        }
-        .hero-sub { 
-            max-width: 500px; font-size: clamp(0.9rem, 1.5vw, 1.1rem); color: var(--mercedes-grey); 
-            border-left: 1px solid var(--accent); padding-left: 20px; margin-bottom: 20px;
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
         }
 
-        /* --- VISION SECTION --- */
-        .vision-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: clamp(40px, 8vw, 100px); align-items: center; 
+        .logo {
+            font-size: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .manifesto { font-size: clamp(1.3rem, 3vw, 2.2rem); font-weight: 300; color: #1a1a1a; line-height: 1.3; }
-        .signature-block img { width: clamp(200px, 25vw, 300px); height: auto; }
 
-        /* --- BENTO GRID (RESPONSIVE) --- */
-        .bento-grid {
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 15px; 
-            padding: 20px 0 80px;
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            color: var(--text-light);
+            font-size: 14px;
         }
-        .bento-item {
-            background: var(--silver); padding: clamp(20px, 4vw, 40px); border-radius: 2px;
-            border: 1px solid transparent; transition: 0.4s;
-            display: flex; flex-direction: column; justify-content: space-between;
-            min-height: clamp(200px, 30vh, 280px);
+
+        .nav-links span { cursor: pointer; }
+        .nav-links span:hover { color: var(--text-dark); }
+
+        .nav-right {
+            display: flex;
+            gap: 12px;
         }
-        .bento-item:hover { border-color: var(--charcoal); background: #fff; }
-        .bento-item h3 { font-family: 'Bodoni Moda'; font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 400; }
-        .bento-item p { font-size: 0.85rem; color: var(--mercedes-grey); margin-top: 10px; }
 
-        .btn-gold {
-            background: var(--charcoal); color: white; padding: 18px 35px;
-            text-decoration: none; display: inline-block;
-            font-size: 0.7rem; font-weight: 700; letter-spacing: 2px;
-            text-transform: uppercase; transition: 0.4s; border: none; cursor: pointer;
-            width: fit-content;
+        .btn {
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
         }
-        .btn-gold:hover { padding-right: 50px; background: #222; }
 
-        .geo-shape { position: absolute; fill: none; stroke: var(--accent); stroke-width: 1; }
+        .btn-outline {
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+        }
 
-        /* --- BREAKPOINTS --- */
-        @media (max-width: 1024px) {
-            .bento-grid { grid-template-columns: repeat(2, 1fr); }
-            .bento-item.span-4 { grid-column: span 2 !important; }
+        .btn-solid {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .os-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 64px;
+            line-height: 1.1;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .highlight-box {
+            background: #fde7e9;
+            color: #d93025;
+            padding: 0 15px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+
+        .sub-text {
+            color: var(--text-light);
+            font-size: 18px;
+            max-width: 600px;
+            line-height: 1.6;
+            margin: 30px 0;
         }
 
         @media (max-width: 768px) {
-            .hamburger { display: flex; }
-            .nav-links {
-                position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
-                background: #fff; flex-direction: column; justify-content: center;
-                align-items: center; transition: 0.6s var(--transition);
-                box-shadow: -10px 0 30px rgba(0,0,0,0.05);
-            }
-            .nav-links.open { right: 0; }
-            .private-office { display: none; }
-            .bento-grid { grid-template-columns: 1fr; }
-            .bento-item { grid-column: span 1 !important; min-height: 200px; }
-            .hero-title { margin-top: 20px; }
-            .vision-grid { grid-template-columns: 1fr; text-align: left; }
-        }
-
-        @media (max-height: 600px) {
-            .page { padding-top: 80px; justify-content: flex-start; }
-            .hero-title { font-size: 2.5rem; }
+            h1 { font-size: 40px; }
+            .nav-links { display: none; }
+            .nav-left { gap: 10px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-overlay">
-        <svg width="100%" height="100%">
-            <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-                <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
-            </pattern>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-            <circle cx="90%" cy="20%" r="150" class="geo-shape" />
-        </svg>
-    </div>
-
-    <div id="page-loader"></div>
-
     <nav>
-        <div class="logo" onclick="navigateTo('home')">
-            <img src="./argon.png" alt="Argon Logo" onerror="this.style.display='none'; this.after('ARGON')">
+        <div class="nav-left">
+            <div class="logo">
+                <!-- Replace logo image if you want later -->
+                Vasuki Argon
+            </div>
+            <div class="nav-links">
+            </div>
         </div>
-        
-        <div class="nav-links" id="navLinks">
-            <span class="nav-item active" onclick="navigateTo('home')" id="nav-home">01. Home</span>
-            <span class="nav-item" onclick="navigateTo('vision')" id="nav-vision">02. Vision</span>
-            <span class="nav-item" onclick="navigateTo('ecosystem')" id="nav-ecosystem">03. Ecosystem</span>
-            <span class="nav-item" onclick="navigateTo('investment')" id="nav-investment">04. Investment</span>
-        </div>
-
-        <div class="hamburger" onclick="toggleMenu()" id="burger">
-            <span></span><span></span>
-        </div>
-
-        <div class="nav-item private-office" style="color: var(--charcoal); font-weight: 800;">
-            EST. 2024 — PRIVATE ACCESS
+        <div class="nav-right">
+            <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" class="btn btn-outline">Request Access</a>
         </div>
     </nav>
 
-    <section id="page-home" class="page active">
-        <h1 class="hero-title">Architecting <br> Digital Sovereignty.</h1>
-        <p class="hero-sub">Where Startups Are Built For Longevity And Purpose Of Being The 1%.</p>
-        <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" target="_blank" class="btn-gold">Initiate Protocol</a>
-    </section>
-
-    <section id="page-vision" class="page">
-        <div class="vision-grid">
-            <div class="manifesto">
-                "We don't build apps. We build <strong>Sovereign Systems</strong>. In a world of fleeting subscriptions, we provide permanent digital dominance."
-            </div>
-            <div class="signature-block">
-                <div style="font-family: 'Great Vibes'; font-size: 3.5rem; margin-bottom: 10px;">
-                    <img src="./signature.png" alt="Signature" onerror="this.style.display='none'; this.after('Adamya Khairwal')">
-                </div>
-                <div style="letter-spacing: 5px; font-size: 0.6rem; color: var(--mercedes-grey); margin-bottom: 20px;">CHIEF EXECUTIVE OFFICER</div>
-                <div style="width: 40px; height: 1px; background: var(--charcoal); margin-bottom: 20px;"></div>
-                <p style="font-size: 0.9rem; color: var(--mercedes-grey); max-width: 400px;">
-                    At <strong>Vasuki iTech</strong>, we've transitioned from service-level engineering to fundamental architectural governance.
-                </p>
-            </div>
+    <section class="hero">
+        <div class="os-badge">
+            <!-- Replace icon later if needed -->
+            <img src="./favicon-blk.png" width="30" alt="Argon Logo">
+            Vasuki Argon
         </div>
+
+        <h1>
+          <span class="highlight-box">Upgrade</span> your infrastructure to Vasuki Argon
+        </h1>
+
+        <p class="sub-text">
+            Modernize your existing devices with Vasuki Argon — a sovereign, cloud-native operating system built for security, control, and AI-native workflows.
+        </p>
+
+        <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" class="btn btn-solid" style="padding: 15px 35px; font-size: 16px;">
+          Try Vasuki Argon
+        </a>
     </section>
 
-    <section id="page-ecosystem" class="page">
-        <div class="bento-grid">
-            <div class="bento-item" style="grid-column: span 2;">
-                <h3>01 / DataBase Management</h3>
-                <p>Manage Your Servers, Securely.</p>
-                <svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" stroke="black" fill="none"/></svg>
-            </div>
-            <div class="bento-item">
-                <h3>02 / Digital Campaigns</h3>
-                <p>Run Form Submissions, Directly On Your Digital Card.</p>
-            </div>
-            <div class="bento-item">
-                <h3>03 / Cloud Management</h3>
-                <p>Manage Cloud Sources As Easily As Managing Folders.</p>
-            </div>
-            <div class="bento-item span-4" style="grid-column: span 4; background: var(--charcoal); color: white; min-height: 120px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-                    <h3>Standing Out With Digital Visiting Cards</h3>
-                    <span style="font-size: 0.7rem; letter-spacing: 2px;">Create Something That Leaves An Impression.</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="page-investment" class="page">
-        <div style="text-align: center; margin: auto 0;">
-            <div style="letter-spacing: clamp(5px, 2vw, 10px); font-size: 0.7rem; color: var(--mercedes-grey); margin-bottom: 20px;">PERPETUAL ASSET ACQUISITION</div>
-            <div class="hero-title" style="font-size: clamp(3.5rem, 12vw, 10rem); margin-bottom: 10px;">₹299 /-</div>
-            <p style="max-width: 500px; margin: 0 auto 30px; color: var(--mercedes-grey); font-size: 0.9rem;">
-                Something Which Gives You Actual Access And Ease Of Startup. Absolute ownership of the Argon kernel for your enterprise.
-            </p>
-            <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" target="_blank" class="btn-gold">Commission Your Access</a>
-        </div>
-    </section>
-
-    <script>
-        function toggleMenu() {
-            const nav = document.getElementById('navLinks');
-            const spans = document.querySelectorAll('#burger span');
-            nav.classList.toggle('open');
-            
-            if(nav.classList.contains('open')) {
-                spans[0].style.transform = "rotate(45deg) translate(5px, 5px)";
-                spans[1].style.transform = "rotate(-45deg) translate(4px, -4px)";
-            } else {
-                spans[0].style.transform = "none";
-                spans[1].style.transform = "none";
-            }
-        }
-
-        function navigateTo(pageId) {
-            const navLinks = document.getElementById('navLinks');
-            const loader = document.getElementById('page-loader');
-            
-            navLinks.classList.remove('open');
-            document.querySelectorAll('#burger span').forEach(s => s.style.transform = "none");
-
-            loader.style.pointerEvents = "all";
-            loader.style.clipPath = "circle(150% at 50% 50%)";
-            
-            setTimeout(() => {
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.remove('active');
-                    page.style.display = 'none';
-                });
-                
-                const targetPage = document.getElementById('page-' + pageId);
-                targetPage.style.display = 'flex';
-                setTimeout(() => targetPage.classList.add('active'), 20);
-                
-                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-                const activeNav = document.getElementById('nav-' + pageId);
-                if(activeNav) activeNav.classList.add('active');
-
-                loader.style.clipPath = "circle(0% at 50% 50%)";
-                loader.style.pointerEvents = "none";
-                targetPage.scrollTop = 0;
-            }, 800);
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.page:not(.active)').forEach(p => p.style.display = 'none');
-        });
-    </script>
 </body>
 </html>
