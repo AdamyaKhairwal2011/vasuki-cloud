@@ -2,315 +2,187 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Vasuki iTech | Elite Creative Engineering</title>
+    <title>Vasuki Learning | Fostering Next Generation Of Founders</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        @font-face {
-            font-family: 'BrandFont';
-            src: url('./custom.ttf');
-        }
-
         :root {
-            --brand-gold: #D4B185;
-            --brand-brown: #5E4632;
-            --hero-bg: #6B5642;
-            --accent: #A24E32;
-            --text-main: #2D1A15;
-            --text-light: #ffffff;
-            --border: #E8DED9;
+            --g-blue: #1a73e8;
+            --g-gray-100: #f8f9fa;
+            --g-gray-300: #dadce0;
+            --g-text-main: #202124;
+            --g-text-sub: #5f6368;
         }
 
-        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
 
         body {
             background: #ffffff;
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--g-text-main);
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
             line-height: 1.6;
         }
 
-        /* --- NAVIGATION (Matches Image) --- */
+        /* --- Workspace Nav --- */
         header {
-            height: 70px;
-            background: #ffffff;
+            height: 64px;
+            background: #fff;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 6%;
+            padding: 0 24px;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--g-gray-300);
         }
 
-        .nav-left { display: flex; align-items: center; gap: 10px; }
-        .nav-logo { height: 24px; }
-        .nav-brand { font-size: 18px; font-weight: 700; color: #333; }
+        .nav-brand { font-size: 22px; font-weight: 400; color: var(--g-text-sub); }
+        .nav-brand b { color: var(--g-text-main); font-weight: 500; }
 
-        .nav-links { display: flex; gap: 25px; list-style: none; }
-        .nav-links a { text-decoration: none; color: #555; font-size: 14px; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--accent); }
-
-        /* --- HERO SECTION (Themed to Image) --- */
-        .hero {
-            position: relative;
-            background-color: var(--hero-bg);
-            background-image: 
-                radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%),
-                url('https://www.transparenttextures.com/patterns/stardust.png'); /* Starburst effect */
-            padding: 180px 24px 120px;
+        /* --- Informational Hero --- */
+        .info-hero {
+            padding: 140px 24px 60px;
             text-align: center;
-            color: var(--text-light);
-            overflow: hidden;
-        }
-
-        .hero-sub {
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: rgba(255,255,255,0.8);
-        }
-
-        .hero h1 {
-            font-size: clamp(40px, 6vw, 64px);
-            font-weight: 400;
-            line-height: 1.1;
             max-width: 900px;
-            margin: 0 auto 30px;
-            letter-spacing: -1px;
-            font-family: BrandFont;
-        }
-
-        .hero p {
-            font-size: clamp(16px, 1.5vw, 18px);
-            max-width: 600px;
-            margin: 0 auto 40px;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-
-        .btn-primary {
-            background: #2D1A15;
-            color: white;
-            padding: 16px 32px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: transform 0.2s, background 0.2s;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .btn-primary:hover {
-            background: #1a100d;
-            transform: translateY(-2px);
-        }
-
-        /* --- FEATURES SECTION (Card Theme) --- */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: -60px auto 100px;
-            padding: 0 24px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .feat-card {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 1px solid #f0f0f0;
-            transition: transform 0.3s ease;
-        }
-
-        .feat-card:hover { transform: translateY(-5px); }
-        .feat-card h3 { font-size: 20px; margin-bottom: 15px; color: #333; }
-        .feat-card p { font-size: 15px; color: #666; line-height: 1.7; }
-
-        /* --- ENROLLMENT SECTION (Integrated Theme) --- */
-        .enroll-section {
-            background: #F9F7F5;
-            padding: 100px 24px;
-        }
-
-        .card {
-            max-width: 500px;
             margin: 0 auto;
-            background: white;
-            padding: 50px 40px;
-            border-radius: 24px;
-            border: 1px solid var(--border);
         }
 
-        .price-box { text-align: center; margin-bottom: 35px; }
-        .new-price { font-size: 48px; font-weight: 700; color: var(--brand-brown); display: block; }
-        .old-price { text-decoration: line-through; color: #A89382; font-size: 18px; }
-
-        input {
-            width: 100%;
-            height: 55px;
-            padding: 0 20px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            margin-bottom: 15px;
-            font-size: 15px;
-            transition: border-color 0.2s;
+        .chip {
+            background: #e8f0fe;
+            color: #1967d2;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 20px;
         }
 
-        input:focus { outline: none; border-color: var(--hero-bg); }
+        h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
 
-        .submit-btn {
-            width: 100%;
-            height: 60px;
-            background: var(--hero-bg);
-            color: white;
-            border: none;
-            border-radius: 8px;
+        .hero-desc {
             font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: opacity 0.2s;
+            color: var(--g-text-sub);
+            margin-bottom: 40px;
         }
 
-        .submit-btn:hover { opacity: 0.9; }
-
-        /* --- TOASTS --- */
-        #toast-container { position: fixed; top: 85px; right: 24px; z-index: 9999; }
-        .toast {
-            background: white; border-radius: 12px; padding: 16px 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; align-items: center;
-            gap: 12px; border-left: 4px solid var(--hero-bg); margin-bottom: 10px;
-            transform: translateX(120%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* --- Info Grid (Workspace Card Style) --- */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            padding: 40px 24px 100px;
+            max-width: 1100px;
+            margin: 0 auto;
         }
-        .toast.show { transform: translateX(0); }
+
+        .info-card {
+            border: 1px solid var(--g-gray-300);
+            border-radius: 8px;
+            padding: 32px;
+            transition: box-shadow 0.2s;
+        }
+
+        .info-card:hover {
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+            border-color: transparent;
+        }
+
+        .info-card h3 {
+            font-weight: 500;
+            font-size: 20px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-card p {
+            font-size: 15px;
+            color: var(--g-text-sub);
+        }
+
+        .icon-circle {
+            width: 40px;
+            height: 40px;
+            background: var(--g-gray-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--g-blue);
+            margin-bottom: 20px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--g-gray-100);
+            padding: 60px 24px;
+            text-align: center;
+            border-top: 1px solid var(--g-gray-300);
+        }
+
+        .contact-link {
+            color: var(--g-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
 
         @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero h1 { font-size: 38px; }
-            .features { margin-top: 40px; }
+            .info-hero { padding-top: 100px; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="nav-left">
-        <span class="nav-brand">Vasuki Learning</span>
-    </div>
-    <ul class="nav-links">
-        <li><a href="../login.html">Login</a></li>
-        <li><a href="mailto:codeclutch.adamyarao@gmail.com">Support</a></li>
-        <li><a href="../guppt">Guppt</a></li>
-    </ul>
+    <div class="nav-brand"><b>Vasuki</b> Learning</div>
 </header>
 
-<div id="toast-container"></div>
-
-<section class="hero">
-    <div class="hero-sub">VASUKI ITECH</div>
-    <h1>Simple, scalable engineering <br> for everyone.</h1>
-    <p>Prioritizing creativity and individual growth with industry-led workshops in logic and development.</p>
-    <a href="#enroll" class="btn-primary">
-        Get Registered for Free 
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M7 17l9.2-9.2M8 7h9v9"/></svg>
-    </a>
+<section class="info-hero">
+    <div class="chip">Curriculum Overview</div>
+    <h1>Engineering for the next generation.</h1>
+    <p class="hero-desc">Explore the core pillars of our workshop program. We focus on practical logic and scalable cloud infrastructure over rote memorization.</p>
 </section>
 
-
-
-<section class="enroll-section" id="enroll">
-    <div class="card">
-        <div class="price-box">
-            <span class="old-price">Worth ₹1,999</span>
-            <span class="new-price">₹399</span>
-            <p style="font-size: 13px; color: #8A736E; margin-top: 10px;">Cloud Engineering Workshop Fee</p>
+<section class="content-grid">
+    <div class="info-card">
+        <div class="icon-circle">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z"/></svg>
         </div>
+        <h3>Core Logic</h3>
+        <p>Master the fundamentals of algorithmic thinking. We teach students how to break down complex problems into manageable engineering tasks.</p>
+    </div>
 
-        <input id="name" placeholder="Student's Full Name">
-        <input id="dob" type="text" placeholder="Date of Birth" onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'">
-        <input id="email" placeholder="Email Address" type="email">
-        <input id="phone" placeholder="WhatsApp Number" type="tel">
+    <div class="info-card">
+        <div class="icon-circle">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+        </div>
+        <h3>Cloud Architecture</h3>
+        <p>A deep dive into the Vasuki Cloud ecosystem. Learn about 256-bit encryption, storage buckets, and high-availability server management.</p>
+    </div>
 
-        <button class="submit-btn" onclick="register()">Confirm Enrollment</button>
-        
-        <p style="text-align: center; color: #999; font-size: 12px; margin-top: 20px;">
-            Secure 256-bit encrypted registration via Vasuki Cloud Infrastructure.
-        </p>
+    <div class="info-card">
+        <div class="icon-circle">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7L9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg>
+        </div>
+        <h3>Industry Readiness</h3>
+        <p>Practical workshops led by engineers from Vasuki iTech. Move beyond theory with real-world deployment scenarios and code reviews.</p>
     </div>
 </section>
 
-<script>
-    function notify(msg, type = 'success') {
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerHTML = `<span>${msg}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => toast.classList.add('show'), 10);
-        setTimeout(() => { 
-            toast.classList.remove('show'); 
-            setTimeout(() => toast.remove(), 600); 
-        }, 4000);
-    }
-
-    const BACKEND = "https://vasuki-cloud-backend-production.up.railway.app";
-    const OWNER = "codeclutch.adamyarao@gmail.com";
-    const FOLDER = "workshop-registrations";
-
-    async function register() {
-        const nameVal = document.getElementById("name").value.trim();
-        const dobVal = document.getElementById("dob").value;
-        const emailVal = document.getElementById("email").value.trim();
-        const phoneVal = document.getElementById("phone").value.trim();
-
-        if (!nameVal || !dobVal || !emailVal || !phoneVal) {
-            notify("Missing information. Please complete all fields.");
-            return;
-        }
-
-        notify("Connecting to Vasuki Cloud...");
-        
-        let data = [];
-        try {
-            const res = await fetch(`${BACKEND}/download/${OWNER}/${FOLDER}/registration.json`);
-            if (res.ok) data = await res.json();
-        } catch(e) {}
-
-        data.push({
-            name: nameVal,
-            dob: dobVal,
-            email: emailVal,
-            phone: phoneVal,
-            timestamp: new Date().toISOString(),
-            source: "Vasuki_iTech_Landing"
-        });
-
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-        const form = new FormData();
-        form.append("email", OWNER);
-        form.append("folder", FOLDER);
-        form.append("files", blob, "registration.json");
-
-        try {
-            const up = await fetch(`${BACKEND}/upload`, { method: "POST", body: form });
-            if(up.ok) {
-                notify("Registration Stored.");
-            } else throw Error();
-        } catch (e) {
-            notify("Network error. Please try again later.");
-        }
-    }
-</script>
+<footer>
+    <p style="color: var(--g-text-sub); font-size: 14px;">
+        Questions about our workshops? <br><br>
+        <a href="mailto:codeclutch.adamyarao@gmail.com" class="contact-link">Contact Support</a> &nbsp; | &nbsp; 
+    </p>
+</footer>
 
 </body>
 </html>
