@@ -255,29 +255,162 @@
             .hamburger.toggle .line2 { opacity: 0; }
             .hamburger.toggle .line3 { transform: rotate(45deg) translate(-5px, -5px); }
         }
-    </style>
-</head>
-<body>
 
-    <nav>
-        <div class="nav-brand">
-            <span class="heading-logo">Vasuki Cloud</span>
-        </div>
+
+    /* Dropdown Container */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+        margin-left: 24px;
+    }
+
+    .dropdown-trigger {
+        text-decoration: none;
+        color: var(--text-main);
+        font-size: 14px;
+        font-weight: 500;
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+        font-family: inherit;
+    }
+
+    .dropdown-trigger svg {
+        transition: transform 0.3s ease;
+    }
+
+    /* Desktop Hover Logic */
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        background: white;
+        min-width: 200px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 8px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1100;
+    }
+
+    .dropdown:hover .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .dropdown:hover .dropdown-trigger svg {
+        transform: rotate(180deg);
+    }
+
+    .dropdown-item {
+        display: flex;
+        flex-direction: column;
+        padding: 12px 16px;
+        text-decoration: none;
+        color: var(--text-main);
+        border-radius: 8px;
+        transition: background 0.2s;
+        margin-left: 0 !important; /* Override global nav-link margin */
+    }
+
+    .dropdown-item:hover {
+        background: #f8f9fa;
+        color: var(--brand-gold) !important;
+    }
+
+    .dropdown-item span {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .dropdown-item small {
+        font-size: 11px;
+        color: var(--text-light);
+        margin-top: 2px;
+    }
+
+    /* Mobile Adjustments for Dropdown */
+    @media (max-width: 768px) {
+        .dropdown {
+            margin-left: 0;
+            width: 100%;
+            text-align: center;
+        }
         
-        <div class="nav-links" id="nav-links">
-            <a href="./login.html">Login</a>
-            <a href="mailto:codeclutch.adamyarao@gmail.com">Support</a>
-            <a href="./guppt/">Guppt</a>
-            <a href="./argon/">Argon</a>
-            <a href="./dhanda/">Dhanda</a>
+        .dropdown-trigger {
+            font-size: 18px;
+            justify-content: center;
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .dropdown-menu {
+            position: static;
+            transform: none;
+            box-shadow: none;
+            border: none;
+            opacity: 1;
+            visibility: visible;
+            display: none; /* Toggle via JS on mobile */
+            background: #f8f9fa;
+            width: 100%;
+        }
+
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+    }
+</style>
+
+<nav>
+    <div class="nav-brand">
+        <span class="heading-logo">Vasuki Cloud</span>
+    </div>
+    
+    <div class="nav-links" id="nav-links">
+        <div class="dropdown" id="products-dropdown">
+            <button class="dropdown-trigger">
+                Products
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="dropdown-menu">
+                <a href="./guppt/" class="dropdown-item">
+                    <span>Guppt</span>
+                    <small>Encrypted API Storage</small>
+                </a>
+                <a href="./argon/" class="dropdown-item">
+                    <span>Argon</span>
+                    <small>Startup OS</small>
+                </a>
+                <a href="./dhanda/" class="dropdown-item">
+                    <span>Dhanda</span>
+                    <small>Business Registerer</small>
+                </a>
+            </div>
         </div>
 
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-            <div class="line1"></div>
-            <div class="line2"></div>
-            <div class="line3"></div>
-        </button>
-    </nav>
+        <a href="./login.html">Login</a>
+        <a href="mailto:codeclutch.adamyarao@gmail.com">Support</a>
+    </div>
+
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+        <div class="line1"></div>
+        <div class="line2"></div>
+        <div class="line3"></div>
+    </button>
+</nav>
 
     <div class="hero-wrap">
         <canvas id="hero-canvas"></canvas>
@@ -395,6 +528,37 @@
             mouse.x = e.clientX - rect.left;
             mouse.y = e.clientY - rect.top;
         });
+
+        // --- Navigation Logic ---
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('nav-links');
+const productsDropdown = document.getElementById('products-dropdown');
+
+hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    hamburger.classList.toggle('toggle');
+});
+
+// Mobile Dropdown Toggle
+productsDropdown.addEventListener('click', (e) => {
+    if (window.innerWidth <= 768) {
+        // Prevent immediate navigation if clicking the trigger
+        if (e.target.closest('.dropdown-trigger')) {
+            productsDropdown.classList.toggle('active');
+        }
+    }
+});
+
+// Close menu when a link is clicked
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', (e) => {
+        // Only close if it's not a dropdown trigger
+        if (!link.classList.contains('dropdown-trigger')) {
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('toggle');
+        }
+    });
+});
 
         window.addEventListener('resize', init);
         init();
