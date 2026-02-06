@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-gold: #1a73e8; /* Google Blue for Workspace feel */
+            --brand-gold: #1a73e8; 
             --brand-gold-hover: #174ea6;
             --text-main: #202124;
             --text-light: #5f6368;
@@ -29,7 +29,7 @@
             overflow-x: hidden;
         }
 
-        /* --- Navigation: Workspace Style --- */
+        /* --- Navigation --- */
         nav {
             height: 64px;
             display: flex;
@@ -39,7 +39,7 @@
             position: fixed;
             top: 0;
             width: 100%;
-            z-index: 1000;
+            z-index: 2000;
             border-bottom: 1px solid var(--border);
             justify-content: space-between;
         }
@@ -48,6 +48,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            z-index: 2100;
         }
 
         .heading-logo {
@@ -81,7 +82,7 @@
             color: var(--text-main);
         }
 
-        /* --- Dropdown: Google Menu Style --- */
+        /* --- Dropdown --- */
         .dropdown { position: relative; }
 
         .dropdown-menu {
@@ -119,11 +120,11 @@
         .dropdown-item span { font-weight: 500; font-size: 15px; }
         .dropdown-item small { color: var(--text-light); font-size: 12px; }
 
-        /* --- Hero Section --- */
+        /* --- Hero --- */
         .hero-wrap {
             position: relative;
             width: 100%;
-            height: 70vh;
+            height: 80vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -143,6 +144,7 @@
             z-index: 2;
             text-align: center;
             max-width: 800px;
+            padding: 0 24px;
         }
 
         h1 {
@@ -155,10 +157,11 @@
         }
 
         .btn-pill {
+            display: inline-block;
             background-color: var(--brand-gold);
             color: white;
             padding: 12px 24px;
-            border-radius: 4px; /* Google button style is slightly rounded, not full pill */
+            border-radius: 4px;
             font-size: 16px;
             font-weight: 500;
             text-decoration: none;
@@ -171,12 +174,12 @@
             box-shadow: 0 1px 3px 1px rgba(60,64,67,0.15);
         }
 
-        /* --- Features Section --- */
+        /* --- Layout Sections --- */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 24px;
-            padding: 40px 24px;
+            padding: 80px 24px;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -188,25 +191,49 @@
             transition: box-shadow 0.2s;
         }
 
-        .card:hover {
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
+        .card:hover { box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card h3 { font-weight: 400; font-size: 24px; margin-bottom: 16px; }
 
-        /* Mobile Hamburger */
-        .hamburger { display: none; cursor: pointer; border: none; background: none; padding: 10px; }
-        .hamburger div { width: 20px; height: 2px; background: #5f6368; margin: 4px 0; }
+        /* --- Mobile Styles --- */
+        .hamburger { 
+            display: none; 
+            cursor: pointer; 
+            border: none; 
+            background: none; 
+            padding: 10px; 
+            z-index: 2100;
+        }
+        .hamburger div { width: 22px; height: 2px; background: #5f6368; margin: 4px 0; transition: 0.3s; }
 
         @media (max-width: 768px) {
             .hamburger { display: block; }
             .nav-links {
-                position: fixed; top: 64px; right: -100%; height: calc(100vh - 64px);
-                width: 100%; background: white; flex-direction: column; padding: 20px;
-                transition: 0.3s;
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 280px;
+                background: white;
+                flex-direction: column;
+                padding: 80px 24px;
+                transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -5px 0 15px rgba(0,0,0,0.05);
+                align-items: flex-start;
             }
             .nav-links.active { right: 0; }
-            .dropdown-menu { position: static; visibility: visible; opacity: 1; transform: none; display: none; box-shadow: none; border: none; width: 100%; }
+            .nav-links > a, .dropdown-trigger { margin: 10px 0; width: 100%; text-align: left; font-size: 16px; }
+            .dropdown-menu { 
+                position: static; 
+                opacity: 1; 
+                visibility: visible; 
+                transform: none; 
+                display: none; 
+                box-shadow: none; 
+                border-left: 2px solid #eee; 
+                border-radius: 0;
+                margin-left: 12px;
+                min-width: auto;
+            }
             .dropdown.active .dropdown-menu { display: block; }
         }
     </style>
@@ -236,7 +263,7 @@
                 </a>
                 <a href="./workshop/" class="dropdown-item">
                     <span>Vasuki Learning</span>
-                    <small>Learn Tech And Business Management</small>
+                    <small>Learn Tech & Management</small>
                 </a>
             </div>
         </div>
@@ -244,7 +271,7 @@
         <a href="mailto:codeclutch.adamyarao@gmail.com">Support</a>
     </div>
 
-    <button class="hamburger" id="hamburger">
+    <button class="hamburger" id="hamburger" aria-label="Menu">
         <div></div><div></div><div></div>
     </button>
 </nav>
@@ -252,8 +279,8 @@
 <div class="hero-wrap">
     <canvas id="hero-canvas"></canvas>
     <div class="hero-content">
-        <h1>Simple, scalable Technology.</h1>
-        <p style="margin-bottom: 40px; color: var(--text-light); font-size: 18px;">Prioritizing startups and individual creators with forever-free storage.</p>
+        <h1>Simple. Scalable. Powerful</h1>
+        <p style="margin-bottom: 40px; color: var(--text-light); font-size: 18px;">Prioritizing startups and individual creators with free management and storage tools.</p>
         <a href="./signup.html" class="btn-pill">Get started at no cost</a>
     </div>
 </div>
@@ -273,22 +300,104 @@
     </div>
 </section>
 
+<section style="padding: 80px 24px; background: #fff; border-top: 1px solid var(--border);">
+    <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+        <h2 style="font-size: 32px; font-weight: 400; margin-bottom: 24px; color: var(--text-main);">Enterprise power, creator simplicity.</h2>
+        <p style="font-size: 18px; color: var(--text-light); line-height: 1.6;">
+            At <b>Vasuki iTech</b>, we believe digital infrastructure should be invisible. 
+            We've built an ecosystem that removes the friction of DevOps, allowing CEO-led teams 
+            to deploy and scale without the overhead of traditional providers.
+        </p>
+    </div>
+</section>
+
+<section style="padding: 100px 24px; background: #f8f9fa;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <h2 style="text-align: center; font-size: 32px; font-weight: 400; margin-bottom: 60px;">Onboarding made simple</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;">
+            <div style="text-align: center;">
+                <div style="width: 48px; height: 48px; background: var(--brand-gold); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-weight: bold;">1</div>
+                <h4 style="margin-bottom: 12px; font-size: 20px;">Claim Namespace</h4>
+                <p style="color: var(--text-light);">Reserve your unique Vasuki cloud handle instantly during signup.</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="width: 48px; height: 48px; background: var(--brand-gold); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-weight: bold;">2</div>
+                <h4 style="margin-bottom: 12px; font-size: 20px;">Connect Tools</h4>
+                <p style="color: var(--text-light);">Integrate Guppt or Argon into your workflow via our unified API.</p>
+            </div>
+            <div style="text-align: center;">
+                <div style="width: 48px; height: 48px; background: var(--brand-gold); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-weight: bold;">3</div>
+                <h4 style="margin-bottom: 12px; font-size: 20px;">Scale Globally</h4>
+                <p style="color: var(--text-light);">Push your assets. We handle the distribution and security automatically.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer style="padding: 80px 24px 40px; border-top: 1px solid var(--border); background: #fff;">
+    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 60px;">
+        <div>
+            <p style="font-weight: 700; color: #5f6368; margin-bottom: 24px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Product</p>
+            <ul style="list-style: none; font-size: 14px; line-height: 2.8;">
+                <li><a href="./guppt/" style="text-decoration: none; color: var(--text-light);">Guppt Storage</a></li>
+                <li><a href="./argon/" style="text-decoration: none; color: var(--text-light);">Argon OS</a></li>
+                <li><a href="./vypaar/" style="text-decoration: none; color: var(--text-light);">Vypaar Business</a></li>
+            </ul>
+        </div>
+        <div>
+            <p style="font-weight: 700; color: #5f6368; margin-bottom: 24px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Resources</p>
+            <ul style="list-style: none; font-size: 14px; line-height: 2.8;">
+                <li><a href="./documentation.html" style="text-decoration: none; color: var(--text-light);">Documentation</a></li>
+                <li><a href="./workshop/" style="text-decoration: none; color: var(--text-light);">Vasuki Learning</a></li>
+                <li><a href="mailto:codeclutch.adamyarao@gmail.com" style="text-decoration: none; color: var(--text-light);">Support</a></li>
+            </ul>
+        </div>
+        <div>
+            <p style="font-weight: 700; color: #5f6368; margin-bottom: 24px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Social</p>
+            <ul style="list-style: none; font-size: 14px; line-height: 2.8;">
+                <li><a href="https://www.linkedin.com/company/vasuki-itech?originalSubdomain=in" style="text-decoration: none; color: var(--text-light);">Linkedin</a></li>
+                <li><a href="https://vasuki.cloud/org.html?org=adbdb81c-1aad-404b-9fff-b01f1e44e516" style="text-decoration: none; color: var(--text-light);">Vasuki Vypaar Page</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div style="max-width: 1200px; margin: 0 auto; padding-top: 30px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 18px; font-weight: 700; color: #5f6368;">Vasuki</span>
+            <span style="color: var(--text-light); font-size: 14px;">© 2026 Vasuki iTech</span>
+        </div>
+        <div style="display: flex; gap: 24px;">
+            <a href="mailto:codeclutch.adamyarao@gmail.com" style="color: var(--text-light); text-decoration: none; font-size: 13px;">Mail Us</a>
+        </div>
+    </div>
+</footer>
+
 <script>
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('nav-links');
     const productsDropdown = document.getElementById('products-dropdown');
 
-    hamburger.addEventListener('click', () => {
+    // Toggle Mobile Nav
+    hamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
         navLinks.classList.toggle('active');
     });
 
+    // Toggle Dropdown on Mobile
     productsDropdown.addEventListener('click', (e) => {
         if (window.innerWidth <= 768) {
+            e.stopPropagation();
             productsDropdown.classList.toggle('active');
         }
     });
 
-    // --- Original Canvas Logic ---
+    // Close menu when clicking outside
+    document.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        productsDropdown.classList.remove('active');
+    });
+
+    // --- Canvas Engine ---
     const canvas = document.getElementById('hero-canvas');
     const ctx = canvas.getContext('2d');
     let points = [];
