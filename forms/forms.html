@@ -145,7 +145,6 @@ if(!userBlob) {
         const u = userBlob;
         currentUser = u.email || u;
     } catch(e) { currentUser = userBlob; }
-    document.getElementById("userBadge").textContent = currentUser;
     window.showPage('dashboard');
 }
 
