@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vasuki Dhanda | Admin Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --google-blue: #1a73e8;
+      --google-blue-variant: #e8f0fe;
+      --google-gray: #5f6368;
+      --google-dark: #3c4043;
+      --google-border: #dadce0;
+      --surface: #ffffff;
+      --bg-body: #ffffff;
+      --radius-lg: 8px;
+      --radius-md: 4px;
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      background: var(--bg-body);
+      color: var(--google-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* --- Workspace Header --- */
+    header.top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 16px;
+      background: #fff;
+      border-bottom: 1px solid var(--google-border);
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Hamburger Menu Button */
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+    .menu-btn:hover { background: #f1f3f4; }
+
+    .logo-text {
+      font-family: 'Google Sans';
+      font-size: 20px;
+      color: var(--google-gray);
+      white-space: nowrap;
+    }
+    .logo-text b { color: var(--google-dark); font-weight: 500; }
+
+    /* --- Auth View --- */
+    #authView {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 70px);
+      padding: 20px;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 450px;
+      padding: 48px 40px;
+      border: 1px solid var(--google-border);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .drop-zone {
+      border: 2px dashed var(--google-border);
+      border-radius: 8px;
+      padding: 30px 20px;
+      margin: 24px 0;
+      cursor: pointer;
+      background: #f8f9fa;
+    }
+
+    /* --- Main App Layout --- */
+    #mainApp {
+      display: none;
+      grid-template-columns: 280px 1fr;
+    }
+
+    .sidebar {
+      padding: 20px 0;
+      border-right: 1px solid var(--google-border);
+      height: calc(100vh - 65px);
+      position: sticky;
+      top: 65px;
+      background: #fff;
+      z-index: 1500;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-item {
+      padding: 12px 24px;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      border-radius: 0 100px 100px 0;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--google-dark);
+    }
+    .nav-item.active { background: #e8f0fe; color: var(--google-blue); }
+    .nav-item:hover:not(.active) { background: #f1f3f4; }
+
+    /* --- Content Area --- */
+    .content-area { padding: 40px 60px; max-width: 1000px; width: 100%; }
+
+    .card {
+      padding: 32px 0;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--google-border);
+    }
+
+    h1 { font-family: 'Google Sans'; font-weight: 400; font-size: 28px; }
+
+    .google-input {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1px solid var(--google-border);
+      border-radius: 4px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    .google-input:focus { outline: none; border: 2px solid var(--google-blue); padding: 12px 14px; }
+
+    .btn-google {
+      background: var(--google-blue);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .chip {
+      background: #f1f3f4;
+      padding: 6px 12px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px;
+      font-size: 13px;
+      border: 1px solid var(--google-border);
+    }
+
+    .loader {
+      width: 18px; height: 18px;
+      border: 2px solid #ffffff44;
+      border-radius: 50%; border-top-color: #fff;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hidden { display: none !important; }
+    
+    label { font-size: 14px; font-weight: 500; color: var(--google-dark); }
+    textarea { font-family: 'google sans'; }
+
+    /* --- RESPONSIVE OVERRIDES --- */
+    @media (max-width: 900px) {
+      .menu-btn { display: block; }
+      #mainApp { grid-template-columns: 1fr; }
+      
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        width: 280px;
+        transform: translateX(-100%);
+        box-shadow: 10px 0 15px rgba(0,0,0,0.05);
+      }
+      .sidebar.open { transform: translateX(0); }
+      
+      .content-area { padding: 24px 20px; }
+      
+      .mobile-stack { flex-direction: column !important; gap: 20px !important; }
+      .mobile-grid { grid-template-columns: 1fr !important; }
+      
+      .header-actions {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        padding: 16px;
+        border-top: 1px solid var(--google-border);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+      }
+      .btn-google.save-btn { width: 100%; }
+      .editor-title-container { margin-bottom: 20px !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-nav">
+    <div class="logo-container">
+      <button class="menu-btn" onclick="toggleSidebar()" id="hamburger">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--google-gray)"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </button>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M1 21h22L12 2 1 21z" fill="#34A853" fill-opacity=".3"/>
+        <path d="M12 2L1 21h4.5L12 9l6.5 12H23L12 2z" fill="#1A73E8"/>
+      </svg>
+      <div class="logo-text">Vasuki <b>Dhanda</b></div>
+    </div>
+    <div id="userHeader" class="hidden" style="font-size: 14px; color: var(--google-gray);">
+      CEO Console
+    </div>
+  </header>
+
+  <div id="authView">
+    <div class="auth-card" id="loginCard">
+      <h1 style="margin-bottom: 8px;">Sign in</h1>
+      <p style="margin-bottom: 32px; font-size: 15px;">Use your .vasuki authenticator file</p>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('authFileInput').click()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--google-gray)" stroke-width="2" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p id="fileStatus" style="font-size: 13px; color: var(--google-gray);">Select .vasuki file</p>
+        <input type="file" id="authFileInput" hidden accept=".vasuki">
+      </div>
+      <button class="btn-google" style="width: 100%;" onclick="handleFileLogin()" id="loginBtn"><span id="loginBtnText">Next</span></button>
+      <p style="margin-top: 40px; font-size: 14px;">No file? <a href="#" onclick="toggleAuth(true)" style="color:var(--google-blue); text-decoration:none; font-weight:500;">Create account</a></p>
+    </div>
+
+    <div class="auth-card hidden" id="registerCard">
+      <h1 style="margin-bottom: 8px;">Create account</h1>
+      <input type="email" id="regEmail" class="google-input" placeholder="Email">
+      <input type="password" id="regPass" class="google-input" placeholder="Password" style="margin-top: 15px;">
+      <button class="btn-google" style="width: 100%; margin-top: 30px;" onclick="handleRegistration()">Download Authenticator</button>
+      <p style="margin-top: 40px; font-size: 14px;"><a href="#" onclick="toggleAuth(false)" style="color:var(--google-blue); text-decoration:none; font-weight:500;">Sign in instead</a></p>
+    </div>
+  </div>
+
+  <div id="mainApp">
+    <aside class="sidebar" id="sidebar">
+      <div class="nav-item active" onclick="switchView('editorView', 0)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <span>Profile Editor</span>
+      </div>
+      <div class="nav-item" onclick="switchView('dashboardView', 1)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        <span>Digital Presence</span>
+      </div>
+      <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+        <div class="nav-item" onclick="location.reload()" style="color: #d93025;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sign out</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content-area">
+      <div id="editorView">
+        <div class="editor-title-container" style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px;">
+          <div>
+            <h1>Organization Profile</h1>
+            <p style="color: var(--google-gray); font-size: 14px; margin-top: 4px;">Update your Vasuki network identity</p>
+          </div>
+          <div class="header-actions">
+            <button class="btn-google save-btn" id="saveBtn" onclick="saveStartup()">
+              <span id="saveBtnText">Save changes</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="mobile-stack" style="display: flex; gap: 40px; align-items: flex-start;">
+            <div style="text-align: center;">
+              <div style="position: relative; margin-top: 15px; display: inline-block;">
+                <img id="logoPreview" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border: 1px solid var(--google-border);">
+                <button class="btn-google" style="position:absolute; bottom:0; right:0; padding:6px; border-radius:50%; width:32px; height:32px; display:grid; place-items:center;" onclick="document.getElementById('logoInput').click()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
+              </div>
+            </div>
+            <div style="flex:1; width: 100%;">
+              <label>Theme Color</label>
+              <input type="color" id="themeColor" style="width:100%; height:45px; border:1px solid var(--google-border); border-radius:4px; margin-top:15px; cursor:pointer;">
+            </div>
+            <input type="file" id="logoInput" hidden accept="image/*">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="mobile-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            <div><label>Startup Name</label><input id="startupName" class="google-input"></div>
+            <div><label>Tagline</label><input id="startupTagline" class="google-input"></div>
+          </div>
+          <div style="margin-top: 24px;">
+            <label>Detailed Bio</label>
+            <textarea id="startupAbout" class="google-input" rows="5"></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom:20px; font-size: 18px;">Contact Channels</h3>
+          <div class="mobile-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div><label>Public Email</label><input id="contactEmail" class="google-input"></div>
+            <div><label>Phone</label><input id="contactPhone" class="google-input"></div>
+            <div><label>Website URL</label><input id="contactWebsite" class="google-input"></div>
+            <div><label>LinkedIn</label><input id="contactLinkedIn" class="google-input"></div>
+          </div>
+        </div>
+
+        <div class="card" style="border-bottom: none; padding-bottom: 80px;">
+          <h3 style="margin-bottom:20px; font-size: 18px;">Quick Links</h3>
+          <div class="mobile-stack" style="display:flex; gap:12px; margin-bottom:20px; align-items: flex-end;">
+            <div style="flex:1; width:100%"><label>Label</label><input id="btnLabel" class="google-input"></div>
+            <div style="flex:2; width:100%"><label>URL</label><input id="btnUrl" class="google-input"></div>
+            <button class="btn-google" style="margin-top: 8px;" onclick="addButton()">Add</button>
+          </div>
+          <div id="buttonList" style="min-height: 60px; background: #f8f9fa; border-radius: 4px; padding: 12px; display:flex; flex-wrap:wrap; border: 1px solid #eee;"></div>
+        </div>
+      </div>
+
+      <div id="dashboardView" class="hidden">
+        <h1>Digital Presence</h1>
+        <div id="startupContent" style="margin-top: 32px;"></div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    window.supabase = createClient(
+      "https://aitckloahlwemlekaour.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA"
+    );
+  </script>
+
+  <script>
+    // RESPONSIVE UI LOGIC
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    // Close sidebar on item click for mobile
+    function handleNavClick() {
+      if (window.innerWidth <= 900) {
+        document.getElementById('sidebar').classList.remove('open');
+      }
+    }
+
+    // ORIGINAL LOGIC PRESERVED
+    let currentStartup = null;
+    let logoBase64 = '';
+    let buttons = [];
+    let USER_EMAIL = '';
+    let uploadedAuthData = null;
+
+    function toggleAuth(isReg) {
+      document.getElementById('loginCard').classList.toggle('hidden', isReg);
+      document.getElementById('registerCard').classList.toggle('hidden', !isReg);
+    }
+
+    const dropZone = document.getElementById('dropZone');
+    const authInput = document.getElementById('authFileInput');
+
+    authInput.onchange = (e) => processFile(e.target.files[0]);
+    dropZone.ondragover = (e) => { e.preventDefault(); };
+    dropZone.ondrop = (e) => { e.preventDefault(); processFile(e.dataTransfer.files[0]); };
+
+    function processFile(file) {
+      if (!file || !file.name.endsWith('.vasuki')) return alert("Invalid file.");
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          uploadedAuthData = JSON.parse(atob(e.target.result));
+          document.getElementById('fileStatus').innerHTML = `<b>Verified:</b> ${file.name}`;
+          document.getElementById('fileStatus').style.color = 'var(--google-blue)';
+        } catch (err) { alert("Invalid file format."); }
+      };
+      reader.readAsText(file);
+    }
+
+    async function handleFileLogin() {
+      if (!uploadedAuthData) return alert("Please upload file.");
+      const btn = document.getElementById('loginBtn');
+      const text = document.getElementById('loginBtnText');
+      btn.disabled = true;
+      text.innerHTML = '<div class="loader"></div>';
+      USER_EMAIL = uploadedAuthData.email;
+      const { data } = await supabase.from('startups').select('*').eq('email_owner', USER_EMAIL);
+      setTimeout(() => {
+        document.getElementById('authView').classList.add('hidden');
+        document.getElementById('userHeader').classList.remove('hidden');
+        document.getElementById('mainApp').style.display = 'grid';
+        if(data && data[0]) populateEditor(data[0]);
+        else loadStartupData();
+      }, 800);
+    }
+
+    function handleRegistration() {
+      const email = document.getElementById('regEmail').value;
+      const pass = document.getElementById('regPass').value;
+      if(!email || !pass) return alert("Fill all fields.");
+      const authObj = { email, pass: btoa(pass), created: new Date().toISOString() };
+      const blob = new Blob([btoa(JSON.stringify(authObj))], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = window.URL.createObjectURL(blob);
+      a.download = 'startup.authenticator.vasuki';
+      a.click();
+      toggleAuth(false);
+    }
+
+    function switchView(viewId, navIndex) {
+      handleNavClick();
+      document.getElementById('editorView').classList.add('hidden');
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById(viewId).classList.remove('hidden');
+      document.querySelectorAll('.nav-item').forEach((item, i) => {
+        item.classList.toggle('active', i === navIndex);
+      });
+      if(viewId === 'dashboardView') renderDashboard();
+    }
+
+    async function loadStartupData() {
+      const { data } = await supabase.from('startups').select('*').eq('email_owner', USER_EMAIL);
+      if (data && data[0]) populateEditor(data[0]);
+    }
+
+    function populateEditor(d) {
+      currentStartup = d;
+      logoBase64 = d.logo_base64 || '';
+      buttons = d.buttons || [];
+      document.getElementById('logoPreview').src = logoBase64 || 'https://cdn-icons-png.flaticon.com/512/847/847969.png';
+      document.getElementById('themeColor').value = d.theme_color || '#1a73e8';
+      document.getElementById('startupName').value = d.name || '';
+      document.getElementById('startupTagline').value = d.tagline || '';
+      document.getElementById('startupAbout').value = d.about || '';
+      document.getElementById('contactEmail').value = d.contacts?.email || '';
+      document.getElementById('contactPhone').value = d.contacts?.phone || '';
+      document.getElementById('contactWebsite').value = d.contacts?.website || '';
+      document.getElementById('contactLinkedIn').value = d.contacts?.linkedin || '';
+      renderButtons();
+    }
+
+    async function saveStartup() {
+      const btn = document.getElementById('saveBtn');
+      const text = document.getElementById('saveBtnText');
+      btn.disabled = true;
+      text.innerHTML = '<div class="loader"></div>';
+      const payload = {
+        name: document.getElementById('startupName').value,
+        tagline: document.getElementById('startupTagline').value,
+        theme_color: document.getElementById('themeColor').value,
+        about: document.getElementById('startupAbout').value,
+        logo_base64: logoBase64,
+        buttons: buttons,
+        contacts: {
+          email: document.getElementById('contactEmail').value,
+          phone: document.getElementById('contactPhone').value,
+          website: document.getElementById('contactWebsite').value,
+          linkedin: document.getElementById('contactLinkedIn').value,
+        },
+        email_owner: USER_EMAIL
+      };
+      const q = supabase.from('startups');
+      const res = currentStartup ? await q.update(payload).eq('id', currentStartup.id) : await q.insert([payload]);
+      setTimeout(() => {
+        btn.disabled = false;
+        text.innerHTML = 'Save changes';
+        if (!res.error) { alert("Updated successfully"); loadStartupData(); }
+      }, 800);
+    }
+
+    function renderButtons() {
+      const list = document.getElementById('buttonList');
+      if(buttons.length === 0) { list.innerHTML = '<p style="color:#999; font-size:12px;">No links</p>'; return; }
+      list.innerHTML = buttons.map((b, i) => `<div class="chip"><span>${b.label}</span><span style="cursor:pointer; font-weight:bold;" onclick="removeButton(${i})">×</span></div>`).join('');
+    }
+
+    function addButton() {
+      const label = document.getElementById('btnLabel').value;
+      const url = document.getElementById('btnUrl').value;
+      if(label && url) { buttons.push({label, url}); renderButtons(); document.getElementById('btnLabel').value = ''; document.getElementById('btnUrl').value = ''; }
+    }
+
+    function removeButton(i) { buttons.splice(i, 1); renderButtons(); }
+
+    document.getElementById('logoInput').onchange = (e) => {
+      const reader = new FileReader();
+      reader.onload = () => { logoBase64 = reader.result; document.getElementById('logoPreview').src = logoBase64; };
+      reader.readAsDataURL(e.target.files[0]);
+    };
+
+    function renderDashboard() {
+      if (!currentStartup) {
+        document.getElementById('startupContent').innerHTML = 'Please save profile first.';
+        return;
+      }
+      const orgUrl = `https://www.vasuki.cloud/org.html?org=${currentStartup.id}`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(orgUrl)}`;
+      document.getElementById('startupContent').innerHTML = `
+        <div class="mobile-stack" style="display:flex; gap:40px; border:1px solid var(--google-border); border-radius:8px; padding:32px;">
+          <div style="flex:1;">
+            <h2 style="margin-bottom:12px;">${currentStartup.name}</h2>
+            <div style="background:#f1f3f4; padding:12px; border-radius:4px; font-family:monospace; margin-bottom:20px; font-size:13px; word-break:break-all;">${orgUrl}</div>
+            <button class="btn-google" onclick="window.open('${orgUrl}', '_blank')">View Page</button>
+          </div>
+          <div style="text-align:center;">
+            <img src="${qrUrl}" style="border: 1px solid #eee; border-radius:4px; margin-bottom:10px;">
+            <p style="font-size:11px; font-weight:700;">DIGITAL ID</p>
+          </div>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
