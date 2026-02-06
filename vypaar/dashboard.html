@@ -427,7 +427,7 @@
       const pass = document.getElementById('regPass').value;
       if(!email || !pass) return alert("Fill all fields.");
       const authObj = { email, pass: btoa(pass), created: new Date().toISOString() };
-      const blob = new Blob([btoa(JSON.stringify(authObj))], { type: 'text/plain' });
+      const blob = new Blob([btoa(JSON.stringify(authObj))], { type: 'json/plain' });
       const a = document.createElement('a');
       a.href = window.URL.createObjectURL(blob);
       a.download = 'startup.authenticator.vasuki';
