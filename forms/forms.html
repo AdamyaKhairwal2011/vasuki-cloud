@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vasuki Form Studio | CEO Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand: #1a73e8;
+            --brand-hover: #1557b0;
+            --bg: #f1f3f4;
+            --white: #ffffff;
+            --border: #dadce0;
+            --text-main: #202124;
+            --text-sub: #5f6368;
+            --danger: #d93025;
+            --shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+        }
+
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text-main); }
+
+        /* --- GOOGLE STYLE NAV --- */
+        nav {
+            background: var(--white); padding: 0 24px; height: 64px;
+            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .nav-logo { font-weight: 600; font-size: 22px; color: var(--text-sub); display: flex; align-items: center; gap: 10px; cursor: pointer;}
+        .nav-logo span { color: var(--brand); }
+
+        .container { max-width: 900px; margin: 20px auto; padding: 0 20px 100px 20px; }
+        
+        /* --- CARDS --- */
+        .card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 16px; }
+        .form-item { 
+            background: white; border-radius: 8px; border: 1px solid var(--border); 
+            padding: 16px; transition: box-shadow 0.2s; cursor: pointer;
+        }
+        .form-item:hover { box-shadow: var(--shadow); }
+
+        /* --- BUTTONS --- */
+        .btn {
+            padding: 8px 24px; border-radius: 4px; font-weight: 500; cursor: pointer;
+            font-size: 14px; border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 8px; transition: 0.1s;
+        }
+        .btn-primary { background: var(--brand); color: white; border: none; }
+        .btn-primary:hover { background: var(--brand-hover); }
+        .btn-text { background: transparent; border: none; color: var(--brand); padding: 6px 12px; }
+        .btn-text:hover { background: rgba(26,115,232,0.04); }
+
+        /* --- EDITOR UI --- */
+        .field-box { border-top: 1px solid var(--border); transition: 0.2s; position: relative; }
+        .field-box:focus-within { border-left: 6px solid var(--brand); box-shadow: var(--shadow); }
+        
+        input, select { padding: 12px; border: 1px solid transparent; border-bottom: 1px solid var(--border); font-size: 14px; width: 100%; transition: 0.2s; background: #f8f9fa; }
+        input:focus { outline: none; border-bottom: 2px solid var(--brand); background: white; }
+
+        .options-list { margin: 10px 0; display: flex; flex-direction: column; gap: 5px; }
+        .opt-item { display: flex; align-items: center; gap: 10px; }
+        .opt-input { border-bottom: 1px solid #eee; padding: 6px !important; background: transparent; }
+
+        /* --- TOAST NOTIFICATION --- */
+        #toast {
+            position: fixed; bottom: 20px; left: 20px; background: #323232; color: white;
+            padding: 12px 24px; border-radius: 4px; font-size: 14px; transform: translateY(100px);
+            transition: 0.3s; z-index: 9999;
+        }
+        #toast.show { transform: translateY(0); }
+
+        .hidden { display: none !important; }
+        .sticky-footer { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); padding: 12px; display: flex; justify-content: center; gap: 12px; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px; background: #f8f9fa; border-bottom: 2px solid var(--border); color: var(--text-sub); font-size: 12px; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-logo" onclick="window.showPage('dashboard')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#1a73e8"><path d="M14,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8L14,2z M13,9V3.5L18.5,9H13z"/></svg>
+        Vasuki <span>Forms</span>
+    </div>
+    <div id="userBadge" style="font-size: 12px; color: var(--text-sub); font-weight: 500;"></div>
+</nav>
+
+<div id="page-dashboard" class="container hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <h2 style="font-weight: 400;">Recent Forms</h2>
+        <button class="btn btn-primary" onclick="window.openEditor()">+ Blank Form</button>
+    </div>
+    <div id="formsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;"></div>
+</div>
+
+<div id="page-editor" class="container hidden">
+    <div class="card" style="border-top: 10px solid var(--brand);">
+        <input id="edit-title" style="font-size: 32px; font-weight: 400; border: none; border-bottom: 1px solid transparent;" placeholder="Form Title">
+        <input id="edit-id" style="font-size: 13px; color: var(--brand); border: none; background: transparent; margin-top: 8px;" placeholder="form-id-slug">
+    </div>
+
+    <div id="fieldsList"></div>
+    
+    <div class="sticky-footer">
+        <button class="btn btn-text" onclick="window.addField()">+ Add Question</button>
+        <button class="btn btn-primary" id="saveBtn" onclick="window.saveFormToCloud()">Save Form</button>
+        <button class="btn" onclick="window.showPage('dashboard')">Back</button>
+    </div>
+</div>
+
+<div id="page-responses" class="container hidden">
+    <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 id="resp-title" style="margin:0; font-weight:400;">Responses</h2>
+            <button class="btn btn-text" onclick="window.showPage('dashboard')">Close</button>
+        </div>
+    </div>
+    <div class="card" id="resp-content" style="padding:0; overflow:hidden;"></div>
+</div>
+
+<div id="toast">Link copied to clipboard</div>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentUser = null;
+
+window.showPage = (id) => {
+    document.querySelectorAll('.container').forEach(p => p.classList.add('hidden'));
+    document.getElementById(`page-${id}`).classList.remove('hidden');
+    if(id === 'dashboard') fetchForms();
+};
+
+// Error fix: Ensure user session is handled cleanly
+const userBlob = localStorage.getItem("vcloud_user");
+if(!userBlob) { 
+    location.href = "../login.html/"; 
+} else {
+    try {
+        const u = userBlob;
+        currentUser = u.email || u;
+    } catch(e) { currentUser = userBlob; }
+    document.getElementById("userBadge").textContent = currentUser;
+    window.showPage('dashboard');
+}
+
+async function fetchForms() {
+    const { data } = await supabase.from("forms").select("*").eq("user", currentUser).order("updated_at", { ascending: false });
+    const grid = document.getElementById("formsGrid");
+    grid.innerHTML = data?.map(f => `
+        <div class="form-item" onclick="window.openEditor('${f.id}')">
+            <div style="height:120px; background:#f1f3f4; margin:-16px -16px 12px -16px; border-radius:8px 8px 0 0; display:flex; align-items:center; justify-content:center; position:relative;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="#70757a"><path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M9,17H7v-2h2V17z M9,13H7v-2h2V13z M9,9H7V7h2V9z M17,17h-6v-2h6V17z M17,13h-6v-2h6V13z M17,9h-6V7h6V9z"/></svg>
+                <button onclick="event.stopPropagation(); window.deleteForm('${f.id}')" style="position:absolute; top:8px; right:8px; background:white; border-radius:50%; border:1px solid #ddd; width:28px; height:28px; cursor:pointer; color:var(--danger); display:flex; align-items:center; justify-content:center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
+                </button>
+            </div>
+            <h3 style="margin:0; font-size:14px; font-weight:500;">${f.title}</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
+                <button class="btn btn-text" style="font-size:11px;" onclick="event.stopPropagation(); window.viewResponses('${f.id}', '${f.title}')">Responses</button>
+                <button class="btn btn-text" style="font-size:11px;" onclick="event.stopPropagation(); window.copyLink('${f.id}')">Copy Link</button>
+            </div>
+        </div>
+    `).join('') || "No forms yet.";
+}
+window.copyLink = (id) => {
+    // Generates link based on current origin
+    const url = `https://vasuki.cloud/view-form.html?id=${id}`;
+    navigator.clipboard.writeText(url);
+    const toast = document.getElementById("toast");
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+};
+
+window.openEditor = async (id = null) => {
+    window.showPage('editor');
+    const list = document.getElementById("fieldsList");
+    list.innerHTML = "";
+    
+    if(id && typeof id === 'string') {
+        const { data } = await supabase.from("forms").select("*").eq("id", id).single();
+        document.getElementById("edit-title").value = data.title;
+        document.getElementById("edit-id").value = data.id;
+        document.getElementById("edit-id").disabled = true;
+        data.fields.forEach(f => window.addField(f));
+    } else {
+        document.getElementById("edit-title").value = "Untitled Form";
+        document.getElementById("edit-id").value = "f-" + Math.random().toString(36).substr(2,6);
+        document.getElementById("edit-id").disabled = false;
+        window.addField();
+    }
+};
+
+window.addField = (f = { label: "", type: "text", options: [] }) => {
+    const div = document.createElement("div");
+    div.className = "card field-box";
+    div.innerHTML = `
+        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+            <div style="flex:2">
+                <input class="f-label" value="${f.label}" placeholder="Question">
+            </div>
+            <div style="flex:1">
+                <select class="f-type">
+                    <option value="text" ${f.type==='text'?'selected':''}>Short Answer</option>
+                    <option value="textarea" ${f.type==='textarea'?'selected':''}>Paragraph</option>
+                    <option value="radio" ${f.type==='radio'?'selected':''}>Multiple Choice</option>
+                    <option value="checkbox" ${f.type==='checkbox'?'selected':''}>Checkboxes</option>
+                </select>
+            </div>
+            <button class="btn-text" style="color:var(--text-sub)" onclick="this.closest('.field-box').remove()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+        </div>
+        <div class="opt-section ${['text','textarea'].includes(f.type) ? 'hidden' : ''}">
+            <div class="options-list"></div>
+            <button class="btn btn-text" style="font-size:13px;" onclick="window.addOption(this.previousElementSibling)">+ Add Option</button>
+        </div>
+    `;
+
+    const optList = div.querySelector(".options-list");
+    (f.options || ["Option 1"]).forEach(o => window.addOption(optList, o));
+
+    div.querySelector(".f-type").onchange = (e) => {
+        div.querySelector(".opt-section").classList.toggle("hidden", ['text','textarea'].includes(e.target.value));
+    };
+    document.getElementById("fieldsList").appendChild(div);
+};
+
+window.addOption = (container, val = "") => {
+    const div = document.createElement("div");
+    div.className = "opt-item";
+    div.innerHTML = `
+        <div style="width:18px; height:18px; border:2px solid var(--border); border-radius:50%;"></div>
+        <input class="opt-input" value="${val}" placeholder="Option text">
+        <button class="btn-text" style="color:var(--text-sub)" onclick="this.parentElement.remove()">✕</button>
+    `;
+    container.appendChild(div);
+};
+
+window.saveFormToCloud = async () => {
+    const btn = document.getElementById("saveBtn");
+    btn.innerText = "Saving...";
+    
+    const fields = [...document.querySelectorAll(".field-box")].map((box, i) => ({
+        id: `q_${i}`,
+        label: box.querySelector(".f-label").value,
+        type: box.querySelector(".f-type").value,
+        options: [...box.querySelectorAll(".opt-input")].map(i => i.value).filter(v => v)
+    }));
+
+    const { error } = await supabase.from("forms").upsert({
+        id: document.getElementById("edit-id").value,
+        title: document.getElementById("edit-title").value,
+        fields, user: currentUser, updated_at: new Date().toISOString()
+    });
+
+    if(!error) window.showPage('dashboard');
+    else alert(error.message);
+    btn.innerText = "Save Form";
+};
+
+window.viewResponses = async (id, title) => {
+    document.getElementById("resp-content").innerHTML = "<div style='padding:20px'>Loading responses...</div>";
+    window.showPage('responses');
+    document.getElementById("resp-title").innerText = `${title}`;
+    
+    const { data: resps, error: rErr } = await supabase.from("form_responses").select("*").eq("form_id", id).order("created_at", { ascending: false });
+    const { data: form, error: fErr } = await supabase.from("forms").select("fields").eq("id", id).single();
+
+    if (rErr || fErr || !resps?.length) {
+        document.getElementById("resp-content").innerHTML = `
+            <div style='padding:60px; text-align:center;'>
+                <p style="color:var(--text-sub)">No responses found.</p>
+                <button class="btn btn-text" onclick="window.showPage('dashboard')">Back</button>
+            </div>`;
+        return;
+    }
+
+    let html = `
+        <div style="padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #fff;">
+            <span style="font-size: 14px; color: var(--text-sub); font-weight: 600;">${resps.length} Submissions</span>
+            <div style="display:flex; gap: 8px;">
+                <button class="btn btn-text" style="color: var(--danger); font-size: 12px;" onclick="window.clearAllResponses('${id}', '${title}')">Clear All Responses</button>
+                <button class="btn btn-text" style="font-size: 12px;" onclick="window.deleteForm('${id}')">Delete Form</button>
+            </div>
+        </div>
+        <div style="overflow-x: auto; width: 100%;">
+            <table style="width: 100%; border-collapse: collapse; background: white;">
+                <thead>
+                    <tr style="background: #f8f9fa;">
+                        <th style="width: 50px; padding: 12px; border: 1px solid var(--border);"></th>
+                        <th style="min-width: 180px; padding: 12px; border: 1px solid var(--border);">Date</th>`;
+    
+    form.fields.forEach(f => {
+        html += `<th style="min-width: 150px; padding: 12px; border: 1px solid var(--border);">${f.label}</th>`;
+    });
+    html += `</tr></thead><tbody>`;
+
+    resps.forEach(r => {
+        const sub = r.submission;
+        html += `<tr>
+            <td style="text-align:center; border: 1px solid var(--border);">
+                <button class="btn-text" style="color:var(--text-sub); padding:4px;" onclick="window.deleteSingleResponse('${r.id}', '${id}', '${title}')" title="Delete Row">✕</button>
+            </td>
+            <td style="color: #888; font-size: 13px; padding: 12px; border: 1px solid var(--border);">${new Date(r.created_at).toLocaleString('en-IN')}</td>`;
+        
+        form.fields.forEach((f, index) => {
+            let val = sub[f.id] || sub[f.label] || sub[`q_${index}`];
+            if (val === undefined || val === null) {
+                const fuzzyKey = Object.keys(sub).find(k => k.toLowerCase() === f.label.toLowerCase());
+                val = fuzzyKey ? sub[fuzzyKey] : "-";
+            }
+            if (Array.isArray(val)) val = val.join(", ");
+            html += `<td style="padding: 12px; border: 1px solid var(--border);">${val}</td>`;
+        });
+        html += `</tr>`;
+    });
+
+    html += `</tbody></table></div>`;
+    document.getElementById("resp-content").innerHTML = html;
+};
+
+// 1. Delete just one entry
+window.deleteSingleResponse = async (responseId, formId, title) => {
+    if(!confirm("Delete this specific entry?")) return;
+    const { error } = await supabase.from("form_responses").delete().eq("id", responseId);
+    if(!error) window.viewResponses(formId, title);
+    else alert("Error: " + error.message);
+};
+
+// 2. Clear all entries for this form
+window.clearAllResponses = async (formId, title) => {
+    if(!confirm("Are you sure you want to WIPE ALL responses for this form? This cannot be undone.")) return;
+    const { error } = await supabase.from("form_responses").delete().eq("form_id", formId);
+    if(!error) window.viewResponses(formId, title);
+    else alert("Error: " + error.message);
+};
+
+
+// Added Delete Form for cleaner management
+window.deleteForm = async (id) => {
+    const confirmDelete = confirm("⚠️ CRITICAL: This will permanently delete this form and all its responses. Are you sure?");
+    
+    if (confirmDelete) {
+        // 1. Delete all responses linked to this form
+        const { error: respError } = await supabase.from("form_responses").delete().eq("form_id", id);
+        
+        // 2. Delete the form itself
+        const { error: formError } = await supabase.from("forms").delete().eq("id", id);
+
+        if (!formError) {
+            // Show a quick toast or just refresh dashboard
+            const toast = document.getElementById("toast");
+            toast.innerText = "Form deleted successfully";
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 2000);
+            
+            window.showPage('dashboard');
+        } else {
+            alert("Error deleting form: " + formError.message);
+        }
+    }
+};
+</script>
+</body>
+</html>
