@@ -187,35 +187,17 @@
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const mpinScreen = document.getElementById('mpin-screen');
-        const mpinInputs = document.querySelectorAll('.mpin-input');
-        const mpinTitle = document.getElementById('mpin-title');
-        const mpinBtn = document.getElementById('mpin-btn');
+
 
         let isSettingMode = false;
         let tempUserEmail = "";
 
         // Check for existing MPIN on Load
         window.addEventListener('DOMContentLoaded', () => {
-            const savedMPIN = localStorage.getItem('vcloud_mpin');
-            const savedEmail = localStorage.getItem('vcloud_user');
-            
-            if (savedMPIN && savedEmail) {
-                tempUserEmail = savedEmail;
-                mpinScreen.style.display = 'flex';
-                mpinInputs[0].focus();
+            if (localStorage.getItem("vcloud_user")) {
+                tempUserEmail = localStorage.getItem("vcloud_user");
+                window.location.href = `dash.html?email=${encodeURIComponent(tempUserEmail)}`;
             }
-        });
-
-        // Handle MPIN auto-focus flow
-        mpinInputs.forEach((input, index) => {
-            input.addEventListener('keyup', (e) => {
-                if (e.key >= 0 && e.key <= 9) {
-                    if (index < 3) mpinInputs[index + 1].focus();
-                } else if (e.key === 'Backspace') {
-                    if (index > 0) mpinInputs[index - 1].focus();
-                }
-            });
         });
 
         // Main Login Logic
@@ -231,19 +213,8 @@
                     const user = data.find(user => user.username.toLowerCase() === email && user.password === password);
                     if (user) {
                         tempUserEmail = email;
-                        const hasMPIN = localStorage.getItem('vcloud_mpin');
-                        
-                        if (!hasMPIN) {
-                            // First time login - Trigger MPIN Creation
-                            isSettingMode = true;
-                            mpinTitle.innerText = "Setup New MPIN";
-                            mpinBtn.innerText = "Set MPIN";
-                            mpinScreen.style.display = 'flex';
-                            mpinInputs[0].focus();
-                        } else {
-                            // Move to dashboard
-                            window.location.href = `dash.html?email=${encodeURIComponent(email)}`;
-                        }
+                        localStorage.setItem('vcloud_user', tempUserEmail);
+                        window.location.href = `dash.html?email=${encodeURIComponent(email)}`;
                     } else {
                         alert("Invalid credentials");
                     }
@@ -254,41 +225,7 @@
             }
         }
 
-        window.verifyOrSetMPIN = function() {
-            let mpinValue = "";
-            mpinInputs.forEach(input => mpinValue += input.value);
 
-            if (mpinValue.length < 4) {
-                alert("Please enter a 4-digit code");
-                return;
-            }
-
-            if (isSettingMode) {
-                // Save new MPIN
-                localStorage.setItem('vcloud_mpin', mpinValue);
-                localStorage.setItem('vcloud_user', tempUserEmail);
-                window.location.href = `dash.html?email=${encodeURIComponent(tempUserEmail)}`;
-            } else {
-                // Verify existing MPIN
-                const savedMPIN = localStorage.getItem('vcloud_mpin');
-                const savedEmail = localStorage.getItem('vcloud_user');
-                if (mpinValue === savedMPIN) {
-                    window.location.href = `dash.html?email=${encodeURIComponent(savedEmail)}`;
-                } else {
-                    alert("Incorrect MPIN");
-                    mpinInputs.forEach(i => i.value = "");
-                    mpinInputs[0].focus();
-                }
-            }
-        }
-
-        window.forgotMPIN = function() {
-            // If they forget, we hide the MPIN screen and let them use normal login
-            mpinScreen.style.display = 'none';
-            mpinInputs.forEach(i => i.value = "");
-            // Optionally clear storage if you want to force re-setup after login
-            // localStorage.removeItem('vcloud_mpin'); 
-        }
 
         window.goToSignup = () => window.location.href = "signup.html";
     </script>
