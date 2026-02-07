@@ -139,7 +139,7 @@ window.showPage = (id) => {
 // Error fix: Ensure user session is handled cleanly
 const userBlob = localStorage.getItem("vcloud_user");
 if(!userBlob) { 
-    location.href = "../login.html/"; 
+    location.href = "../login.html"; 
 } else {
     try {
         const u = userBlob;
