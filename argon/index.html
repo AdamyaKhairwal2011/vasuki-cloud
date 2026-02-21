@@ -24,6 +24,7 @@
             color: var(--text-dark);
             background: #ffffff;
             line-height: 1.5;
+            overflow-x: hidden;
         }
 
         /* --- Workspace Nav --- */
@@ -32,7 +33,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 8px 24px;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
@@ -46,7 +48,6 @@
             font-size: 22px;
             color: var(--text-light);
         }
-
         .nav-brand b { color: var(--text-dark); font-weight: 500; }
 
         .btn-google {
@@ -57,128 +58,118 @@
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
-
         .btn-google:hover { background: #185abc; box-shadow: 0 1px 3px rgba(60,64,67,0.3); }
 
-        /* --- Hero Section --- */
-        .hero {
-            padding: 100px 24px;
+        /* --- Hero with Chrome-style Illustration --- */
+        .hero-container {
+            position: relative;
+            padding: 120px 24px;
             text-align: center;
-            max-width: 1000px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        /* The "Chrome Style" CSS Illustration */
+        .chrome-bg {
+            position: absolute;
+            bottom: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120%;
+            height: 400px;
+            z-index: 0;
+            filter: blur(80px);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+        }
+        .blue { width: 400px; height: 400px; background: var(--google-blue); left: 20%; bottom: 0; }
+        .red { width: 300px; height: 300px; background: var(--google-red); left: 45%; bottom: 50px; }
+        .yellow { width: 350px; height: 350px; background: var(--google-yellow); right: 15%; bottom: -20px; }
+        .green { width: 250px; height: 250px; background: var(--google-green); right: 35%; bottom: 100px; }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .hero h1 {
-            font-size: 56px;
+            font-size: 64px;
             font-weight: 400;
             color: var(--text-dark);
-            letter-spacing: -1px;
+            letter-spacing: -1.5px;
             margin-bottom: 24px;
         }
 
         .hero p {
-            font-size: 22px;
+            font-size: 20px;
             color: var(--text-light);
             margin-bottom: 40px;
-            line-height: 1.4;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        /* --- Mind Map: Workspace Canvas Style --- */
-        .canvas-section {
-            background: var(--bg-light);
+        /* --- Ecosystem Grid --- */
+        .section {
             padding: 80px 24px;
             border-top: 1px solid var(--border-color);
+            position: relative;
+            z-index: 2;
+            background: white;
         }
 
-        .canvas-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .canvas-grid {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .canvas-card {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+        .card {
             padding: 32px;
-            width: 320px;
-            transition: box-shadow 0.2s;
-        }
-
-        .canvas-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-
-        .card-icon {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 20px;
-        }
-
-        /* --- Static Graphic: 99.9% Uptime --- */
-        .stats-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border-top: 1px solid var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.3s ease;
             background: #fff;
         }
-
-        .stats-visual {
-            background: #1a73e8;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 100px 24px;
-            position: relative;
+        .card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transform: translateY(-5px);
+            border-color: var(--google-blue);
         }
 
-        /* Clean "Google" circle graphic */
-        .circle-graphic {
-            border: 15px solid rgba(255,255,255,0.1);
-            border-top: 15px solid #fff;
-            border-radius: 50%;
-            width: 220px;
-            height: 220px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
+        .card h3 { margin-top: 0; font-weight: 500; font-size: 20px; }
+        .card p { color: var(--text-light); font-size: 14px; line-height: 1.6; }
+        .badge {
+            background: #e6f4ea;
+            color: #137333;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
-        .stats-content {
-            padding: 100px 80px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        /* --- Footer --- */
+        footer {
+            padding: 60px 24px;
+            background: var(--bg-light);
+            border-top: 1px solid var(--border-color);
         }
 
-        .stats-content h2 { font-size: 36px; font-weight: 400; margin-bottom: 24px; }
-
-        .feature-tag {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            font-size: 16px;
-            color: var(--text-light);
-        }
-
-        .dot { width: 8px; height: 8px; border-radius: 50%; }
-
-        @media (max-width: 850px) {
-            .stats-container { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 36px; }
-            .stats-content { padding: 60px 24px; }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 42px; }
+            .chrome-bg { width: 200%; }
         }
     </style>
 </head>
@@ -189,93 +180,83 @@
             <svg width="24" height="24" viewBox="0 0 24 24"><path fill="#1a73e8" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
             <span>Vasuki <b>Argon</b></span>
         </div>
-        <div>
-            <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" class="btn-google">Request Pilot</a>
-        </div>
+        <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" class="btn-google">Request Pilot</a>
     </nav>
 
-    <section class="hero">
-        <h1>Cloud-native OS for the sovereign enterprise.</h1>
-        <p>Modernize your legacy infrastructure with a secure, AI-native operating system designed for absolute data control and 99.9% reliability.</p>
-        <div style="display: flex; gap: 12px; justify-content: center;">
-            <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" class="btn-google">Start Free Trial</a>
-            <a href="mailto:codeclutch.adamyarao@gmail.com" style="color: var(--google-blue); text-decoration: none; font-weight: 500; align-self: center; font-size: 14px; padding: 10px 20px;">Contact Sales</a>
+    <div class="hero-container">
+        <div class="chrome-bg">
+            <div class="blob blue"></div>
+            <div class="blob red"></div>
+            <div class="blob yellow"></div>
+            <div class="blob green"></div>
         </div>
-    </section>
 
-    <section class="canvas-section">
-        <div class="canvas-title">
-            <h2 style="font-weight: 400; font-size: 28px;">The Vasuki Ecosystem</h2>
-        </div>
-        <div class="canvas-grid">
-            <div class="canvas-card">
-                <div class="card-icon"><svg viewBox="0 0 24 24" width="32"><path fill="#ea4335" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg></div>
-                <h3 style="font-weight: 500; margin-bottom: 12px;">Immutable Core</h3>
-                <p style="font-size: 14px; color: var(--text-light);">A read-only architecture that prevents system drift and enhances security against ransomware.</p>
+        <section class="hero-content">
+            <div style="font-size: 14px; font-weight: 500; color: var(--google-blue); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;">
+                99.9% Uptime Guaranteed
             </div>
-            <div class="canvas-card">
-                <div class="card-icon"><svg viewBox="0 0 24 24" width="32"><path fill="#fbbc04" d="M13 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V9l-7-7zM6 20V4h6v5h5v11H6z"></path></svg></div>
-                <h3 style="font-weight: 500; margin-bottom: 12px;">AI Edge Runtime</h3>
-                <p style="font-size: 14px; color: var(--text-light);">Direct NPU/GPU passthrough for local LLM inference and high-speed data processing.</p>
+            <h1>Cloud-native OS for the sovereign enterprise.</h1>
+            <p>Modernize your infrastructure with an AI-native operating system designed for absolute data control and zero-trust security.</p>
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" class="btn-google">Start Free Trial</a>
+                <a href="mailto:codeclutch.adamyarao@gmail.com" style="color: var(--text-dark); text-decoration: none; font-weight: 500; padding: 10px 20px;">Contact Sales →</a>
             </div>
-            <div class="canvas-card">
-                <div class="card-icon"><svg viewBox="0 0 24 24" width="32"><path fill="#34a853" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg></div>
-                <h3 style="font-weight: 500; margin-bottom: 12px;">Sovereign Mesh</h3>
-                <p style="font-size: 14px; color: var(--text-light);">Build a global private network that keeps sensitive traffic off the public internet.</p>
-            </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
-    <section class="stats-container">
-        <div class="stats-visual">
-            <div class="circle-graphic">
-                <span style="font-size: 48px; font-weight: 500;">99.9%</span>
-            </div>
-            <p style="font-size: 18px; font-weight: 400; opacity: 0.9;">Guaranteed Infrastructure Uptime</p>
-        </div>
-        <div class="stats-content">
-            <h2>Reliability by design.</h2>
-            <p style="color: var(--text-light); font-size: 18px; margin-bottom: 32px;">Vasuki Argon is built for the CEO who cannot afford downtime. By treating infrastructure as a managed cloud service, we remove the complexity of traditional server maintenance.</p>
-            
-            <div class="feature-tag"><div class="dot" style="background: var(--google-blue);"></div> Zero-Trust security as default</div>
-            <div class="feature-tag"><div class="dot" style="background: var(--google-red);"></div> Atomic OTA updates (A/B partitioning)</div>
-            <div class="feature-tag"><div class="dot" style="background: var(--google-green);"></div> Native container orchestration</div>
-        </div>
-    </section>
-
-    <footer style="border-top: 1px solid rgb(211, 211, 211); padding: 80px 24px 40px; background: #fff;">
-        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 60px;">
-            <div>
-                <p style="font-weight: 700; color: #5f6368; margin-bottom: 24px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Product</p>
-                <ul style="list-style: none; font-size: 14px; line-height: 2.8; padding: 0;">
-                    <li><a href="https://www.vasuki.cloud/argon/" style="text-decoration: none; color: var(--text-light);">Argon OS</a></li>
-                    <li><a href="https://www.vasuki.cloud/vypaar/" style="text-decoration: none; color: var(--text-light);">Vypaar Business</a></li>
-                </ul>
-            </div>
-            <div>
-                <p style="font-weight: 700; color: #5f6368; margin-bottom: 24px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Resources</p>
-                <ul style="list-style: none; font-size: 14px; line-height: 2.8; padding: 0;">
-                    <li><a href="https://www.vasuki.cloud/documentation.html" style="text-decoration: none; color: var(--text-light);">Documentation</a></li>
-                    <li><a href="https://www.vasuki.cloud/workshop/" style="text-decoration: none; color: var(--text-light);">Vasuki Learning</a></li>
-                    <li><a href="mailto:codeclutch.adamyarao@gmail.com" style="text-decoration: none; color: var(--text-light);">Support</a></li>
-                </ul>
-            </div>
-            <div>
-                <p style="font-weight: 700; color: #5f6368; margin-bottom: 24px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Social</p>
-                <ul style="list-style: none; font-size: 14px; line-height: 2.8; padding: 0;">
-                    <li><a href="https://www.linkedin.com/company/vasuki-itech?originalSubdomain=in" style="text-decoration: none; color: var(--text-light);">Linkedin</a></li>
-                    <li><a href="https://vasuki.cloud/org.html?org=adbdb81c-1aad-404b-9fff-b01f1e44e516" style="text-decoration: none; color: var(--text-light);">Vasuki Vypaar Page</a></li>
-                </ul>
-            </div>
+    <section class="section">
+        <div style="text-align: center; margin-bottom: 60px;">
+            <h2 style="font-weight: 400; font-size: 32px;">Vasuki Advanced Ecosystem</h2>
+            <p style="color: var(--text-light);">Professional tools for modern startups and enterprises.</p>
         </div>
         
-        <div style="max-width: 1200px; margin: 0 auto; padding-top: 30px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <span style="font-size: 18px; font-weight: 700; color: #5f6368;">Vasuki</span>
-                <span style="color: var(--text-light); font-size: 14px;">© 2026 Vasuki iTech</span>
+        <div class="grid">
+            <div class="card">
+                <div style="color: var(--google-blue); font-weight: bold; margin-bottom: 10px;">Vasuki Forms Adv. <span class="badge">Free</span></div>
+                <p>Get access to advanced features of Vasuki Forms for FREE. Create logic-heavy, secure forms with ease.</p>
             </div>
-            <div style="display: flex; gap: 24px;">
-                <a href="mailto:codeclutch.adamyarao@gmail.com" style="color: var(--text-light); text-decoration: none; font-size: 13px;">Mail Us</a>
+            <div class="card">
+                <div style="color: var(--google-green); font-weight: bold; margin-bottom: 10px;">Cloud Explorer</div>
+                <p>Access contents on your cloud with the ease of managing a folder in Windows. Native desktop feel.</p>
+            </div>
+            <div class="card">
+                <div style="color: var(--google-red); font-weight: bold; margin-bottom: 10px;">NoSQL Management</div>
+                <p>Manage your tables and databases with ease. Secure your data on your own sovereign infrastructure.</p>
+            </div>
+            <div class="card">
+                <div style="color: var(--google-yellow); font-weight: bold; margin-bottom: 10px;">Vypaar Advanced</div>
+                <p>Register your startup for visibility towards investors. Customize your page with built-in forms and analytics.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background: var(--bg-light);">
+        <div class="grid" style="align-items: center;">
+            <div>
+                <h2 style="font-weight: 400; font-size: 36px;">Immutable by Design.</h2>
+                <p>Vasuki Argon treats infrastructure as a managed service. No system drift, no manual patching, just reliable performance for the modern CEO.</p>
+                <ul style="list-style: none; padding: 0; color: var(--text-light);">
+                    <li style="margin-bottom: 12px;">✅ Zero-Trust security as default</li>
+                    <li style="margin-bottom: 12px;">✅ Atomic OTA updates</li>
+                    <li style="margin-bottom: 12px;">✅ Native container orchestration</li>
+                </ul>
+            </div>
+            <div style="background: white; padding: 40px; border-radius: 20px; border: 1px solid var(--border-color); text-align: center;">
+                <div style="font-size: 72px; font-weight: 700; color: var(--google-blue);">99.9%</div>
+                <p style="font-weight: 500;">Guaranteed Infrastructure Uptime</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <b style="font-size: 20px;">Vasuki</b>
+                <p style="font-size: 13px; color: var(--text-light);">© 2026 Vasuki iTech. Empowering the sovereign enterprise.</p>
+            </div>
+            <div style="display: flex; gap: 20px; font-size: 14px;">
+                <a href="https://www.linkedin.com/company/vasuki-itech" style="color: var(--text-light); text-decoration: none;">LinkedIn</a>
+                <a href="mailto:codeclutch.adamyarao@gmail.com" style="color: var(--text-light); text-decoration: none;">Support</a>
             </div>
         </div>
     </footer>
