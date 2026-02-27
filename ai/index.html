@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>astra UI Clone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    /* --- Styles preserved as per your request --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background-color: #e9e9f1; color: #f0f0f0; display: flex; height: 100vh; overflow: hidden; flex-direction: row; }
+    @font-face { font-family: 'custom'; src: url('custom.ttf') format('truetype'); font-display: swap; }
+    .main { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; padding: 20px; overflow-y: auto; }
+    .center-box { max-width: 700px; width: 100%; text-align: center; transition: all 0.5s ease; z-index: 1; }
+    .astra-logo { font-size: 40px; margin-bottom: 30px; color: rgb(50, 58, 63); font-family: 'custom'; }
+    .input-bar { background-color: #27272733; backdrop-filter: blur(8px); border-radius: 18px; padding: 20px; text-align: left; color: #1e3138; font-size: 16px; margin-bottom: 20px; position: relative; transition: margin-top 0.5s ease; }
+    .input-bar input { width: 100%; background: transparent; border: none; color: #303541; font-size: 16px; outline: none; }
+    .toolbar { display: flex; justify-content: space-between; flex-wrap: wrap; margin-top: 10px; font-size: 14px; gap: 8px; }
+    .toolbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .toolbar button { background-color: #1a1a1a; border: 1px solid #333; padding: 6px 12px; border-radius: 14px; color: #ccc; cursor: pointer; font-size: 13px; }
+    .bottom-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .bottom-buttons button { background-color: #181818; border: 1px solid #333; padding: 8px 14px; border-radius: 16px; color: #ccc; font-size: 14px; cursor: pointer; }
+    .mess-area { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 700px; height: 60vh; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background-color: transparent; color: #1e1e1e; scrollbar-width: thin; }
+    .hidden { display: none !important; }
+    .message { padding: 12px 18px; word-break: break-word; line-height: 1.5; font-size: 15px; }
+    .user { align-self: flex-end; background-color: #ffffff99; backdrop-filter: blur(4px); border-radius: 18px 18px 2px 18px; border: 1px solid #d1d1d6; max-width: 85%; color: #303541; }
+    .bot { align-self: flex-start; background-color: #f8f9fa44; border: 1px solid #1e313833; border-radius: 18px 18px 18px 2px; max-width: 90%; color: #1e1e1e; }
+    #bg-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="main">
+    <div class="mess-area hidden" id="messageArea">
+      <div class="astra-logo" style="width: 100%; text-align: center; font-size: 24px;">Vaimanika Labs</div>
+    </div>
+
+    <div class="center-box" id="centerBox">
+      <div class="astra-logo" id="logo">॥ वासुकी वायमनिका शिखरम् ॥</div>
+
+      <div class="input-bar" id="inputContainer">
+        <input type="text" placeholder="What do you want to know?" id="query" autocomplete="off"/>
+        <div class="toolbar">
+          <div class="toolbar-left"></div>
+          <div class="toolbar-right">
+            <button style="pointer-events: none; opacity: 0.7;">वायमनिका शिखरम्</button>
+            <button id="getAnswer" style="font-weight: bold;">↑</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-buttons" id="actionButtons">
+        <button onclick="handleQuickAction('solve for x, 256 raised to power 3 divided by 7 equals to x')">Solve Mathematics</button>
+        <button onclick="handleQuickAction('explain quantum computing in detail')">Dive Deeper</button>
+        <button onclick="handleQuickAction('how to cure my boredom')">Brainstorm</button>
+        <button onclick="handleQuickAction('research for latest advancement of ai systems in india')">Web Research</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    const logo = document.getElementById('logo');
+    const actionButtons = document.getElementById('actionButtons');
+    const inputContainer = document.getElementById('inputContainer');
+    const messageArea = document.getElementById('messageArea');
+    const queryInput = document.getElementById('query');
+    const getAnswerBtn = document.getElementById('getAnswer');
+
+    let isFirstMessage = true;
+
+    // Focus input on load
+    window.onload = () => queryInput.focus();
+
+    async function sendMessage(userInput) {
+      if (!userInput || userInput.trim() === '') return;
+
+      // 1. UI Transition
+      if (isFirstMessage) {
+        logo.classList.add('hidden');
+        actionButtons.classList.add('hidden');
+        messageArea.classList.remove('hidden');
+        inputContainer.style.marginTop = '65vh'; 
+        isFirstMessage = false;
+      }
+
+      // 2. Append User Message
+      const userDiv = document.createElement('div');
+      userDiv.className = 'message user';
+      userDiv.innerHTML = `<p>${userInput}</p>`;
+      messageArea.appendChild(userDiv);
+
+      const currentQuery = userInput;
+      queryInput.value = '';
+
+      // 3. Add Thinking State
+      const botDiv = document.createElement('div');
+      botDiv.className = 'message bot';
+      botDiv.innerHTML = `<p><em>Vaimanika is researching...</em></p>`;
+      messageArea.appendChild(botDiv);
+      messageArea.scrollTo({ top: messageArea.scrollHeight, behavior: 'smooth' });
+
+      // 4. API Integrated Replying Logic
+      try {
+        // Constructing the URL with the question
+        const fetchUrl = `https://adamyakhairwal2011-vasuki-ai.hf.space/research?topic=${encodeURIComponent(currentQuery)}&mode=ask`;
+        
+        const response = await fetch(fetchUrl);
+        
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        // Reading the response directly as text
+        const data = await response.text();
+        
+        // Update Bot Message with direct text
+        botDiv.innerHTML = `<p>${data}</p>`;
+      } catch (err) {
+        botDiv.innerHTML = `<p style="color:#d93025"><strong>Error:</strong> Failed to reach Vaimanika node. Please check your connection.</p>`;
+        console.error("Fetch error:", err);
+      }
+
+      messageArea.scrollTo({ top: messageArea.scrollHeight, behavior: 'smooth' });
+    }
+
+    // Handle Quick Action Buttons
+    window.handleQuickAction = (text) => {
+      queryInput.value = text;
+      sendMessage(text);
+    };
+
+    // Event Listeners
+    getAnswerBtn.addEventListener('click', () => sendMessage(queryInput.value));
+
+    queryInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage(queryInput.value);
+      }
+    });
+
+    window.fetchNews = () => {
+      const q = 'Please give me the latest news';
+      queryInput.value = q;
+      sendMessage(q);
+    };
+  </script>
+</body>
+</html>
