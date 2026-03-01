@@ -2,205 +2,483 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Vasuki Vaimanika Shikharam</title>
+  <title>Vaimanika Shikharam - Vasuki AI Labs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+
   <style>
-    /* --- Styles preserved and fixed for scrollability --- */
+    :root {
+      --bg-color: #f0f4f9;
+      --text-main: #1f1f1f;
+      --text-sub: #444746;
+      --white: #ffffff;
+      --border: #dee2e6;
+      --accent: #4285f4;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
-    /* Removed overflow: hidden from body to allow overall page stability */
     body { 
-      font-family: 'Segoe UI', sans-serif; 
-      background-color: #e9e9f1; 
-      color: #f0f0f0; 
-      display: flex; 
+      font-family: 'Google Sans', Roboto, Arial, sans-serif; 
+      background-color: var(--bg-color); 
+      color: var(--text-main); 
       height: 100vh; 
-      flex-direction: row; 
-    }
-
-    @font-face { font-family: 'custom'; src: url('custom.ttf') format('truetype'); font-display: swap; }
-    
-    .main { 
-      flex: 1; 
       display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      position: relative; 
-      padding: 20px; 
-      /* Changed to hidden so the message area handles internal scrolling */
-      overflow: hidden; 
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
     }
 
-    .center-box { max-width: 700px; width: 100%; text-align: center; transition: all 0.5s ease; z-index: 1; }
-    .astra-logo { font-size: 40px; margin-bottom: 30px; color: rgb(50, 58, 63); font-family: 'custom'; }
-    
-    .input-bar { 
-      background-color: #27272733; 
-      backdrop-filter: blur(8px); 
-      border-radius: 18px; 
-      padding: 20px; 
-      text-align: left; 
-      color: #1e3138; 
-      font-size: 16px; 
-      margin-bottom: 20px; 
-      position: relative; 
-      transition: margin-top 0.5s ease; 
+    header {
+      width: 100%;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
+      top: 0;
       z-index: 10;
     }
 
-    .input-bar input { width: 100%; background: transparent; border: none; color: #303541; font-size: 16px; outline: none; }
-    .toolbar { display: flex; justify-content: space-between; flex-wrap: wrap; margin-top: 10px; font-size: 14px; gap: 8px; }
-    .toolbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .toolbar button { background-color: #1a1a1a; border: 1px solid #333; padding: 6px 12px; border-radius: 14px; color: #ccc; cursor: pointer; font-size: 13px; }
-    .bottom-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-    .bottom-buttons button { background-color: #181818; border: 1px solid #333; padding: 8px 14px; border-radius: 16px; color: #ccc; font-size: 14px; cursor: pointer; }
-
-    /* FIXED: Adjusted height and overflow for message area */
-    .mess-area { 
-      position: absolute; 
-      top: 20px; 
-      left: 50%; 
-      transform: translateX(-50%); 
-      width: 100%; 
-      max-width: 700px; 
-      height: calc(65vh - 40px); /* Adjusting to fit above the input bar */
-      overflow-y: auto; 
-      padding: 20px; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 15px; 
-      background-color: transparent; 
-      color: #1e1e1e; 
-      /* Ensures scrollbar is visible when needed */
-      scrollbar-width: thin;
-      -webkit-overflow-scrolling: touch; 
+    .gemini-logo { font-size: 18px; font-weight: 500; color: var(--text-sub); }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .upgrade-btn {
+      background: #c2e7ff;
+      color: #001d35;
+      padding: 10px 16px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .hidden { display: none !important; }
-    .message { padding: 12px 18px; word-break: break-word; line-height: 1.5; font-size: 15px; }
+    .container {
+      margin-top: 15vh;
+      height: 55vh; 
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.5s ease;
+    }
+
+    .greeting { font-size: 36px; font-weight: 400; margin-bottom: 8px; color: var(--text-main); margin-top:10vh;}
+    .greeting span { display: block; font-size: 18px; color: #444746; margin-bottom: 4px; }
+
+    .input-wrapper {
+      width: 90%;
+      max-width: 720px;
+      background: var(--white);
+      border-radius: 28px;
+      padding: 12px 24px;
+      margin-top: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+
+    .input-top { display: flex; align-items: center; width: 100%; gap: 10px; }
+    input#query {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 18px;
+      padding: 12px 0;
+      color: var(--text-main);
+      background: transparent;
+    }
+
+    .stop-btn-container {
+      position: relative;
+      display: none; 
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+    }
+
+    .loader-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 3px solid #e8f0fe;
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    #stopBtn {
+      position: relative;
+      width: 12px;
+      height: 12px;
+      background: #1f1f1f;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .input-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      margin-top: 4px;
+    }
+
+    .tools-group { display: flex; align-items: center; gap: 16px; color: #444746; font-size: 14px; }
+    .tool-btn { cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 8px; transition: 0.2s; background-color: #def2ff;}
+    .tool-btn:hover { background: #f1f3f4; }
+
+    /* Code Block Enhancements */
+    pre {
+      position: relative;
+      padding: 1em !important;
+      border-radius: 12px !important;
+      margin: 1.5em 0 !important;
+      overflow-x: auto;
+    }
+
+    .code-copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s, background 0.2s;
+      z-index: 5;
+    }
+
+    pre:hover .code-copy-btn {
+      opacity: 1;
+    }
+
+    .code-copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .mode-select-container { position: relative; display: flex; align-items: center; gap: 10px; }
+    #modeLabel { font-size: 13px; color: var(--accent); font-weight: 500; cursor: pointer; padding: 6px 12px; border-radius: 18px; background: #e8f0fe; }
     
-    /* Markdown Styles */
-    .message p { margin-bottom: 10px; }
-    .message h1, .message h2, .message h3 { margin: 10px 0; color: #111; }
-    .message ul, .message ol { margin-left: 20px; margin-bottom: 10px; }
-    .message code { background: #0000001a; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
-    .message pre { background: #222; color: #eee; padding: 10px; border-radius: 8px; overflow-x: auto; margin: 10px 0; }
+    .mode-dropdown {
+      position: absolute;
+      bottom: 110%;
+      right: 0;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: none;
+      flex-direction: column;
+      width: 120px;
+      overflow: hidden;
+      z-index: 100;
+    }
+    .mode-option { padding: 10px 15px; font-size: 13px; cursor: pointer; text-align: left; }
+    .mode-option:hover { background: #f8f9fa; color: var(--accent); }
+
+    .chips-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 32px;
+      max-width: 700px;
+    }
+
+    .chip {
+      background: var(--white);
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #1f1f1f;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chip:hover { background: #eef2f7; border-color: var(--border); }
+    .chip svg { width: 18px; height: 18px; fill: none; stroke: var(--text-sub); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    #chatArea {
+      width: 100%;
+      max-width: 800px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+      gap: 40px;
+      margin-top: 80px;
+      padding: 40px 20px;
+      height: calc(100vh - 240px); 
+      scroll-behavior: smooth;
+    }
+
+    .message { max-width: 100%; line-height: 1.6; font-size: 16px; position: relative; }
+    .user-msg { align-self: flex-end; color: #1f1f1f; font-size: 24px; font-weight: 400; text-align: right; }
+    .bot-msg { align-self: flex-start; color: #1f1f1f; width: 100%; text-align: left; }
     
-    .user { align-self: flex-end; background-color: #ffffff99; backdrop-filter: blur(4px); border-radius: 18px 18px 2px 18px; border: 1px solid #d1d1d6; max-width: 85%; color: #303541; }
-    .bot { align-self: flex-start; background-color: #f8f9fa44; border: 1px solid #1e313833; border-radius: 18px 18px 18px 2px; max-width: 90%; color: #1e1e1e; }
-    
-    #bg-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .action-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+    }
+    .bot-msg:hover .action-row { opacity: 1; }
+    .action-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .action-btn:hover { background: #e8eaed; }
+    .action-btn svg { width: 18px; height: 18px; fill: none; stroke: var(--text-sub); stroke-width: 2; }
+
+    .docked-footer {
+      position: fixed;
+      bottom: 24px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      background: transparent;
+      z-index: 10;
+    }
   </style>
 </head>
 <body>
-  <canvas id="bg-canvas"></canvas>
 
-  <div class="main">
-    <div class="mess-area hidden" id="messageArea">
-      <div class="astra-logo" style="width: 100%; text-align: center; font-size: 24px;">Vaimanika Labs</div>
-    </div>
+<header>
+  <div class="gemini-logo">Vaimanika Labs</div>
+  <div class="header-right">
+    <a href="#" class="upgrade-btn">✦ Get Access To Vasuki Argon</a>
+    <div id="userInit" style="width: 32px; height: 32px; background: #512da8; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; cursor: pointer;">?</div>
+  </div>
+</header>
 
-    <div class="center-box" id="centerBox">
-      <div class="astra-logo" id="logo">॥ वासुकी वायमनिका शिखरम् ॥</div>
+<div class="container" id="homeUI">
+  <div class="greeting">
+    <span id="userName">✦ Hi Guest</span>
+    Where should we start?
+  </div>
 
-      <div class="input-bar" id="inputContainer">
-        <input type="text" placeholder="What do you want to know?" id="query" autocomplete="off"/>
-        <div class="toolbar">
-          <div class="toolbar-left"></div>
-          <div class="toolbar-right">
-            <button style="pointer-events: none; opacity: 0.7;">वायमनिका शिखरम्</button>
-            <button id="getAnswer" style="font-weight: bold;">↑</button>
-          </div>
-        </div>
+  <div class="input-wrapper" id="mainInput">
+    <div class="input-top">
+      <input type="text" id="query" placeholder="Ask Vaimanika..." autocomplete="off">
+      <div class="stop-btn-container" id="stopContainer">
+        <div class="loader-ring"></div>
+        <button id="stopBtn" onclick="stopAIResponse()" title="Stop response"></button>
       </div>
-
-      <div class="bottom-buttons" id="actionButtons">
-        <button onclick="handleQuickAction('solve for x, 256 raised to power 3 divided by 7 equals to x')">Solve Mathematics</button>
-        <button onclick="handleQuickAction('explain quantum computing in detail')">Dive Deeper</button>
-        <button onclick="handleQuickAction('how to cure my boredom')">Brainstorm</button>
-        <button onclick="handleQuickAction('research for latest advancement of ai systems in india')">Web Research</button>
+    </div>
+    <div class="input-bottom">
+      <div class="tools-group">
+        <div class="tool-btn">Vasuki Vaimanika Shikharam</div>
+      </div>
+      <div class="mode-select-container">
+        <div id="modeLabel" onclick="toggleModeDropdown()">Ask ▾</div>
+        <div class="mode-dropdown" id="modeDropdown">
+          <div class="mode-option" onclick="setMode('ask')">Ask</div>
+          <div class="mode-option" onclick="setMode('research')">Research</div>
+          <div class="mode-option" onclick="setMode('coder')">Coder</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <script type="module">
-    const logo = document.getElementById('logo');
-    const actionButtons = document.getElementById('actionButtons');
-    const inputContainer = document.getElementById('inputContainer');
-    const messageArea = document.getElementById('messageArea');
-    const queryInput = document.getElementById('query');
-    const getAnswerBtn = document.getElementById('getAnswer');
+ <div class="chips-container">
 
-    let isFirstMessage = true;
+    <div class="chip" onclick="handleQuickAction('Write HTML & CSS code to make a website in one file')">
 
-    window.onload = () => queryInput.focus();
+      <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
 
-    async function sendMessage(userInput) {
-      if (!userInput || userInput.trim() === '') return;
+      Coding Help
 
-      if (isFirstMessage) {
-        logo.classList.add('hidden');
-        actionButtons.classList.add('hidden');
-        messageArea.classList.remove('hidden');
-        inputContainer.style.marginTop = '65vh'; 
-        isFirstMessage = false;
+    </div>
+
+    <div class="chip" onclick="handleQuickAction('Write a professional email to a client')">
+
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+
+      Write anything
+
+    </div>
+
+    <div class="chip" onclick="handleQuickAction('Suggest a 10 minute workout plan')">
+
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+
+      Boost my day
+
+    </div>
+
+    <div class="chip" onclick="handleQuickAction('Tell me a joke to make my day better')">
+
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+
+      Make Me Smile
+
+    </div>
+
+
+</div>
+</div>
+
+<div id="chatArea"></div>
+<div id="footerDock" class="hidden docked-footer"></div>
+
+<script type="module">
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const queryInput = document.getElementById('query');
+  const stopContainer = document.getElementById('stopContainer');
+  const homeUI = document.getElementById('homeUI');
+  const chatArea = document.getElementById('chatArea');
+  const footerDock = document.getElementById('footerDock');
+  const mainInput = document.getElementById('mainInput');
+  const modeLabel = document.getElementById('modeLabel');
+  const modeDropdown = document.getElementById('modeDropdown');
+  const userNameDisplay = document.getElementById('userName');
+
+  let currentMode = 'ask';
+  let abortController = null;
+
+  async function initUser() {
+    const vcloudUser = localStorage.getItem('vcloud_user');
+    if (!vcloudUser) return;
+    try {
+      const { data } = await supabase.from('users').select('name').eq('username', vcloudUser).single();
+      if (data && data.name) {
+        userNameDisplay.textContent = `✦ Welcome Back, ${data.name}`;
+        document.getElementById('userInit').textContent = data.name.charAt(0).toUpperCase();
       }
+    } catch (err) {}
+  }
+  initUser();
 
-      const userDiv = document.createElement('div');
-      userDiv.className = 'message user';
-      userDiv.innerHTML = `<p>${userInput}</p>`;
-      messageArea.appendChild(userDiv);
+  function renderContent(text) {
+    let processed = text.replace(/\\\[/g, '$$$$').replace(/\\\]/g, '$$$$').replace(/\\\(/g, '$').replace(/\\\)/g, '$');
+    let htmlContent = marked.parse(processed);
+    
+    const temp = document.createElement('div');
+    temp.innerHTML = htmlContent;
 
-      const currentQuery = userInput;
-      queryInput.value = '';
+    // LaTeX handling
+    temp.innerHTML = temp.innerHTML.replace(/\$\$([\s\S]+?)\$\$/g, (_, formula) => katex.renderToString(formula, { displayMode: true, throwOnError: false }));
+    temp.innerHTML = temp.innerHTML.replace(/\$([^\$\n]+?)\$/g, (_, formula) => katex.renderToString(formula, { displayMode: false, throwOnError: false }));
 
-      const botDiv = document.createElement('div');
-      botDiv.className = 'message bot';
-      botDiv.innerHTML = `<p><em>Vaimanika is researching...</em></p>`;
-      messageArea.appendChild(botDiv);
-      
-      // Immediate scroll after user message
-      messageArea.scrollTop = messageArea.scrollHeight;
-
-      try {
-        const fetchUrl = `https://adamyakhairwal2011-vasuki-ai.hf.space/research?topic=${encodeURIComponent(currentQuery)}&mode=ask`;
-        const response = await fetch(fetchUrl);
-        
-        if (!response.ok) throw new Error('Network response was not ok');
-
-        const data = await response.text();
-        
-        // Render Markdown
-        botDiv.innerHTML = marked.parse(data);
-      } catch (err) {
-        botDiv.innerHTML = `<p style="color:#d93025"><strong>Error:</strong> Failed to reach Vaimanika node. Please check your connection.</p>`;
-        console.error("Fetch error:", err);
-      }
-
-      // Final scroll after bot response
-      messageArea.scrollTo({ top: messageArea.scrollHeight, behavior: 'smooth' });
-    }
-
-    window.handleQuickAction = (text) => {
-      queryInput.value = text;
-      sendMessage(text);
-    };
-
-    getAnswerBtn.addEventListener('click', () => sendMessage(queryInput.value));
-
-    queryInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        sendMessage(queryInput.value);
-      }
+    // Add Copy buttons to Pre blocks
+    temp.querySelectorAll('pre').forEach(pre => {
+        const btn = document.createElement('button');
+        btn.className = 'code-copy-btn';
+        btn.innerText = 'Copy';
+        btn.onclick = () => {
+            const code = pre.querySelector('code')?.innerText || pre.innerText;
+            navigator.clipboard.writeText(code);
+            btn.innerText = 'Copied!';
+            setTimeout(() => btn.innerText = 'Copy', 2000);
+        };
+        pre.appendChild(btn);
     });
 
-    window.fetchNews = () => {
-      const q = 'Please give me the latest news';
-      queryInput.value = q;
-      sendMessage(q);
-    };
-  </script>
+    return temp.innerHTML;
+  }
+
+  window.toggleModeDropdown = () => modeDropdown.style.display = modeDropdown.style.display === 'flex' ? 'none' : 'flex';
+  window.setMode = (mode) => {
+    currentMode = mode;
+    modeLabel.textContent = mode.charAt(0).toUpperCase() + mode.slice(1) + ' ▾';
+    modeDropdown.style.display = 'none';
+  }
+  window.stopAIResponse = () => abortController?.abort();
+
+  async function startConversation(text) {
+    document.querySelector(".greeting").style.display = 'none';
+    document.querySelector(".container").style.display = 'none';
+    if (!text.trim()) return;
+    if (!homeUI.classList.contains('hidden')) {
+      homeUI.classList.add('hidden');
+      chatArea.style.display = 'flex';
+      footerDock.classList.remove('hidden');
+      footerDock.appendChild(mainInput);
+    }
+
+    const uMsg = document.createElement('div');
+    uMsg.className = 'message user-msg';
+    uMsg.textContent = text;
+    chatArea.appendChild(uMsg);
+    queryInput.value = '';
+
+    const bMsg = document.createElement('div');
+    bMsg.className = 'message bot-msg';
+    const contentDiv = document.createElement('div');
+    contentDiv.innerHTML = '<em>Thinking...</em>';
+    bMsg.appendChild(contentDiv);
+    chatArea.appendChild(bMsg);
+
+    stopContainer.style.display = 'flex';
+    abortController = new AbortController();
+
+    try {
+      const resp = await fetch(`https://adamyakhairwal2011-vasuki-ai.hf.space/research?topic=${encodeURIComponent(text)}&mode=${currentMode}`, {
+        signal: abortController.signal
+      });
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+
+      while (true) {
+        const {done, value} = await reader.read();
+        if (done) break;
+        fullText += decoder.decode(value, {stream: true});
+        contentDiv.innerHTML = renderContent(fullText);
+        // Highlight code after rendering
+        Prism.highlightAllUnder(contentDiv);
+        chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'auto' });
+      }
+    } catch (e) {
+      contentDiv.innerHTML = e.name === 'AbortError' ? "<em>Stopped.</em>" : "<p style='color:red'>Error.</p>";
+    } finally {
+      stopContainer.style.display = 'none';
+    }
+  }
+
+  queryInput.addEventListener('keydown', (e) => e.key === 'Enter' && startConversation(queryInput.value));
+  window.handleQuickAction = (t) => startConversation(t);
+</script>
 </body>
 </html>
