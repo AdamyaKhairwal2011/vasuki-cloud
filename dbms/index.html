@@ -4,180 +4,261 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vasuki DB | The Data Infrastructure for Vasuki iTech</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Tektur:wght@400..900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --v-blue: #1a73e8;
-            --v-ink: #202124;
-            --v-slate: #5f6368;
-            --v-border: #e0e2e6;
+            --g-blue: #1a73e8;
+            --g-blue-hover: #1765cc;
+            --g-text: #3c4043;
+            --g-text-light: #5f6368;
+            --g-border: #dadce0;
+            --g-bg: #ffffff;
         }
-        body { font-family: 'Inter', sans-serif; color: var(--v-ink); background: #ffffff; -webkit-font-smoothing: antialiased; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        .elevated-card { box-shadow: 0 1px 2px rgba(60,64,67,0.1), 0 2px 6px 2px rgba(60,64,67,0.05); }
-        .nav-blur { backdrop-filter: saturate(180%) blur(20px); background: rgba(255, 255, 255, 0.8); }
-        .grid-bg {
-            background-image: radial-gradient(#e0e2e6 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Google Sans', 'Segoe UI', Roboto, Arial, sans-serif;
+            color: var(--g-text);
+            background-color: var(--g-bg);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        .btn-core {
-            height: 40px;
-            display: inline-flex;
+
+        /* Navigation */
+        nav {
+            height: 64px;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 0 24px;
-            font-weight: 500;
-            font-size: 14px;
-            border-radius: 4px;
-            transition: all 0.2s;
+            padding: 0 32px;
+            border-bottom: 1px solid var(--g-border);
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 22px;
+            color: var(--g-text-light);
+            text-decoration: none;
             cursor: pointer;
+        }
+
+        .logo b { color: #202124; }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--g-text-light);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-blue {
+            background: var(--g-blue);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-blue:hover {
+            background: var(--g-blue-hover);
+            box-shadow: 0 1px 3px rgba(60,64,67,0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            max-width: 1280px;
+            margin: 80px auto;
+            padding: 0 40px;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .hero-content { flex: 1; }
+
+        .hero-content h1 {
+            font-size: 52px;
+            font-weight: 400;
+            color: #202124;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--g-text-light);
+            margin-bottom: 40px;
+            max-width: 480px;
+        }
+
+        /* Code Window */
+        .code-window {
+            flex: 1.1;
+            background: #202124;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14);
+        }
+
+        .code-header {
+            background: #2d2e31;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27c93f; }
+
+        .code-content {
+            padding: 32px;
+            font-family: 'Consolas', 'Monaco', 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #e8eaed;
+            overflow-x: auto;
+        }
+
+        .keyword { color: #8ab4f8; }
+        .string { color: #81c995; }
+        .func { color: #fdd663; }
+        .comment { color: #9aa0a6; }
+
+        /* Feature Grid */
+        .features {
+            background: #f8f9fa;
+            padding: 80px 40px;
+            border-top: 1px solid var(--g-border);
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 500;
+            margin: 16px 0;
+            color: #202124;
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: var(--g-text-light);
+        }
+
+        /* Footer */
+        footer {
+            padding: 48px 40px;
+            border-top: 1px solid var(--g-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--g-text-light);
+        }
+
+        @media (max-width: 960px) {
+            .hero { flex-direction: column; text-align: center; margin: 40px auto; }
+            .hero-content p { margin: 0 auto 40px; }
+            .features-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body class="grid-bg">
+<body>
 
-    <div class="bg-[#1a73e8] text-white text-[11px] font-semibold py-1.5 px-6 flex justify-between tracking-wide">
-        <span>VASUKI ITECH INTERNAL SYSTEMS // DB-CORE v4.0</span>
-        <span class="flex items-center gap-2">
-            <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span> SYSTEM STATUS: OPTIMAL
-        </span>
-    </div>
-
-    <nav class="nav-blur sticky top-0 z-50 border-b border-[#eef0f2]">
-        <div class="max-w-[1440px] mx-auto px-8 h-16 flex justify-between items-center">
-            <div class="flex items-center gap-10">
-                <a href="./dashboard.html" class="flex items-center gap-3">
-                    <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-                        <rect width="40" height="40" rx="6" fill="#1a73e8"/>
-                        <path d="M12 14L20 10L28 14L20 18L12 14Z" fill="white"/>
-                        <path d="M12 21L20 25L28 21" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                        <path d="M12 28L20 32L28 28" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <span class="text-xl font-semibold tracking-tight text-gray-900">Vasuki <span class="text-blue-600">DB</span></span>
-                </a>
-                <div class="hidden lg:flex items-center gap-6">
-                </div>
-            </div>
-            <div class="flex items-center gap-4">
-                <a href="./dashboard.html" class="btn-core bg-[#1a73e8] text-white hover:bg-blue-700 elevated-card">Launch Console</a>
-            </div>
+    <nav>
+        <a href="#" class="logo">
+            <b>Guppt</b>DBMS
+        </a>
+        <div class="nav-right">
+            <a href="mailto:codeclutch.adamyarao@gmail.com" class="nav-link">Contact Sales</a>
+            <a href="./dashboard.html" class="btn-blue">Get Started</a>
         </div>
     </nav>
 
-    <section class="relative pt-24 pb-32 px-8 overflow-hidden">
-        <div class="max-w-[1440px] mx-auto grid lg:grid-cols-2 gap-20 items-center">
-            <div class="relative z-10">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 mb-8">
-                    <span class="text-[10px] font-bold text-blue-600 tracking-widest uppercase">New Release</span>
-                    <span class="text-[10px] text-blue-400 font-medium tracking-tight italic">Instance Partitioning v4.2</span>
-                </div>
-                <h1 class="text-6xl font-light text-gray-900 leading-[1.05] tracking-tight mb-8">
-                    The foundation for <br> 
-                    <span class="font-bold">intelligent data.</span>
-                </h1>
-                <p class="text-lg text-gray-500 leading-relaxed mb-10 max-w-lg">
-                    A unified DBMS designed for the modern enterprise. Deploy secure, partitioned JSON-relational environments in the Vasuki Cloud ecosystem with zero overhead.
-                </p>
-                <div class="flex items-center gap-6">
-                    <a href="./dashboard.html" class="btn-core bg-gray-900 text-white hover:bg-black elevated-card h-12 px-10">Request Instance</a>
-                    <a href="mailto:codeclutch.adamyarao@gmail.com" class="text-sm font-bold text-gray-900 flex items-center gap-2 group">
-                        Explore technical whitepaper 
-                        <svg class="group-hover:translate-x-1 transition-transform" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.33331 8H12.6666" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M8 3.33334L12.6667 8L8 12.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                    </a>
-                </div>
+    <main class="hero">
+        <div class="hero-content">
+            <h1>India's native <br><span style="color:var(--g-blue)">JSON-First</span> DBMS.</h1>
+            <p>The foundation for intelligent data. Deploy secure, partitioned environments in the Vasuki Cloud ecosystem with zero overhead.</p>
+            <div style="display:flex; gap: 12px; justify-content: inherit;">
+                <a href="./dashboard.html" class="btn-blue" style="padding: 14px 32px; font-size: 15px;">Launch Console</a>
+                <a href="mailto:codeclutch.adamyarao@gmail.com" class="btn-blue" style="background:white; font-size: 15px; color:var(--g-blue);padding: 14px 32px; border: 1px solid var(--g-border);">Request Access</a>
             </div>
+        </div>
 
-            <div class="relative">
-                <div class="absolute -inset-4 bg-gradient-to-tr from-blue-500 to-indigo-500 opacity-10 blur-3xl"></div>
-                <a href="./dashboard.html" class="block relative bg-white border border-[#e0e2e6] rounded-xl elevated-card overflow-hidden transition-transform hover:scale-[1.01]">
-                    <div class="bg-[#f8f9fa] border-b border-[#e0e2e6] px-4 py-3 flex items-center justify-between">
-                        <div class="flex items-center gap-6">
-                            <div class="flex gap-1.5">
-                                <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
-                                <div class="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
-                            </div>
-                            <span class="text-[11px] font-mono text-gray-400 uppercase tracking-tighter">console.vasuki.it/db_production</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex gap-4 mb-8">
-                            <div class="h-24 flex-1 bg-white border border-gray-100 rounded-lg p-4 flex flex-col justify-between">
-                                <span class="text-[10px] font-bold text-gray-400 uppercase">Requests/sec</span>
-                                <span class="text-2xl font-light">14.2k</span>
-                            </div>
-                            <div class="h-24 flex-1 bg-white border border-gray-100 rounded-lg p-4 flex flex-col justify-between">
-                                <span class="text-[10px] font-bold text-gray-400 uppercase">Latency</span>
-                                <span class="text-2xl font-light text-green-500">18ms</span>
-                            </div>
-                        </div>
-                        <div class="space-y-4">
-                            <div class="h-[1px] bg-gray-100 w-full"></div>
-                            <div class="flex justify-between items-center opacity-50">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded bg-blue-50"></div>
-                                    <div class="space-y-1">
-                                        <div class="h-2 w-24 bg-gray-200 rounded"></div>
-                                        <div class="h-2 w-16 bg-gray-100 rounded"></div>
-                                    </div>
-                                </div>
-                                <div class="h-6 w-12 bg-gray-50 rounded"></div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+        <div class="code-window">
+            <div class="code-header">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+                <span style="color: #9aa0a6; font-size: 12px; margin-left: 12px; font-family: monospace;">npm install vasuki-db</span>
+            </div>
+            <div class="code-content">
+                <div><span class="keyword">import</span> Vasuki <span class="keyword">from</span> <span class="string">'vasuki-db'</span>;</div>
+                <div style="margin-top: 16px;"><span class="keyword">const</span> vdb = <span class="keyword">new</span> <span class="func">Vasuki</span>();</div>
+                
+                <div style="margin-top: 16px;"><span class="comment">// Connection with Vasuki Auth</span></div>
+                <div><span class="keyword">await</span> vdb.<span class="func">login</span>(<span class="string">'admin@itech.in'</span>, <span class="string">'********'</span>);</div>
+
+                <div style="margin-top: 16px;"><span class="comment">// JSON-Native CRUD</span></div>
+                <div><span class="keyword">const</span> users = <span class="keyword">await</span> vdb.<span class="func">fetchTable</span>(<span class="string">'Main'</span>, <span class="string">'Users'</span>);</div>
+                <div>console.<span class="func">log</span>(<span class="string">"Live Data:"</span>, users);</div>
+            </div>
+        </div>
+    </main>
+
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#1a73e8"><path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                <h3>Sovereign Infrastructure</h3>
+                <p>Built and hosted within India. 100% compliance with domestic data residency and security protocols.</p>
+            </div>
+            <div class="feature-card">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#1a73e8"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>
+                <h3>Zero-Config Auth</h3>
+                <p>Native V-Auth integration allows you to map user permissions directly to your JSON rows with a single line of code.</p>
+            </div>
+            <div class="feature-card">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#1a73e8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                <h3>Global Sync Engine</h3>
+                <p>Relational integrity meets JSON flexibility. Sync data across partitioned kernels with ultra-low latency.</p>
             </div>
         </div>
     </section>
 
-    <section class="py-24 border-t border-gray-100 bg-gray-50/50">
-        <div class="max-w-[1440px] mx-auto px-8 grid md:grid-cols-4 gap-12">
-            <a href="./dashboard.html" class="block group space-y-4">
-                <span class="text-xs font-mono text-blue-600 group-hover:underline">01</span>
-                <h4 class="text-sm font-bold uppercase tracking-widest">Isolated Kernels</h4>
-                <p class="text-sm text-gray-500 leading-relaxed">Each database instance runs on a dedicated cloud partition for zero-noise interference.</p>
-            </a>
-            <a href="./dashboard.html" class="block group space-y-4">
-                <span class="text-xs font-mono text-blue-600 group-hover:underline">02</span>
-                <h4 class="text-sm font-bold uppercase tracking-widest">JSON-R Engine</h4>
-                <p class="text-sm text-gray-500 leading-relaxed">Relational integrity meets JSON flexibility. Manage complex schemas with ease.</p>
-            </a>
-            <a href="./dashboard.html" class="block group space-y-4">
-                <span class="text-xs font-mono text-blue-600 group-hover:underline">03</span>
-                <h4 class="text-sm font-bold uppercase tracking-widest">Global Sync</h4>
-                <p class="text-sm text-gray-500 leading-relaxed">Automated regional replication ensures low-latency access globally.</p>
-            </a>
-            <a href="./dashboard.html" class="block group space-y-4">
-                <span class="text-xs font-mono text-blue-600 group-hover:underline">04</span>
-                <h4 class="text-sm font-bold uppercase tracking-widest">Native V-Auth</h4>
-                <p class="text-sm text-gray-500 leading-relaxed">SSO integrated directly with the Vasuki corporate directory.</p>
-            </a>
-        </div>
-    </section>
-
-    <section class="py-24 px-8">
-        <div class="max-w-[1440px] mx-auto bg-gray-900 rounded-3xl p-16 text-center relative overflow-hidden">
-            <h2 class="text-4xl font-light text-white mb-6 relative z-10">Modernize your <span class="font-bold">data strategy.</span></h2>
-            <div class="flex justify-center gap-4 relative z-10">
-                <a href="mailto:codeclutch.adamyarao@gmail.com" class="btn-core bg-white text-gray-900 hover:bg-gray-100">Contact Architecture Team</a>
-                <a href="mailto:codeclutch.adamyarao@gmail.com" class="btn-core border border-gray-700 text-white hover:bg-gray-800">Review Compliance</a>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-12 px-8 border-t border-gray-100 text-gray-400 text-xs font-medium">
-        <div class="max-w-[1440px] mx-auto flex justify-between items-center">
-            <div class="flex gap-8">
-                <span>© 2026 VASUKI ITECH CLOUD</span>
-                <a href="mailto:codeclutch.adamyarao@gmail.com" class="hover:text-gray-900 transition">SECURITY</a>
-                <a href="./dashboard.html" class="hover:text-gray-900 transition">SYSTEM STATUS</a>
-                <a href="mailto:codeclutch.adamyarao@gmail.com" class="hover:text-gray-900 transition">LEGAL</a>
-            </div>
-            <div class="flex items-center gap-4 uppercase tracking-tighter">
-                <span class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-green-500"></span> 
-                    ALL SYSTEMS OPERATIONAL
-                </span>
-            </div>
+    <footer>
+        <p>© 2026 VASUKI ITECH CLOUD • INDIA</p>
+        <div style="display:flex; gap: 32px;">
+            <a href="mailto:codeclutch.adamyarao@gmail.com" style="color:inherit; text-decoration:none;">SECURITY</a>
+            <a href="mailto:codeclutch.adamyarao@gmail.com" style="color:inherit; text-decoration:none;">LEGAL</a>
+            <a href="mailto:codeclutch.adamyarao@gmail.com" style="color:inherit; text-decoration:none;">SUPPORT</a>
         </div>
     </footer>
 
