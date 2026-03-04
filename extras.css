@@ -9,7 +9,7 @@
   --ui-border: rgba(0,0,0,0.06);
   --ui-text: #2d2d2d;
   --ui-dim: #7a7a7a;
-  --ui-radius: 16px;
+  --ui-radius: 5px;
   --ui-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
@@ -25,7 +25,7 @@
 /* --- GLASS CARD --- */
 .about-card{
   background: var(--ui-bg);
-  border-radius: 18px;
+  border-radius: var(--ui-radius);
   padding: 22px;
   border: 1px solid var(--ui-border);
 }
@@ -33,7 +33,7 @@
 /* --- TITLES --- */
 .about-title{
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 100;
   margin-bottom: 6px;
 }
 
@@ -60,7 +60,7 @@
 
 .feature-box{
   background: #fff;
-  border-radius: 14px;
+  border-radius: var(--ui-radius);
   padding: 14px;
   border: 1px solid var(--ui-border);
   text-align: center;
@@ -87,7 +87,7 @@
 .badge{
   font-size: 12px;
   padding: 6px 12px;
-  border-radius: 999px;
+  border-radius: var(--ui-radius);
   border: 1px solid var(--ui-border);
   background: #fff;
   color: var(--ui-text);
@@ -97,8 +97,8 @@
 /* --- HIGHLIGHT BOX --- */
 .highlight-box{
   background: linear-gradient(135deg, rgba(0,0,0,0.02), rgba(0,0,0,0.05));
-  border: 1px dashed rgba(0,0,0,0.1);
-  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: var(--ui-radius);
   padding: 16px;
   margin-top: 16px;
   font-size: 13px;
@@ -142,7 +142,7 @@
 .cta-box{
   margin-top: 20px;
   padding: 16px;
-  border-radius: 14px;
+  border-radius: var(--ui-radius);
   background: #fff;
   border: 1px solid var(--ui-border);
   display: flex;
@@ -165,7 +165,7 @@
   border-radius: 10px;
   border: 1px solid rgba(0,0,0,0.2);
   color: #000;
-  font-weight: 600;
+  font-weight: 100;
 }
 
 /* --- RESPONSIVE FIXES --- */
