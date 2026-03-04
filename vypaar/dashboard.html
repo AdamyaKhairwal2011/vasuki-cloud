@@ -331,6 +331,8 @@
             <div><label>Phone</label><input id="contactPhone" class="google-input"></div>
             <div><label>Website URL</label><input id="contactWebsite" class="google-input"></div>
             <div><label>LinkedIn</label><input id="contactLinkedIn" class="google-input"></div>
+            <div><label>Featured Image URL</label><input id="contactFeaturedImage" class="google-input"></div>
+
           </div>
         </div>
 
@@ -505,6 +507,7 @@
           website: document.getElementById('contactWebsite').value,
           linkedin: document.getElementById('contactLinkedIn').value,
         },
+        cover_base64: document.getElementById('contactFeaturedImage').value,
         email_owner: USER_EMAIL
       };
       const q = supabase.from('startups');
