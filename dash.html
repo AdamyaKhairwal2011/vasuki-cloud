@@ -475,6 +475,10 @@ input, select {
     </div>
   </div>
 
+    <div class="nav-group">
+    <button onclick="signOut() toggleSidebar();">Sign Out</button>
+  </div>
+
   <div class="storage-card">
     <canvas id="storageChart" height="120"></canvas>
     <div class="storage-text">
@@ -590,6 +594,11 @@ function toggleSidebar() {
     sidebar.classList.toggle('active');
     overlay.classList.toggle('active');
 }
+
+ function signOut() {
+   localStorage.removeItem("vcloud_user")
+   window.location.href = "./index.html"
+ }
 
 function initChart(){
   storageChart=new Chart(storageChartEl,{
@@ -1135,6 +1144,7 @@ listFiles();
 
 </body>
 </html>
+
 
 
 
