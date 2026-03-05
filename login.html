@@ -2,232 +2,221 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unlimited Free Cloud Services And Storage - Vasuki Neem Cloud</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sign in - Vasuki vCloud</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'CustomFont';
-            src: url('font.ttf') format('truetype');
+        :root {
+            --google-blue: #5c8cbd;
+            --google-blue-hover: #174ea6;
+            --text-dark: #202124;
+            --text-light: #5f6368;
+            --border-color: #dadce0;
+        }
+                html {
+            -webkit-text-size-adjust: 80%; /* Prevents iOS Safari from auto-adjusting font size */
+            -moz-text-size-adjust: 80%;    /* For Firefox */
+            -ms-text-size-adjust: 80%;     /* For older IE */
+            text-size-adjust: 80%;
         }
 
-        :root {
-            --bg: #f3f3f3;
-            --card-bg: #f5f5f5;
-            --accent: #bd8317;
-            --text-main: #3f3f3f;
-            --text-sec: #888888;
-            --border: #bebebe;
-        }
 
         body {
-            font-family: 'Google Sans', 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
+            font-family: 'Roboto', sans-serif;
+            background-color: #5c8cbd;
             margin: 0;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
-        /* Login Card */
-        .login-card {
+        .login-container {
             width: 100%;
-            max-width: 360px;
-            padding: 40px;
+            max-width: 450px;
+            padding: 48px 40px;
+            border-radius: 50px 50px 0 0;
             text-align: center;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            animation: fadeIn 0.8s ease-out;
-            z-index: 10;
+            background-color: #fff;
+            height: 60vh;
+            box-sizing: border-box;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.1);
         }
 
-        .logo { width: 70px; height: 70px; margin-bottom: 10px; }
+        h1 { font-size: 24px; font-weight: 400; margin-bottom: 8px; }
+        .subtitle { color: var(--text-light); margin-bottom: 40px; font-size: 14px; }
 
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 500;
-            margin-bottom: 40px;
-            letter-spacing: -0.02em;
-        }
-
+        .input-group { margin-bottom: 24px; text-align: left; }
+        
         input {
             width: 100%;
-            padding: 14px 0;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-main);
-            font-size: 0.95rem;
-            margin-bottom: 24px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        input:focus { border-bottom-color: var(--accent); }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: #3d2d0e;
-            color: #f1f1f1;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            margin-top: 10px;
-            font-family: inherit;
-        }
-
-        .signup-btn {
-            margin-top: 12px;
-            background: transparent;
-            color: var(--text-sec);
-            border: 1px solid var(--border);
-        }
-
-        /* MPIN Full Screen Overlay */
-        #mpin-screen {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(243, 243, 243, 0.98);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            display: none; /* Hidden by default */
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .mpin-container {
-            display: flex;
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .mpin-input {
-            width: 50px;
-            height: 60px;
-            border: 1px solid var(--border);
+            padding: 13px 15px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: 700;
-            background: white;
-            margin: 0;
-            padding: 0;
+            outline: none;
+            box-sizing: border-box;
         }
 
-        .mpin-input:focus {
-            border: 2px solid var(--accent);
-            background: #fffdf9;
-        }
+        input:focus { border: 2px solid var(--google-blue); padding: 12px 14px; }
 
-        .forgot-link {
-            color: var(--text-sec);
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: underline;
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 20px;
         }
 
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
+        .btn-text {
+            color: var(--google-blue);
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
         }
 
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.05;
-            pointer-events: none;
+        /* --- LOADER STYLES --- */
+        .btn-primary {
+            background-color: var(--google-blue);
+            color: #fff;
+            padding: 10px 24px;
+            min-width: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .loader {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ffffff;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: none; /* Hidden by default */
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-primary.loading .btn-text-content {
+            display: none;
+        }
+
+        .btn-primary.loading .loader {
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-    
-    <div id="mpin-screen">
-        <img src="./logo.png" alt="" class="logo">
-        <h2 id="mpin-title">Enter MPIN</h2>
-        <p id="mpin-subtitle" style="color: var(--text-sec);">Enter your 4-digit security code</p>
-        
-        <div class="mpin-container">
-            <input type="password" maxlength="1" class="mpin-input" id="m1">
-            <input type="password" maxlength="1" class="mpin-input" id="m2">
-            <input type="password" maxlength="1" class="mpin-input" id="m3">
-            <input type="password" maxlength="1" class="mpin-input" id="m4">
+
+    <div class="login-container">
+        <div class="logo-container">
+        </div>
+        <h1>Welcome Back, We Missed You!</h1>
+        <p class="subtitle">Get Back By Using Your EmailID and password</p>
+
+        <div class="input-group">
+            <input type="email" id="emailInput" placeholder="Email" autocomplete="username">
         </div>
 
-        <button style="max-width: 200px;" onclick="verifyOrSetMPIN()" id="mpin-btn">Unlock</button>
-        <span class="forgot-link" onclick="forgotMPIN()">Forgot MPIN / Switch User</span>
+        <div class="input-group">
+            <input type="password" id="passwordInput" placeholder="Enter your password" autocomplete="current-password">
+        </div>
+
+
+        <div class="button-row">
+            <button class="btn-text" onclick="goToSignup()">Create account</button>
+            <button class="btn-primary" id="loginBtn" onclick="handleLogin()">Next</button>
+             <div class="loader" id="loginLoader"></div>
+        </div>
     </div>
 
-    <div class="login-card">
-        <img src="./logo.png" alt="" class="logo">
-        <h1>Welcome To vCloud</h1>
+<script type="module">
+    import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
+    
+    let vdb = new Vasuki();
+
+    // 1. DETERMINE REDIRECT LOGIC
+    const previousPage = document.referrer;
+    const isInternal = previousPage && previousPage.includes(window.location.hostname);
+    
+    // Create a URL object to easily manipulate the path
+    if(localStorage.getItem("vcloud_user")){
+        window.location.href = './dash.html?email=' + encodeURIComponent(localStorage.getItem("vcloud_user"));
+    }
+
+    // 2. AUTO-LOGIN CHECK (On Load)
+    window.addEventListener('DOMContentLoaded', () => {
+        const existingUser = localStorage.getItem("vcloud_user");
         
-        <input type="email" id="emailInput" placeholder="Email address">
-        <input type="password" id="passwordInput" placeholder="Password">
-        
-        <button onclick="handleLogin()">Sign In</button>
-        <button class="signup-btn" onclick="goToSignup()">Create Account</button>
-    </div>
+        // Prevent loop: If we just came from the dashboard, don't auto-redirect back to it
+        const comingFromDash = destURL.pathname.includes('dash.html');
 
-    <script type="module">
-        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-        const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-
-
-        let isSettingMode = false;
-        let tempUserEmail = "";
-
-        // Check for existing MPIN on Load
-        window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem("vcloud_user")) {
-                tempUserEmail = localStorage.getItem("vcloud_user");
-                window.location.href = `dash.html?email=${encodeURIComponent(tempUserEmail)}`;
+        if (existingUser && !comingFromDash) {
+            // Only add email if it's not already there
+            if (!destURL.searchParams.has('email')) {
+                destURL.searchParams.set('email', existingUser);
             }
-        });
+            window.location.href = destURL.href;
+        }
+    });
 
-        // Main Login Logic
-        window.handleLogin = async function handleLogin() {
-            try {
-                const { data, error } = await supabase.from("users").select("*");
-                if (error) throw error;
+    window.goToSignup = function() {
+        window.location.href = 'signup.html';
+    }
 
-                const email = document.getElementById('emailInput').value.toLowerCase();
-                const password = document.getElementById('passwordInput').value;
+    // 3. LOGIN HANDLER
+    window.handleLogin = async function() {
+        const emailInput = document.getElementById('emailInput').value.toLowerCase().trim();
+        const password = document.getElementById('passwordInput').value;
+        const loginBtn = document.getElementById('loginBtn');
 
-                if (email && password) {
-                    const user = data.find(user => user.username.toLowerCase() === email && user.password === password);
-                    if (user) {
-                        tempUserEmail = email;
-                        localStorage.setItem('vcloud_user', tempUserEmail);
-                        window.location.href = `dash.html?email=${encodeURIComponent(email)}`;
-                    } else {
-                        alert("Invalid credentials");
-                    }
-                }
-            } catch (err) {
-                console.error(err);
-                alert("Login failed");
-            }
+        if (!emailInput || !password) {
+            alert("Please fill in all fields");
+            return;
         }
 
+        loginBtn.classList.add('loading');
+        loginBtn.disabled = true;
 
+        try {
+            await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+            const data = await vdb.fetchTable('users_rows', 'Sheet1');
 
-        window.goToSignup = () => window.location.href = "signup.html";
-    </script>
+            const user = data.find(u => 
+                u && u.username && u.username.toLowerCase() === emailInput && u.password === password
+            );
+
+            if (user) {
+                localStorage.setItem('vcloud_user', emailInput);
+                window.location.href = './dash.html?email=' + encodeURIComponent(emailInput);
+            } else {
+                alert("Invalid credentials.");
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+            }
+        } catch (err) {
+            console.error(err);
+            loginBtn.classList.remove('loading');
+            loginBtn.disabled = false;
+        }
+    }
+</script>
 </body>
 </html>
