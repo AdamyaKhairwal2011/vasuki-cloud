@@ -1,201 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Create Account</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Create Account - Vasuki vCloud</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --google-blue: #5c8cbd;
+            --google-blue-hover: #174ea6;
+            --text-dark: #202124;
+            --text-light: #5f6368;
+            --border-color: #dadce0;
+        }
+                        html {
+            -webkit-text-size-adjust: 80%; /* Prevents iOS Safari from auto-adjusting font size */
+            -moz-text-size-adjust: 80%;    /* For Firefox */
+            -ms-text-size-adjust: 80%;     /* For older IE */
+            text-size-adjust: 80%;
+        }
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-    * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  
-        font-family: 'Google Sans', 'Inter', sans-serif;
-}
 
-body {
-  background: #f6f5f3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #5c8cbd;
+            margin: 0;
+            display: flex;
+            align-items: flex-end; /* Keeps it as a bottom sheet like login */
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-.signup-wrapper {
-  width: 100%;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-}
+        .signup-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 48px 40px;
+            border-radius: 50px 50px 0 0;
+            text-align: center;
+            background-color: #fff;
+            min-height: 70vh; /* Slightly taller to fit more fields */
+            box-sizing: border-box;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.1);
+        }
 
-.signup-box {
-  background: #ffffff;
-  width: 100%;
-  max-width: 420px;
-  padding: 38px;
-  border-radius: 14px;
-  text-align: center;
-}
+        h1 { font-size: 24px; font-weight: 400; margin-bottom: 8px; color: var(--text-dark); }
+        .subtitle { color: var(--text-light); margin-bottom: 30px; font-size: 14px; }
 
-.signup-box h2 {
-  font-size: 26px;
-  margin-bottom: 6px;
-  font-weight: 700;
-  color: #111;
-}
+        .input-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-.subtitle {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 22px;
-}
+        .input-group { margin-bottom: 20px; text-align: left; }
+        
+        input {
+            width: 100%;
+            padding: 13px 15px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border 0.2s;
+        }
 
-.input-group {
-  width: 100%;
-  margin-bottom: 16px;
-}
+        input:focus { border: 2px solid var(--google-blue); padding: 12px 14px; }
 
-.signup-box input {
-  width: 100%;
-  padding: 14px;
-  border: 1.5px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 15px;
-  outline: none;
-  transition: 0.2s;
-}
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
 
-.signup-box input:focus {
-  border-color: #eba625;
-  box-shadow: 0 0 0 3px rgba(235, 166, 37, 0.2);
-}
+        .btn-text {
+            color: var(--google-blue);
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            font-size: 14px;
+        }
 
-.btn {
-  width: 100%;
-  margin-top: 10px;
-  padding: 14px;
-  background-color: #3d2d0e;
-  color: #fff;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-}
+        .btn-primary {
+            background-color: var(--google-blue);
+            color: #fff;
+            padding: 10px 24px;
+            min-width: 110px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
 
-.btn:hover {
-  background: #997617;
-}
+        .btn-primary:disabled { background-color: #ccc; cursor: not-allowed; }
 
-.bottom-text {
-  margin-top: 16px;
-  font-size: 14px;
-  color: #444;
-}
+        /* Loader Styles */
+        .loader {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ffffff;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: none;
+            animation: rotation 1s linear infinite;
+        }
 
-.bottom-text a {
-  color: #ebac25;
-  font-weight: 600;
-  text-decoration: none;
-}
+        @keyframes rotation {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-.bottom-text a:hover {
-  text-decoration: underline;
-}
+        .loading .btn-text-content { display: none; }
+        .loading .loader { display: inline-block; }
 
-/* Mobile responsiveness */
-@media (max-width: 480px) {
-  .signup-box {
-    padding: 28px;
-  }
-
-  .signup-box h2 {
-    font-size: 22px;
-  }
-}
-
-.logo {
-  width: 70px;
-  height: 70px;
-}
-
-</style>
+        @media (max-width: 450px) {
+            .signup-container { padding: 30px 24px; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="signup-wrapper">
-  <div class="signup-box">
+    <div class="signup-container">
+        <h1>Create Account</h1>
+        <p class="subtitle">Join Vasuki Cloud and start building</p>
 
-    <img src="./logo.png" alt="" class="logo">
+        <div class="input-row">
+            <input type="text" id="firstName" placeholder="First Name">
+            <input type="text" id="lastName" placeholder="Last Name">
+        </div>
 
-    <h2>Create Your Account</h2>
-    <p class="subtitle">Join Vasuki Cloud and start building magic</p>
+        <div class="input-group">
+            <input type="email" id="email" placeholder="Email address">
+        </div>
 
-    <div class="input-group">
-      <input type="text" id="firstName" placeholder="First Name" />
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Create password">
+        </div>
+
+        <div class="button-row">
+            <button class="btn-text" onclick="window.location.href='login.html'">Sign in instead</button>
+            <button class="btn-primary" id="signupBtn" onclick="submitSignup()">
+                <span class="btn-text-content">Create</span>
+                <div class="loader"></div>
+            </button>
+        </div>
     </div>
 
-    <div class="input-group">
-      <input type="text" id="lastName" placeholder="Last Name" />
-    </div>
+    <script type="module">
+        import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
+        
+        let vdb = new Vasuki();
 
-    <div class="input-group">
-      <input type="email" id="email" placeholder="Email" />
-    </div>
+        window.submitSignup = async () => {
+            const first = document.getElementById("firstName").value.trim();
+            const last = document.getElementById("lastName").value.trim();
+            const email = document.getElementById("email").value.trim().toLowerCase();
+            const password = document.getElementById("password").value;
+            const signupBtn = document.getElementById("signupBtn");
 
-    <div class="input-group">
-      <input type="password" id="password" placeholder="Password" />
-    </div>
+            if (!first || !last || !email || !password) {
+                return alert("Please fill all fields");
+            }
 
-    <button class="btn" onclick="submitSignup()">Sign Up</button>
+            // UI: Start Loading
+            signupBtn.classList.add('loading');
+            signupBtn.disabled = true;
 
-    <p class="bottom-text">
-      Already have an account? <a href="login.html">Login</a>
-    </p>
-  </div>
-</div>
+            try {
+                // Step 1: Auth the SDK session
+                await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
 
-<script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+                // Step 2: Insert the new user
+                const name = `${first} ${last}`;
+                // Note: Ensure your SDK uses 'users_rows.json' as the DB name 
+                // and 'Sheet1' as table to match your login logic
+                const result = await vdb.insertRow('users_rows', 'Sheet1', {
+                    username: email, // used 'username' to match your login query
+                    email: email,    // keeping both for safety
+                    name: name,
+                    password: password
+                });
 
-const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
+                alert("Account created successfully!");
+                window.location.href = "login.html";
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-window.submitSignup = async () => {
-  const first = document.getElementById("firstName").value.trim();
-  const last = document.getElementById("lastName").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-
-  if (!first || !last || !email || !password) {
-    return alert("Fill all fields");
-  }
-
-  const name = `${first} ${last}`;
-
-  const { error } = await supabase
-    .from("users")
-    .insert([
-      {
-        username: email,
-        name,
-        password
-      }
-    ]);
-
-  if (error) {
-    alert("Signup failed: " + error.message);
-  } else {
-    alert("Account created. You can login now.");
-    window.location.href = "login.html";
-  }
-};
-</script>
-
+            } catch (err) {
+                console.error("Signup Error:", err);
+                alert("Signup failed. Check console for details.");
+                signupBtn.classList.remove('loading');
+                signupBtn.disabled = false;
+            }
+        };
+    </script>
 </body>
 </html>
