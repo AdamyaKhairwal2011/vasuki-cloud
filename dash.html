@@ -116,11 +116,43 @@ main { flex: 1; padding: 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
 .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 15px; }
 
 .upload { border: 2px dashed var(--border); border-radius: 2px; padding: 40px; text-align: center; cursor: pointer; margin-bottom: 32px; background: var(--sidebar-bg); }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
-.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 2px; padding: 16px; position: relative; cursor: pointer; box-shadow: var(--shadow); }
-.preview { height: 110px; border-radius: 2px; background: #f1f1f2; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 12px; }
-.preview img { width: 100%; height: 100%; object-fit: cover; }
+/* Enhanced Google Photos-style Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-auto-rows: 160px; /* Base row height */
+  grid-auto-flow: dense; /* Fills in gaps automatically */
+  gap: 12px;
+}
 
+/* Big Image Card (2x2) */
+.card.card-big {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* Portrait Image Card (1x2) */
+.card.card-tall {
+  grid-row: span 2;
+}
+
+/* Override preview height for spanning cards */
+.card.card-big .preview, 
+.card.card-tall .preview {
+  height: calc(100% - 45px); /* Adjust based on your text label height */
+}
+
+/* Normal Files (Standard Square) */
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.preview {
+  flex-grow: 1;
+  height: auto; /* Allow it to fill the spanned area */
+}
 /* MOBILE BREAKPOINTS */
 @media (max-width: 850px) {
   body { flex-direction: column; }
@@ -256,67 +288,120 @@ main {
   gap: 20px;
 }
 
+#folders {
+    display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+
+}
+
+#folders .card {
+  background: #ffffff;
+  width: 150px;
+  float: left;
+  height: 170px;
+}
+
+#folders .card svg {
+  width: 60px;
+  background-size: 50%;
+  height: 120px;
+  margin-bottom: 0;
+}
+
+#folders .card .name {
+  background-color: rgba(0, 0, 0, 0.418);
+  width: 100%;
+  border-radius: 0px;
+
+}
+
+#folders .card .name:hover {
+  background-color: none;
+  color: var(--accent);
+  transform: none;
+}
+
+#folder .card::after {
+  background: none;
+}
+
 .card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 16px;
+  border-radius: 5px; /* Smoother corners */
+  overflow: hidden;
   position: relative;
   cursor: pointer;
-  box-shadow: var(--shadow);
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
-}
-
-.card.selected {
-  outline: 2px solid var(--accent);
-  background: var(--accent-light);
+  background-color: #f1f1f2;
+  border: 1px solid var(--border);
 }
 
 .preview {
-  height: 130px;
-  border-radius: 2px;
-  background: #f1f1f2;
+  height: 100%; /* Fill the entire card */
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  margin-bottom: 12px;
+  margin-bottom: 0; /* Remove margin since text floats */
 }
 
-.preview img { width: 100%; height: 100%; object-fit: cover; }
-
-/* SVG CONTAINER STYLE */
-.svg-icon {
-  width: 48px;
-  height: 48px;
+/* Gradient Overlay for Text Readability */
+.grid .card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.4));
+  pointer-events: none;
 }
 
+/* The Floating Pill */
 .name {
-  font-weight: 100;
-  font-size: 0.9rem;
-  margin-bottom: 4px;
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 2;
+  
+  /* Pill Styling */
+  background: rgba(8, 8, 8, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 6px 12px;
+  
+  /* Text Styling */
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  
+  /* Override your previous fixed width */
+  min-width: 0; 
+  max-width: calc(100% - 24px);
 }
 
-.size { font-size: 0.75rem; color: var(--text-dim); }
+/* Hide size or make it a small tag inside the pill */
+.size {
+  display: none; /* Usually, gallery views hide size for a cleaner look */
+}
 
-/* MENU */
+.card:hover .name {
+  background: #ffffff;
+  transform: translateY(-2px);
+  color: #000;
+}
+
+/* Keep the Menu Button on top */
 .menu-btn {
+  z-index: 10;
+  background: rgba(255,255,255,0.9) !important;
+  width: 28px;
+  height: 28px;
+  top: 8px;
+  right: 8px;
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: white;
-  border: 1px solid var(--border);
-  padding: 4px 8px;
-  border-radius: 2px;
-  z-index: 5;
 }
+
 
 .menu {
   position: absolute;
@@ -444,6 +529,10 @@ input, select {
   from { transform:translateY(20px); opacity:0 }
   to { transform:translateY(0); opacity:1 }
 }
+
+.selected {
+  opacity: 0.5;
+}
 </style>
 
 <body>
@@ -524,19 +613,26 @@ input, select {
 <br><br>
   <div style="display:flex; gap:10px;">
 <button id="downloadSelectedBtn" style="display:none" onclick="downloadSelected()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Download
 </button>
 
 <button id="deleteSelectedBtn" style="display:none; background:#4b3507; color:white; border:none;" onclick="deleteSelected()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
     Delete
 </button>
 
 <button id="shareBtn" onclick="openShare()" style="display:none">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
     Share Selection
 </button>
 
     <button id="pasteBtn" style="display:none; background: #28a745; color: white;" onclick="handlePaste()">
     Paste
+</button>
+
+    <button id="cutBtn" style="display:none; background: #6d1d1d; color: white;" onclick="handleCut()">
+    Cut
 </button>
     <div id="shareModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:100">
   <div class="modal-content">
@@ -559,9 +655,11 @@ input, select {
   </div>
 </div>
   </div>
+<br><br>
+
+  <div id="folders"></div>
 
   <br><br>
-
 
   <div class="grid" id="list"></div>
 </main>
@@ -821,42 +919,50 @@ async function listFiles(){
   path.textContent="/"+currentFolder;
   list.innerHTML="";
   let used=0;
-
-  files.forEach(f=>{
-    if(!f.isFolder)used+=f.size;
-    const card=document.createElement("div");
-    card.className="card"+(selectedFiles.has(f.name)?" selected":"");
-
-    card.onclick=()=>toggleSelect(f.name);
-
-    const isImg=/\.(png|jpg|jpeg|webp|gif)$/i.test(f.name);
-    const src=`${BASE_URL}/download/${userEmail}/${currentFolder}/${f.name}`;
-
-    card.innerHTML=`
-      <button class="menu-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
-      <div class="menu">
-         ${/\.(txt|html|css|js|py|json|csv)$/i.test(f.name) ? `<button onclick="editFile('${f.name}')">Edit</button>` : ""}
-        ${!f.isFolder?`<button onclick="downloadFile('${f.name}')">Download</button>`:""}
-        <button onclick="renameItem('${f.name}')">Rename</button>
-        <button onclick="deleteItem('${f.name}')">Delete</button>
-      </div>
-      <div class="preview">
-        ${
-          isImg ? `<img src="${src}">` : getSvgIcon(f.name, f.isFolder)
-        }
-      </div>
-      <div class="name">${f.name}</div>
-      <div class="size">${f.isFolder?"Folder":(f.size/1024).toFixed(1)+" KB"}</div>
-    `;
-
-
-
-    if(f.isFolder){
-      card.ondblclick=()=>openFolder(f.name);
+      document.getElementById('folders').innerHTML = ''
+files.forEach((f, index) => {
+    if(!f.isFolder) used += f.size;
+    
+    const card = document.createElement("div");
+    const isImg = /\.(png|jpg|jpeg|webp|gif)$/i.test(f.name);
+    
+    // Logic: Make every 4th image "Big" and every 7th "Tall" for visual variety
+    let spanClass = "";
+    if (isImg) {
+        if (index % 5 === 0) spanClass = "card-big";
+        else if (index % 7 === 0) spanClass = "card-tall";
     }
 
-    list.appendChild(card);
-  });
+    card.className = `card ${selectedFiles.has(f.name) ? "selected" : ""} ${spanClass}`;
+    card.onclick = () => toggleSelect(f.name);
+
+    const src = `${BASE_URL}/download/${userEmail}/${currentFolder}/${f.name}`;
+
+// Inside your files.forEach loop:
+card.innerHTML = `
+  <button class="menu-btn" onclick="event.stopPropagation();toggleMenu(this)">⋮</button>
+  <div class="menu">
+     ${/\.(txt|html|css|js|py|json|csv)$/i.test(f.name) ? `<button onclick="editFile('${f.name}')">Edit</button>` : ""}
+     <button onclick="downloadFile('${f.name}')">Download</button>
+     <button onclick="renameItem('${f.name}')">Rename</button>
+     <button onclick="deleteItem('${f.name}')">Delete</button>
+  </div>
+  
+  <div class="preview">
+    ${isImg ? `<img src="${src}" loading="lazy">` : getSvgIcon(f.name, f.isFolder)}
+  </div>
+  
+  <div class="name">${f.name}</div>
+`;
+
+    if(f.isFolder) {
+      card.ondblclick = () => openFolder(f.name);
+      document.getElementById('folders').appendChild(card);
+    } else {
+      list.appendChild(card);
+    }
+
+});
 
   updateStorage(used/1024/1024);
 }
@@ -1012,7 +1118,7 @@ function toggleSelect(name){
   shareBtn.style.display = hasSelection ? "flex" : "none";
   downloadSelectedBtn.style.display = hasSelection ? "flex" : "none";
   deleteSelectedBtn.style.display = hasSelection ? "flex" : "none";
-
+  document.getElementById('cutBtn').style.display = hasSelection ? "flex" : "none";
 
 
 
