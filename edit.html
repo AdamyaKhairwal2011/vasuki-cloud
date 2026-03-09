@@ -1,268 +1,553 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Edit File | Vasuki Cloud</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <title>Vasuki Cloud Pro | IDE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --google-blue: #1a73e8;
+            --sidebar-bg: #f8f9fa;
+            --border-subtle: #dadce0;
+            --accent-burnt: #7D3C1B;
+            --tab-inactive: #e8eaed;
+        }
 
-<!-- Monaco -->
-<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+        body { font-family: 'Inter', sans-serif; background: #fff; overflow: hidden; }
+        
+        /* Glassmorphic UI */
+        .glass-header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-subtle); shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15); }
+        
+        /* Sidebar Styling */
+        .folder-toggle::before { content: '▶'; display: inline-block; transition: transform 0.2s; font-size: 8px; margin-right: 6px; }
+        .folder-open > .folder-toggle::before { transform: rotate(90deg); }
+        .sidebar-item { border-radius: 0 20px 20px 0; transition: all 0.2s; }
+        .sidebar-item:hover { background: #f1f3f4; }
+        .sidebar-active { background: #e8f0fe !important; color: var(--google-blue); font-weight: 500; }
 
-<!-- Skulpt -->
-<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+        /* Tab System */
+        .tab { transition: all 0.2s; border-top-left-radius: 8px; border-top-right-radius: 8px; margin-top: 4px; }
+        .tab-active { background: white !important; color: var(--accent-burnt) !important; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
+        .tab-active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--accent-burnt); }
+        .dirty-dot { width: 6px; height: 6px; background: #ea4335; border-radius: 50%; }
 
-<style>
-body {
-  margin: 0;
-  font-family: Inter, sans-serif;
-  background: #ffffff;
-  color: #352b16;
-}
+        /* Custom Toast */
+        #toast-container { position: fixed; bottom: 40px; right: 20px; z-index: 9999; }
+        .toast { background: #202124; color: white; padding: 12px 24px; border-radius: 8px; font-size: 13px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); animation: slideIn 0.3s cubic-bezier(0,0,0.2,1); }
+        
+        @keyframes slideIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-.topbar {
-  padding: 14px 20px;
-  background: #ffffff;
-  border-bottom: 1px solid #f0f0f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.buttons {
-    display: flex;
-    gap: 10px;
-  }
-
-  .buttons button {
-    padding: 8px; /* Adjusted for icons */
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.2s;
-    /* Dark Burnt Sienna Background */
-    background: #7D3C1B; 
-    color: #fff;
-  }
-
-  .buttons button:hover {
-    opacity: 0.8;
-  }
-
-  .buttons svg {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
-  }
-
-  /* Keep existing layout for editor and terminal */
-  #editor {
-    width: 100%;
-    height: calc(100vh - 260px);
-  }
-
-#terminal {
-  height: 200px;
-  background: #fff;
-  color: #8A3D26;
-  font-family: monospace;
-  padding: 12px;
-  overflow-y: auto;
-  border-top: 1px solid #30363d;
-  display: none;
-}
-</style>
+        /* Quick Open Modal */
+        .modal-overlay { background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); }
+    </style>
 </head>
+<body class="h-screen flex flex-col">
 
-<body>
+    <header class="glass-header h-14 flex items-center justify-between px-6 z-50">
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="location.reload()">
+                <span class="text-sm font-semibold text-gray-700 tracking-tight">VASUKI <span class="text-gray-400 font-light">CLOUD</span></span>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <button onclick="saveAll()" class="text-xs font-medium px-4 py-2 hover:bg-gray-100 rounded-full transition">Save All</button>
+            <button onclick="handleRun()" class="px-5 py-2 bg-[#217559] text-white text-xs font-semibold rounded-full hover:shadow-lg hover:brightness-110 transition flex items-center gap-2">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Run Script
+            </button>
+        </div>
+    </header>
 
-<div class="topbar">
-  <div id="filePath">Loading...</div>
-  <div class="buttons">
-    <button class="save" onclick="saveFile()" title="Save">
-      <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
-    </button>
-    <button class="run" onclick="handleRun()" title="Run">
-      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-    </button>
-    <button class="back" onclick="goBack()" title="Back">
-      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-    </button>
-  </div>
+    <div class="flex flex-1 overflow-hidden">
+        <aside class="w-72 border-r border-gray-200 bg-[#f8f9fa] flex flex-col py-6 overflow-hidden">
+            <div class="px-6 mb-6 flex items-center justify-between">
+                <h2 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Workspace Explorer</h2>
+                <button onclick="refreshFileTree()" class="p-1 hover:bg-gray-200 rounded-md transition-colors">
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                </button>
+            </div>
+            <div id="file-tree" class="flex-1 overflow-y-auto px-2 space-y-0.5 custom-scroll">
+                </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col min-w-0 bg-white">
+            <div class="flex bg-[#f1f3f4] border-b border-gray-200 h-11 items-end px-3">
+                <div id="tab-bar" class="flex items-end gap-1 overflow-x-auto no-scrollbar max-w-[calc(100%-50px)]">
+                    </div>
+                <button onclick="toggleQuickOpen()" class="mb-1 ml-2 p-1.5 hover:bg-white rounded-md text-gray-500 transition-all hover:text-[#7D3C1B] font-bold" title="Quick Open file">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </button>
+            </div>
+
+            <div id="editor-container" class="flex-1 relative">
+                <div id="editor" class="h-full"></div>
+                
+                <div id="terminal-wrapper" class="absolute bottom-0 left-0 w-full h-1/3 border-t-4 border-gray-100 bg-white z-20 flex flex-col hidden">
+                    <div class="h-9 bg-gray-50 flex items-center justify-between px-4 border-b">
+                        <span class="text-[10px] font-bold text-[#7D3C1B] uppercase tracking-tighter">Debug Console</span>
+                        <div class="flex gap-4">
+                            <button onclick="clearTerminal()" class="text-[10px] font-bold text-blue-600 hover:opacity-70">CLEAR</button>
+                            <button onclick="toggleTerminal(false)" class="text-gray-400 hover:text-black">×</button>
+                        </div>
+                    </div>
+                    <div id="terminal" class="flex-1 p-6 font-mono text-xs overflow-y-auto selection:bg-[#7D3C1B] selection:text-white"></div>
+                </div>
+            </div>
+
+            <footer class="h-7 bg-[#1a73e8] text-white flex items-center justify-between px-4 text-[11px] font-medium">
+                <div class="flex items-center gap-3">
+                    <span id="status-path" class="opacity-90">Ready</span>
+                </div>
+                <div class="flex items-center gap-5">
+                    <span id="cursor-pos">Ln 1, Col 1</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Server Active</span>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <div id="quick-open" class="fixed inset-0 modal-overlay z-[100] hidden flex items-start justify-center pt-24 px-4">
+        <div class="bg-white w-full max-w-xl rounded-xl shadow-2xl overflow-hidden border border-gray-200">
+            <div class="p-4 border-b">
+                <input type="text" id="quick-input" placeholder="Search files in your cloud..." class="w-full text-sm outline-none font-medium" onkeyup="filterQuickOpen(this.value)">
+            </div>
+            <div id="quick-results" class="max-height-[400px] overflow-y-auto p-2">
+                </div>
+        </div>
+        <div class="absolute inset-0 -z-10" onclick="toggleQuickOpen()"></div>
+    </div>
+
+    <div id="toast-container"></div>
+
+
+    <div id="create-modal" class="fixed inset-0 modal-overlay z-[110] hidden flex items-center justify-center px-4">
+    <div class="bg-white w-full max-w-sm rounded-xl shadow-2xl overflow-hidden border border-gray-200">
+        <div class="p-5 border-b flex justify-between items-center bg-gray-50">
+            <h3 class="text-sm font-bold text-gray-700 uppercase tracking-tight">New File</h3>
+            <button onclick="closeCreateModal()" class="text-gray-400 hover:text-black">×</button>
+        </div>
+        <div class="p-6 space-y-4">
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 uppercase block mb-1">File Name</label>
+                <input type="text" id="new-file-name" placeholder="e.g. index" 
+                       class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-[#7D3C1B] transition-all">
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-gray-400 uppercase block mb-1">Extension</label>
+                <select id="new-file-ext" class="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-[#7D3C1B] transition-all">
+                    <option value="html">HTML</option>
+                    <option value="js">JavaScript</option>
+                    <option value="css">CSS</option>
+                    <option value="py">Python</option>
+                    <option value="json">JSON</option>
+                    <option value="txt">Text</option>
+                </select>
+            </div>
+            <button id="confirm-create-btn" class="w-full py-3 bg-[#7D3C1B] text-white rounded-lg text-xs font-bold shadow-lg hover:brightness-110 transition-all">
+                CREATE FILE
+            </button>
+        </div>
+    </div>
 </div>
-<div id="editor"></div>
-<div id="terminal"></div>
+    <script>
+        const BASE_URL = "https://adamyakhairwal2011-vasuki-cloud.hf.space";
+        const params = new URLSearchParams(location.search);
+        const email = params.get("email");
 
-<script>
-const BASE_URL = "https://adamyakhairwal2011-vasuki-cloud.hf.space";
+        let editor;
+        let openFiles = []; 
+        let activeIdx = -1;
+        let folderState = {}; // Persist folder toggle states
 
-const params = new URLSearchParams(location.search);
-const email = params.get("email");
-const file = params.get("file");
+        /* SETUP */
+        require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs" } });
+        require(["vs/editor/editor.main"], () => {
+            editor = monaco.editor.create(document.getElementById("editor"), {
+                theme: "vs-light",
+                automaticLayout: true,
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 14,
+                lineHeight: 24,
+                minimap: { enabled: false },
+                scrollbar: { verticalScrollbarSize: 8, horizontalScrollbarSize: 8 },
+                padding: { top: 15 }
+            });
 
-if (!email || !file) location.href = "index.html";
-document.getElementById("filePath").textContent = file;
+            editor.onDidChangeModelContent(() => {
+                if (activeIdx !== -1) {
+                    openFiles[activeIdx].isDirty = true;
+                    renderTabs();
+                }
+            });
 
-let editor;
-let previewWindow = null;
+            editor.onDidChangeCursorPosition(e => {
+                document.getElementById('cursor-pos').innerText = `Ln ${e.position.lineNumber}, Col ${e.position.column}`;
+            });
 
-/* LANGUAGE DETECTION */
-function getLanguage(f) {
-  if (f.endsWith(".html")) return "html";
-  if (f.endsWith(".css")) return "css";
-  if (f.endsWith(".js")) return "javascript";
-  if (f.endsWith(".json")) return "json";
-  if (f.endsWith(".py")) return "python";
-  return "plaintext";
-}
+            refreshFileTree();
+            const initFile = params.get("file");
+            if (initFile) openFile(initFile);
+        });
 
-/* LOAD FILE */
-async function loadFile() {
-  const r = await fetch(`${BASE_URL}/get-file-content`, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ email, path: file })
-  });
-  const d = await r.json();
-  editor.setValue(d.content || "");
-}
-
-/* SAVE */
-async function saveFile() {
-  const content = editor.getValue();
-  await fetch(`${BASE_URL}/save-file-content`, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ email, path: file, content })
-  });
-}
-
-/* BACK */
-function goBack() {
-  location.href = `dash.html?email=${encodeURIComponent(email)}`;
-}
-
-/* PREVIEW HTML */
-/* FIXED PREVIEW HTML */
-async function previewFile() {
-  const content = editor.getValue();
-  
-  // First, SAVE the file to ensure the backend has the latest version
-  await saveFile();
-
-  // Use the deterministic URL structure we defined in the backend
-  // This avoids the 'about:blank' popup issue caused by async delays
-  const previewUrl = `${BASE_URL}/preview/${email}/${file}`;
-  window.open(previewUrl, "_blank");
-}
-
-/* SERVER-SIDE PYTHON RUNNER */
-async function runPythonOnServer() {
-  const code = editor.getValue();
-  const term = document.getElementById("terminal");
-  term.style.display = "block";
-  term.innerHTML = "Running on server...<br>";
-
-  try {
-    const r = await fetch(`${BASE_URL}/run-python`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code })
-    });
+        /* RECURSIVE SIDEBAR LOGIC */
+/* RECURSIVE SIDEBAR LOGIC (USER-SCOPED) */
+async function refreshFileTree() {
+    const r = await fetch(`${BASE_URL}/admin/system-overview`);
     const d = await r.json();
-    
-    if (d.error) {
-      term.innerHTML = `<span style="color:#ff5555">${d.error}</span>`;
+    const treeEl = document.getElementById('file-tree');
+    treeEl.innerHTML = "";
+
+    // Find the specific folder that matches the user's email
+    // This assumes the backend tree has a top-level "uploads" or similar structure
+    const userBranch = findUserBranch(d.tree, email);
+
+    if (userBranch && userBranch.children) {
+renderNodes(userBranch.children, treeEl, "");
     } else {
-      term.innerHTML = d.output.replace(/\n/g, "<br>");
+        treeEl.innerHTML = `<div class="px-6 py-4 text-xs text-gray-400 italic">No files found for ${email}</div>`;
     }
-  } catch (err) {
-    term.innerHTML = `<span style="color:#ff5555">Server Error: ${err.message}</span>`;
-  }
 }
 
-/* UPDATED RUN HANDLER */
-function handleRun() {
-  if (file.endsWith(".py")) {
-    runPythonOnServer(); // Use the high-performance backend runner
-  } else {
-    previewFile();
-  }
+// Helper to locate the user's specific directory in the global tree
+function findUserBranch(nodes, targetEmail) {
+    for (const node of nodes) {
+        if (node.name === targetEmail) return node;
+        if (node.children) {
+            const found = findUserBranch(node.children, targetEmail);
+            if (found) return found;
+        }
+    }
+    return null;
 }
 
-/* PYTHON ENGINE */
-function builtinRead(x) {
-  if (!Sk.builtinFiles || !Sk.builtinFiles["files"][x])
-    throw "File not found: " + x;
-  return Sk.builtinFiles["files"][x];
+let activeFolderPath = ""; // Track where the file is being created
+
+function openCreateModal(folderPath, e) {
+    if (e) e.stopPropagation();
+    activeFolderPath = folderPath || ""; // Default to root if empty
+    document.getElementById('create-modal').classList.remove('hidden');
+    document.getElementById('new-file-name').focus();
 }
 
-function runPython(code) {
-  const term = document.getElementById("terminal");
-  term.style.display = "block";
-  term.innerHTML = "";
-
-  Sk.configure({
-    output: t => term.innerHTML += t + "<br>",
-    read: builtinRead,
-    execLimit: 10000,
-    __future__: Sk.python3
-  });
-
-  /* ML + DL helper preload */
-  Sk.builtins.ml = Sk.ffi.remapToPy({
-    linear_regression(x, y) {
-      const n = x.length;
-      let sx=0, sy=0, sxy=0, sx2=0;
-      for (let i=0;i<n;i++){
-        sx+=x[i]; sy+=y[i];
-        sxy+=x[i]*y[i];
-        sx2+=x[i]*x[i];
-      }
-      return {
-        slope:(n*sxy-sx*sy)/(n*sx2-sx*sx),
-        intercept:(sy-( (n*sxy-sx*sy)/(n*sx2-sx*sx) )*sx)/n
-      };
-    },
-    array(a){ return a; },
-    mean(a){ return a.reduce((s,v)=>s+v,0)/a.length; }
-  });
-
-  Sk.misceval.asyncToPromise(() =>
-    Sk.importMainWithBody("<stdin>", false, code, true)
-  ).catch(err => {
-    term.innerHTML += `<span style="color:#ff5555">${err.toString()}</span>`;
-  });
+function closeCreateModal() {
+    document.getElementById('create-modal').classList.add('hidden');
+    document.getElementById('new-file-name').value = ""; // Clear input
 }
 
-/* RUN HANDLER */
-function handleRun() {
-  const code = editor.getValue();
-  if (file.endsWith(".py")) runPythonOnServer();
-  else previewFile();
+// The core logic linked to the "CREATE FILE" button
+document.getElementById('confirm-create-btn').onclick = async function() {
+    const name = document.getElementById('new-file-name').value.trim();
+    const extension = document.getElementById('new-file-ext').value;
+
+    if (!name) {
+        notify("Please enter a file name");
+        return;
+    }
+
+    const r = await fetch(`${BASE_URL}/create-file`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email: email,
+            folder: activeFolderPath,
+            name: name,
+            extension: extension
+        })
+    });
+
+    const d = await r.json();
+
+    if (d.ok) {
+        notify(`Created ${name}.${extension} successfully 🚀`);
+        closeCreateModal();
+        refreshFileTree();
+    } else {
+        notify(d.error || "File creation failed");
+    }
+};
+
+/* Updated renderNodes logic */
+function renderNodes(nodes, container, pathPrefix) {
+    nodes.sort((a, b) => (b.isFolder - a.isFolder)).forEach(node => {
+        // Build the relative path (e.g., "folder/sub/file.js")
+        const relativePath = pathPrefix ? `${pathPrefix}/${node.name}` : node.name;
+        const nodeEl = document.createElement('div');
+        
+        if (node.isFolder) {
+            const isOpen = folderState[relativePath]; // Use relative path for state
+            nodeEl.className = `folder-container ${isOpen ? 'folder-open' : ''}`;
+// Add this inside the renderNodes logic where it handles folders:
+nodeEl.innerHTML = `
+    <div onclick="toggleFolder('${relativePath}', event)" class="px-4 py-1.5 flex items-center justify-between cursor-pointer sidebar-item text-[13px] text-gray-600 font-medium group">
+        <div class="flex items-center flex-1">
+            <span class="mr-2 opacity-70">${isOpen ? '📂' : '📁'}</span> 
+            <span class="truncate">${node.name}</span>
+        </div>
+        <button onclick="openCreateModal('${relativePath}', event)" class="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded text-xs">
+            +
+        </button>
+    </div>
+    <div class="ml-4 child-container ${isOpen ? '' : 'hidden'} border-l border-gray-200"></div>
+`;
+            container.appendChild(nodeEl);
+            if (node.children) renderNodes(node.children, nodeEl.querySelector('.child-container'), relativePath);
+        } else {
+            const isActive = activeIdx !== -1 && openFiles[activeIdx].path === relativePath;
+            nodeEl.className = `px-4 py-1.5 flex items-center cursor-pointer sidebar-item text-[13px] transition-colors ${isActive ? 'sidebar-active' : 'text-gray-500'}`;
+nodeEl.innerHTML = `
+<div class="flex items-center justify-between w-full">
+
+<span class="flex items-center truncate">
+<span class="mr-2 opacity-70">📄</span>
+${node.name}
+</span>
+
+<button 
+onclick="deleteFile('${relativePath}',event)" 
+class="text-xs ml-2 px-1 hover:bg-red-100 rounded">
+🗑
+</button>
+
+</div>
+`;            // Pass the RELATIVE path to openFile
+            nodeEl.onclick = () => openFile(relativePath);
+            container.appendChild(nodeEl);
+        }
+    });
 }
 
-/* MONACO INIT */
-require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs" } });
+async function createFile(folderPath, e){
+    e.stopPropagation()
 
-require(["vs/editor/editor.main"], () => {
-  editor = monaco.editor.create(document.getElementById("editor"), {
-    value: "",
-    language: getLanguage(file),
-    theme: "vs-light",
-    automaticLayout: true,
-    fontSize: 14,
-    minimap: { enabled: false },
-    wordWrap: "on"
-  });
-  loadFile();
-});
-</script>
+    const name = prompt("File name (without extension)")
+    if(!name) return
 
+    const extension = prompt("Extension (html, js, css, py, etc)")
+    if(!extension) return
+
+    const r = await fetch(`${BASE_URL}/create-file`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+            email: email,
+            folder: folderPath,
+            name: name,
+            extension: extension
+        })
+    })
+
+    const d = await r.json()
+
+    if(d.ok){
+        notify("File created successfully 🚀")
+        refreshFileTree()
+    }else{
+        notify(d.error || "File creation failed")
+    }
+}
+
+
+async function deleteFile(path,e){
+    e.stopPropagation()
+
+    if(!confirm(`Delete ${path}?`)) return
+
+    const r = await fetch(`${BASE_URL}/delete-file`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+            email: email,
+            path: path
+        })
+    })
+
+    const d = await r.json()
+
+    if(d.ok){
+        notify("File deleted 🗑")
+        openFiles = openFiles.filter(f=>f.path !== path)
+
+        refreshFileTree()
+
+        if(activeIdx !== -1 && openFiles.length){
+            switchTab(0)
+        }else{
+            editor.setValue("")
+        }
+
+    }else{
+        notify("Delete failed")
+    }
+}
+
+        function toggleFolder(path, e) {
+            e.stopPropagation();
+            folderState[path] = !folderState[path];
+            refreshFileTree();
+        }
+
+        /* CORE FILE OPERATIONS */
+        async function openFile(path) {
+            const exists = openFiles.findIndex(f => f.path === path);
+            if (exists !== -1) return switchTab(exists);
+
+            // Auto-load content
+            const r = await fetch(`${BASE_URL}/get-file-content`, {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({ email, path })
+            });
+            const d = await r.json();
+            
+            openFiles.push({ path, content: d.content || "", isDirty: false });
+            switchTab(openFiles.length - 1);
+            toggleQuickOpen(false);
+        }
+
+        function switchTab(index) {
+            if (activeIdx !== -1) openFiles[activeIdx].content = editor.getValue();
+            activeIdx = index;
+            const file = openFiles[index];
+            
+            const ext = file.path.split('.').pop();
+            const langMap = { 'js':'javascript', 'py':'python', 'html':'html', 'css':'css', 'json':'json' };
+            monaco.editor.setModelLanguage(editor.getModel(), langMap[ext] || 'plaintext');
+
+            file.path = file.path.replace(localStorage.getItem('vcloud_user') + "/",'');
+            console.log(file)
+            editor.setValue(file.content);
+            document.getElementById('status-path').innerText = `Editing: ${file.path}`;
+            renderTabs();
+            refreshFileTree();
+        }
+
+        function renderTabs() {
+            const bar = document.getElementById('tab-bar');
+            bar.innerHTML = "";
+            openFiles.forEach((file, i) => {
+                const tab = document.createElement('div');
+                tab.className = `relative flex items-center px-4 h-9 cursor-pointer text-xs min-w-[140px] border-r border-gray-300 ${i === activeIdx ? 'tab-active' : 'bg-[#e8eaed] text-gray-500 hover:bg-gray-200'}`;
+                tab.innerHTML = `
+                    <span class="truncate pr-4">${file.path.split('/').pop()}</span>
+                    <div class="absolute right-3 flex items-center gap-2">
+                        ${file.isDirty ? '<div class="dirty-dot"></div>' : ''}
+                        <span class="hover:bg-gray-300 rounded px-1" onclick="closeTab(${i}, event)">×</span>
+                    </div>
+                `;
+                tab.onclick = () => switchTab(i);
+                bar.appendChild(tab);
+            });
+        }
+
+        function closeTab(i, e) {
+            e.stopPropagation();
+            openFiles.splice(i, 1);
+            activeIdx = openFiles.length ? 0 : -1;
+            if (activeIdx !== -1) switchTab(activeIdx);
+            else {
+                editor.setValue("");
+                document.getElementById('status-path').innerText = "Ready";
+            }
+            renderTabs();
+        }
+
+        /* ACTIONS */
+        async function saveAll() {
+            if (activeIdx !== -1) openFiles[activeIdx].content = editor.getValue();
+            const dirtyFiles = openFiles.filter(f => f.isDirty);
+            
+            for (const file of dirtyFiles) {
+                await fetch(`${BASE_URL}/save-file-content`, {
+                    method: "POST",
+                    headers: {"Content-Type":"application/json"},
+                    body: JSON.stringify({ email, path: file.path, content: file.content })
+                });
+                file.isDirty = false;
+            }
+            renderTabs();
+            notify(`${dirtyFiles.length || 'No'} files updated in cloud.`);
+        }
+
+        async function handleRun() {
+            const file = openFiles[activeIdx];
+            if (!file) return;
+
+            toggleTerminal(true);
+            const term = document.getElementById('terminal');
+            term.innerHTML = `<span class="text-[#7D3C1B] font-bold">[SYSTEM] Initializing ${file.path}...</span>\n\n`;
+
+            if (file.path.endsWith('.py')) {
+                const r = await fetch(`${BASE_URL}/run-python`, {
+                    method: "POST",
+                    headers: {"Content-Type":"application/json"},
+                    body: JSON.stringify({ code: editor.getValue() })
+                });
+                const d = await r.json();
+                term.innerHTML += d.error ? `<span class="text-red-500">${d.error}</span>` : d.output;
+            } else {
+                await saveAll();
+                if(file.path.includes(email)) {
+                  window.open(`${BASE_URL}/preview/${file.path}`, "_blank");
+                  term.innerHTML += "[INFO] Web preview active in new tab.";
+                } else {
+                  window.open(`${BASE_URL}/preview/${email}/${file.path}`, "_blank");
+                  term.innerHTML += "[INFO] Web preview active in new tab.";
+                }
+            }
+        }
+
+        /* UI HELPERS */
+        function notify(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        function toggleTerminal(show) {
+            document.getElementById('terminal-wrapper').classList.toggle('hidden', !show);
+        }
+
+        function clearTerminal() { document.getElementById('terminal').innerHTML = ""; }
+
+        function toggleQuickOpen(show) {
+            const el = document.getElementById('quick-open');
+            const input = document.getElementById('quick-input');
+            const active = typeof show === 'boolean' ? show : el.classList.contains('hidden');
+            el.classList.toggle('hidden', !active);
+            if (active) {
+                input.focus();
+                filterQuickOpen(""); // Load all first
+            }
+        }
+
+        async function filterQuickOpen(val) {
+            const r = await fetch(`${BASE_URL}/admin/system-overview`);
+            const d = await r.json();
+            const results = document.getElementById('quick-results');
+            results.innerHTML = "";
+            
+            const findFiles = (nodes, pathPrefix = "") => {
+                nodes.forEach(n => {
+                    const fullPath = pathPrefix ? `${pathPrefix}/${n.name}` : n.name;
+                    if (n.isFolder) findFiles(n.children, fullPath);
+                    else if (fullPath.toLowerCase().includes(val.toLowerCase())) {
+                        const div = document.createElement('div');
+                        div.className = "p-3 hover:bg-gray-100 cursor-pointer text-sm rounded-md flex justify-between";
+                        div.innerHTML = `<span>${n.name}</span> <span class="text-[10px] text-gray-400">${fullPath}</span>`;
+                        div.onclick = () => openFile(fullPath);
+                        results.appendChild(div);
+                    }
+                });
+            };
+            findFiles(d.tree);
+        }
+    </script>
 </body>
 </html>
