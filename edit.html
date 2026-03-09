@@ -148,18 +148,51 @@ function goBack() {
 }
 
 /* PREVIEW HTML */
+/* FIXED PREVIEW HTML */
 async function previewFile() {
   const content = editor.getValue();
-  const baseUrl = `${BASE_URL}/download/${email}/${file.split("/").slice(0,-1).join("/")}/`;
+  
+  // First, SAVE the file to ensure the backend has the latest version
+  await saveFile();
 
-  const r = await fetch(`${BASE_URL}/preview-html`, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ content, baseUrl })
-  });
+  // Use the deterministic URL structure we defined in the backend
+  // This avoids the 'about:blank' popup issue caused by async delays
+  const previewUrl = `${BASE_URL}/preview/${email}/${file}`;
+  window.open(previewUrl, "_blank");
+}
 
-  const d = await r.json();
-  previewWindow = window.open(d.url, "_blank");
+/* SERVER-SIDE PYTHON RUNNER */
+async function runPythonOnServer() {
+  const code = editor.getValue();
+  const term = document.getElementById("terminal");
+  term.style.display = "block";
+  term.innerHTML = "Running on server...<br>";
+
+  try {
+    const r = await fetch(`${BASE_URL}/run-python`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code })
+    });
+    const d = await r.json();
+    
+    if (d.error) {
+      term.innerHTML = `<span style="color:#ff5555">${d.error}</span>`;
+    } else {
+      term.innerHTML = d.output.replace(/\n/g, "<br>");
+    }
+  } catch (err) {
+    term.innerHTML = `<span style="color:#ff5555">Server Error: ${err.message}</span>`;
+  }
+}
+
+/* UPDATED RUN HANDLER */
+function handleRun() {
+  if (file.endsWith(".py")) {
+    runPythonOnServer(); // Use the high-performance backend runner
+  } else {
+    previewFile();
+  }
 }
 
 /* PYTHON ENGINE */
@@ -210,7 +243,7 @@ function runPython(code) {
 /* RUN HANDLER */
 function handleRun() {
   const code = editor.getValue();
-  if (file.endsWith(".py")) runPython(code);
+  if (file.endsWith(".py")) runPythonOnServer();
   else previewFile();
 }
 
