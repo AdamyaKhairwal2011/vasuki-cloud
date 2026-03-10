@@ -11,8 +11,8 @@
 <style>
 :root {
   --bg: #fafafa;
-  --sidebar-bg: #ffffff;
-  --accent: #4b3507;
+  --sidebar-bg: #3e494e;
+  --accent: #fffcce;
   --accent-light: #fff9e8;
   --text-main: #1d1d1f;
   --text-dim: #6e6e73;
@@ -44,6 +44,8 @@ aside {
   position: sticky;
   top: 0;
   z-index: 1100;
+  color: #fff;
+  border-radius: 0px 40px 40px 0px;
 }
 
 .sidebar-overlay {
@@ -104,8 +106,15 @@ aside {
 /* EXISTING STYLES - MAINTAINED */
 aside h2 { font-weight: 100; letter-spacing: -1px; margin-top: 0; margin-bottom: 40px; font-size: 1.5rem; }
 .nav-group { display: flex; flex-direction: column; gap: 8px; }
-.path-container { background: white; padding: 12px; border-radius: 2px; border: 1px solid var(--border); margin-bottom: 20px; }
-.path { font-size: 0.85rem; font-weight: 100; color: var(--accent); word-break: break-all; }
+.path-container { background: #4d5b61; padding: 12px; border-radius: 2px; margin-bottom: 20px;}
+.path { font-size: 0.85rem; font-weight: 100; color: whitesmoke; word-break: break-all; }
+
+.nav-group button {
+  border-radius: 30px;
+  background-color: #2f373b;
+  border: none;
+  color: whitesmoke;
+}
 
 button { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-main); padding: 12px 16px; border-radius: 2px; cursor: pointer; font-weight: 100; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
 button:hover { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
@@ -193,17 +202,14 @@ aside h2 {
 }
 
 .path-container {
-  background: white;
   padding: 12px;
   border-radius: 2px;
-  border: 1px solid var(--border);
   margin-bottom: 20px;
 }
 
 .path {
   font-size: 0.85rem;
   font-weight: 100;
-  color: var(--accent);
   word-break: break-all;
 }
 
@@ -430,9 +436,8 @@ main {
 
 /* STORAGE CARD */
 .storage-card {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 2px;
+  background: #2e363a;
+  border-radius: 40px;
   padding: 20px;
   margin-top: auto;
 }
@@ -549,20 +554,24 @@ input, select {
 
 <div class="mobile-top-bar">
     <button class="hamburger" onclick="toggleSidebar()">☰</button>
-    <img src="./logo.jpg" width="50px" height="50px" alt="" class="logo">
+    <img src="./logo.png" width="50px" height="50px" alt="" class="logo">
     <div style="width: 30px;"></div> </div>
 
 <aside id="sidebar">
   <button class="close-sidebar" onclick="toggleSidebar()">✕</button>
-      <img src="./logo.jpg" width="50px" height="50px" alt="" class="logo">
+      <img src="./logo.png" width="50px" height="50px" alt="" class="logo">
 <br><br>
   
-  <div class="nav-group">
-    <button onclick="goBack(); toggleSidebar();">Back to Root</button>
     <div class="path-container">
         <div class="path" id="path">/</div>
     </div>
+
+  <div class="nav-group">
+    <button onclick="goBack(); toggleSidebar();">Back to Root</button>
+
   </div>
+
+  <br>
 
     <div class="nav-group">
     <button onclick="signOut(); toggleSidebar();">Sign Out</button>
@@ -704,7 +713,7 @@ function toggleSidebar() {
 function initChart(){
   storageChart=new Chart(storageChartEl,{
     type:"doughnut",
-    data:{datasets:[{data:[0,MAX_MB],backgroundColor:["#e39b00","#f1f1f2"],borderWidth:0}]},
+    data:{datasets:[{data:[0,MAX_MB],backgroundColor:["##94a6af","#444f53"],borderWidth:0}]},
     options:{cutout:"82%",plugins:{legend:{display:false}}, animation: {animateRotate: true}}
   });
 }
