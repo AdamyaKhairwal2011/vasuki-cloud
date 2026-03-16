@@ -2,203 +2,876 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Shared Assets | Vasuki Cloud</title>
+<title>Shared Assets | Vasuki Neem</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&family=Fraunces:opsz,wght@9..144,100;9..144,300;9..144,400&display=swap" rel="stylesheet">
 <style>
 :root {
-    --bg:#F5F5F7;
-    --card-bg:#fff;
-    --accent:#007AFF;
-    --text-main:#1D1D1F;
-    --text-sec:#86868B;
-    --glass-border:rgba(0,0,0,.08);
+  --slate: #3e494e;
+  --slate-deep: #2b3438;
+  --slate-mid: #4f5c62;
+  --slate-light: #6b7a80;
+  --lemon: #fffcce;
+  --lemon-mid: #fff9a8;
+  --lemon-dark: #e8e49a;
+  --lemon-faint: #fffef5;
+  --bg: #f4f2ec;
+  --bg-dark: #ece9e0;
+  --bg-mid: #f0ede4;
+  --card: #ffffff;
+  --ink: #1e2628;
+  --ink-mid: #3e494e;
+  --ink-light: #6b7a80;
+  --ink-faint: #a0adb2;
+  --border: #dddad0;
+  --border-dark: #c8c4b4;
+  --rule: #d4d0c4;
+  --red: #7a3020;
 }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    margin:0;
-    font-family:Inter,-apple-system,sans-serif;
-    background:var(--bg);
-    color:var(--text-main);
-    user-select:none;
+  min-height: 100vh;
+  font-family: 'EB Garamond', Georgia, serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 8% 20%, rgba(62,73,78,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 92% 8%, rgba(255,252,206,0.4) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 95%, rgba(62,73,78,0.03) 0%, transparent 40%);
+  color: var(--ink);
 }
 
-header {
-    max-width:1000px;
-    margin:auto;
-    padding:60px 30px 40px;
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
+/* ═══ HEADER ═══ */
+.site-header {
+  background: var(--slate-deep);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 0 0 0;
 }
 
-.container {
-    max-width:1000px;
-    margin:auto;
-    padding:0 30px 60px;
+.header-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 28px 40px 0;
+  display: flex;
+  flex-direction: column;
 }
 
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-logo {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--lemon);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--slate-deep);
+  flex-shrink: 0;
+  opacity: 0.9;
+  overflow: hidden;
+}
+.brand-logo img { width: 100%; height: 100%; object-fit: cover; }
+.brand-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--lemon);
+  letter-spacing: 0.01em;
+}
+.brand-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Permission badge */
+.perm-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,252,206,0.2);
+  color: rgba(255,252,206,0.6);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.perm-badge .dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--lemon);
+  opacity: 0.7;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.7} 50%{opacity:.25} }
+
+/* Title row */
+.header-title-row {
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+.page-title {
+  font-family: 'Fraunces', serif;
+  font-size: 2.6rem;
+  font-weight: 100;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  color: #e8dfc8;
+}
+.page-title em {
+  font-style: italic;
+  color: var(--lemon);
+  /* lemon underline */
+  background: linear-gradient(0deg, rgba(255,252,206,0.25) 0%, rgba(255,252,206,0.25) 35%, transparent 35%);
+}
+
+.header-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.file-count-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.file-count-num {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 100;
+  color: var(--lemon);
+  line-height: 1;
+}
+
+/* Breadcrumb strip */
+.breadcrumb-strip {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 14px 40px;
+}
+.breadcrumb {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bc-sep { opacity: 0.3; }
+
+/* ═══ MAIN ═══ */
+main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 40px 80px;
+}
+
+/* Permission notice bar */
+.read-only-bar {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 20px;
+  background: var(--lemon-faint);
+  border: 1.5px solid var(--lemon-dark);
+  border-radius: 100px;
+  margin-bottom: 32px;
+}
+.read-only-bar.visible { display: flex; }
+.ro-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+.ro-icon {
+  width: 14px; height: 14px;
+  color: var(--slate);
+  flex-shrink: 0;
+}
+
+/* ═══ GRID ═══ */
 .grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
 }
 
+/* ═══ CARD ═══ */
 .card {
-    background:var(--card-bg);
-    border-radius:24px;
-    padding:16px;
-    border:1px solid var(--glass-border);
-    position:relative;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: border-color 0.13s ease;
 }
+/* Lemon bottom accent on hover */
+.card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: transparent;
+  transition: background 0.13s;
+}
+.card:hover { border-color: var(--slate-light); }
+.card:hover::after { background: var(--lemon); }
 
+/* Preview */
 .preview-wrapper {
-    height:180px;
-    border-radius:16px;
-    overflow:hidden;
-    position:relative;
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, var(--bg) 0%, var(--bg-dark) 100%);
 }
-
 .preview-wrapper img {
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    pointer-events:none;
-    -webkit-user-drag:none;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
 }
-
 .block-layer {
-    position:absolute;
-    inset:0;
-    z-index:5;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  /* Frosted lemon glaze for view-only */
+  background: linear-gradient(160deg, rgba(255,252,206,0.04) 0%, transparent 60%);
+}
+.file-icon-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; height: 100%;
 }
 
-.file-info {
-    padding:15px 5px 5px;
+/* View-only ribbon */
+.view-only-ribbon {
+  position: absolute;
+  top: 10px; right: 10px;
+  z-index: 10;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 100px;
+  background: rgba(43,52,56,0.85);
+  color: var(--lemon);
+  border: 1px solid rgba(255,252,206,0.2);
+  backdrop-filter: blur(8px);
+}
+
+/* Card body */
+.card-body {
+  padding: 14px 14px 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--border);
 }
 
 .file-name {
-    font-size:.9rem;
-    font-weight:600;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.02em;
 }
 
+.file-ext-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: var(--bg-dark);
+  padding: 2px 7px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  display: inline-block;
+}
+
+.file-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Download button */
 .download-btn {
-    width:100%;
-    padding:10px;
-    border:none;
-    border-radius:12px;
-    background:var(--accent);
-    color:#fff;
-    font-weight:600;
-    cursor:pointer;
+  width: 100%;
+  padding: 9px 16px;
+  border-radius: 100px;
+  border: 1.5px solid var(--slate);
+  background: var(--slate);
+  color: var(--lemon);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: all 0.13s ease;
+}
+.download-btn:hover {
+  background: var(--slate-deep);
+  border-color: var(--slate-deep);
+}
+.download-btn:active { transform: scale(0.98); }
+
+/* View only label */
+.view-only-label {
+  width: 100%;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 8px 0 2px;
 }
 
-.read-only-shield {
-    position:absolute;
-    top:10px;
-    right:10px;
-    font-size:.6rem;
-    font-weight:700;
-    padding:4px 8px;
-    border-radius:8px;
-    background:rgba(255,255,255,.9);
+/* ═══ EMPTY / ERROR STATE ═══ */
+.state-page {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 40px;
+}
+.state-icon {
+  font-family: 'Fraunces', serif;
+  font-size: 4rem;
+  font-weight: 100;
+  font-style: italic;
+  color: var(--ink-faint);
+  line-height: 1;
+}
+.state-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--ink-light);
+  letter-spacing: -0.02em;
+}
+.state-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.08em;
 }
 
-.footer-note {
-    text-align:center;
-    padding:20px;
-    font-size:.8rem;
-    color:var(--text-sec);
+/* ═══ FOOTER ═══ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.footer-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.footer-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border-dark); }
+
+/* ═══ LIGHTBOX ═══ */
+#lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(22,27,30,0.97);
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#lightbox.open { display: flex; }
+.lb-close {
+  position: absolute;
+  top: 20px; right: 24px;
+  background: rgba(255,252,206,0.07);
+  border: 1px solid rgba(255,252,206,0.12);
+  color: rgba(255,252,206,0.65);
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.12s;
+}
+.lb-close:hover { background: rgba(255,252,206,0.13); color: var(--lemon); }
+.lb-title {
+  position: absolute;
+  top: 24px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(255,252,206,0.35);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  max-width: 55vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#lbContent {
+  max-width: 88vw;
+  max-height: 78vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.lb-img-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.lb-img-wrap img {
+  max-width: 88vw;
+  max-height: 78vh;
+  border-radius: 8px;
+  display: block;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+/* Diagonal watermark tiled across the image */
+.lb-watermark {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lb-watermark-text {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 100;
+  color: rgba(255,252,206,0.08);
+  letter-spacing: 0.08em;
+  transform: rotate(-28deg);
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.lb-file-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: rgba(255,252,206,0.4);
+}
+.lb-file-icon { transform: scale(2.2); margin-bottom: 24px; }
+.lb-file-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: rgba(255,252,206,0.45);
+  letter-spacing: 0.05em;
+}
+.lb-no-preview {
+  font-family: 'Fraunces', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: rgba(255,252,206,0.2);
+}
+.lb-nav {
+  position: absolute;
+  bottom: 32px;
+  display: flex;
+  gap: 10px;
+}
+.lb-nav-btn {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.9rem;
+  padding: 10px 26px;
+  background: rgba(255,252,206,0.06);
+  border: 1px solid rgba(255,252,206,0.12);
+  color: rgba(255,252,206,0.65);
+  cursor: pointer;
+  border-radius: 100px;
+  transition: all 0.12s;
+}
+.lb-nav-btn:hover { background: rgba(255,252,206,0.12); color: var(--lemon); }
+.lb-counter {
+  position: absolute;
+  bottom: 88px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  color: rgba(255,252,206,0.2);
+  letter-spacing: 0.1em;
+}
+/* View-only cards get zoom cursor */
+.card.viewable { cursor: zoom-in; }
+
+/* ═══ LOADING SKELETON ═══ */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+}
+.skeleton-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.skel-preview {
+  height: 180px;
+  background: linear-gradient(90deg, var(--bg) 0%, var(--bg-dark) 50%, var(--bg) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+.skel-body { padding: 14px; display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); }
+.skel-line { height: 10px; border-radius: 100px; background: linear-gradient(90deg, var(--bg) 0%, var(--bg-dark) 50%, var(--bg) 100%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+.skel-line.short { width: 40%; }
+.skel-btn { height: 34px; border-radius: 100px; background: linear-gradient(90deg, var(--bg) 0%, var(--bg-dark) 50%, var(--bg) 100%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .header-inner, .breadcrumb-strip, main, footer { padding-left: 20px; padding-right: 20px; }
+  .page-title { font-size: 2rem; }
+  .grid, .skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+  .header-title-row { flex-direction: column; align-items: flex-start; }
 }
 </style>
 </head>
-
 <body>
 
-<header>
-  <div>
-    <div style="color:#007AFF;font-size:.75rem;font-weight:700;letter-spacing:2px">VASUKI ITECH VAULT</div>
-    <h2>Shared Assets</h2>
-  </div>
-  <div id="permBadge">Secure Link Active</div>
-</header>
+<!-- HEADER -->
+<div class="site-header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="brand">
+        <div>
+          <div class="brand-name">Vasuki Neem</div>
+          <div class="brand-sub">Secure Share</div>
+        </div>
+      </div>
+      <div class="perm-badge" id="permBadge">
+        <div class="dot"></div>
+        <span>Secure Link Active</span>
+      </div>
+    </div>
 
-<div class="container">
-  <div class="grid" id="grid"></div>
+    <div class="header-title-row">
+      <h1 class="page-title">Shared <em>Assets</em></h1>
+      <div class="header-meta">
+        <div class="file-count-label">Files</div>
+        <div class="file-count-num" id="fileCountNum">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="breadcrumb-strip">
+    <div class="breadcrumb">
+      <span>Vasuki Neem</span>
+      <span class="bc-sep">/</span>
+      <span>Shared</span>
+      <span class="bc-sep">/</span>
+      <span id="bcToken" style="color:rgba(255,252,206,0.4)">…</span>
+    </div>
+  </div>
 </div>
 
-<div class="footer-note">Protected by Vasuki Cloud Encryption</div>
+<!-- MAIN -->
+<main>
+
+  <!-- Loading state -->
+  <div id="loadingState">
+    <div class="skeleton-grid">
+      <div class="skeleton-card"><div class="skel-preview"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-btn" style="margin-top:4px;"></div></div></div>
+      <div class="skeleton-card"><div class="skel-preview"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-btn" style="margin-top:4px;"></div></div></div>
+      <div class="skeleton-card"><div class="skel-preview"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-btn" style="margin-top:4px;"></div></div></div>
+      <div class="skeleton-card"><div class="skel-preview"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line short"></div><div class="skel-btn" style="margin-top:4px;"></div></div></div>
+    </div>
+  </div>
+
+  <!-- Read-only notice -->
+  <div class="read-only-bar" id="readOnlyBar">
+    <svg class="ro-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    <span class="ro-label">View only — downloading is disabled for this link</span>
+  </div>
+
+  <!-- Files grid -->
+  <div class="grid" id="grid" style="display:none;"></div>
+
+  <!-- Error state -->
+  <div id="errorState" style="display:none;">
+    <div class="state-page">
+      <div class="state-icon">∅</div>
+      <div class="state-title">Link unavailable</div>
+      <div class="state-sub">This share link has expired or is invalid</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-text">Vasuki Neem Cloud</span>
+  <div class="footer-dot"></div>
+  <span class="footer-text">End-to-end encrypted</span>
+  <div class="footer-dot"></div>
+  <span class="footer-text">Secure Link</span>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <div class="lb-title" id="lbTitle"></div>
+  <div id="lbContent"></div>
+  <div class="lb-counter" id="lbCounter"></div>
+  <div class="lb-nav">
+    <button class="lb-nav-btn" onclick="lbNav(-1)">← Previous</button>
+    <button class="lb-nav-btn" onclick="lbNav(1)">Next →</button>
+  </div>
+</div>
 
 <script>
 const BASE_URL = "https://adamyakhairwal2011-vasuki-cloud.hf.space";
 const token = new URLSearchParams(location.search).get("token");
 
+let allFiles = [];
+let lbIndex = 0;
+let isReadOnly = false;
+
 if (!token) {
-  document.body.innerHTML = "Invalid share link";
-  throw "";
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('errorState').style.display = 'block';
+} else {
+  document.getElementById('bcToken').textContent = token.slice(0, 12) + '…';
+  loadShare();
 }
 
 async function loadShare() {
-  const res = await fetch(`${BASE_URL}/shared-info/${token}`);
-  if (!res.ok) {
-    document.body.innerHTML = "Link expired or invalid";
-    return;
+  try {
+    const res = await fetch(`${BASE_URL}/shared-info/${token}`);
+    document.getElementById('loadingState').style.display = 'none';
+    if (!res.ok) { document.getElementById('errorState').style.display = 'block'; return; }
+    renderFiles(await res.json());
+  } catch {
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('errorState').style.display = 'block';
   }
-  renderFiles(await res.json());
+}
+
+function getFileIcon(name, size=44) {
+  const s = size;
+  if (/\.(pdf)$/i.test(name)) return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#4a5a6a"/><text x="12" y="15.5" text-anchor="middle" fill="white" font-size="6" font-family="monospace" font-weight="600">PDF</text></svg>`;
+  if (/\.(zip|rar|7z)$/i.test(name)) return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#5a5a4a"/><text x="12" y="15.5" text-anchor="middle" fill="white" font-size="6" font-family="monospace" font-weight="600">ZIP</text></svg>`;
+  if (/\.(mp3|wav|ogg)$/i.test(name)) return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#6a5a3a"/><path d="M9 17V7l8 3-8 4" fill="white"/></svg>`;
+  if (/\.(mp4|mov|avi|mkv)$/i.test(name)) return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#6a4a5a"/><path d="M10 8l6 4-6 4V8z" fill="white"/></svg>`;
+  if (/\.(html|css|js|py|json|ts)$/i.test(name)) return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#5a6a50"/><path d="M8 9l-3 3 3 3M16 9l3 3-3 3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+  if (/\.(docx?|pptx?|xlsx?)$/i.test(name)) return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#4a5a6a"/><rect x="6" y="7" width="12" height="2" rx="1" fill="white"/><rect x="6" y="11" width="10" height="2" rx="1" fill="white"/><rect x="6" y="15" width="8" height="2" rx="1" fill="white"/></svg>`;
+  return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#7a7a6a"/><path d="M7 7h10M7 12h10M7 17h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+}
+
+function getExt(name) {
+  const p = name.split('.'); return p.length > 1 ? p.pop().toUpperCase() : 'FILE';
 }
 
 function renderFiles({ files, permission }) {
   const grid = document.getElementById("grid");
-  grid.innerHTML = "";
+  isReadOnly = permission === "read";
+  allFiles = files;
 
-  if (permission === "read") {
+  document.getElementById('fileCountNum').textContent = files.length;
+  document.getElementById('permBadge').innerHTML = isReadOnly
+    ? `<div class="dot" style="background:#e8e49a"></div><span>View Only</span>`
+    : `<div class="dot"></div><span>Download Enabled</span>`;
+
+  if (isReadOnly) {
+    document.getElementById('readOnlyBar').classList.add('visible');
+    // Block all download-intent events
     document.addEventListener("contextmenu", e => e.preventDefault());
     document.addEventListener("dragstart", e => e.preventDefault());
     document.addEventListener("keydown", e => {
-      if ((e.ctrlKey || e.metaKey) && ["s","u","p"].includes(e.key.toLowerCase()))
-        e.preventDefault();
+      if ((e.ctrlKey || e.metaKey) && ["s","u","p","a"].includes(e.key.toLowerCase())) e.preventDefault();
     });
   }
 
-  files.forEach(f => {
+  grid.innerHTML = "";
+
+  files.forEach((f, i) => {
     const isImage = /\.(png|jpg|jpeg|gif|webp)$/i.test(f);
+    const ext = getExt(f);
+    const fileName = f.split('/').pop();
 
     const card = document.createElement("div");
-    card.className = "card";
+    // view-only cards are clickable to open lightbox
+    card.className = isReadOnly ? "card viewable" : "card";
 
     card.innerHTML = `
-      ${permission === "read" ? `<div class="read-only-shield">VIEW ONLY</div>` : ""}
+      ${isReadOnly ? `<div class="view-only-ribbon">View Only</div>` : ''}
+
       <div class="preview-wrapper">
         ${isImage
-          ? `<img src="${BASE_URL}/shared-file/${token}/${f}">`
-          : `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:3rem">📄</div>`
+          ? `<img src="${BASE_URL}/shared-file/${token}/${f}" alt="${fileName}" loading="lazy">`
+          : `<div class="file-icon-preview">${getFileIcon(f)}</div>`
         }
-        ${permission === "read" ? `<div class="block-layer"></div>` : ""}
+        ${isReadOnly ? `<div class="block-layer"></div>` : ''}
       </div>
-      <div class="file-info">
-        <div class="file-name">${f}</div>
-        ${
-          permission === "download"
-          ? `<button class="download-btn" onclick="downloadFile('${f}')">⬇ Download</button>`
-          : `<div style="text-align:center;font-size:.75rem;color:#86868B">View only</div>`
+
+      <div class="card-body">
+        <div class="file-meta-row">
+          <span class="file-name">${fileName}</span>
+          <span class="file-ext-tag">${ext}</span>
+        </div>
+
+        ${isReadOnly
+          ? `<button class="download-btn" style="background:transparent;border-color:var(--border-dark);color:var(--ink-mid);" onclick="openLightbox(${i})">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              View Full
+            </button>`
+          : `<button class="download-btn" onclick="downloadFile('${f}')">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </button>`
         }
       </div>
     `;
 
+    // Also open lightbox on card click for view-only
+    if (isReadOnly) {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('button')) return; // button handles its own click
+        openLightbox(i);
+      });
+    }
+
     grid.appendChild(card);
   });
+
+  grid.style.display = 'grid';
 }
 
+/* ═══════════ LIGHTBOX ═══════════ */
+function openLightbox(index) {
+  lbIndex = index;
+  document.getElementById('lightbox').classList.add('open');
+  renderLightbox();
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+function lbNav(dir) {
+  lbIndex = (lbIndex + dir + allFiles.length) % allFiles.length;
+  renderLightbox();
+}
+
+function renderLightbox() {
+  const f = allFiles[lbIndex];
+  const fileName = f.split('/').pop();
+  const isImage = /\.(png|jpg|jpeg|gif|webp)$/i.test(f);
+  const src = `${BASE_URL}/shared-file/${token}/${f}`;
+
+  document.getElementById('lbTitle').textContent = fileName;
+  document.getElementById('lbCounter').textContent = `${lbIndex + 1} / ${allFiles.length}`;
+
+  const content = document.getElementById('lbContent');
+
+  if (isImage) {
+    // Image shown with watermark overlay — no src attribute trick possible to prevent save,
+    // but pointer-events:none + contextmenu block + CSS user-select:none makes it very hard.
+    content.innerHTML = `
+      <div class="lb-img-wrap">
+        <img src="${src}" alt="${fileName}" draggable="false">
+        <div class="lb-watermark">
+          <span class="lb-watermark-text">Vasuki Neem · View Only · ${token.slice(0,8)}</span>
+        </div>
+      </div>
+    `;
+  } else {
+    // Non-image: show icon + name, no preview possible
+    content.innerHTML = `
+      <div class="lb-file-view">
+        <div class="lb-file-icon">${getFileIcon(f, 44)}</div>
+        <div class="lb-file-name">${fileName}</div>
+        <div class="lb-no-preview">No preview available for this file type</div>
+      </div>
+    `;
+  }
+}
+
+/* ═══════════ DOWNLOAD (download mode only) ═══════════ */
 function downloadFile(f) {
+  // Only reachable when permission === "download"
   window.open(`${BASE_URL}/shared-file/${token}/${f}`, "_blank");
 }
 
-loadShare();
-</script>
+/* ═══════════ KEYBOARD ═══════════ */
+document.addEventListener('keydown', (e) => {
+  const lb = document.getElementById('lightbox');
+  if (lb.classList.contains('open')) {
+    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === 'ArrowLeft') lbNav(-1);
+    if (e.key === 'Escape') closeLightbox();
+    // Extra: block Ctrl+S inside lightbox too
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') e.preventDefault();
+  }
+});
 
+// Close lightbox on backdrop click
+document.getElementById('lightbox').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+});
+</script>
 </body>
 </html>
