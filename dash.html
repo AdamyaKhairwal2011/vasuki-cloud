@@ -300,9 +300,8 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 /* SELECTION BAR */
 .selection-bar {
   margin: 12px 36px 0; padding: 8px 16px;
-  background: var(--slate); border-radius: 100px;
+  background: var(--slate); border-radius: 20px;
   display: none; align-items: center; gap: 8px; flex-wrap: wrap;
-  box-shadow: 0 2px 8px rgba(43,52,56,0.3);
 }
 .selection-bar.visible { display: flex; }
 .selection-count { font-family: 'Google Sans Text', sans-serif; font-size: 0.8rem; font-weight: 500; color: var(--lemon); margin-right: 4px; }
@@ -549,10 +548,17 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   .mobile-top-bar { display: flex; }
   .topbar, .main-header, .upload-zone, .type-bar-section, .content-area { padding-left: 18px; padding-right: 18px; }
   .selection-bar, .paste-bar, .filter-chips { margin-left: 18px; margin-right: 18px; }
+
+  .filter-chips {
+    display: none;
+  }
   .page-title { font-size: 1.3rem; }
   .files-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 8px; }
   .file-card.card-wide { grid-column: span 1; aspect-ratio: 1; }
   .topbar { display: none; }
+    main {
+    max-width: 100vw;
+  }
 }
 
 /* ═══════════ AI AGENT PANEL ═══════════ */
@@ -669,6 +675,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 
 @media (max-width: 860px) {
   #aiPanel { width: 100dvw; }
+
 }
 </style>
 </head>
@@ -981,7 +988,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 <script>
 const BASE_URL='https://adamyakhairwal2011-vasuki-cloud.hf.space';
 const params=new URLSearchParams(location.search);
-const userEmail=params.get("email")||"demo@vasuki.ai";
+const userEmail=localStorage.getItem('vcloud_user');
 const MAX_MB=500;
 let currentFolder="",selectedFiles=new Set(),allFiles=[],focusIndex=0,ctxTarget=null,createType='file';
 let clipboard={files:[],sourceFolder:"",isCut:false};
