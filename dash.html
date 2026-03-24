@@ -67,6 +67,8 @@ aside {
   z-index: 100;
   border-radius: 0 16px 16px 0;
 }
+
+::-webkit-scrollbar { display: none;}
 .sidebar-logo {
   padding: 20px 20px 16px;
   border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -749,6 +751,56 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
     </button>
   </nav>
   <div style="flex:1"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+    .qr-card {
+        padding: 24px;
+        border-radius: 12px;
+        display: inline-flex;
+        flex-direction: column;
+        gap: 16px;
+        box-shadow: 0 1px 3px rgba(60,64,67,0.3);
+        font-family: 'Roboto', sans-serif;
+    }
+
+    #qrcode img {
+        border: 8px solid #8e9ea4; /* Google-style white border around QR */
+        border-radius: 4px;
+    }
+
+    .qr-input {
+        padding: 10px;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        width: 200px;
+        outline: none;
+    }
+
+    .qr-input:focus { border: 2px solid #1a73e8; padding: 9px; }
+
+    .btn-generate {
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        padding: 8px 24px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+</style>
+
+<div class="qr-card">
+      <span class="storage-used">Referral Code:</span>
+      <div class="storage-header">Allow Your Friends To Join Vasuki Cloud By Scanning The QR</div>
+      <div id="code_review" style="color: #fff9a8"></div>
+    <div id="qrcode"></div>
+</div>
+
+<script type="module">
+
+</script>
+<div id="flex-1"></div>
   <div class="storage-section">
     <div class="storage-header">Storage Used</div>
     <div class="storage-numbers">
@@ -983,6 +1035,26 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   await vdb.login('codeclutch.adamyarao@gmail.com','wkmeupb4ugo')
   let data = await vdb.fetchTable('users_rows','Sheet1')
 
+      let access_codes = await vdb.fetchTable('users_rows','access_asked')
+    let randomCode = access_codes[Math.floor(Math.random() * access_codes.length)].value
+    console.log(access_codes)
+    // Initialize the QR instance
+    const qrcode = new QRCode(document.getElementById("qrcode"), {
+        text: randomCode,
+        width: 120,
+        height: 120,
+        colorDark : "#2b3438",
+        colorLight : "#8e9ea4",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+    document.getElementById('code_review').innerHTML = `Your referral code is:<b> ${randomCode}</b>`;
+
+    function generateQR() {
+        if (val.trim()) {
+            qrcode.clear(); // Clear the previous QR
+            qrcode.makeCode(val); // Generate new one
+        }
+    }
 </script>
 
 <script>
