@@ -154,7 +154,7 @@ aside {
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 99; }
 
 /* ═══════════ MAIN ═══════════ */
-main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-width: 80vw; width: 100%; }
+main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-width: 100dvw; width: 100%; }
 
 /* ═══════════ TOPBAR ═══════════ */
 .topbar {
@@ -269,13 +269,13 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   border: 2px dashed var(--border-dark);
   border-radius: 12px; padding: 24px 40px;
   text-align: center; cursor: pointer;
-  background: linear-gradient(135deg, var(--lemon-faint) 0%, var(--bg) 100%);
+  background: #eeeae0;
   transition: all 0.15s; position: relative; overflow: hidden;
 }
-.upload-zone::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 110%, rgba(255,252,206,0.5) 0%, transparent 60%); pointer-events: none; }
+.upload-zone::before { content: ''; position: absolute; inset: 0; pointer-events: none; }
 .upload-zone:hover, .upload-zone.drag-over {
   border-color: var(--slate);
-  background: linear-gradient(135deg, var(--lemon) 0%, var(--bg-mid) 100%);
+  background: var(--bg-mid);
   box-shadow: 0 2px 12px rgba(62,73,78,0.1);
 }
 .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
@@ -1256,13 +1256,13 @@ function renderFiles(){
     const first = localStorage.getItem('vcloud_username').split(" ")[0].toLowerCase();
     let time = new Date().getHours();
     if (time >= 5 && time < 12) {
-      document.getElementById('pageTitle').textContent = `good morning, ${first}`;
+      document.getElementById('pageTitle').textContent = `Morning, ${first.charAt(0).toUpperCase() + first.slice(1)}`;
     } else if (time >= 12 && time < 17) {
-      document.getElementById('pageTitle').textContent = `good afternoon, ${first}`;
+      document.getElementById('pageTitle').textContent = `Afternoon, ${first.charAt(0).toUpperCase() + first.slice(1)}`;
     } else if (time >= 17 && time < 22) {
-      document.getElementById('pageTitle').textContent = `good evening, ${first}`;
+      document.getElementById('pageTitle').textContent = `Evening, ${first.charAt(0).toUpperCase() + first.slice(1)}`;
     } else {
-      document.getElementById('pageTitle').textContent = `welcome, ${first}`;
+      document.getElementById('pageTitle').textContent = `welcome, ${first.charAt(0).toUpperCase() + first.slice(1)}`;
     }
   } else {
     location.href = "login.html";
