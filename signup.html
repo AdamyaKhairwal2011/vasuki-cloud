@@ -5,30 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Create Account - Vasuki vCloud</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
     <style>
         :root {
-            --google-blue: #5c8cbd;
-            --google-blue-hover: #174ea6;
+            --google-blue: #5f666e;
+            --google-blue-hover: #3d4450;
             --text-dark: #202124;
             --text-light: #5f6368;
             --border-color: #dadce0;
-        }
-                        html {
-            -webkit-text-size-adjust: 80%; /* Prevents iOS Safari from auto-adjusting font size */
-            -moz-text-size-adjust: 80%;    /* For Firefox */
-            -ms-text-size-adjust: 80%;     /* For older IE */
-            text-size-adjust: 80%;
+            --error-red: #d93025;
         }
 
+        html { text-size-adjust: 80%; }
 
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #5c8cbd;
             margin: 0;
             display: flex;
-            align-items: flex-end; /* Keeps it as a bottom sheet like login */
+            align-items: flex-end;
             justify-content: center;
             min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Access Gate Overlay */
+        #accessGate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gate-content {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Camera Scanner Styles */
+        #reader {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color) !important;
+            margin-bottom: 20px;
+            background: #000;
+        }
+
+        #reader __dashboard { padding: 10px !important; }
+        #reader button {
+            background-color: var(--google-blue) !important;
+            color: white !important;
+            border: none !important;
+            padding: 8px 16px !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            font-family: 'Roboto', sans-serif !important;
+            margin: 10px 0 !important;
         }
 
         .signup-container {
@@ -38,21 +83,20 @@
             border-radius: 50px 50px 0 0;
             text-align: center;
             background-color: #fff;
-            min-height: 70vh; /* Slightly taller to fit more fields */
+            min-height: 85vh;
             box-sizing: border-box;
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .signup-container.visible { transform: translateY(0); }
 
         h1 { font-size: 24px; font-weight: 400; margin-bottom: 8px; color: var(--text-dark); }
-        .subtitle { color: var(--text-light); margin-bottom: 30px; font-size: 14px; }
+        .subtitle { color: var(--text-light); margin-bottom: 24px; font-size: 14px; }
 
-        .input-row {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-row { display: flex; gap: 12px; margin-bottom: 16px; }
+        .input-group { margin-bottom: 16px; text-align: left; }
         
         input {
             width: 100%;
@@ -67,46 +111,46 @@
 
         input:focus { border: 2px solid var(--google-blue); padding: 12px 14px; }
 
-        .button-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-        }
-
-        .btn-text {
-            color: var(--google-blue);
-            font-weight: 500;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            font-size: 14px;
-        }
-
         .btn-primary {
             background-color: var(--google-blue);
             color: #fff;
-            padding: 10px 24px;
+            padding: 12px 24px;
             min-width: 110px;
             font-size: 14px;
             font-weight: 500;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            position: relative;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-light);
+            font-size: 12px;
+            margin: 15px 0;
+        }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
+
+        .btn-google {
+            width: 100%;
+            padding: 10px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-dark);
+            margin-bottom: 15px;
         }
 
-        .btn-primary:disabled { background-color: #ccc; cursor: not-allowed; }
-
-        /* Loader Styles */
         .loader {
-            width: 18px;
-            height: 18px;
+            width: 18px; height: 18px;
             border: 2px solid #ffffff;
             border-bottom-color: transparent;
             border-radius: 50%;
@@ -114,24 +158,43 @@
             animation: rotation 1s linear infinite;
         }
 
-        @keyframes rotation {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
+        @keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .loading .btn-text-content { display: none; }
         .loading .loader { display: inline-block; }
 
-        @media (max-width: 450px) {
-            .signup-container { padding: 30px 24px; }
+        #scanFeedback {
+            color: #34a853;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: none;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
-    <div class="signup-container">
+    <div id="accessGate">
+        <div class="gate-content">
+            <h1>Exclusive Access</h1>
+            <p class="subtitle">Scan a referrer QR code or enter code manually</p>
+            
+            <div id="reader"></div>
+            <div id="scanFeedback">✔ QR Code Detected!</div>
+
+            <div class="input-group">
+                <input type="text" id="accessCode" placeholder="Enter manual code" style="text-align: center;">
+            </div>
+
+            <button class="btn-primary" style="width: 100%;" onclick="validateAccess()">Verify & Continue</button>
+            <p id="gateError" style="color: var(--error-red); font-size: 12px; margin-top: 10px; display: none;">Invalid access code. Please try again.</p>
+        </div>
+    </div>
+
+    <div class="signup-container" id="signupForm">
         <h1>Create Account</h1>
-        <p class="subtitle">Join Vasuki Cloud and start building</p>
+        <p class="subtitle">Complete your Vasuki Cloud profile</p>
+
+
 
         <div class="input-row">
             <input type="text" id="firstName" placeholder="First Name">
@@ -145,9 +208,15 @@
         <div class="input-group">
             <input type="password" id="password" placeholder="Create password">
         </div>
+        <div class="input-group">
+            <input type="phone" id="phone" placeholder="Phone number">
+        </div>
+        <div class="input-group">
+            <input type="password" id="re-password" placeholder="Re-enter password">
+        </div>
 
-        <div class="button-row">
-            <button class="btn-text" onclick="window.location.href='login.html'">Sign in instead</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
+            <button style="color: var(--google-blue); background:none; border:none; cursor:pointer; font-weight:500;" onclick="location.reload()">Reset</button>
             <button class="btn-primary" id="signupBtn" onclick="submitSignup()">
                 <span class="btn-text-content">Create</span>
                 <div class="loader"></div>
@@ -158,8 +227,58 @@
     <script type="module">
         import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
         
-        let vdb = new Vasuki();
+        const vdb = new Vasuki();
+        await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+        
+        let codes = await vdb.fetchTable('users_rows','access_asked')
+        // --- QR SCANNER LOGIC ---
+        let html5QrCode;
 
+        function onScanSuccess(decodedText, decodedResult) {
+            // Fill the input with the decoded text from the QR
+            document.getElementById('accessCode').value = decodedText;
+            document.getElementById('scanFeedback').style.display = 'block';
+            
+            // Auto-verify if successful
+            validateAccess();
+            
+            // Stop scanning once found
+            html5QrCode.stop().then((ignore) => {
+                console.log("Scanner stopped.");
+            }).catch((err) => {
+                console.error("Unable to stop scanning.", err);
+            });
+        }
+
+        // Initialize Scanner
+        html5QrCode = new Html5Qrcode("reader");
+        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+        // Start scanning automatically on load
+        html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
+
+
+        // --- ACCESS VALIDATION ---
+        window.validateAccess = () => {
+            const code = document.getElementById('accessCode').value.trim();
+            codes.forEach(c => {
+                if (c.value === code) {
+                    // Transition UI
+                    document.getElementById('accessGate').style.transform = 'translateY(-100%)';
+                    document.getElementById('signupForm').classList.add('visible');
+                    
+                    // Ensure scanner stops if it was still running
+                    try { html5QrCode.stop(); } catch(e) {}
+                } else {
+                const err = document.getElementById('gateError');
+                err.style.display = 'block';
+                setTimeout(() => err.style.display = 'none', 3000);
+            }
+            })
+
+        };
+
+        // --- SIGNUP SUBMISSION ---
         window.submitSignup = async () => {
             const first = document.getElementById("firstName").value.trim();
             const last = document.getElementById("lastName").value.trim();
@@ -167,39 +286,38 @@
             const password = document.getElementById("password").value;
             const signupBtn = document.getElementById("signupBtn");
 
-            if (!first || !last || !email || !password) {
-                return alert("Please fill all fields");
-            }
+            if (!first || !last || !email || !password) return alert("Please fill all fields");
 
-            // UI: Start Loading
             signupBtn.classList.add('loading');
             signupBtn.disabled = true;
 
+            if (password !== document.getElementById("re-password").value) {
+                alert("Passwords do not match");
+                signupBtn.classList.remove('loading');
+                signupBtn.disabled = false;
+                return;
+            }
             try {
-                // Step 1: Auth the SDK session
-                await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
-
-                // Step 2: Insert the new user
                 const name = `${first} ${last}`;
-                // Note: Ensure your SDK uses 'users_rows.json' as the DB name 
-                // and 'Sheet1' as table to match your login logic
-                const result = await vdb.insertRow('users_rows', 'Sheet1', {
-                    username: email, // used 'username' to match your login query
-                    email: email,    // keeping both for safety
+                await vdb.insertRow('users_rows', 'Sheet1', {
+                    username: email,
+                    email: email,
                     name: name,
-                    password: password
+                    password: password,
+                    phone_number: document.getElementById("phone").value.trim()
                 });
 
                 alert("Account created successfully!");
                 window.location.href = "login.html";
-
             } catch (err) {
                 console.error("Signup Error:", err);
-                alert("Signup failed. Check console for details.");
+                alert("Signup failed. Check console.");
                 signupBtn.classList.remove('loading');
                 signupBtn.disabled = false;
             }
         };
+
+        //
     </script>
 </body>
 </html>
