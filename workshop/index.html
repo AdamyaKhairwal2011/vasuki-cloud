@@ -1,188 +1,824 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Vasuki Learning | Fostering Next Generation Of Founders</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        :root {
-            --g-blue: #1a73e8;
-            --g-gray-100: #f8f9fa;
-            --g-gray-300: #dadce0;
-            --g-text-main: #202124;
-            --g-text-sub: #5f6368;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasuki Learning | Fostering the Next Generation of Founders</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display:wght@400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:      #1a73e8;
+  --blue-dark: #1967d2;
+  --blue-tint: #e8f0fe;
+  --green:     #1e8e3e;
+  --green-tint:#e6f4ea;
+  --red:       #d93025;
+  --red-tint:  #fce8e6;
+  --yellow:    #e37400;
+  --yellow-tint:#fef7e0;
+  --ink:       #202124;
+  --ink-2:     #3c4043;
+  --ink-3:     #5f6368;
+  --ink-4:     #80868b;
+  --line:      #e8eaed;
+  --line-2:    #dadce0;
+  --bg:        #ffffff;
+  --bg-2:      #f8f9fa;
+  --sans: 'Google Sans', 'Roboto', system-ui, sans-serif;
+  --display: 'Google Sans Display', 'Google Sans', system-ui, sans-serif;
+}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-        body {
-            background: #ffffff;
-            color: var(--g-text-main);
-            font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
-            line-height: 1.6;
-        }
+/* ── SCROLL PROGRESS ── */
+#prog {
+  position: fixed; top: 0; left: 0;
+  height: 3px; background: var(--blue);
+  z-index: 9999; width: 0%;
+  transition: width 0.08s linear;
+  pointer-events: none;
+}
 
-        /* --- Workspace Nav --- */
-        header {
-            height: 64px;
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--g-gray-300);
-        }
+/* ── HEADER ── */
+header {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 64px; background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line-2);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; z-index: 1000;
+  transition: box-shadow 0.2s;
+}
+header.shadow { box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
 
-        .nav-brand { font-size: 22px; font-weight: 400; color: var(--g-text-sub); }
-        .nav-brand b { color: var(--g-text-main); font-weight: 500; }
+.nav-brand {
+  font-size: 20px; font-weight: 400;
+  color: var(--ink-3); text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-brand b { color: var(--ink); font-weight: 500; }
 
-        /* --- Informational Hero --- */
-        .info-hero {
-            padding: 140px 24px 60px;
-            text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
-        }
+.nav-links { display: flex; align-items: center; gap: 4px; }
+.nav-link {
+  font-size: 14px; font-weight: 500; color: var(--ink-3);
+  text-decoration: none; padding: 7px 14px; border-radius: 100px;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-link:hover { background: var(--bg-2); color: var(--ink); }
+.nav-link.active { color: var(--blue); }
 
-        .chip {
-            background: #e8f0fe;
-            color: #1967d2;
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
+.nav-cta {
+  background: var(--blue); color: #fff;
+  font-family: var(--sans); font-size: 14px; font-weight: 500;
+  padding: 8px 18px; border-radius: 4px; border: none;
+  cursor: pointer; text-decoration: none; margin-left: 8px;
+  transition: background 0.15s;
+}
+.nav-cta:hover { background: var(--blue-dark); }
 
-        h1 {
-            font-size: clamp(32px, 5vw, 48px);
-            font-weight: 400;
-            margin-bottom: 20px;
-            letter-spacing: -0.5px;
-        }
+/* ── REVEAL ── */
+.reveal {
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.in { opacity: 1; transform: none; }
 
-        .hero-desc {
-            font-size: 18px;
-            color: var(--g-text-sub);
-            margin-bottom: 40px;
-        }
+/* ════════════════════════════════════
+   HERO
+════════════════════════════════════ */
+#hero {
+  padding: 120px 24px 96px;
+  max-width: 860px; margin: 0 auto;
+  text-align: center;
+}
 
-        /* --- Info Grid (Workspace Card Style) --- */
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
-            padding: 40px 24px 100px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+.hero-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--blue-tint); color: var(--blue-dark);
+  padding: 5px 14px; border-radius: 4px;
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.3px; margin-bottom: 24px;
+}
+.chip-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--blue); animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
 
-        .info-card {
-            border: 1px solid var(--g-gray-300);
-            border-radius: 8px;
-            padding: 32px;
-            transition: box-shadow 0.2s;
-        }
+.hero-h1 {
+  font-size: clamp(36px, 5.5vw, 56px); font-weight: 400;
+  letter-spacing: -1.2px; line-height: 1.1;
+  color: var(--ink); margin-bottom: 20px;
+}
+.hero-h1 em { font-style: normal; color: var(--blue); }
 
-        .info-card:hover {
-            box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
-            border-color: transparent;
-        }
+.hero-sub {
+  font-size: 18px; color: var(--ink-3);
+  line-height: 1.7; max-width: 620px;
+  margin: 0 auto 40px;
+}
 
-        .info-card h3 {
-            font-weight: 500;
-            font-size: 20px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+.hero-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
-        .info-card p {
-            font-size: 15px;
-            color: var(--g-text-sub);
-        }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--sans); font-size: 14px; font-weight: 500;
+  padding: 10px 24px; border-radius: 4px; border: none;
+  cursor: pointer; text-decoration: none; transition: all 0.15s;
+}
+.btn-filled { background: var(--blue); color: #fff; }
+.btn-filled:hover { background: var(--blue-dark); }
+.btn-outlined { background: transparent; color: var(--blue); border: 1.5px solid var(--line-2); }
+.btn-outlined:hover { background: var(--blue-tint); border-color: var(--blue); }
+.btn-lg { padding: 13px 28px; font-size: 16px; }
 
-        .icon-circle {
-            width: 40px;
-            height: 40px;
-            background: var(--g-gray-100);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--g-blue);
-            margin-bottom: 20px;
-        }
+/* Hero stats */
+.hero-stats {
+  display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;
+  margin-top: 56px; padding-top: 40px;
+  border-top: 1px solid var(--line-2);
+}
+.stat-n { font-size: 32px; font-weight: 400; color: var(--ink); letter-spacing: -0.5px; }
+.stat-l { font-size: 13px; color: var(--ink-4); margin-top: 2px; }
 
-        /* --- Footer --- */
-        footer {
-            background: var(--g-gray-100);
-            padding: 60px 24px;
-            text-align: center;
-            border-top: 1px solid var(--g-gray-300);
-        }
+/* ════════════════════════════════════
+   SECTION COMMONS
+════════════════════════════════════ */
+.section { padding: 80px 0; border-top: 1px solid var(--line-2); }
+.w { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+.w-lg { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 
-        .contact-link {
-            color: var(--g-blue);
-            text-decoration: none;
-            font-weight: 500;
-        }
+.eyebrow {
+  font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 1.8px;
+  color: var(--blue); margin-bottom: 14px;
+}
+.section-h {
+  font-size: clamp(26px, 4vw, 38px); font-weight: 400;
+  letter-spacing: -0.8px; line-height: 1.2; color: var(--ink);
+  margin-bottom: 14px;
+}
+.section-p {
+  font-size: 16px; color: var(--ink-3); line-height: 1.7;
+  max-width: 580px;
+}
 
-        @media (max-width: 768px) {
-            .info-hero { padding-top: 100px; }
-        }
-    </style>
+/* ════════════════════════════════════
+   CURRICULUM — numbered list
+════════════════════════════════════ */
+#curriculum { background: var(--bg); }
+
+.curriculum-list { margin-top: 52px; }
+
+.curr-item {
+  display: flex; gap: 32px; align-items: flex-start;
+  padding: 40px 0; border-top: 1px solid var(--line-2);
+  position: relative;
+}
+.curr-item:last-child { border-bottom: 1px solid var(--line-2); }
+
+.curr-left { flex-shrink: 0; }
+.curr-num {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--blue-tint); color: var(--blue);
+  font-size: 14px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.curr-body { flex: 1; }
+.curr-phase {
+  font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--ink-4); margin-bottom: 8px;
+}
+.curr-title { font-size: 20px; font-weight: 500; margin-bottom: 10px; color: var(--ink); }
+.curr-desc  { font-size: 15px; color: var(--ink-3); line-height: 1.7; max-width: 580px; }
+.curr-tags  { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.curr-tag {
+  padding: 3px 12px; border-radius: 100px;
+  font-size: 11px; font-weight: 500;
+  background: var(--bg-2); color: var(--ink-3);
+  border: 1px solid var(--line-2);
+}
+
+.curr-duration {
+  flex-shrink: 0;
+  font-size: 12px; color: var(--ink-4);
+  padding-top: 6px; text-align: right;
+  min-width: 80px;
+}
+.curr-weeks { font-size: 22px; font-weight: 400; color: var(--ink); display: block; }
+
+@media (max-width: 600px) {
+  .curr-duration { display: none; }
+}
+
+/* ════════════════════════════════════
+   APPROACH STRIP — horizontal scroller
+════════════════════════════════════ */
+#approach { background: var(--bg-2); }
+
+.approach-row {
+  display: flex; gap: 0;
+  border: 1px solid var(--line-2);
+  border-radius: 12px; overflow: hidden;
+  margin-top: 52px;
+}
+.approach-item {
+  flex: 1; padding: 36px 28px;
+  border-right: 1px solid var(--line-2);
+  transition: background 0.15s;
+}
+.approach-item:last-child { border-right: none; }
+.approach-item:hover { background: var(--bg); }
+
+.ap-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px; font-size: 16px;
+}
+.ap-title { font-size: 15px; font-weight: 500; margin-bottom: 8px; color: var(--ink); }
+.ap-desc  { font-size: 13px; color: var(--ink-3); line-height: 1.6; }
+
+@media (max-width: 768px) {
+  .approach-row { flex-direction: column; }
+  .approach-item { border-right: none; border-bottom: 1px solid var(--line-2); }
+  .approach-item:last-child { border-bottom: none; }
+}
+
+/* ════════════════════════════════════
+   TRACKS — side-by-side full-width rows
+════════════════════════════════════ */
+#tracks { background: var(--bg); }
+
+.track-row {
+  display: flex; align-items: stretch;
+  border: 1px solid var(--line-2); border-radius: 12px;
+  overflow: hidden; margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.track-row:hover { border-color: var(--blue); }
+.track-row:last-child { margin-bottom: 0; }
+
+.track-accent {
+  width: 6px; flex-shrink: 0;
+}
+.track-body {
+  flex: 1; padding: 28px 32px;
+  display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
+}
+.track-info { flex: 1; min-width: 220px; }
+.track-label {
+  font-size: 11px; font-weight: 500; letter-spacing: 1.2px;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.track-title { font-size: 20px; font-weight: 500; margin-bottom: 8px; color: var(--ink); }
+.track-desc  { font-size: 14px; color: var(--ink-3); line-height: 1.6; }
+
+.track-meta {
+  display: flex; flex-direction: column; gap: 8px;
+  text-align: right; flex-shrink: 0;
+  min-width: 120px;
+}
+.track-badge {
+  display: inline-block; padding: 4px 12px;
+  border-radius: 100px; font-size: 11px; font-weight: 500;
+  margin-left: auto;
+}
+.track-detail { font-size: 12px; color: var(--ink-4); }
+
+@media (max-width: 600px) { .track-meta { display: none; } }
+
+/* ════════════════════════════════════
+   INSTRUCTORS — simple horizontal list
+════════════════════════════════════ */
+#instructors { background: var(--bg-2); }
+
+.inst-list {
+  display: flex; flex-direction: column;
+  border-top: 1px solid var(--line-2);
+  margin-top: 48px;
+}
+.inst-row {
+  display: flex; align-items: center; gap: 24px;
+  padding: 24px 0; border-bottom: 1px solid var(--line-2);
+  transition: background 0.15s;
+}
+.inst-row:hover { background: var(--bg); margin: 0 -24px; padding: 24px; border-radius: 8px; border-bottom-color: transparent; }
+
+.inst-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 500; color: #fff;
+  flex-shrink: 0;
+}
+.inst-body { flex: 1; }
+.inst-name   { font-size: 16px; font-weight: 500; color: var(--ink); }
+.inst-role   { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+.inst-topics { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.inst-topic  { padding: 2px 10px; border-radius: 100px; font-size: 11px; font-weight: 500; background: var(--bg); border: 1px solid var(--line-2); color: var(--ink-3); }
+
+/* ════════════════════════════════════
+   FAQ
+════════════════════════════════════ */
+#faq { background: var(--bg); }
+
+.faq-list { margin-top: 48px; }
+.faq-item {
+  border-top: 1px solid var(--line-2);
+  cursor: pointer;
+}
+.faq-item:last-child { border-bottom: 1px solid var(--line-2); }
+
+.faq-q {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 0; font-size: 16px; font-weight: 500; color: var(--ink);
+  user-select: none;
+}
+.faq-icon {
+  width: 20px; height: 20px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-3); transition: transform 0.2s;
+}
+.faq-item.open .faq-icon { transform: rotate(180deg); }
+.faq-a {
+  font-size: 15px; color: var(--ink-3); line-height: 1.7;
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s;
+}
+.faq-item.open .faq-a { max-height: 300px; padding-bottom: 20px; }
+
+/* ════════════════════════════════════
+   CTA BAND
+════════════════════════════════════ */
+#cta {
+  background: var(--ink); color: #fff;
+  padding: 96px 24px; text-align: center;
+  border-top: none;
+}
+#cta .eyebrow { color: #fbbc04; }
+.cta-h {
+  font-size: clamp(28px, 5vw, 48px); font-weight: 400;
+  letter-spacing: -1px; color: #fff; margin-bottom: 16px; line-height: 1.12;
+}
+.cta-p {
+  font-size: 17px; color: rgba(255,255,255,0.6);
+  max-width: 500px; margin: 0 auto 40px; line-height: 1.65;
+}
+.email-row {
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  max-width: 460px; margin: 0 auto;
+}
+.email-in {
+  flex: 1; min-width: 200px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px; padding: 12px 18px;
+  font-family: var(--sans); font-size: 14px; color: #fff; outline: none;
+  transition: border-color 0.15s;
+}
+.email-in::placeholder { color: rgba(255,255,255,0.4); }
+.email-in:focus { border-color: rgba(255,255,255,0.5); }
+.btn-white { background: #fff; color: var(--ink); flex-shrink: 0; }
+.btn-white:hover { background: #f1f3f4; }
+
+/* ════════════════════════════════════
+   FOOTER
+════════════════════════════════════ */
+footer {
+  background: var(--bg-2); border-top: 1px solid var(--line-2);
+  padding: 48px 24px 32px;
+}
+.footer-wrap {
+  max-width: 860px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 40px; flex-wrap: wrap;
+  padding-bottom: 32px; border-bottom: 1px solid var(--line-2); margin-bottom: 24px;
+}
+.footer-brand { font-size: 16px; font-weight: 400; color: var(--ink-3); margin-bottom: 6px; }
+.footer-brand b { color: var(--ink); font-weight: 500; }
+.footer-desc { font-size: 13px; color: var(--ink-4); max-width: 220px; line-height: 1.6; }
+.footer-col-head { font-size: 11px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px; }
+.footer-link { display: block; font-size: 13px; color: var(--ink-4); text-decoration: none; margin-bottom: 10px; transition: color 0.15s; }
+.footer-link:hover { color: var(--blue); }
+.footer-bottom { max-width: 860px; margin: 0 auto; display: flex; justify-content: space-between; font-size: 12px; color: var(--ink-4); flex-wrap: wrap; gap: 8px; }
+.footer-bottom a { color: var(--ink-4); text-decoration: none; }
+.footer-bottom a:hover { color: var(--ink); }
+</style>
 </head>
 <body>
 
-<header>
-    <div class="nav-brand"><b>Vasuki</b> Learning</div>
+<div id="prog"></div>
+
+<!-- HEADER -->
+<header id="hdr">
+  <a href="../" class="nav-brand"><b>Vasuki</b> Learning</a>
+  <nav class="nav-links">
+    <a href="#curriculum"  class="nav-link">Curriculum</a>
+    <a href="#tracks"      class="nav-link">Tracks</a>
+    <a href="#instructors" class="nav-link">Instructors</a>
+    <a href="#faq"         class="nav-link">FAQ</a>
+  </nav>
+  <a href="mailto:codeclutch.adamyarao@gmail.com" class="nav-cta">Apply now</a>
 </header>
 
-<section class="info-hero">
-    <div class="chip">Curriculum Overview</div>
-    <h1>Engineering for the next generation.</h1>
-    <p class="hero-desc">Explore the core pillars of our workshop program. We focus on practical logic and scalable cloud infrastructure over rote memorization.</p>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-chip reveal"><span class="chip-dot"></span>Now enrolling — Cohort 4</div>
+  <h1 class="hero-h1 reveal" style="transition-delay:0.07s">
+    Engineering for the<br><em>next generation</em> of founders.
+  </h1>
+  <p class="hero-sub reveal" style="transition-delay:0.14s">
+    Practical logic, real cloud infrastructure, and deployment workflows — taught by engineers who build production systems every day.
+  </p>
+  <div class="hero-actions reveal" style="transition-delay:0.21s">
+    <a href="mailto:codeclutch.adamyarao@gmail.com" class="btn btn-filled btn-lg">Apply for next cohort</a>
+    <a href="#curriculum" class="btn btn-outlined btn-lg">View curriculum</a>
+  </div>
+  <div class="hero-stats reveal" style="transition-delay:0.28s">
+    <div><div class="stat-n" id="s1">0</div><div class="stat-l">Students trained</div></div>
+    <div><div class="stat-n" id="s2">0</div><div class="stat-l">Workshop hours</div></div>
+    <div><div class="stat-n" id="s3">0%</div><div class="stat-l">Hands-on content</div></div>
+  </div>
 </section>
 
-<section class="content-grid">
-    <div class="info-card">
-        <div class="icon-circle">
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z"/></svg>
-        </div>
-        <h3>Core Logic</h3>
-        <p>Master the fundamentals of algorithmic thinking. We teach students how to break down complex problems into manageable engineering tasks.</p>
-    </div>
+<!-- CURRICULUM -->
+<section id="curriculum" class="section">
+  <div class="w">
+    <div class="reveal"><div class="eyebrow">Curriculum</div>
+    <h2 class="section-h">What you'll actually learn</h2>
+    <p class="section-p">Six structured modules across twelve weeks. Each one builds on the last — from logical thinking to deploying production-grade infrastructure.</p></div>
 
-    <div class="info-card">
-        <div class="icon-circle">
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
-        </div>
-        <h3>Cloud Architecture</h3>
-        <p>A deep dive into the Vasuki Cloud ecosystem. Learn about 256-bit encryption, storage buckets, and high-availability server management.</p>
-    </div>
+    <div class="curriculum-list">
 
-    <div class="info-card">
-        <div class="icon-circle">
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7L9 19l-5.5-5.5 1.41-1.41L9 16.17 19.59 5.59 21 7z"/></svg>
+      <div class="curr-item reveal">
+        <div class="curr-left"><div class="curr-num">1</div></div>
+        <div class="curr-body">
+          <div class="curr-phase">Phase 1 · Foundation</div>
+          <div class="curr-title">Algorithmic Thinking & Problem Decomposition</div>
+          <div class="curr-desc">Learn to break complex engineering challenges into smaller, testable units. We cover flowcharts, pseudocode, time complexity basics, and how senior engineers approach ambiguous problems.</div>
+          <div class="curr-tags"><span class="curr-tag">Logic</span><span class="curr-tag">Pseudocode</span><span class="curr-tag">Big-O Basics</span></div>
         </div>
-        <h3>Industry Readiness</h3>
-        <p>Practical workshops led by engineers from Vasuki iTech. Move beyond theory with real-world deployment scenarios and code reviews.</p>
+        <div class="curr-duration"><span class="curr-weeks">2</span>weeks</div>
+      </div>
+
+      <div class="curr-item reveal">
+        <div class="curr-left"><div class="curr-num">2</div></div>
+        <div class="curr-body">
+          <div class="curr-phase">Phase 1 · Foundation</div>
+          <div class="curr-title">Web Fundamentals & HTTP Internals</div>
+          <div class="curr-desc">How the web actually works — DNS resolution, TCP/IP, HTTP request/response cycles, status codes, and why your React app can't fetch data in production. Built from first principles, not tutorials.</div>
+          <div class="curr-tags"><span class="curr-tag">HTTP</span><span class="curr-tag">DNS</span><span class="curr-tag">REST</span><span class="curr-tag">Status Codes</span></div>
+        </div>
+        <div class="curr-duration"><span class="curr-weeks">2</span>weeks</div>
+      </div>
+
+      <div class="curr-item reveal">
+        <div class="curr-left"><div class="curr-num">3</div></div>
+        <div class="curr-body">
+          <div class="curr-phase">Phase 2 · Cloud</div>
+          <div class="curr-title">Cloud Architecture & the Vasuki Ecosystem</div>
+          <div class="curr-desc">A deep dive into distributed systems thinking — load balancers, object storage, CDNs, and message queues. Practical labs use Vasuki Guppt Storage and Argon OS to mirror real deployment environments.</div>
+          <div class="curr-tags"><span class="curr-tag">Object Storage</span><span class="curr-tag">CDN</span><span class="curr-tag">Load Balancing</span><span class="curr-tag">Guppt</span></div>
+        </div>
+        <div class="curr-duration"><span class="curr-weeks">2</span>weeks</div>
+      </div>
+
+      <div class="curr-item reveal">
+        <div class="curr-left"><div class="curr-num">4</div></div>
+        <div class="curr-body">
+          <div class="curr-phase">Phase 2 · Cloud</div>
+          <div class="curr-title">Security, Auth & Encryption</div>
+          <div class="curr-desc">256-bit AES encryption, JWT tokens, OAuth 2.0 flows, CORS, and the most common security mistakes startups make in production. Students audit a live Vasuki sandbox environment and fix real vulnerabilities.</div>
+          <div class="curr-tags"><span class="curr-tag">AES-256</span><span class="curr-tag">JWT</span><span class="curr-tag">OAuth</span><span class="curr-tag">CORS</span></div>
+        </div>
+        <div class="curr-duration"><span class="curr-weeks">2</span>weeks</div>
+      </div>
+
+      <div class="curr-item reveal">
+        <div class="curr-left"><div class="curr-num">5</div></div>
+        <div class="curr-body">
+          <div class="curr-phase">Phase 3 · Deployment</div>
+          <div class="curr-title">CI/CD, Testing & Deployment Pipelines</div>
+          <div class="curr-desc">From git commit to live production — how GitHub Actions, containerisation, environment variables, feature flags, and blue-green deployments work in a real startup engineering team.</div>
+          <div class="curr-tags"><span class="curr-tag">CI/CD</span><span class="curr-tag">Docker</span><span class="curr-tag">Feature Flags</span><span class="curr-tag">Testing</span></div>
+        </div>
+        <div class="curr-duration"><span class="curr-weeks">2</span>weeks</div>
+      </div>
+
+      <div class="curr-item reveal">
+        <div class="curr-left"><div class="curr-num">6</div></div>
+        <div class="curr-body">
+          <div class="curr-phase">Phase 3 · Capstone</div>
+          <div class="curr-title">Build & Ship a Real Product</div>
+          <div class="curr-desc">Teams of three ship a production-quality micro-product on Vasuki Cloud infrastructure. Code reviews from Vasuki engineers, a live demo day, and a feedback report you can share with future employers.</div>
+          <div class="curr-tags"><span class="curr-tag">Team Project</span><span class="curr-tag">Code Review</span><span class="curr-tag">Demo Day</span></div>
+        </div>
+        <div class="curr-duration"><span class="curr-weeks">2</span>weeks</div>
+      </div>
+
     </div>
+  </div>
 </section>
 
+<!-- APPROACH -->
+<section id="approach" class="section">
+  <div class="w">
+    <div class="reveal"><div class="eyebrow">Our Approach</div>
+    <h2 class="section-h">How we teach differently</h2></div>
+
+    <div class="approach-row reveal" style="transition-delay:0.08s">
+      <div class="approach-item">
+        <div class="ap-icon" style="background:#e8f0fe;color:#1a73e8">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        </div>
+        <div class="ap-title">No rote memorization</div>
+        <div class="ap-desc">Every concept is taught by breaking it — students are given a broken system and must debug it before understanding it.</div>
+      </div>
+      <div class="approach-item">
+        <div class="ap-icon" style="background:#e6f4ea;color:#1e8e3e">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+        </div>
+        <div class="ap-title">Small cohorts only</div>
+        <div class="ap-desc">Maximum 18 students per cohort. Every student gets a named engineer as a mentor, not just access to a Slack channel.</div>
+      </div>
+      <div class="approach-item">
+        <div class="ap-icon" style="background:#fce8e6;color:#d93025">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div class="ap-title">Real infrastructure</div>
+        <div class="ap-desc">Labs run on actual Vasuki Cloud infrastructure — not toy sandboxes. By the end you've shipped to a real server.</div>
+      </div>
+      <div class="approach-item">
+        <div class="ap-icon" style="background:#fef7e0;color:#e37400">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg>
+        </div>
+        <div class="ap-title">Industry-led sessions</div>
+        <div class="ap-desc">Guest sessions from CTOs and senior engineers at Indian startups. Not career advice — actual technical war stories.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACKS -->
+<section id="tracks" class="section">
+  <div class="w">
+    <div class="reveal"><div class="eyebrow">Learning Tracks</div>
+    <h2 class="section-h">Pick your path</h2>
+    <p class="section-p">Two tracks, same core curriculum. Choose based on how much time you can commit.</p></div>
+
+    <div style="margin-top:48px">
+
+      <div class="track-row reveal">
+        <div class="track-accent" style="background:#1a73e8"></div>
+        <div class="track-body">
+          <div class="track-info">
+            <div class="track-label" style="color:#1a73e8">Intensive</div>
+            <div class="track-title">Full-time Bootcamp</div>
+            <div class="track-desc">6 hours per day, 5 days a week for 12 weeks. Best for students who can go all-in. Includes daily code reviews and weekly 1-on-1 mentorship sessions.</div>
+          </div>
+          <div class="track-meta">
+            <span class="track-badge" style="background:#e8f0fe;color:#1967d2">Most Popular</span>
+            <span class="track-detail">12 weeks · 360 hrs</span>
+            <span class="track-detail">₹ 7,000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="track-row reveal">
+        <div class="track-accent" style="background:#1e8e3e"></div>
+        <div class="track-body">
+          <div class="track-info">
+            <div class="track-label" style="color:#1e8e3e">Flexible</div>
+            <div class="track-title">Part-time Evening Track</div>
+            <div class="track-desc">2 hours each evening, Monday to Thursday. Designed for working professionals and college students. Same curriculum, slightly extended timeline over 20 weeks.</div>
+          </div>
+          <div class="track-meta">
+            <span class="track-badge" style="background:#e6f4ea;color:#1e8e3e">New</span>
+            <span class="track-detail">20 weeks · 160 hrs</span>
+            <span class="track-detail">₹ 5699</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="track-row reveal">
+        <div class="track-accent" style="background:#e37400"></div>
+        <div class="track-body">
+          <div class="track-info">
+            <div class="track-label" style="color:#e37400">Self-paced</div>
+            <div class="track-title">On-Demand Access</div>
+            <div class="track-desc">All recorded sessions, lab environments, and written materials. No live cohort. Complete at your own speed with async feedback from the community forum.</div>
+          </div>
+          <div class="track-meta">
+            <span class="track-badge" style="background:#fef7e0;color:#e37400">Coming Soon</span>
+            <span class="track-detail">Flexible timeline</span>
+            <span class="track-detail">₹7,000</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INSTRUCTORS -->
+<section id="instructors" class="section">
+  <div class="w">
+    <div class="reveal"><div class="eyebrow">Instructors</div>
+    <h2 class="section-h">Taught by people who ship</h2>
+    <p class="section-p">No academics, no influencers. Every instructor is an active engineer at Vasuki iTech or a partner company.</p></div>
+
+    <div class="inst-list reveal" style="transition-delay:0.1s">
+
+      <div class="inst-row">
+        <div class="inst-avatar" style="background:linear-gradient(135deg,#1a73e8,#4285f4)">A</div>
+        <div class="inst-body">
+          <div class="inst-name">Adamya R. Khairwal</div>
+          <div class="inst-role">Founder · Vasuki iTech — leads Architecture & Security modules</div>
+          <div class="inst-topics">
+            <span class="inst-topic">Cloud Architecture</span>
+            <span class="inst-topic">AI & DS</span>
+            <span class="inst-topic">Web Development</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section">
+  <div class="w">
+    <div class="reveal"><div class="eyebrow">FAQ</div>
+    <h2 class="section-h">Common questions</h2></div>
+
+    <div class="faq-list reveal" style="transition-delay:0.1s">
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Do I need prior programming experience?
+          <span class="faq-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="faq-a">No prior experience is needed for the Foundation track. We start from logical thinking before writing a single line of code. If you already know the basics, you'll move quickly through Phase 1 and get more from Phases 2 and 3.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Is it really free?
+          <span class="faq-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="faq-a">Yes. Vasuki Learning is completely free for all three tracks. We believe the talent gap in Indian tech is a distribution problem, not a willingness problem. Our costs are covered by Vasuki iTech's infrastructure revenue.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">What do I get at the end?
+          <span class="faq-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="faq-a">A Vasuki Learning certificate, a live project hosted on Vasuki Cloud infrastructure, a code review report from our engineers, and direct access to our alumni network. We also share standout graduates with our network of partner companies.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">How large are the cohorts?
+          <span class="faq-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="faq-a">Maximum 18 students per cohort for the live tracks. We deliberately keep them small so every student gets real attention. Applications are competitive — we review each one personally.</div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Is this connected to Vasuki Cloud / Vasuki iTech?
+          <span class="faq-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+        </div>
+        <div class="faq-a">Yes. Vasuki Learning is a product of Vasuki iTech. Labs run on real Vasuki Cloud infrastructure. Instructors are active engineers at the company. This isn't a side project — it's how we grow the ecosystem of builders who use our tools.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="section" style="border-top:none">
+  <div class="reveal">
+    <div class="eyebrow">Applications open</div>
+    <h2 class="cta-h">Cohort 4 starts next month.</h2>
+    <p class="cta-p">18 seats. Free. For founders, engineers, and people who want to build things that last.</p>
+    <div class="email-row">
+      <input type="email" class="email-in" placeholder="your@email.com" id="email-in">
+      <button class="btn btn-white" onclick="subscribe(event)">Apply →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-    <p style="color: var(--g-text-sub); font-size: 14px;">
-        Questions about our workshops? <br><br>
-        <a href="mailto:codeclutch.adamyarao@gmail.com" class="contact-link">Contact Support</a> &nbsp; | &nbsp; 
-    </p>
+  <div class="footer-wrap">
+    <div>
+      <div class="footer-brand"><b>Vasuki</b> Learning</div>
+      <div class="footer-desc">A product of Vasuki iTech. Free workshops for the next generation of builders.</div>
+    </div>
+    <div>
+      <div class="footer-col-head">Programme</div>
+      <a href="#curriculum"  class="footer-link">Curriculum</a>
+      <a href="#tracks"      class="footer-link">Tracks</a>
+      <a href="#instructors" class="footer-link">Instructors</a>
+      <a href="#faq"         class="footer-link">FAQ</a>
+    </div>
+    <div>
+      <div class="footer-col-head">Vasuki</div>
+      <a href="../"          class="footer-link">Vasuki Cloud</a>
+      <a href="../ai/"       class="footer-link">Vaimanika AI</a>
+      <a href="../argon/"    class="footer-link">Argon OS</a>
+      <a href="../dbms/"     class="footer-link">Guppt Storage</a>
+    </div>
+    <div>
+      <div class="footer-col-head">Contact</div>
+      <a href="mailto:codeclutch.adamyarao@gmail.com" class="footer-link">Support</a>
+      <a href="https://www.linkedin.com/company/vasuki-itech" target="_blank" class="footer-link">LinkedIn</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Vasuki iTech · Vasuki Learning</span>
+    <span>Made in India 🇮🇳</span>
+  </div>
 </footer>
 
+<script>
+// ── SCROLL PROGRESS + HEADER SHADOW ──
+window.addEventListener('scroll', () => {
+  const p = window.scrollY / (document.body.scrollHeight - innerHeight) * 100;
+  document.getElementById('prog').style.width = p + '%';
+  document.getElementById('hdr').classList.toggle('shadow', window.scrollY > 10);
+}, { passive: true });
+
+// ── REVEAL ──
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+document.querySelectorAll('.reveal').forEach(el => {
+  io.observe(el);
+  if (el.getBoundingClientRect().top < innerHeight) el.classList.add('in');
+});
+
+// ── COUNTER ANIMATION ──
+function count(id, target, suffix, dur = 1200) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let v = 0;
+  const step = target / (dur / 14);
+  const t = setInterval(() => {
+    v = Math.min(v + step, target);
+    el.textContent = Math.round(v) + suffix;
+    if (v >= target) clearInterval(t);
+  }, 14);
+}
+const statsObs = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    count('s1', 340, '+');
+    count('s2', 80,  '+');
+    count('s3', 100, '%');
+    statsObs.disconnect();
+  }
+}, { threshold: 0.5 });
+const heroEl = document.getElementById('hero');
+if (heroEl) statsObs.observe(heroEl);
+
+// ── FAQ ACCORDION ──
+function toggleFaq(item) {
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ── SMOOTH ANCHOR SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+// ── SUBSCRIBE ──
+function subscribe(e) {
+  const inp = document.getElementById('email-in');
+  if (!inp.value.includes('@')) {
+    inp.style.borderColor = '#d93025';
+    inp.placeholder = 'Enter a valid email';
+    setTimeout(() => { inp.style.borderColor = ''; inp.placeholder = 'your@email.com'; }, 2000);
+    return;
+  }
+  inp.value = '';
+  inp.placeholder = 'Application received ✓';
+  inp.style.borderColor = 'rgba(30,142,62,0.5)';
+  e.target.textContent = 'Done ✓';
+  e.target.style.background = '#1e8e3e';
+  e.target.style.color = '#fff';
+}
+</script>
 </body>
 </html>
