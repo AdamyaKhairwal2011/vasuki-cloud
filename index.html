@@ -1,527 +1,739 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vasuki iTech | Cloud Computing Infrastructure And Management Tools For Startups And Individuals</title>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/jpg" href="logo-blk-bg.jpg">
-    <meta name="theme-color" content="#217559" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasuki Cloud | Simple, Scalable Tools For Startups</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+<style>
+:root {
+  --gold: #fffd8b;
+  --teal-dark: #3e494e;
+  --teal-mid: #536168;
+  --teal-light: #6b7c84;
+  --white: #ffffff;
+  --off-white: #f8f9fa;
+  --border: #dadce0;
+  --text: #202124;
+  --text-muted: #686868;
+  --sans: 'Google Sans', system-ui, sans-serif;
+}
 
+@font-face {
+  font-family: 'vasuki-sans';
+  src: url('./custom\ copy.ttf')
+}
+html.lenis, html.lenis body {
+  height: auto;
+}
 
+.head {
+  font-family: 'vasuki-sans', system-ui, sans-serif;
+}
 
-    <style>
-        :root {
-            --brand-gold: #fffd8b; 
-            --brand-gold-hover: #d6daa2;
-            --text-main: #202124;
-            --text-light: #686868;
-            --border: #dadce0;
-            --nav-bg: rgba(255, 255, 255, 0.98);
-            --body: #3e494e;
-        }
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
 
-        html {
-            -webkit-text-size-adjust: 80%; /* Prevents iOS Safari from auto-adjusting font size */
-            -moz-text-size-adjust: 80%;    /* For Firefox */
-            -ms-text-size-adjust: 80%;     /* For older IE */
-            text-size-adjust: 80%;
-        }
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
 
-        body {
-            font-family: 'Google Sans', 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: #3e494e;
-            color: var(--text-main);
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+body {
+  font-family: var(--sans);
+  background: var(--teal-dark);
+  color: var(--white);
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+}
 
-        /* --- Navigation --- */
-        nav {
-            height: 64px;
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            background: var(--nav-bg);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 2000;
-            border-bottom: 1px solid var(--border);
-            justify-content: space-between;
-        }
+#prog { position: fixed; top: 0; left: 0; height: 2px; background: var(--gold); z-index: 9999; width: 0; transition: width 0.08s linear; pointer-events: none; }
 
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 2100;
-        }
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 64px;
+  background: rgba(0, 0, 0, 0.322); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; padding: 0 40px;
+  z-index: 1000; transition: background 0.3s, border-color 0.3s;
+  z-index: 10003;
+}
+nav.light { background: rgba(0, 0, 0, 0.637); }
+.nav-brand { font-size: 20px; font-weight: 100; color: var(--white); text-decoration: none; letter-spacing: -0.3px; flex-shrink: 0; transition: color 0.3s; }
 
-        .heading-logo {
-            font-size: 22px;
-            font-weight: 400;
-            color: #5f6368;
-            letter-spacing: -0.5px;
-        }
+.nav-links { flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.nav-link { padding: 7px 16px; border-radius: 100px; font-size: 14px; font-weight: 100; color: rgba(255,255,255,0.7); text-decoration: none; background: none; border: none; cursor: pointer; font-family: var(--sans); transition: all 0.15s; white-space: nowrap; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+.nav-end { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.dropdown { position: relative; }
+.dropdown-menu { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%) translateY(-8px); background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 8px 0; min-width: 260px; opacity: 0; visibility: hidden; transition: all 0.18s ease; z-index: 2000; }
+.dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+.dd-item { display: flex; flex-direction: column; padding: 10px 20px; text-decoration: none; color: var(--text); transition: background 0.1s; }
+.dd-item:hover { background: var(--off-white); }
+.dd-item span { font-size: 14px; font-weight: 100; }
+.dd-item small { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 22px; border-radius: 4px; font-family: var(--sans); font-size: 14px; font-weight: 100; cursor: pointer; border: none; text-decoration: none; transition: all 0.15s; }
+.btn-gold { background: var(--gold); color: var(--teal-dark); }
+.btn-gold:hover { background: #e8e66e; }
+.btn-ghost { background: transparent; color: rgba(255,255,255,0.75); border: 1px solid rgba(255,255,255,0.2); }
+.btn-ghost:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+.btn-lg { padding: 13px 28px; font-size: 16px; }
+.btn-sm { padding: 7px 16px; font-size: 13px; }
+.ham { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.ham span { display: block; width: 20px; height: 2px; background: rgba(255,255,255,0.8); margin: 4px 0; transition: 0.2s; }
+nav.light .ham span
+.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 10007; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+.nav-drawer { position: fixed; top: 0; right: -100%; bottom: 0; width: 280px; background: var(--white); z-index: 10004; padding: 80px 32px 32px; transition: right 0.3s cubic-bezier(0.4,0,0.2,1); border-left: 1px solid var(--border); }
+.nav-drawer.open { right: 0; }
+.nav-drawer a { display: block; padding: 13px 0; font-size: 15px; font-weight: 100; color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); transition: color 0.15s; }
+.nav-drawer a:hover { color: var(--teal-dark); }
 
-        .nav-links {
-            display: flex;
-            align-items: center;
-        }
+/* ═══════════════════════════════════════
+   HERO — Three.js canvas is a child
+   of this container, clipped by overflow:hidden
+═══════════════════════════════════════ */
+#hero {
+  position: relative;
+  width: 100%;
+  height: 70dvh;
+  min-height: 600px;
+  /* CRITICAL: clips the Three.js canvas */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(160deg, #606f75 0%, #5e6a70 55%, #333d42 100%);
+}
 
-        .nav-links > a, .dropdown-trigger {
-            text-decoration: none;
-            color: var(--text-light);
-            font-size: 14px;
-            font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: background 0.2s, color 0.2s;
-            margin-left: 8px;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-        }
+/* Three.js canvas — absolutely positioned INSIDE #hero */
+#threejs-canvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: block;
+  /* No pointer events so hero text/buttons remain clickable */
+  pointer-events: none;
+  z-index: 1;
+}
 
-        .nav-links a:hover, .dropdown-trigger:hover {
-            background: #f1f3f4;
-            color: var(--text-main);
-        }
+.hero-inner { position: absolute; z-index: 10001; max-width: 740px; padding: 0 24px; }
 
-        /* --- Dropdown --- */
-        .dropdown { position: relative; }
+.overlay {
+    height: 70dvh;
+    width: 100dvw;
+    background-color: #00000077;
+    z-index: 1000;
+}
+.hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,253,139,0.12); border: 1px solid rgba(255,253,139,0.28); color: var(--gold); padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 100; margin-bottom: 32px; animation: fu 0.5s ease both; }
+.tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 2.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.hero-h1 { z-index: 1001; font-size: clamp(38px, 6dvw, 66px); font-weight: 100; line-height: 1.08; letter-spacing: -1.5px; color: #fff9ae; margin-bottom: 20px; animation: fu 0.5s 0.08s ease both; }
+.hero-sub { font-size: 18px; color: rgb(255, 255, 255); line-height: 1.65; margin-bottom: 40px; animation: fu 0.5s 0.16s ease both;}
+.hero-cta { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; animation: fu 0.5s 0.24s ease both; }
+.hero-scroll { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(255,255,255,0.3); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; z-index: 2; animation: fu 0.5s 0.5s ease both; }
+.scroll-line { width: 1px; height: 30px; background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent); animation: spulse 2s ease-in-out infinite; }
+@keyframes spulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+@keyframes fu { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
 
-        .dropdown-menu {
-            position: absolute;
-            top: 110%;
-            right: 0;
-            background: white;
-            min-width: 280px;
-            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 2px 6px 2px rgba(60,64,67,0.15);
-            border-radius: 8px;
-            padding: 8px 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s ease;
-            z-index: 1100;
-        }
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.in { opacity: 1; transform: none; }
 
-        .dropdown:hover .dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
+/* ZONES */
+.white    { background: var(--white);     color: var(--text); }
+.offwhite { background: var(--off-white); color: var(--text); }
 
-        .dropdown-item {
-            display: flex;
-            padding: 12px 20px;
-            text-decoration: none;
-            color: var(--text-main);
-            transition: background 0.2s;
-            flex-direction: column;
-        }
+/* INTRO */
+.intro { padding: 100px 40px; max-width: 680px; margin: 0 auto; text-align: center; }
+.intro h2 { font-size: clamp(26px, 3.8dvw, 40px); font-weight: 100; letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 20px; }
+.intro p { font-size: 17px; color: var(--text-muted); line-height: 1.7; }
+.rule { width: 40px; height: 3px; background: var(--teal-mid); border-radius: 2px; margin: 24px auto; }
 
-        .dropdown-item:hover { background: #f8f9fa; }
-        .dropdown-item span { font-weight: 500; font-size: 15px; }
-        .dropdown-item small { color: var(--text-light); font-size: 12px; }
+/* FEATURE STACK */
+.feature-stack { max-width: 820px; margin: 0 auto; padding: 0 40px 100px; }
+.feat-item { display: flex; gap: 48px; align-items: flex-start; padding: 52px 0; border-top: 1px solid var(--border); }
+.feat-item:last-child { border-bottom: 1px solid var(--border); }
+.feat-num { font-size: 11px; font-weight: 100; letter-spacing: 2px; text-transform: uppercase; color: var(--teal-light); padding-top: 5px; flex-shrink: 0; width: 36px; }
+.feat-title { font-size: 23px; font-weight: 100; letter-spacing: -0.2px; margin-bottom: 10px; }
+.feat-desc { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 540px; }
 
-        /* --- Hero --- */
-        .hero-wrap {
-            position: relative;
-            width: 100%;
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #536168;
-            padding-top: 64px;
-        }
+/* QUOTE BAND */
+.quote-band { background: var(--teal-dark); color: var(--white); padding: 100px 40px; text-align: center; }
+.qb-eyebrow { font-size: 11px; font-weight: 100; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+.qb-h { font-size: clamp(26px, 4dvw, 46px); font-weight: 100; letter-spacing: -1px; line-height: 1.18; color: #fff9ae; max-width: 680px; margin: 0 auto 20px; }
+.qb-p { font-size: 17px; color: rgba(255,255,255,0.55); max-width: 540px; margin: 0 auto; line-height: 1.7; }
 
-        #hero-canvas {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0.6;
-        }
+/* PRODUCTS */
+.product-section { padding: 100px 40px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.product-inner { max-width: 820px; margin: 0 auto; }
+.section-eyebrow { font-size: 11px; font-weight: 100; letter-spacing: 2px; text-transform: uppercase; color: var(--teal-mid); margin-bottom: 16px; }
+.section-title { font-size: clamp(24px, 3.5dvw, 38px); font-weight: 100; letter-spacing: -0.7px; margin-bottom: 56px; }
+.prod-row { display: flex; align-items: center; gap: 32px; padding: 32px 0; border-top: 1px solid var(--border); text-decoration: none; color: inherit; transition: padding-left 0.2s; }
+.prod-row:last-child { border-bottom: 1px solid var(--border); }
+.prod-row:hover { padding-left: 8px; }
+.prod-row:hover .prod-arrow { opacity: 1; transform: translate(4px,-4px); }
+.prod-body { flex: 1; }
+.prod-name { font-size: 17px; font-weight: 500; color: var(--text); margin-bottom: 5px; }
+.prod-desc { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
+.prod-cat { font-size: 11px; font-weight: 100; letter-spacing: 0.8px; text-transform: uppercase; color: var(--teal-light); flex-shrink: 0; }
+.prod-arrow { font-size: 15px; color: var(--text-muted); opacity: 0; flex-shrink: 0; transition: all 0.18s; }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            max-width: 800px;
-            padding: 0 24px;
-        }
+/* STEPS */
+.steps-section { padding: 100px 40px; }
+.steps-inner { max-width: 680px; margin: 0 auto; }
+.step-item { display: flex; gap: 32px; padding: 40px 0; border-top: 1px solid var(--border); }
+.step-item:last-child { border-bottom: 1px solid var(--border); }
+.step-circle { width: 36px; height: 36px; border-radius: 50%; background: var(--teal-dark); color: var(--white); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 100; flex-shrink: 0; }
+.step-title { font-size: 19px; font-weight: 100; margin-bottom: 8px; }
+.step-desc { font-size: 15px; color: var(--text-muted); line-height: 1.65; }
 
-        h1 {
-            font-size: clamp(40px, 8vw, 64px);
-            font-weight: 400;
-            color: #fff9ae;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -1px;
-        }
+/* PARTNER */
+.partner-section { padding: 100px 40px; border-top: 1px solid var(--border); }
+.partner-inner { max-width: 680px; margin: 0 auto; }
+.partner-h { font-size: clamp(24px, 3.5dvw, 36px); font-weight: 100; letter-spacing: -0.6px; margin-bottom: 18px; }
+.partner-p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 28px; }
+.partner-link { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 100; color: var(--teal-dark); text-decoration: none; border-bottom: 1.5px solid var(--teal-dark); padding-bottom: 2px; transition: opacity 0.15s; }
+.partner-link:hover { opacity: 0.65; }
+.partner-link:hover svg { transform: translateX(3px); }
+.partner-link svg { transition: transform 0.15s; }
 
-        .btn-pill {
-            display: inline-block;
-            background-color: var(--brand-gold);
-            color: #3e494e;
-            padding: 12px 24px;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: box-shadow 0.2s;
-            box-shadow: 0 1px 3px rgba(60,64,67,0.3);
-        }
+/* CTA BAND */
+.cta-band { background: var(--teal-dark); color: var(--white); padding: 120px 40px; text-align: center; }
+.cta-eyebrow { font-size: 11px; font-weight: 100; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+.cta-h { font-size: clamp(28px, 4.5dvw, 52px); font-weight: 100; letter-spacing: -1.2px; color: #fff9ae; margin-bottom: 16px; }
+.cta-p { font-size: 17px; color: rgba(255,255,255,0.5); max-width: 460px; margin: 0 auto 40px; line-height: 1.65; }
+.cta-acts { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
-        .btn-pill:hover {
-            background-color: var(--brand-gold-hover);
-            box-shadow: 0 1px 3px 1px rgba(60,64,67,0.15);
-        }
+/* FOOTER */
+footer { background: var(--white); border-top: 1px solid var(--border); padding: 72px 40px 40px; }
+.footer-wrap { max-width: 820px; margin: 0 auto; }
+.footer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.footer-brand-name { font-size: 20px; font-weight: 100; color: var(--teal-dark); margin-bottom: 8px; }
+.footer-brand-desc { font-size: 13px; color: var(--text-muted); max-width: 210px; line-height: 1.6; }
+.footer-cols { display: flex; gap: 56px; flex-wrap: wrap; }
+.footer-col-head { font-size: 11px; font-weight: 100; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-mid); margin-bottom: 18px; }
+.footer-col a { display: block; font-size: 14px; color: var(--text-muted); text-decoration: none; margin-bottom: 11px; transition: color 0.15s; }
+.footer-col a:hover { color: var(--teal-dark); }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; flex-wrap: wrap; gap: 12px; }
+.footer-copy { font-size: 13px; color: var(--text-muted); }
 
-        /* --- Layout Sections --- */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            padding: 80px 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .card {
-            border: 1px solid var(--border);
-            padding: 40px;
-            border-radius: 8px;
-            transition: box-shadow 0.2s;
-        }
-
-        .card:hover { box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .card h3 { font-weight: 400; font-size: 24px; margin-bottom: 16px; }
-
-        /* --- Mobile Styles --- */
-        .hamburger { 
-            display: none; 
-            cursor: pointer; 
-            border: none; 
-            background: none; 
-            padding: 10px; 
-            z-index: 2100;
-        }
-
-        section {
-            background-color: #fff;
-        }
-        .hamburger div { width: 22px; height: 2px; background: #5f6368; margin: 4px 0; transition: 0.3s; }
-
-        @media (max-width: 768px) {
-            .hamburger { display: block; }
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                height: 100vh;
-                width: 280px;
-                background: white;
-                flex-direction: column;
-                padding: 80px 24px;
-                transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                box-shadow: -5px 0 15px rgba(0,0,0,0.05);
-                align-items: flex-start;
-            }
-            .nav-links.active { right: 0; }
-            .nav-links > a, .dropdown-trigger { margin: 10px 0; width: 100%; text-align: left; font-size: 16px; }
-            .dropdown-menu { 
-                position: static; 
-                opacity: 1; 
-                visibility: visible; 
-                transform: none; 
-                display: none; 
-                box-shadow: none; 
-                border-left: 2px solid #eee; 
-                border-radius: 0;
-                margin-left: 12px;
-                min-width: auto;
-            }
-            .dropdown.active .dropdown-menu { display: block; }
-        }
-
-
-    </style>
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .ham { display: block; right: 0;}
+  .feat-item { flex-direction: column; gap: 14px; }
+  .feat-num { width: auto; }
+  .prod-cat { display: none; }
+  .footer-top { flex-direction: column; gap: 28px; }
+  .footer-cols { gap: 32px; }
+  .nav-end {
+    position: absolute;
+    right: 20px;
+  }
+  #dead {
+    display: none;
+  }
+}
+</style>
 </head>
 <body>
 
-<nav>
-    <div class="nav-brand">
-        <span class="heading-logo"><b>Vasuki</b> Cloud</span>
-    </div>
-    
-    <div class="nav-links" id="nav-links">
-        <div class="dropdown" id="products-dropdown">
-            <button class="dropdown-trigger">Products ▾</button>
-            <div class="dropdown-menu">
-                <a href="./forms/" class="dropdown-item">
-                    <span>Forms</span>
-                    <small>Digital Campaigns Manager</small>
-                </a>
-                <a href="./argon/" class="dropdown-item">
-                    <span>Argon</span>
-                    <small>Startup OS</small>
-                </a>
-                <a href="./vypaar/" class="dropdown-item">
-                    <span>Vypaar</span>
-                    <small>Business Registerer</small>
-                </a>
-                <a href="./workshop/" class="dropdown-item">
-                    <span>Vasuki Learning</span>
-                    <small>Learn Tech & Management</small>
-                </a>
-                <a href="./ai/" class="dropdown-item">
-                    <span>Vasuki Vaimanika</span>
-                    <small>Vasuki AI Labs</small>
-                </a>
-                <a href="./dbms/" class="dropdown-item">
-                    <span>Vasuki Guppt Storage</span>
-                    <small>Database Manager Made For India</small>
-                </a>
-            </div>
-        </div>
-        <a href="./login.html">Login</a>
-        <a href="mailto:codeclutch.adamyarao@gmail.com">Support</a>
-    </div>
+<div id="prog"></div>
 
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-        <div></div><div></div><div></div>
-    </button>
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-brand"><b>Vasuki</b> Cloud</a>
+  <div class="nav-links">
+    <div class="dropdown">
+      <button class="nav-link">Products ▾</button>
+      <div class="dropdown-menu">
+        <a href="./forms/"    class="dd-item"><span>Forms</span>          <small>Digital Campaigns Manager</small></a>
+        <a href="./argon/"    class="dd-item"><span>Argon</span>          <small>Startup OS</small></a>
+        <a href="./vypaar/"   class="dd-item"><span>Vypaar</span>         <small>Business Registerer</small></a>
+        <a href="./workshop/" class="dd-item"><span>Vasuki Learning</span><small>Learn Tech &amp; Management</small></a>
+        <a href="./ai/"       class="dd-item"><span>Vaimanika AI</span>   <small>Vasuki AI Labs</small></a>
+        <a href="./dbms/"     class="dd-item"><span>Guppt Storage</span>  <small>Database Made For India</small></a>
+      </div>
+    </div>
+    <a href="./login.html"                             class="nav-link">Login</a>
+    <a href="mailto:codeclutch.adamyarao@gmail.com"    class="nav-link">Support</a>
+  </div>
+  <div class="nav-end">
+    <a href="./signup.html" class="btn btn-gold btn-sm">Get started</a>
+    <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
 </nav>
 
-<div class="hero-wrap">
-    <canvas id="hero-canvas"></canvas>
-    <div class="hero-content">
-        <h1>Simple, Scalable Tools For Startups And Individuals</h1>
-        <p style="font-weight: 100;margin-bottom: 40px; color: #eef0f3; font-size: 18px;">Prioritizing startups and individual creators with free management and storage tools.</p>
-        <a href="./signup.html" class="btn-pill">Get started at no cost &nbsp;⇲</a>
-    </div>
+<div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="nav-drawer" id="drawer">
+  <div onclick="document.querySelector('.nav-drawer').classList.toggle('open')" style="color: #202124; cursor: pointer;">x</div>
+  <a href="https://lab.vasuki.cloud">Labs</a>
+  <a href="./forms/">Forms</a>
+  <a href="./argon/">Argon</a>
+  <a href="./vypaar/">Vypaar</a>
+  <a href="./workshop/">Vasuki Learning</a>
+  <a href="./ai/">Vaimanika AI</a>
+  <a href="./dbms/">Guppt Storage</a>
+  <a href="./login.html">Login</a>
+  <a href="mailto:codeclutch.adamyarao@gmail.com">Support</a>
 </div>
 
+<!-- ═══════════════════════════════════
+     HERO — Three.js renders inside here
+═══════════════════════════════════ -->
+<section id="hero">
+    <div class="overlay"></div>
+  <!-- canvas injected by JS into this element, not document.body -->
+  <canvas id="threejs-canvas"></canvas>
 
-
-<section style="border-radius: 50px 50px 0px 0px;padding: 80px 24px; background: #fff; border-top: 1px solid var(--border);">
-    <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-        <h2 style="font-size: 32px; font-weight: 400; margin-bottom: 24px; color: var(--text-main);">Enterprise power, creator simplicity.</h2>
-        <p style="font-size: 18px; color: var(--text-light); line-height: 1.6;">
-            At <b>Vasuki iTech</b>, we believe digital infrastructure should be invisible. 
-            We've built an ecosystem that removes the friction of DevOps, allowing CEO-led teams 
-            to deploy and scale without the overhead of traditional providers.
-        </p>
+  <div class="hero-inner">
+    <h1 class="hero-h1 head">Simple, Scalable Tools<br>For Every Builder</h1>
+    <p class="hero-sub">Digital infrastructure that stays invisible — so your team can focus on shipping, not DevOps.</p>
+    <div class="hero-cta">
+      <a href="./signup.html" class="btn btn-gold btn-lg">Get started at no cost &nbsp;→</a>
+      <a href="#products"  id="dead"   class="btn btn-ghost btn-lg">See products</a>
     </div>
-    <section class="features">
-    <div class="card">
-        <h3>Unlimited Life</h3>
-        <p>From simple image assets to complex multi-terabyte application backends. Bringing life into your files.</p>
-    </div>
-    <div class="card">
-        <h3>Permission Based</h3>
-        <p>Deploy client demos instantly. Share a URL and select granular permissions for every viewer.</p>
-    </div>
-    <div class="card">
-        <h3>Cloud Editing</h3>
-        <p>Develop and manage your full-stack applications directly in the cloud environment.</p>
-    </div>
-</section>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div>scroll</div>
 </section>
 
-<section style="padding: 100px 24px; background: #f8f9fa;">
-    <div style="max-width: 1200px; margin: 0 auto;">
-        <h2 style="text-align: center; font-size: 32px; font-weight: 400; margin-bottom: 60px;">Onboarding made simple</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;">
-            <div style="text-align: center;">
-                <div style="width: 48px; height: 48px; background: var(--body); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-weight: bold;">1</div>
-                <h4 style="margin-bottom: 12px; font-size: 20px;">Claim Namespace</h4>
-                <p style="color: var(--text-light);">Reserve your unique Vasuki cloud handle instantly during signup.</p>
-            </div>
-            <div style="text-align: center;">
-                <div style="width: 48px; height: 48px; background: var(--body); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-weight: bold;">2</div>
-                <h4 style="margin-bottom: 12px; font-size: 20px;">Connect Tools</h4>
-                <p style="color: var(--text-light);">Integrate Guppt or Argon into your workflow via our unified API.</p>
-            </div>
-            <div style="text-align: center;">
-                <div style="width: 48px; height: 48px; background: var(--body); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-weight: bold;">3</div>
-                <h4 style="margin-bottom: 12px; font-size: 20px;">Scale Globally</h4>
-                <p style="color: var(--text-light);">Push your assets. We handle the distribution and security automatically.</p>
-            </div>
-        </div>
+<!-- WHITE ZONE -->
+<div class="white">
+  <div class="intro reveal">
+    <h2>Enterprise power, creator simplicity.</h2>
+    <div class="rule"></div>
+    <p>At <b>Vasuki iTech</b>, we believe digital infrastructure should be invisible. We've built an ecosystem that removes the friction of DevOps, allowing CEO-led teams to deploy and scale without the overhead of traditional providers.</p>
+  </div>
+  <div class="feature-stack">
+    <div class="feat-item reveal">
+      <div class="feat-num">01</div>
+      <div>
+        <div class="feat-title">Unlimited Lifetime Storage</div>
+        <div class="feat-desc">From simple image assets to complex multi-terabyte application backends — your files live forever. No expiry, no surprise deletion, no storage anxiety.</div>
+      </div>
     </div>
-</section>
+    <div class="feat-item reveal">
+      <div class="feat-num">02</div>
+      <div>
+        <div class="feat-title">Permission-Based Sharing</div>
+        <div class="feat-desc">Deploy client demos instantly. Share a URL and set granular permissions for every viewer — read, write, or execute. Your data, your rules, your timeline.</div>
+      </div>
+    </div>
+    <div class="feat-item reveal">
+      <div class="feat-num">03</div>
+      <div>
+        <div class="feat-title">Cloud Editing &amp; Development</div>
+        <div class="feat-desc">Develop and manage your full-stack applications directly in the cloud. No local setup, no environment mismatch — write, test, and deploy from any device.</div>
+      </div>
+    </div>
+    <div class="feat-item reveal">
+      <div class="feat-num">04</div>
+      <div>
+        <div class="feat-title">Unified API Across Products</div>
+        <div class="feat-desc">Every Vasuki product shares the same authentication layer and SDK. One integration connects you to Forms, Argon, Guppt Storage, and the rest of the ecosystem.</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<section style="padding: 60px 24px; background: #fff;">
-    <div style="max-width: 1200px; margin: 0 auto;">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 60px; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 300px;">
-                <h3 style="font-size: 28px; font-weight: 400; margin-bottom: 16px;">Empowering the next generation</h3>
-                <p style="color: var(--text-light); font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-                    Through our partnership with <b>Skill Orbit</b>, we are bridging the gap between cloud infrastructure and professional expertise, ensuring creators have the tools and the talent to succeed.
-                </p>
-                <a href="https://skill-orbit.co.in" target="_blank" style="color: var(--body); text-decoration: none; font-weight: 500; font-size: 15px;">
-                    Visit Skill Orbit &rarr;
-                </a>
-            </div>
-            <div style="flex: 1; min-width: 300px; text-align: center;">
-                <a href="https://skill-orbit.co.in" target="_blank">
-                    <img src="./partner.jpeg" 
-                         alt="Skill Orbit Logo" 
-                         style="max-width: 240px; height: auto; transition: transform 0.3s ease;"
-                         onmouseover="this.style.transform='scale(1.05)'"
-                         onmouseout="this.style.transform='scale(1)'">
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
+<!-- QUOTE BAND -->
+<div class="quote-band">
+  <div class="qb-eyebrow reveal">Our belief</div>
+  <div class="qb-h reveal">Infrastructure should accelerate you, not constrain you.</div>
+  <div class="qb-p reveal">We built Vasuki so that a solo founder has the same toolkit as an enterprise engineering team — without the enterprise price tag or the enterprise wait times.</div>
+</div>
 
+<!-- PRODUCTS -->
+<div class="offwhite product-section" id="products">
+  <div class="product-inner">
+    <div class="section-eyebrow reveal">Products</div>
+    <div class="section-title reveal">Everything you need to ship</div>
+    <a href="./forms/"    class="prod-row reveal"><div class="prod-body"><div class="prod-name">Forms</div><div class="prod-desc">Build forms, run surveys, collect leads — all from one digital campaigns interface.</div></div><div class="prod-cat">Campaigns</div><div class="prod-arrow">↗</div></a>
+    <a href="./argon/"    class="prod-row reveal"><div class="prod-body"><div class="prod-name">Argon</div><div class="prod-desc">The full operating layer for early-stage companies — tasks, docs, and team coordination.</div></div><div class="prod-cat">Operations</div><div class="prod-arrow">↗</div></a>
+    <a href="./vypaar/"   class="prod-row reveal"><div class="prod-body"><div class="prod-name">Vypaar</div><div class="prod-desc">Business digital solutions. get your own digital business card and share it with just a scan of a QR code.</div></div><div class="prod-cat">Legal</div><div class="prod-arrow">↗</div></a>
+    <a href="./workshop/" class="prod-row reveal"><div class="prod-body"><div class="prod-name">Vasuki Learning</div><div class="prod-desc">Structured courses in tech and management — built for builders, not academics.</div></div><div class="prod-cat">Education</div><div class="prod-arrow">↗</div></a>
+    <a href="./ai/"       class="prod-row reveal"><div class="prod-body"><div class="prod-name">Vaimanika AI</div><div class="prod-desc">Vasuki AI Labs — experimental AI infrastructure and models for the next generation of builders.</div></div><div class="prod-cat">AI</div><div class="prod-arrow">↗</div></a>
+    <a href="./dbms/"     class="prod-row reveal"><div class="prod-body"><div class="prod-name">Guppt Storage</div><div class="prod-desc">Database manager built for India — fast, private, regionally optimized. No foreign servers.</div></div><div class="prod-cat">Storage</div><div class="prod-arrow">↗</div></a>
+  </div>
+</div>
 
-<footer style="padding: 80px 24px 40px; border-top: 1px solid var(--border); background: #fff;">
-    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 60px;">
-        <div>
-            <p style="font-weight: 700; color: #5f6368; margin-bottom: 24px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Product</p>
-            <ul style="list-style: none; font-size: 14px; line-height: 2.8;">
-                <li><a href="./ai/" style="text-decoration: none; color: var(--text-light);">Vasuki Vaimanika AI</a></li>
-                <li><a href="./argon/" style="text-decoration: none; color: var(--text-light);">Argon OS</a></li>
-                <li><a href="./vypaar/" style="text-decoration: none; color: var(--text-light);">Vypaar Business</a></li>
-            </ul>
+<!-- STEPS -->
+<div class="white steps-section">
+  <div class="steps-inner">
+    <div class="section-eyebrow reveal">Getting started</div>
+    <div class="section-title reveal">Onboarding in three steps</div>
+    <div class="step-item reveal"><div class="step-circle">1</div><div><div class="step-title">Claim your namespace</div><div class="step-desc">Reserve your unique Vasuki cloud handle during signup. It takes under 30 seconds and costs nothing.</div></div></div>
+    <div class="step-item reveal"><div class="step-circle">2</div><div><div class="step-title">Connect your tools</div><div class="step-desc">Integrate Guppt or Argon into your workflow via the unified API. One key covers every product in the ecosystem.</div></div></div>
+    <div class="step-item reveal"><div class="step-circle">3</div><div><div class="step-title">Scale without friction</div><div class="step-desc">Push your assets. We handle distribution, redundancy, and security automatically — no DevOps required on your end.</div></div></div>
+  </div>
+</div>
+
+<!-- PARTNER -->
+<div class="offwhite partner-section">
+  <div class="partner-inner">
+    <div class="section-eyebrow reveal">Partnership</div>
+    <div class="partner-h reveal">Empowering the next generation</div>
+    <p class="partner-p reveal">Through our partnership with <b>Skill Orbit</b>, we're bridging the gap between cloud infrastructure and professional expertise — ensuring creators have both the tools and the talent to succeed.</p>
+    <a href="https://skill-orbit.co.in" target="_blank" class="partner-link reveal">
+      Visit Skill Orbit
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- CTA BAND -->
+<div class="cta-band">
+  <div class="cta-eyebrow reveal">Get started today</div>
+  <div class="cta-h reveal">Your first project is free.</div>
+  <p class="cta-p reveal">No credit card. No time limits. Just a namespace, a set of tools, and room to grow.</p>
+  <div class="cta-acts reveal">
+    <a href="./signup.html"                          class="btn btn-gold btn-lg">Create free account →</a>
+    <a href="mailto:codeclutch.adamyarao@gmail.com"  class="btn btn-ghost btn-lg">Talk to us</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-wrap">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">Vasuki</div>
+        <div class="footer-brand-desc">Simple cloud infrastructure for startups and individual builders.</div>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <div class="footer-col-head">Product</div>
+          <a href="./ai/">Vaimanika AI</a>
+          <a href="./argon/">Argon OS</a>
+          <a href="./vypaar/">Vypaar Business</a>
+          <a href="./dbms/">Guppt Storage</a>
         </div>
-        <div>
-            <p style="font-weight: 700; color: #5f6368; margin-bottom: 24px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Resources</p>
-            <ul style="list-style: none; font-size: 14px; line-height: 2.8;">
-                <li><a href="./documentation.html" style="text-decoration: none; color: var(--text-light);">Documentation</a></li>
-                <li><a href="./workshop/" style="text-decoration: none; color: var(--text-light);">Vasuki Learning</a></li>
-                <li><a href="mailto:codeclutch.adamyarao@gmail.com" style="text-decoration: none; color: var(--text-light);">Support</a></li>
-            </ul>
+        <div class="footer-col">
+          <div class="footer-col-head">Resources</div>
+          <a href="./documentation.html">Documentation</a>
+          <a href="./workshop/">Vasuki Learning</a>
+          <a href="mailto:codeclutch.adamyarao@gmail.com">Support</a>
         </div>
-        <div>
-            <p style="font-weight: 700; color: #5f6368; margin-bottom: 24px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Social</p>
-            <ul style="list-style: none; font-size: 14px; line-height: 2.8;">
-                <li><a href="https://www.linkedin.com/company/vasuki-itech?originalSubdomain=in" style="text-decoration: none; color: var(--text-light);">Linkedin</a></li>
-                <li><a href="https://vasuki-cloud.codeclutch-adamyarao.workers.dev/org.html?org=adbdb81c-1aad-404b-9fff-b01f1e44e516" style="text-decoration: none; color: var(--text-light);">Vasuki Vypaar Page</a></li>
-            </ul>
+        <div class="footer-col">
+          <div class="footer-col-head">Connect</div>
+          <a href="https://www.linkedin.com/company/vasuki-itech" target="_blank">LinkedIn</a>
+          <a href="https://vasuki-cloud.codeclutch-adamyarao.workers.dev/org.html?org=adbdb81c-1aad-404b-9fff-b01f1e44e516" target="_blank">Vasuki Vypaar</a>
+          <a href="mailto:codeclutch.adamyarao@gmail.com">Mail us</a>
         </div>
+      </div>
     </div>
-    
-    <div style="max-width: 1200px; margin: 0 auto; padding-top: 30px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 18px; font-weight: 700; color: #5f6368;">Vasuki</span>
-            <span style="color: var(--text-light); font-size: 14px;">© 2026 Vasuki iTech</span>
-        </div>
-        <div style="display: flex; gap: 24px;">
-            <a href="mailto:codeclutch.adamyarao@gmail.com" style="color: var(--text-light); text-decoration: none; font-size: 13px;">Mail Us</a>
-        </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Vasuki iTech</span>
+      <span class="footer-copy">Independent cloud infrastructure</span>
     </div>
+  </div>
 </footer>
 
+<!-- ═══════════════════════════════════
+     THREE.JS — renders into #threejs-canvas
+     which lives inside #hero
+     NO scroll effects, NO body.appendChild
+═══════════════════════════════════ -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass }     from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+// ── Target the pre-existing canvas inside #hero ──
+const canvas = document.getElementById('threejs-canvas');
+const hero   = document.getElementById('hero');
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+// DO NOT append to document.body — already in DOM
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 5000);
+camera.position.set(0, 0, 25);
+
+// Size renderer to hero, not window
+function sizeToHero() {
+  const w = hero.clientWidth;
+  const h = hero.clientHeight;
+  renderer.setSize(w, h, false); // false = don't set canvas style (CSS handles it)
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  composer.setSize(w, h);
+}
+
+// Post-processing
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(
+  new THREE.Vector2(hero.clientWidth, hero.clientHeight),
+  2.0, 0.7, 0.1
+);
+composer.addPass(bloom);
+
+// Mouse — relative to hero, normalised -1..1
+const mouse = new THREE.Vector2(-100, -100);
+hero.addEventListener('mousemove', e => {
+  const r = hero.getBoundingClientRect();
+  mouse.x =  ((e.clientX - r.left)  / r.width)  * 2 - 1;
+  mouse.y = -((e.clientY - r.top)   / r.height) * 2 + 1;
+});
+hero.addEventListener('mouseleave', () => { mouse.set(-100, -100); });
+
+// ── Scene objects ──
+const sunGeo = new THREE.SphereGeometry(4.5, 64, 64);
+const sunMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
+const sun = new THREE.Mesh(sunGeo, sunMat);
+sun.position.set(0, 0, -12);
+scene.add(sun);
+
+const rimLight = new THREE.PointLight(0xffffff, 1000, 50);
+rimLight.position.set(0, 0, -10);
+scene.add(rimLight);
+
+// Asteroid material
+const rockMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.8, metalness: 0.2 });
+
+function createBoulder() {
+  const geo = new THREE.IcosahedronGeometry(1.8, 5);
+  const pos = geo.attributes.position;
+  const v   = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i++) {
+    v.fromBufferAttribute(pos, i);
+    const n = Math.sin(v.x * 5.5) * Math.cos(v.y * 3.5);
+    v.multiplyScalar(1.25 + n * 0.15);
+    pos.setXYZ(i, v.x, v.y, v.z);
+  }
+  geo.computeVertexNormals();
+  return new THREE.Mesh(geo, rockMat);
+}
+
+const boulder = createBoulder();
+boulder.position.set(0, 0, 4);
+scene.add(boulder);
+
+// Shards
+const shardGroup = new THREE.Group();
+const shards = [];
+
+function initShards() {
+  shards.length = 0;
+  shardGroup.clear();
+  for (let i = 0; i < 120; i++) {
+    const size  = Math.random() * 0.4 + 0.1;
+    const geo   = new THREE.TetrahedronGeometry(size, 1);
+    const shard = new THREE.Mesh(geo, rockMat);
+    const r     = 7 + Math.random() * 8;
+    const phi   = Math.acos(-1 + Math.random() * 2);
+    const theta = Math.random() * Math.PI * 2;
+    const home  = new THREE.Vector3(
+      r * Math.sin(phi) * Math.cos(theta),
+      r * Math.sin(phi) * Math.sin(theta) * 0.6,
+      Math.random() * 8 - 2
+    );
+    shard.position.set(0, 0, 4);
+    shard.userData = {
+      home, driftOffset: Math.random() * 100,
+      floatSpeed: 0.2 + Math.random() * 0.4,
+      rotVel: new THREE.Vector3(Math.random()-0.5, Math.random()-0.5, 0).multiplyScalar(0.03)
+    };
+    shards.push(shard);
+    shardGroup.add(shard);
+  }
+}
+initShards();
+
+// State
+let exploded      = false;
+let shakeIntensity = 0;
+const clock       = new THREE.Clock();
+const raycaster   = new THREE.Raycaster();
+const planeZ      = new THREE.Plane(new THREE.Vector3(0, 0, 1), -2);
+const mouseWorld  = new THREE.Vector3();
+
+// ── Animate ──
+function animate() {
+  requestAnimationFrame(animate);
+  const delta   = clock.getDelta();
+  const elapsed = clock.getElapsedTime();
+
+  if (!exploded) {
+    boulder.rotation.y += delta * 0.4;
+    if (elapsed > 1) {
+      exploded = true;
+      scene.remove(boulder);
+      scene.add(shardGroup);
+      shakeIntensity   = 0.7;
+      rimLight.intensity = 18000;
+      bloom.strength    = 12;
+    }
+  } else {
+    // Camera shake — no scroll involvement
+    if (shakeIntensity > 0.001) {
+      camera.position.x = (Math.random() - 0.5) * shakeIntensity;
+      camera.position.y = (Math.random() - 0.5) * shakeIntensity;
+      shakeIntensity   *= 0.94;
+    } else {
+      camera.position.x = 0;
+      camera.position.y = 0;
+      shakeIntensity    = 0;
+    }
+
+    // Mouse-world for repulsion (only when mouse is over hero)
+    raycaster.setFromCamera(mouse, camera);
+    raycaster.ray.intersectPlane(planeZ, mouseWorld);
+
+    shards.forEach(s => {
+      const off = s.userData.driftOffset;
+      // Gentle drift — purely time-based, NO scroll
+      s.userData.home.x += Math.sin(elapsed * s.userData.floatSpeed + off)       * 0.01;
+      s.userData.home.y += Math.cos(elapsed * s.userData.floatSpeed * 1.1 + off) * 0.01;
+
+      let target = s.userData.home.clone();
+
+      // Mouse repulsion
+      const dist = s.position.distanceTo(mouseWorld);
+      if (dist < 6) {
+        const pushDir   = new THREE.Vector3().subVectors(s.position, mouseWorld).normalize();
+        const pushForce = (6 - dist) * 0.25;
+        target.addScaledVector(pushDir, pushForce);
+      }
+
+      s.position.lerp(target, 0.04);
+      s.rotation.x += s.userData.rotVel.x;
+      s.rotation.y += s.userData.rotVel.y;
+    });
+
+    rimLight.intensity = THREE.MathUtils.lerp(rimLight.intensity, 800,  0.03);
+    bloom.strength     = THREE.MathUtils.lerp(bloom.strength,     2.8, 0.03);
+  }
+
+  composer.render();
+}
+
+// ── Initial size + resize observer ──
+sizeToHero();
+
+// ResizeObserver watches #hero specifically, not window
+const ro = new ResizeObserver(sizeToHero);
+ro.observe(hero);
+
+animate();
+</script>
+
+<!-- ═══════════════════════════════════
+     PAGE JS — scroll, nav, reveal, Lenis
+═══════════════════════════════════ -->
 <script>
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('nav-links');
-    const productsDropdown = document.getElementById('products-dropdown');
+// Scroll progress + nav light mode
+function onScroll() {
+  const pct = window.scrollY / (document.body.scrollHeight - innerHeight) * 100;
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('nav').classList.toggle('light', window.scrollY > 80);
+}
+window.addEventListener('scroll', onScroll, { passive: true });
 
-    // Toggle Mobile Nav
-    hamburger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        navLinks.classList.toggle('active');
-    });
+// Mobile drawer
+document.getElementById('ham').addEventListener('click', () => {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+});
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
 
-    // Toggle Dropdown on Mobile
-    productsDropdown.addEventListener('click', (e) => {
-        if (window.innerWidth <= 768) {
-            e.stopPropagation();
-            productsDropdown.classList.toggle('active');
-        }
-    });
+// Reveal on scroll
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.style.transitionDelay = (i % 6 * 0.055) + 's';
+  io.observe(el);
+  if (el.getBoundingClientRect().top < innerHeight) el.classList.add('in');
+});
 
-    // Close menu when clicking outside
-    document.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        productsDropdown.classList.remove('active');
-    });
+// --- SMOOTH SCROLL INITIALIZATION (LENIS) ---
+const lenis = new Lenis({
+  duration: 1.8,    // Higher = slower, more "drifty"
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Luxurious easing curve
+  direction: 'vertical',
+  gestureDirection: 'vertical',
+  smoothHover: true,
+  smoothWheel: true,
+  wheelMultiplier: 0.8, // Adjust this to make it feel "heavier" (lower = slower)
+  touchMultiplier: 2,
+  infinite: false,
+});
 
-    // --- Canvas Engine ---
-    const canvas = document.getElementById('hero-canvas');
-    const ctx = canvas.getContext('2d');
-    let points = [];
-    const mouse = { x: -1000, y: -1000 };
-    let width, height;
+// Sync Lenis with your existing scroll progress and navbar logic
+function raf(time) {
+  lenis.raf(time);
+  
+  // Update your scroll progress bar
+  const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100);
+  document.getElementById('prog').style.width = scrollPercent + '%';
+  
+  // Toggle navbar light mode
+  document.getElementById('nav').classList.toggle('light', window.scrollY > 80);
+  
+  requestAnimationFrame(raf);
+}
 
-    function init() {
-        width = canvas.width = canvas.offsetWidth;
-        height = canvas.height = canvas.offsetHeight;
-        points = [];
-        const count = 155; 
-        const radius = Math.min(width, height) * 0.35;
-        for (let i = 0; i < count; i++) {
-            let lat = Math.acos(-1 + (2 * i) / count);
-            let lon = Math.sqrt(count * Math.PI) * lat;
-            points.push({
-                x: radius * Math.sin(lat) * Math.cos(lon),
-                y: radius * Math.sin(lat) * Math.sin(lon),
-                z: radius * Math.cos(lat),
-                baseRadius: radius
-            });
-        }
+requestAnimationFrame(raf);
+
+// --- UPDATE YOUR SMOOTH SCROLL LINKS ---
+// Lenis handles anchor links automatically, but for manual control:
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      lenis.scrollTo(target);
     }
+  });
+});
 
-    function draw() {
-        ctx.clearRect(0, 0, width, height);
-        ctx.save();
-        ctx.translate(width / 2, height / 2);
-        const rotationSpeed = Date.now() * 0.0003;
+// Anchor links via Lenis
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); lenis.scrollTo(target); }
+  });
+});
 
-        points.forEach(p => {
-            let x1 = p.x * Math.cos(rotationSpeed) - p.z * Math.sin(rotationSpeed);
-            let z1 = p.z * Math.cos(rotationSpeed) + p.x * Math.sin(rotationSpeed);
-            let y2 = p.y * Math.cos(rotationSpeed * 0.5) - z1 * Math.sin(rotationSpeed * 0.5);
-            let z2 = z1 * Math.cos(rotationSpeed * 0.5) + p.y * Math.sin(rotationSpeed * 0.5);
-
-            let perspective = 600 / (600 + z2);
-            let drawX = x1 * perspective;
-            let drawY = y2 * perspective;
-
-            let dx = (mouse.x - width / 2) - drawX;
-            let dy = (mouse.y - height / 2) - drawY;
-            let dist = Math.sqrt(dx * dx + dy * dy);
-            
-            if (dist < 150) {
-                let push = (150 - dist) * 0.15;
-                drawX -= (dx / dist) * push;
-                drawY -= (dy / dist) * push;
-            }
-
-            ctx.fillStyle = `#ddeeff`;
-            ctx.beginPath();
-            ctx.arc(drawX, drawY, 2 * perspective, 0, Math.PI * 2);
-            ctx.fill();
-        });
-        ctx.restore();
-        requestAnimationFrame(draw);
-    }
-
-    window.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        mouse.x = e.clientX - rect.left;
-        mouse.y = e.clientY - rect.top;
-    });
-
-    window.addEventListener('resize', init);
-    init();
-    draw();
+function raf(time) {
+  lenis.raf(time);
+  onScroll();
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
 </script>
 </body>
 </html>
