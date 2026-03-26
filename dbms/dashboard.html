@@ -1,378 +1,2352 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vasuki DB | Workspace</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-        :root { --vasuki: #0066ff; --google-gray: #f1f3f4; --border-gray: #dadce0; }
-        .bg-vasuki { background-color: var(--vasuki); }
-        .table-container { height: calc(100vh - 240px); overflow: auto; background: white; }
-        table { border-spacing: 0; border-collapse: separate; }
-        th { border-bottom: 1px solid var(--border-gray); border-right: 1px solid var(--border-gray); position: sticky; top: 0; background: #fff; z-index: 20; }
-        td { border-bottom: 1px solid var(--border-gray); border-right: 1px solid var(--border-gray); padding: 0 !important; }
-        tr:hover td { background-color: #f8f9fa; }
-        .cell-input { width: 100%; border: none; padding: 8px 12px; font-size: 13px; outline: none; background: transparent; }
-        .cell-input:focus { background: white; box-shadow: inset 0 0 0 2px var(--vasuki); z-index: 10; }
-        .column-menu { display: none; position: absolute; right: 4px; top: 50%; transform: translateY(-50%); cursor: pointer; }
-        th:hover .column-menu { display: flex; gap: 6px; background: white; padding-left: 4px; }
-        .scale-in { animation: scaleIn 0.2s ease-out; }
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 12px 20px; border-radius: 8px; background: white; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; font-size: 13px; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasuki DB | Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400;500&family=Fraunces:opsz,wght@9..144,100;9..144,300;9..144,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --slate:       #3e494e;
+  --slate-deep:  #2b3438;
+  --slate-mid:   #4f5c62;
+  --slate-light: #6b7a80;
+  --lemon:       #fffcce;
+  --lemon-mid:   #fff9a8;
+  --lemon-dark:  #e8e49a;
+  --lemon-faint: #fffef5;
+  --bg:          #f4f2ec;
+  --bg-dark:     #ece9e0;
+  --card:        #ffffff;
+  --ink:         #1e2628;
+  --ink-mid:     #3e494e;
+  --ink-light:   #6b7a80;
+  --ink-faint:   #a0adb2;
+  --border:      #dddad0;
+  --border-dark: #c8c4b4;
+  --red:         #8b2a1a;
+  --red-faint:   rgba(139,42,26,0.08);
+  --green:       #2a6b3a;
+  --amber:       #a06010;
+}
 
-        /* Sidebar Toggle Logic */
-        @media (max-width: 768px) {
-            #sidebar {
-                position: absolute;
-                z-index: 50;
-                height: 100%;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                top: -11vh;
-                height: 100vh;
-            }
-            #sidebar.open { transform: translateX(0); }
-            .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 40; }
-            .mobile-overlay.active { display: block; }
-        }
-    </style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'EB Garamond', Georgia, serif;
+  background: var(--slate-deep);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.app-shell { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+/* TOP NAV */
+.top-nav {
+  height: 48px;
+  background: var(--slate-deep);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 0;
+  flex-shrink: 0;
+  z-index: 200;
+}
+.nav-logo-wrap {
+  display: flex; align-items: center; gap: 10px;
+  padding-right: 16px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  margin-right: 16px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.nav-logo-name {
+  font-family: 'Fraunces', serif;
+  font-size: 0.95rem; font-weight: 300;
+  color: var(--lemon); letter-spacing: 0.01em; white-space: nowrap;
+}
+.nav-breadcrumb { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+.bc-sep { color: rgba(255,255,255,0.2); font-size: 0.8rem; }
+.bc-item {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  letter-spacing: 0.08em; color: rgba(255,255,255,0.45);
+  text-transform: uppercase; cursor: pointer;
+  padding: 3px 8px; border-radius: 4px; transition: all 0.12s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;
+}
+.bc-item:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.8); }
+.bc-item.current { color: var(--lemon); }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.sync-indicator { display: flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.08em; color: rgba(255,255,255,0.28); }
+.sync-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(90,160,100,0.8); animation: pulse 2s infinite; }
+.sync-dot.dirty  { background: var(--lemon-dark); animation: none; }
+.sync-dot.saving { background: var(--lemon); animation: blink 0.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:.8} 50%{opacity:.3} }
+@keyframes blink  { 0%,100%{opacity:1} 50%{opacity:.2} }
+.nav-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--slate-mid); border: 1.5px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 0.52rem;
+  color: rgba(255,255,255,0.7); font-weight: 500; cursor: pointer;
+}
+.btn-nav {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--lemon); color: var(--slate-deep);
+  border: none; padding: 6px 14px; border-radius: 100px;
+  cursor: pointer; font-weight: 500; transition: all 0.13s;
+  white-space: nowrap; display: flex; align-items: center; gap: 6px;
+}
+.btn-nav:hover { background: var(--lemon-mid); }
+.btn-nav.ghost { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.1); }
+.btn-nav.ghost:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
+
+/* BODY LAYOUT */
+.app-body { flex: 1; display: flex; overflow: hidden; }
+
+/* LEFT RAIL */
+.left-rail {
+  width: 48px; background: var(--slate-deep);
+  border-right: 1px solid rgba(255,255,255,0.06);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 0; gap: 2px; flex-shrink: 0;
+}
+.rail-btn {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.35); transition: all 0.12s; position: relative;
+}
+.rail-btn:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.75); }
+.rail-btn.active { background: rgba(255,252,206,0.12); color: var(--lemon); }
+.rail-btn .tooltip {
+  position: absolute; left: calc(100% + 10px); top: 50%;
+  transform: translateY(-50%); background: var(--slate-deep);
+  border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.8);
+  font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.08em;
+  padding: 4px 10px; border-radius: 6px; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity 0.15s; z-index: 999;
+}
+.rail-btn:hover .tooltip { opacity: 1; }
+.rail-sep { width: 24px; height: 1px; background: rgba(255,255,255,0.06); margin: 6px 0; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px; background: #232b2f;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  display: flex; flex-direction: column; flex-shrink: 0;
+  overflow: hidden; transition: width 0.25s ease;
+}
+.sidebar.collapsed { width: 0; }
+.sidebar-header {
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sidebar-title { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.25); }
+.sidebar-search { margin: 8px 10px; position: relative; }
+.sidebar-search-input {
+  width: 100%; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 6px;
+  padding: 5px 8px 5px 26px; font-family: 'DM Mono', monospace;
+  font-size: 0.62rem; color: rgba(255,255,255,0.6); outline: none; transition: all 0.12s;
+}
+.sidebar-search-input:focus { border-color: rgba(255,252,206,0.3); background: rgba(255,255,255,0.08); }
+.sidebar-search-input::placeholder { color: rgba(255,255,255,0.2); }
+.sidebar-search-icon { position: absolute; left: 7px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.25); }
+.sidebar-list { overflow-y: auto; flex: 1; padding-bottom: 8px; }
+.sidebar-list::-webkit-scrollbar { width: 3px; }
+.sidebar-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); }
+.section-add-btn { background: none; border: none; color: rgba(255,255,255,0.2); cursor: pointer; padding: 2px; border-radius: 4px; display: flex; transition: all 0.12s; }
+.section-add-btn:hover { color: var(--lemon); background: rgba(255,252,206,0.08); }
+.db-group { margin-bottom: 4px; }
+.db-group-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 8px; cursor: pointer; border-radius: 6px;
+  transition: all 0.12s; color: rgba(255,255,255,0.5);
+  font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.04em;
+}
+.db-group-header:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); }
+.db-group-header.active-db { color: var(--lemon); }
+.db-chevron { width: 10px; height: 10px; flex-shrink: 0; transition: transform 0.15s; opacity: 0.4; }
+.db-group.open .db-chevron { transform: rotate(90deg); }
+.db-group-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.db-size-tag { font-size: 0.5rem; color: rgba(255,255,255,0.2); flex-shrink: 0; }
+.table-items { padding-left: 18px; }
+.table-item {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 8px; border-radius: 6px; cursor: pointer;
+  font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.03em;
+  color: rgba(255,255,255,0.35); transition: all 0.12s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.table-item:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.table-item.active { background: rgba(255,252,206,0.1); color: var(--lemon); }
+.table-item-icon { flex-shrink: 0; opacity: 0.5; }
+.table-item.active .table-item-icon { opacity: 1; }
+.table-row-count { margin-left: auto; font-size: 0.5rem; color: rgba(255,255,255,0.18); flex-shrink: 0; }
+
+/* MAIN PANEL */
+.main-panel {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+  background: var(--bg);
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(0,0,0,0.02) 27px, rgba(0,0,0,0.02) 28px);
+}
+
+/* Panel tabs */
+.panel-tabs {
+  height: 40px; background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: stretch; padding: 0 16px; gap: 0; flex-shrink: 0;
+}
+.panel-tab {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0 14px; border: none; background: none;
+  color: var(--ink-faint); cursor: pointer;
+  border-bottom: 2px solid transparent; transition: all 0.12s;
+  display: flex; align-items: center; gap: 6px; white-space: nowrap;
+}
+.panel-tab:hover { color: var(--ink-mid); }
+.panel-tab.active { color: var(--slate-deep); border-bottom-color: var(--slate); }
+
+/* Action bar */
+.action-bar {
+  height: 44px; background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 16px; gap: 8px; flex-shrink: 0;
+  overflow-x: auto;
+}
+.action-bar::-webkit-scrollbar { height: 0; }
+.action-btn {
+  font-family: 'DM Mono', monospace; font-size: 0.58rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 100px;
+  border: 1.5px solid var(--border-dark); background: var(--card);
+  color: var(--ink-light); cursor: pointer; white-space: nowrap; transition: all 0.12s;
+  flex-shrink: 0;
+}
+.action-btn:hover { background: var(--slate); color: var(--lemon); border-color: var(--slate); }
+.action-btn.primary { background: var(--slate); color: var(--lemon); border-color: var(--slate); }
+.action-btn.primary:hover { background: var(--slate-deep); }
+.action-btn.danger { border-color: var(--red); color: var(--red); }
+.action-btn.danger:hover { background: var(--red); color: white; border-color: var(--red); }
+.action-btn.lemon { background: var(--lemon); color: var(--slate-deep); border-color: var(--lemon-dark); }
+.action-btn.lemon:hover { background: var(--lemon-mid); }
+.action-btn.active-filter { background: var(--slate); color: var(--lemon); border-color: var(--slate); }
+.action-div { width: 1px; height: 18px; background: var(--border); flex-shrink: 0; }
+.action-spacer { flex: 1; min-width: 8px; }
+.filter-input-wrap { position: relative; display: flex; align-items: center; flex-shrink: 0; }
+.filter-input {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  padding: 5px 10px 5px 28px; border: 1.5px solid var(--border-dark);
+  border-radius: 100px; background: var(--bg); color: var(--ink);
+  outline: none; width: 180px; transition: all 0.12s;
+}
+.filter-input:focus { border-color: var(--slate); width: 220px; }
+.filter-input::placeholder { color: var(--ink-faint); }
+.filter-icon { position: absolute; left: 9px; color: var(--ink-faint); pointer-events: none; }
+.row-counter { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.06em; color: var(--ink-faint); white-space: nowrap; flex-shrink: 0; }
+
+/* TABLE VIEW */
+.table-view { flex: 1; overflow: auto; background: var(--card); display: none; }
+.table-view.active { display: block; }
+.table-view::-webkit-scrollbar { width: 8px; height: 8px; }
+.table-view::-webkit-scrollbar-track { background: var(--bg-dark); }
+.table-view::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 4px; }
+
+table { border-collapse: separate; border-spacing: 0; min-width: 100%; }
+
+th.rn, td.rn {
+  width: 44px; min-width: 44px; background: var(--bg);
+  border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  text-align: center; font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  color: var(--ink-faint); padding: 0; position: sticky; left: 0; z-index: 15; cursor: default;
+}
+th.rn { top: 0; z-index: 25; border-bottom: 2px solid var(--border-dark); }
+td.rn { user-select: none; }
+th.rn label, td.rn label { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 6px 0; cursor: pointer; }
+.row-cb { width: 13px; height: 13px; accent-color: var(--slate); cursor: pointer; border-radius: 3px; }
+
+th {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--bg); border-bottom: 2px solid var(--border-dark);
+  border-right: 1px solid var(--border); padding: 0; min-width: 140px; user-select: none;
+}
+.th-inner { display: flex; align-items: center; padding: 7px 12px; gap: 6px; cursor: pointer; transition: background 0.1s; }
+.th-inner:hover { background: var(--bg-dark); }
+.th-type-icon { opacity: 0.4; flex-shrink: 0; }
+.th-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mid); font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.th-type-tag { font-family: 'DM Mono', monospace; font-size: 0.5rem; color: var(--ink-faint); letter-spacing: 0.06em; background: var(--bg-dark); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); flex-shrink: 0; }
+.th-sort { flex-shrink: 0; opacity: 0; transition: opacity 0.1s; color: var(--ink-faint); }
+th:hover .th-sort { opacity: 1; }
+th.sorted-asc .th-sort, th.sorted-desc .th-sort { opacity: 1; color: var(--slate); }
+.th-actions {
+  display: none; position: absolute; right: 4px; top: 50%;
+  transform: translateY(-50%); gap: 3px; background: var(--bg); padding-left: 4px; z-index: 5;
+}
+th:hover .th-actions { display: flex; }
+.th-act-btn { background: none; border: none; color: var(--ink-faint); cursor: pointer; padding: 2px; border-radius: 3px; display: flex; transition: all 0.1s; }
+.th-act-btn:hover { color: var(--red); background: var(--red-faint); }
+
+td { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0; position: relative; }
+tr:hover td { background: var(--lemon-faint); }
+tr:hover td.rn { background: var(--bg-dark); }
+tr.selected td { background: rgba(255,252,206,0.35) !important; }
+tr.selected td.rn { background: var(--lemon-dark) !important; }
+
+.cell-input {
+  width: 100%; border: none; padding: 7px 11px;
+  font-family: 'DM Mono', monospace; font-size: 0.7rem;
+  color: var(--ink); background: transparent; outline: none; letter-spacing: 0.01em;
+  display: block;
+}
+.cell-input:focus { background: white; box-shadow: inset 0 0 0 2px var(--slate); z-index: 5; position: relative; }
+.cell-null { font-style: italic; color: var(--ink-faint); }
+
+.add-row-row td { padding: 0; border-bottom: none; }
+.add-row-btn-cell {
+  display: flex; align-items: center; gap: 6px; padding: 7px 12px;
+  font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em;
+  color: var(--ink-faint); cursor: pointer; transition: all 0.12s;
+}
+.add-row-btn-cell:hover { color: var(--slate); background: var(--lemon-faint); }
+
+/* SQL VIEW */
+.sql-view { flex: 1; display: none; flex-direction: column; overflow: hidden; }
+.sql-view.active { display: flex; }
+.sql-editor-wrap { height: 220px; flex-shrink: 0; border-bottom: 1px solid var(--border); position: relative; background: var(--card); }
+.sql-editor-label { position: absolute; top: 10px; left: 14px; font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); z-index: 2; pointer-events: none; }
+.sql-textarea { width: 100%; height: 100%; border: none; padding: 28px 14px 14px; font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--ink); background: transparent; outline: none; resize: none; line-height: 1.6; letter-spacing: 0.02em; }
+.sql-run-bar { position: absolute; bottom: 10px; right: 12px; display: flex; gap: 8px; align-items: center; }
+.sql-info { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--ink-faint); letter-spacing: 0.06em; }
+.sql-results { flex: 1; overflow: auto; background: var(--bg); }
+.sql-results::-webkit-scrollbar { width: 6px; height: 6px; }
+.sql-results::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 3px; }
+.sql-result-header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
+.sql-result-tag { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; background: var(--bg-dark); color: var(--ink-light); }
+.sql-result-tag.success { background: rgba(42,107,58,0.12); color: var(--green); }
+.sql-result-tag.error   { background: var(--red-faint); color: var(--red); }
+.sql-result-time { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--ink-faint); letter-spacing: 0.06em; }
+.sql-empty { padding: 48px; text-align: center; font-family: 'Fraunces', serif; font-size: 1.1rem; font-style: italic; color: var(--ink-faint); }
+
+/* SCHEMA VIEW */
+.schema-view { flex: 1; overflow: auto; display: none; padding: 24px; background: var(--bg); }
+.schema-view.active { display: block; }
+.schema-table-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; max-width: 700px; }
+.schema-table-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg); }
+.schema-table-name { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 300; color: var(--ink); }
+.schema-col-count { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.08em; color: var(--ink-faint); }
+.schema-col-row { display: grid; grid-template-columns: 200px 100px 80px 80px 1fr; padding: 9px 18px; border-bottom: 1px solid var(--border); align-items: center; transition: background 0.1s; }
+.schema-col-row:last-child { border-bottom: none; }
+.schema-col-row:hover { background: var(--lemon-faint); }
+.schema-col-row.header { background: var(--bg-dark); padding: 7px 18px; }
+.schema-col-row.header span { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
+.schema-col-name { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+.pk-badge { font-family: 'DM Mono', monospace; font-size: 0.5rem; background: rgba(62,73,78,0.12); color: var(--slate); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border-dark); letter-spacing: 0.06em; }
+.schema-type-badge { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--ink-light); letter-spacing: 0.04em; }
+.schema-bool { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.schema-bool.yes { background: var(--green); }
+.schema-bool.no  { background: var(--border-dark); }
+
+/* STATS VIEW */
+.stats-view { flex: 1; overflow: auto; display: none; padding: 24px; background: var(--bg); }
+.stats-view.active { display: block; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.stat-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 18px 20px; position: relative; overflow: hidden; transition: border-color 0.12s; }
+.stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: transparent; transition: background 0.12s; }
+.stat-card:hover { border-color: var(--slate-light); }
+.stat-card:hover::after { background: var(--lemon); }
+.stat-label { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+.stat-value { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 100; color: var(--ink); line-height: 1; }
+.stat-sub { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--ink-faint); margin-top: 4px; }
+.col-stats-section { margin-top: 20px; }
+.col-stats-title { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 300; color: var(--ink); margin-bottom: 12px; }
+.col-stat-row { background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 8px; display: grid; grid-template-columns: 160px 1fr auto; align-items: center; gap: 16px; }
+.col-stat-name { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--ink-mid); letter-spacing: 0.04em; }
+.fill-bar-bg { height: 6px; background: var(--bg-dark); border-radius: 100px; overflow: hidden; }
+.fill-bar { height: 100%; background: var(--slate); border-radius: 100px; transition: width 0.4s ease; }
+.col-stat-pct { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); min-width: 36px; text-align: right; }
+
+/* STATUS BAR */
+.status-bar { height: 24px; background: var(--slate-deep); border-top: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; padding: 0 14px; gap: 16px; flex-shrink: 0; }
+.status-item { font-family: 'DM Mono', monospace; font-size: 0.55rem; letter-spacing: 0.08em; color: rgba(255,255,255,0.3); display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.status-item.highlight { color: rgba(255,252,206,0.5); }
+.status-sep { width: 1px; height: 12px; background: rgba(255,255,255,0.08); }
+
+/* WELCOME */
+.welcome-panel { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: var(--bg); padding: 40px; }
+.welcome-icon { width: 64px; height: 64px; border-radius: 16px; background: var(--bg-dark); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--ink-faint); }
+.welcome-title { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 300; font-style: italic; color: var(--ink-light); }
+.welcome-sub { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--ink-faint); letter-spacing: 0.08em; text-align: center; max-width: 300px; line-height: 1.6; }
+
+/* MODALS */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(20,16,10,0.65); backdrop-filter: blur(5px); z-index: 500; display: none; align-items: center; justify-content: center; }
+.modal-backdrop.open { display: flex; }
+.modal-box { background: var(--card); background-image: repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(0,0,0,0.02) 27px, rgba(0,0,0,0.02) 28px); border: 1.5px solid var(--border-dark); border-radius: 14px; width: 440px; max-width: 96vw; overflow: hidden; animation: scaleIn 0.18s ease-out; }
+@keyframes scaleIn { from { opacity:0; transform:scale(0.97); } to { opacity:1; transform:scale(1); } }
+.modal-box::before { content: ''; display: block; height: 3px; background: var(--lemon); }
+.modal-head { padding: 20px 24px 14px; border-bottom: 1px solid var(--border); }
+.modal-title { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 300; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 4px; }
+.modal-subtitle { font-family: 'EB Garamond', serif; font-size: 0.85rem; color: var(--ink-light); font-style: italic; }
+.modal-body { padding: 18px 24px 22px; display: flex; flex-direction: column; gap: 14px; }
+.field-label { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); display: block; margin-bottom: 5px; }
+.field-input, .field-select, .field-textarea { font-family: 'DM Mono', monospace; font-size: 0.74rem; width: 100%; padding: 9px 12px; border: 1.5px solid var(--border-dark); border-radius: 8px; background: var(--bg); color: var(--ink); outline: none; transition: border-color 0.12s; }
+.field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--slate); }
+.field-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+.field-textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field-check-row { display: flex; align-items: center; gap: 8px; font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--ink-light); letter-spacing: 0.04em; }
+.field-check-row input[type=checkbox] { accent-color: var(--slate); width: 14px; height: 14px; }
+.modal-footer { padding: 0 24px 20px; display: flex; gap: 10px; }
+.mbtn { flex: 1; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 10px; border-radius: 100px; border: 1.5px solid var(--border-dark); background: var(--bg); color: var(--ink-mid); cursor: pointer; transition: all 0.12s; }
+.mbtn:hover { background: var(--slate); color: var(--lemon); border-color: var(--slate); }
+.mbtn.primary { background: var(--slate); color: var(--lemon); border-color: var(--slate); }
+.mbtn.primary:hover { background: var(--slate-deep); }
+.mbtn.danger { border-color: var(--red); color: var(--red); }
+.mbtn.danger:hover { background: var(--red); color: white; }
+
+/* TOAST */
+#toastContainer { position: fixed; left: 280px; bottom: 36px; z-index: 900; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+.toast { background: var(--slate-deep); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.06em; color: rgba(255,252,206,0.7); animation: toastIn 0.22s ease; pointer-events: all; }
+@keyframes toastIn { from { transform:translateY(6px);opacity:0; } to { transform:translateY(0);opacity:1; } }
+.toast-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.toast-dot.success { background: #5a9a6a; }
+.toast-dot.error   { background: #c06050; }
+.toast-dot.info    { background: var(--lemon-dark); }
+.toast-dot.warn    { background: var(--amber); }
+
+/* CONTEXT MENU */
+.ctx-menu { position: fixed; background: var(--card); border: 1.5px solid var(--border-dark); border-radius: 10px; z-index: 800; overflow: hidden; display: none; min-width: 170px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+.ctx-menu.open { display: block; }
+.ctx-item { font-family: 'EB Garamond', serif; font-size: 0.92rem; padding: 9px 16px; cursor: pointer; color: var(--ink-mid); border: none; background: none; width: 100%; text-align: left; display: flex; align-items: center; gap: 10px; transition: all 0.1s; border-bottom: 1px solid var(--border); }
+.ctx-item:last-child { border-bottom: none; }
+.ctx-item:hover { background: var(--lemon-faint); color: var(--slate-deep); }
+.ctx-item.danger { color: var(--red); }
+.ctx-item.danger:hover { background: var(--red-faint); }
+.ctx-sep { height: 1px; background: var(--border); }
+
+/* FILTER PANEL */
+.filter-panel { background: var(--card); border-bottom: 1px solid var(--border); padding: 10px 16px; display: none; flex-wrap: wrap; gap: 8px; align-items: center; }
+.filter-panel.open { display: flex; }
+.filter-chip { display: flex; align-items: center; gap: 6px; padding: 4px 10px; background: var(--bg-dark); border: 1.5px solid var(--border-dark); border-radius: 100px; font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--ink-mid); letter-spacing: 0.04em; }
+.filter-chip .remove-filter { background: none; border: none; color: var(--ink-faint); cursor: pointer; padding: 0; display: flex; transition: color 0.1s; }
+.filter-chip .remove-filter:hover { color: var(--red); }
+.add-filter-btn { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.06em; background: none; border: 1.5px dashed var(--border-dark); color: var(--ink-faint); padding: 4px 12px; border-radius: 100px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.12s; }
+.add-filter-btn:hover { border-color: var(--slate); color: var(--slate); }
+
+/* Formula bar */
+.formula-bar { height: 30px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 12px; gap: 10px; flex-shrink: 0; }
+.fx-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; font-weight: 500; color: var(--slate); letter-spacing: 0.05em; flex-shrink: 0; }
+.fx-input { flex: 1; border: none; background: none; font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--ink-light); font-style: italic; outline: none; letter-spacing: 0.02em; }
+
+/* Sheet tab in panel */
+.sheet-tab-btn {
+  font-family: 'DM Mono', monospace; font-size: 0.58rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0 12px; border: none; background: none;
+  color: var(--ink-faint); cursor: pointer;
+  border-bottom: 2px solid transparent; transition: all 0.12s;
+  display: flex; align-items: center; white-space: nowrap; height: 100%;
+  align-self: stretch;
+}
+.sheet-tab-btn:hover { color: var(--ink-mid); }
+.sheet-tab-btn.active { color: var(--slate-deep); border-bottom-color: var(--slate); }
+
+/* Utilities */
+.hidden { display: none !important; }
+.no-scroll::-webkit-scrollbar { display: none; }
+
+/* Confirmation dialog  */
+.confirm-overlay { position: fixed; inset: 0; background: rgba(20,16,10,0.65); backdrop-filter: blur(3px); z-index: 600; display: flex; align-items: center; justify-content: center; }
+.confirm-box { background: var(--card); border: 1.5px solid var(--border-dark); border-radius: 14px; width: 360px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: scaleIn 0.15s ease; }
+.confirm-box::before { content: ''; display: block; height: 3px; background: var(--red); }
+.confirm-head { padding: 18px 22px 12px; }
+.confirm-title { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 300; color: var(--red); }
+.confirm-msg { font-family: 'EB Garamond', serif; font-size: 0.88rem; color: var(--ink-light); font-style: italic; margin-top: 4px; }
+.confirm-footer { padding: 12px 22px 18px; display: flex; gap: 8px; }
+</style>
 </head>
-<body class="bg-[#f8f9fa] font-sans text-slate-700 overflow-hidden">
+<body>
 
-    <div id="toast-container"></div>
-    <div id="sidebarOverlay" class="mobile-overlay" onclick="toggleSidebar()"></div>
-    <input type="file" id="importFile" class="hidden" accept=".json,.csv" onchange="handleImport(this)">
+<div id="toastContainer"></div>
+<input class="hidden" type="file" id="uploadCloudFile" accept=".json,.csv" onchange="handleCloudUpload(this)">
 
-    <nav class="bg-white px-4 py-2 flex justify-between items-center border-b border-slate-200">
-        <div class="flex items-center gap-4">
-            <button onclick="toggleSidebar()" class="md:hidden p-1 hover:bg-slate-100 rounded">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+<!-- CONTEXT MENU -->
+<div class="ctx-menu" id="ctxMenu">
+  <button class="ctx-item" onclick="ctxDo('insert-above')">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16M4 12h16"/></svg>
+    Insert row above
+  </button>
+  <button class="ctx-item" onclick="ctxDo('insert-below')">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4v16M4 12h16"/></svg>
+    Insert row below
+  </button>
+  <div class="ctx-sep"></div>
+  <button class="ctx-item" onclick="ctxDo('copy-row')">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+    Duplicate row
+  </button>
+  <div class="ctx-sep"></div>
+  <button class="ctx-item danger" onclick="ctxDo('delete-row')">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+    Delete row
+  </button>
+</div>
+
+<div class="app-shell">
+
+  <!-- TOP NAV -->
+  <nav class="top-nav">
+    <div class="nav-logo-wrap" onclick="goHome()">
+      <span class="nav-logo-name">Vasuki <span style="opacity:.55;font-weight:300;font-style:italic;">DB</span></span>
+    </div>
+    <div class="nav-breadcrumb">
+      <span class="bc-item" id="bcDB" onclick="goHome()">No DB selected</span>
+      <span class="bc-sep" id="bcSep1" style="display:none;">›</span>
+      <span class="bc-item current" id="bcTable" style="display:none;"></span>
+    </div>
+    <div class="nav-right">
+      <div class="sync-indicator">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncLabel">Ready</span>
+      </div>
+      <div class="nav-avatar" id="navAvatar" title="Signed in">--</div>
+      <button class="btn-nav ghost" onclick="document.getElementById('uploadCloudFile').click()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Import
+      </button>
+      <button class="btn-nav ghost" onclick="exportData()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export
+      </button>
+      <button class="btn-nav" onclick="saveCurrentDB()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Sync
+      </button>
+    </div>
+  </nav>
+
+  <div class="app-body">
+    <!-- LEFT RAIL -->
+    <div class="left-rail">
+      <button class="rail-btn active" onclick="switchRailView('table')" id="railTable">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        <div class="tooltip">Table Editor</div>
+      </button>
+      <button class="rail-btn" onclick="switchRailView('sql')" id="railSQL">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <div class="tooltip">SQL Editor</div>
+      </button>
+      <button class="rail-btn" onclick="switchRailView('schema')" id="railSchema">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="8" height="10" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="14" y="15" width="8" height="6" rx="1"/><line x1="10" y1="12" x2="14" y2="7"/><line x1="10" y1="12" x2="14" y2="18"/></svg>
+        <div class="tooltip">Schema</div>
+      </button>
+      <button class="rail-btn" onclick="switchRailView('stats')" id="railStats">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <div class="tooltip">Statistics</div>
+      </button>
+      <div class="rail-sep"></div>
+      <button class="rail-btn" onclick="openNewDBModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        <div class="tooltip">New Database</div>
+      </button>
+      <button class="rail-btn" onclick="openDeleteDBModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        <div class="tooltip">Delete Database</div>
+      </button>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Databases</span>
+        <button class="section-add-btn" onclick="openNewDBModal()" title="New DB">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+      <div class="sidebar-search">
+        <svg class="sidebar-search-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="sidebar-search-input" id="sidebarSearch" type="text" placeholder="Search databases…" oninput="filterSidebar(this.value)">
+      </div>
+      <div class="sidebar-list" id="dbList">
+        <div style="padding:16px 12px;font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.2);text-align:center;">Loading…</div>
+      </div>
+    </aside>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel" id="mainPanel">
+
+      <!-- Welcome -->
+      <div class="welcome-panel" id="welcomePanel">
+        <div class="welcome-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <div class="welcome-title">Select a database</div>
+        <div class="welcome-sub">Choose an existing database from the sidebar, or create a new one to get started.</div>
+        <button class="action-btn primary" onclick="openNewDBModal()" style="margin-top:8px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Database
+        </button>
+      </div>
+
+      <!-- Editor -->
+      <div id="editorPanel" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+
+        <!-- Panel tabs -->
+        <div class="panel-tabs">
+          <button class="panel-tab active" id="tabTable" onclick="switchPanelTab('table')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            Table
+          </button>
+          <button class="panel-tab" id="tabSQL" onclick="switchPanelTab('sql')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            SQL Editor
+          </button>
+          <button class="panel-tab" id="tabSchema" onclick="switchPanelTab('schema')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="7" height="10" rx="1"/><rect x="15" y="3" width="7" height="8" rx="1"/><rect x="15" y="15" width="7" height="6" rx="1"/></svg>
+            Schema
+          </button>
+          <button class="panel-tab" id="tabStats" onclick="switchPanelTab('stats')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Stats
+          </button>
+          <div style="width:1px;height:20px;background:var(--border);align-self:center;margin:0 8px;flex-shrink:0;"></div>
+          <div id="sheetTabs" style="display:flex;gap:2px;overflow-x:auto;align-self:stretch;flex:1;" class="no-scroll"></div>
+          <button onclick="openAddSheetModal()" style="padding:0 10px;background:none;border:none;color:var(--ink-faint);cursor:pointer;display:flex;align-items:center;flex-shrink:0;transition:color 0.12s;" onmouseover="this.style.color='var(--slate)'" onmouseout="this.style.color='var(--ink-faint)'" title="Add sheet">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+
+        <!-- Action bar -->
+        <div class="action-bar">
+          <button class="action-btn primary" onclick="addRow()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Insert row
+          </button>
+          <button class="action-btn" onclick="openAddColModal()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="14" y="3" width="7" height="18" rx="1"/><rect x="3" y="3" width="7" height="18" rx="1"/></svg>
+            Add column
+          </button>
+          <div class="action-div"></div>
+          <button class="action-btn" onclick="toggleFilterPanel()" id="filterBtn">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filter
+            <span id="filterCount" class="hidden" style="background:var(--slate);color:var(--lemon);border-radius:100px;padding:0 5px;font-size:0.5rem;"></span>
+          </button>
+          <div class="action-div"></div>
+          <div class="filter-input-wrap">
+            <svg class="filter-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input class="filter-input" type="text" placeholder="Search rows…" id="rowSearch" oninput="searchRows(this.value)">
+          </div>
+          <div class="action-spacer"></div>
+          <span class="row-counter" id="rowCounter">— rows</span>
+          <div class="action-div"></div>
+          <button class="action-btn danger" onclick="deleteSelectedRows()" id="delRowsBtn" style="display:none;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            Delete selected
+          </button>
+          <button class="action-btn" onclick="openRenameSheetModal()">Rename Sheet</button>
+          <button class="action-btn danger" onclick="deleteActiveTable()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            Delete Sheet
+          </button>
+        </div>
+
+        <!-- Filter panel -->
+        <div class="filter-panel" id="filterPanel">
+          <div id="filterChips" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+          <button class="add-filter-btn" onclick="openAddFilterModal()">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add filter
+          </button>
+          <button class="action-btn danger" onclick="clearAllFilters()" style="font-size:0.55rem;padding:4px 12px;">Clear all</button>
+        </div>
+
+        <!-- Formula bar -->
+        <div class="formula-bar">
+          <span class="fx-label">ƒx</span>
+          <input class="fx-input" id="formulaDisplay" type="text" placeholder="Select a cell to inspect…" readonly>
+        </div>
+
+        <!-- TABLE VIEW -->
+        <div class="table-view active" id="tableView">
+          <table id="mainTable">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- SQL VIEW -->
+        <div class="sql-view" id="sqlView">
+          <div class="sql-editor-wrap">
+            <span class="sql-editor-label">SQL · <span style="font-style:italic;opacity:.7;">Vasuki Query Language</span></span>
+            <textarea class="sql-textarea" id="sqlTextarea" placeholder="-- Write your query here&#10;SELECT * FROM Sheet1 WHERE id > 0 LIMIT 10;" spellcheck="false"></textarea>
+            <div class="sql-run-bar">
+              <span class="sql-info" id="sqlInfo"></span>
+              <button class="action-btn" onclick="clearSQL()">Clear</button>
+              <button class="action-btn lemon" onclick="runSQL()">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z"/></svg>
+                Run Query
+              </button>
+            </div>
+          </div>
+          <div class="sql-results" id="sqlResults">
+            <div class="sql-empty">Write a query above and click Run →</div>
+          </div>
+        </div>
+
+        <!-- SCHEMA VIEW -->
+        <div class="schema-view" id="schemaView"></div>
+
+        <!-- STATS VIEW -->
+        <div class="stats-view" id="statsView"></div>
+
+      </div><!-- /editorPanel -->
+    </div><!-- /main-panel -->
+  </div><!-- /app-body -->
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <div class="status-item highlight" id="sbDB">No database</div>
+    <div class="status-sep"></div>
+    <div class="status-item" id="sbTable">—</div>
+    <div class="status-sep"></div>
+    <div class="status-item" id="sbRows">0 rows</div>
+    <div class="status-sep"></div>
+    <div class="status-item" id="sbCols">0 columns</div>
+    <div class="status-sep"></div>
+    <div class="status-item" id="sbUser">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span id="userDisplay">—</span>
+    </div>
+    <div style="flex:1"></div>
+    <div class="status-item">Ctrl+S to sync</div>
+    <div class="status-sep"></div>
+    <div class="status-item">Vasuki DB v2.1</div>
+  </div>
+</div>
+
+<!-- ══════════ MODALS ══════════ -->
+
+<!-- New DB modal -->
+<div class="modal-backdrop" id="newDBModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title">Create Database</div>
+      <div class="modal-subtitle">A new JSON-backed database in your cloud storage.</div>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label class="field-label">Database Name</label>
+        <input class="field-input" id="newDBName" type="text" placeholder="my_database">
+      </div>
+      <div>
+        <label class="field-label">First Sheet Name</label>
+        <input class="field-input" id="newDBSheet" type="text" placeholder="Sheet1" value="Sheet1">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="mbtn primary" onclick="createNewDB()">Create</button>
+      <button class="mbtn" onclick="closeModal('newDBModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit column modal -->
+<div class="modal-backdrop" id="addColModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title" id="addColModalTitle">Add Column</div>
+      <div class="modal-subtitle">Define the name and type for the new column.</div>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label class="field-label">Column Name</label>
+        <input class="field-input" id="newColName" type="text" placeholder="e.g. email">
+      </div>
+      <div class="field-row">
+        <div>
+          <label class="field-label">Type</label>
+          <select class="field-select" id="newColType">
+            <option value="text">Text</option>
+            <option value="number">Number</option>
+            <option value="boolean">Boolean</option>
+            <option value="date">Date</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Default Value</label>
+          <input class="field-input" id="newColDefault" type="text" placeholder="optional">
+        </div>
+      </div>
+      <div class="field-check-row">
+        <input type="checkbox" id="colNullable" checked>
+        <label for="colNullable">Nullable</label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="mbtn primary" onclick="handleColumnSubmit()">Apply</button>
+      <button class="mbtn" onclick="closeModal('addColModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add sheet modal -->
+<div class="modal-backdrop" id="addSheetModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title">New Sheet</div>
+      <div class="modal-subtitle">Add a new table to the current database.</div>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label class="field-label">Sheet Name</label>
+        <input class="field-input" id="newSheetName" type="text" placeholder="e.g. orders">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="mbtn primary" onclick="createSheet()">Create</button>
+      <button class="mbtn" onclick="closeModal('addSheetModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rename sheet modal -->
+<div class="modal-backdrop" id="renameSheetModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title">Rename Sheet</div>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label class="field-label">New Name</label>
+        <input class="field-input" id="renameSheetInput" type="text">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="mbtn primary" onclick="renameSheet()">Rename</button>
+      <button class="mbtn" onclick="closeModal('renameSheetModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add filter modal -->
+<div class="modal-backdrop" id="addFilterModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title">Add Filter</div>
+      <div class="modal-subtitle">Filter rows by column value.</div>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label class="field-label">Column</label>
+        <select class="field-select" id="filterCol"></select>
+      </div>
+      <div>
+        <label class="field-label">Operator</label>
+        <select class="field-select" id="filterOp">
+          <option value="contains">Contains</option>
+          <option value="equals">Equals</option>
+          <option value="starts">Starts with</option>
+          <option value="ends">Ends with</option>
+          <option value="gt">Greater than</option>
+          <option value="lt">Less than</option>
+          <option value="empty">Is empty</option>
+          <option value="notempty">Is not empty</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Value</label>
+        <input class="field-input" id="filterVal" type="text" placeholder="Filter value…">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="mbtn primary" onclick="applyFilter()">Apply Filter</button>
+      <button class="mbtn" onclick="closeModal('addFilterModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete DB confirm modal -->
+<div class="modal-backdrop" id="deleteDBModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title" style="color:var(--red);">Delete Database</div>
+      <div class="modal-subtitle">This action cannot be undone.</div>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label class="field-label">Type <strong id="confirmDBNameLabel"></strong> to confirm</label>
+        <input class="field-input" id="deleteDBConfirm" type="text" placeholder="database name…">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="mbtn danger" onclick="confirmDeleteDB()">Delete permanently</button>
+      <button class="mbtn" onclick="closeModal('deleteDBModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   CONFIG & AUTH
+══════════════════════════════════════════════════ */
+const API_BASE = "https://adamyakhairwal2011-vasuki-cloud.hf.space";
+
+// Redirect to login if not authenticated
+const currentUser = localStorage.getItem('vcloud_user');
+if (!currentUser) {
+  window.location.href = "../login.html";
+}
+
+// Set avatar initials
+const initials = (currentUser || '').split('@')[0].slice(0,2).toUpperCase();
+document.getElementById('navAvatar').textContent = initials;
+document.getElementById('userDisplay').textContent = currentUser || '—';
+
+/* ══════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════ */
+const state = {
+  dbs: [],
+  currentDB: null,
+  currentData: {},
+  activeSheet: "",
+  filters: [],
+  sortCol: null,
+  sortDir: 1,
+  searchQuery: "",
+  selectedRows: new Set(),
+  dirty: false,
+  ctxRowIdx: -1,
+  activeView: 'table',   // track current rail/tab view
+};
+
+/* ══════════════════════════════════════════════════
+   API HELPERS
+══════════════════════════════════════════════════ */
+async function api(endpoint, body = {}) {
+  try {
+    const r = await fetch(`${API_BASE}${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: currentUser, ...body })
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  } catch (e) {
+    toast(`Connection error: ${e.message}`, 'error');
+    return { error: e.message };
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════ */
+function toast(msg, type = 'info') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<div class="toast-dot ${type}"></div><span>${escHtml(msg)}</span>`;
+  c.appendChild(t);
+  setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateY(6px)';
+    t.style.transition = 'all 0.2s';
+    setTimeout(() => t.remove(), 220);
+  }, 2800);
+}
+
+/* ══════════════════════════════════════════════════
+   SYNC STATUS
+══════════════════════════════════════════════════ */
+function setSyncStatus(s) {
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  if (s === 'saved')  { dot.className = 'sync-dot'; lbl.textContent = 'All changes saved'; state.dirty = false; }
+  if (s === 'dirty')  { dot.className = 'sync-dot dirty'; lbl.textContent = 'Unsaved changes'; state.dirty = true; }
+  if (s === 'saving') { dot.className = 'sync-dot saving'; lbl.textContent = 'Syncing…'; }
+}
+
+/* ══════════════════════════════════════════════════
+   MODALS
+══════════════════════════════════════════════════ */
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// Close modals on backdrop click
+document.querySelectorAll('.modal-backdrop').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+/* ══════════════════════════════════════════════════
+   CONFIRM DIALOG (replaces native confirm())
+══════════════════════════════════════════════════ */
+function confirmDialog(title, msg, onConfirm, dangerBtn = 'Confirm') {
+  // Remove any existing
+  document.getElementById('_confirmOverlay')?.remove();
+  const overlay = document.createElement('div');
+  overlay.className = 'confirm-overlay';
+  overlay.id = '_confirmOverlay';
+  overlay.innerHTML = `
+    <div class="confirm-box">
+      <div class="confirm-head">
+        <div class="confirm-title">${escHtml(title)}</div>
+        <div class="confirm-msg">${escHtml(msg)}</div>
+      </div>
+      <div class="confirm-footer">
+        <button class="mbtn danger" id="_confirmOK">${escHtml(dangerBtn)}</button>
+        <button class="mbtn" id="_confirmCancel">Cancel</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('_confirmOK').onclick = () => { overlay.remove(); onConfirm(); };
+  document.getElementById('_confirmCancel').onclick = () => overlay.remove();
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+/* ══════════════════════════════════════════════════
+   SIDEBAR / DB LIST
+══════════════════════════════════════════════════ */
+async function refreshDBList() {
+  const data = await api('/list-files', { folder: "" });
+  state.dbs = (data.files || []).filter(f => f.name && f.name.endsWith('.json'));
+  renderSidebar(state.dbs);
+}
+
+function renderSidebar(dbs) {
+  const list = document.getElementById('dbList');
+  if (!dbs.length) {
+    list.innerHTML = `<div style="padding:16px 12px;font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.2);text-align:center;line-height:1.6;">No databases yet.<br>Create one to start.</div>`;
+    return;
+  }
+  list.innerHTML = "";
+  dbs.forEach(f => {
+    const name = f.name.replace('.json', '');
+    const isActive = state.currentDB === f.name;
+    const sizeKb = f.size ? (f.size / 1024).toFixed(0) + 'kb' : '';
+
+    const group = document.createElement('div');
+    group.className = `db-group${isActive ? ' open' : ''}`;
+    group.dataset.filename = f.name;
+    group.innerHTML = `
+      <div class="db-group-header${isActive ? ' active-db' : ''}" onclick="handleDBGroupClick('${escAttr(f.name)}', this)">
+        <svg class="db-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0;opacity:.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        <span class="db-group-name" title="${escAttr(name)}">${escHtml(name)}</span>
+        <span class="db-size-tag">${sizeKb}</span>
+      </div>
+      <div class="table-items" id="tables_${cssId(f.name)}" style="${isActive ? '' : 'display:none;'}"></div>
+    `;
+    list.appendChild(group);
+    if (isActive) renderSheetItems(f.name);
+  });
+}
+
+// Safe CSS id from filename
+function cssId(filename) {
+  return filename.replace(/[^a-zA-Z0-9]/g, '_');
+}
+
+function renderSheetItems(filename) {
+  const el = document.getElementById(`tables_${cssId(filename)}`);
+  if (!el) return;
+  el.innerHTML = "";
+  const sheets = Object.keys(state.currentData).filter(k => k !== '_vasuki_schema');
+  if (!sheets.length) {
+    el.innerHTML = `<div style="padding:6px 8px;font-family:'DM Mono',monospace;font-size:0.58rem;color:rgba(255,255,255,0.18);font-style:italic;">No sheets</div>`;
+    return;
+  }
+  sheets.forEach(s => {
+    const rows = (state.currentData[s] || []).length;
+    const div = document.createElement('div');
+    div.className = `table-item${state.activeSheet === s ? ' active' : ''}`;
+    div.innerHTML = `
+      <svg class="table-item-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;">${escHtml(s)}</span>
+      <span class="table-row-count">${rows}</span>
+    `;
+    div.onclick = () => {
+      state.activeSheet = s;
+      state.filters = [];
+      state.searchQuery = '';
+      state.selectedRows = new Set();
+      document.getElementById('rowSearch').value = '';
+      renderFilterChips();
+      updateFilterCountBadge();
+      updateBreadcrumb();
+      renderSheetItems(filename);
+      renderSheetTabs();
+      renderTable();
+      renderStatusBar();
+      switchPanelTab('table');
+    };
+    el.appendChild(div);
+  });
+}
+
+function handleDBGroupClick(filename, headerEl) {
+  if (state.currentDB !== filename) {
+    loadDatabase(filename);
+  } else {
+    // Toggle collapse
+    const group = headerEl.parentElement;
+    const tableList = group.querySelector('.table-items');
+    const isOpen = group.classList.contains('open');
+    group.classList.toggle('open', !isOpen);
+    tableList.style.display = isOpen ? 'none' : '';
+  }
+}
+
+function filterSidebar(q) {
+  const filtered = state.dbs.filter(f => f.name.toLowerCase().includes(q.toLowerCase()));
+  renderSidebar(filtered);
+}
+
+/* ══════════════════════════════════════════════════
+   LOAD DATABASE
+══════════════════════════════════════════════════ */
+async function loadDatabase(filename) {
+  toast(`Loading ${filename.replace('.json', '')}…`, 'info');
+  const res = await api('/get-file-content', { path: filename });
+  if (res.error) return;
+
+  try {
+    state.currentData = JSON.parse(res.content);
+  } catch {
+    toast('Failed to parse database file', 'error');
+    state.currentData = {};
+  }
+
+  if (!state.currentData._vasuki_schema) state.currentData._vasuki_schema = {};
+
+  state.currentDB = filename;
+  const sheets = Object.keys(state.currentData).filter(k => k !== '_vasuki_schema');
+  state.activeSheet = sheets[0] || '';
+  state.filters = [];
+  state.searchQuery = '';
+  state.selectedRows = new Set();
+  state.dirty = false;
+
+  // Show editor panel
+  document.getElementById('welcomePanel').style.display = 'none';
+  const ep = document.getElementById('editorPanel');
+  ep.style.display = 'flex';
+
+  updateBreadcrumb();
+  renderSidebar(state.dbs);
+  renderSheetTabs();
+  renderTable();
+  renderStatusBar();
+  setSyncStatus('saved');
+  updateFilterCountBadge();
+  renderFilterChips();
+  document.getElementById('rowSearch').value = '';
+
+  // Refresh SQL placeholder
+  document.getElementById('sqlTextarea').placeholder = `-- Write your query here\nSELECT * FROM ${state.activeSheet || 'Sheet1'} LIMIT 10;`;
+
+  toast(`Loaded "${filename.replace('.json', '')}"`, 'success');
+}
+
+function goHome() {
+  if (!state.currentDB) return;
+  // just deselect table highlight
+  updateBreadcrumb();
+}
+
+function updateBreadcrumb() {
+  const dbEl = document.getElementById('bcDB');
+  const tEl  = document.getElementById('bcTable');
+  const sep  = document.getElementById('bcSep1');
+  dbEl.textContent = state.currentDB ? state.currentDB.replace('.json', '') : 'No DB selected';
+  if (state.activeSheet) {
+    tEl.textContent = state.activeSheet;
+    tEl.style.display = '';
+    sep.style.display = '';
+  } else {
+    tEl.style.display = 'none';
+    sep.style.display = 'none';
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   SHEET TABS
+══════════════════════════════════════════════════ */
+function renderSheetTabs() {
+  const tabs = document.getElementById('sheetTabs');
+  tabs.innerHTML = "";
+  const sheets = Object.keys(state.currentData).filter(k => k !== '_vasuki_schema');
+  sheets.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = `sheet-tab-btn${state.activeSheet === s ? ' active' : ''}`;
+    btn.textContent = s;
+    btn.onclick = () => {
+      state.activeSheet = s;
+      state.filters = [];
+      state.searchQuery = '';
+      state.selectedRows = new Set();
+      document.getElementById('rowSearch').value = '';
+      renderFilterChips();
+      updateFilterCountBadge();
+      renderSheetTabs();
+      renderSheetItems(state.currentDB);
+      renderTable();
+      renderStatusBar();
+      updateBreadcrumb();
+      switchPanelTab('table');
+    };
+    tabs.appendChild(btn);
+  });
+}
+
+/* ══════════════════════════════════════════════════
+   RENDER TABLE
+══════════════════════════════════════════════════ */
+function getFilteredData() {
+  let data = [...(state.currentData[state.activeSheet] || [])];
+
+  state.filters.forEach(f => {
+    data = data.filter(row => {
+      const v = String(row[f.col] ?? '').toLowerCase();
+      const fv = (f.val || '').toLowerCase();
+      switch (f.op) {
+        case 'contains': return v.includes(fv);
+        case 'equals':   return v === fv;
+        case 'starts':   return v.startsWith(fv);
+        case 'ends':     return v.endsWith(fv);
+        case 'gt':       return parseFloat(String(row[f.col])) > parseFloat(f.val);
+        case 'lt':       return parseFloat(String(row[f.col])) < parseFloat(f.val);
+        case 'empty':    return row[f.col] === '' || row[f.col] === null || row[f.col] === undefined;
+        case 'notempty': return row[f.col] !== '' && row[f.col] !== null && row[f.col] !== undefined;
+        default:         return true;
+      }
+    });
+  });
+
+  if (state.searchQuery) {
+    const q = state.searchQuery.toLowerCase();
+    data = data.filter(row => Object.values(row).some(v => String(v ?? '').toLowerCase().includes(q)));
+  }
+
+  if (state.sortCol !== null) {
+    data.sort((a, b) => {
+      const av = a[state.sortCol] ?? '';
+      const bv = b[state.sortCol] ?? '';
+      const an = !isNaN(av) && av !== '';
+      const bn = !isNaN(bv) && bv !== '';
+      if (an && bn) return (parseFloat(av) - parseFloat(bv)) * state.sortDir;
+      return String(av).localeCompare(String(bv)) * state.sortDir;
+    });
+  }
+  return data;
+}
+
+function renderTable() {
+  if (!state.activeSheet) {
+    document.getElementById('tableHead').innerHTML = '';
+    document.getElementById('tableBody').innerHTML = `<tr><td colspan="100" style="padding:40px;text-align:center;font-family:'Fraunces',serif;font-style:italic;color:var(--ink-faint);">No sheet selected</td></tr>`;
+    document.getElementById('rowCounter').textContent = '—';
+    return;
+  }
+
+  const head   = document.getElementById('tableHead');
+  const tbody  = document.getElementById('tableBody');
+  const data   = state.currentData[state.activeSheet] || [];
+  const schema = (state.currentData._vasuki_schema || {})[state.activeSheet] || {};
+  const cols   = data.length > 0 ? Object.keys(data[0]) : [];
+  const filtered = getFilteredData();
+
+  document.getElementById('rowCounter').textContent = `${filtered.length} / ${data.length} rows`;
+
+  // ── Head ──
+  head.innerHTML = `<tr>
+    <th class="rn">
+      <label><input type="checkbox" class="row-cb" id="selectAll" onchange="toggleSelectAll(this.checked)"></label>
+    </th>
+    ${cols.map(c => {
+      const isSorted = state.sortCol === c;
+      const sortClass = isSorted ? (state.sortDir === 1 ? 'sorted-asc' : 'sorted-desc') : '';
+      return `<th class="${sortClass}" style="position:relative;">
+        <div class="th-inner" onclick="sortByCol('${escAttr(c)}')">
+          <span class="th-type-icon">${getTypeIcon(schema[c] || 'text')}</span>
+          <span class="th-label" title="${escAttr(c)}">${escHtml(c)}</span>
+          <span class="th-type-tag">${(schema[c] || 'TEXT').toUpperCase()}</span>
+          <svg class="th-sort" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            ${isSorted && state.sortDir === 1
+              ? '<polyline points="18 15 12 9 6 15"/>'
+              : '<polyline points="6 9 12 15 18 9"/>'}
+          </svg>
+        </div>
+        <div class="th-actions">
+          <button class="th-act-btn" onclick="event.stopPropagation();deleteColumn('${escAttr(c)}')" title="Delete column">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </th>`;
+    }).join('')}
+  </tr>`;
+
+  // ── Body ──
+  const rows = filtered.map((row) => {
+    // Find original index in un-filtered data
+    const origIdx = data.indexOf(row);
+    const isSelected = state.selectedRows.has(origIdx);
+    return `<tr class="${isSelected ? 'selected' : ''}" oncontextmenu="openCtxMenu(event,${origIdx});return false;">
+      <td class="rn">
+        <label><input type="checkbox" class="row-cb" ${isSelected ? 'checked' : ''} onchange="toggleRowSelect(${origIdx},this.checked)"></label>
+      </td>
+      ${cols.map(c => {
+        const val = row[c];
+        const isEmpty = val === '' || val === null || val === undefined;
+        const type = schema[c] || 'text';
+        const inputType = type === 'date' ? 'date' : type === 'number' ? 'number' : 'text';
+        const safeVal = escAttr(String(val ?? ''));
+        return `<td>
+          <input
+            class="cell-input${isEmpty ? ' cell-null' : ''}"
+            type="${inputType}"
+            value="${safeVal}"
+            onchange="updateCell(${origIdx},'${escAttr(c)}',this.value)"
+            onfocus="onCellFocus(${origIdx},'${escAttr(c)}',this.value)"
+          >
+        </td>`;
+      }).join('')}
+    </tr>`;
+  });
+
+  tbody.innerHTML = rows.join('');
+
+  // Add-row button
+  const addRowTr = document.createElement('tr');
+  addRowTr.className = 'add-row-row';
+  addRowTr.innerHTML = `
+    <td class="rn" style="border-bottom:none;"></td>
+    <td colspan="${cols.length || 1}" style="border-bottom:none;">
+      <div class="add-row-btn-cell" onclick="addRow()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Insert row
+      </div>
+    </td>`;
+  tbody.appendChild(addRowTr);
+
+  // Select all checkbox state
+  const selAll = document.getElementById('selectAll');
+  if (selAll) {
+    selAll.checked = data.length > 0 && state.selectedRows.size === data.length;
+    selAll.indeterminate = state.selectedRows.size > 0 && state.selectedRows.size < data.length;
+  }
+
+  // Delete button
+  document.getElementById('delRowsBtn').style.display = state.selectedRows.size > 0 ? 'flex' : 'none';
+}
+
+function onCellFocus(origIdx, col, val) {
+  const display = document.getElementById('formulaDisplay');
+  display.value = `${state.activeSheet}[${origIdx}].${col} = ${val}`;
+}
+
+function getTypeIcon(type) {
+  switch (type) {
+    case 'number':  return `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`;
+    case 'boolean': return `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`;
+    case 'date':    return `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`;
+    default:        return `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>`;
+  }
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escAttr(str) {
+  return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ══════════════════════════════════════════════════
+   SORT
+══════════════════════════════════════════════════ */
+function sortByCol(col) {
+  if (state.sortCol === col) { state.sortDir *= -1; }
+  else { state.sortCol = col; state.sortDir = 1; }
+  renderTable();
+}
+
+/* ══════════════════════════════════════════════════
+   SELECTION
+══════════════════════════════════════════════════ */
+function toggleSelectAll(checked) {
+  const data = state.currentData[state.activeSheet] || [];
+  state.selectedRows = checked ? new Set(data.map((_, i) => i)) : new Set();
+  renderTable();
+}
+
+function toggleRowSelect(idx, checked) {
+  if (checked) state.selectedRows.add(idx);
+  else state.selectedRows.delete(idx);
+  document.getElementById('delRowsBtn').style.display = state.selectedRows.size > 0 ? 'flex' : 'none';
+  // Update select-all state
+  const data = state.currentData[state.activeSheet] || [];
+  const selAll = document.getElementById('selectAll');
+  if (selAll) {
+    selAll.checked = state.selectedRows.size === data.length;
+    selAll.indeterminate = state.selectedRows.size > 0 && state.selectedRows.size < data.length;
+  }
+  // Toggle row highlight
+  const rows = document.querySelectorAll('#tableBody tr');
+  rows.forEach(tr => {
+    const cb = tr.querySelector('.row-cb');
+    if (cb && cb.onchange) {
+      // Just re-render selection state on this row visually
+    }
+  });
+  // Simple: re-render table to reflect class changes
+  // (small tables only — for large tables we'd do surgical DOM updates)
+  const data2 = state.currentData[state.activeSheet] || [];
+  const filtered = getFilteredData();
+  filtered.forEach((row, i) => {
+    const origIdx = data2.indexOf(row);
+    const tr = document.querySelectorAll('#tableBody tr')[i];
+    if (tr) tr.classList.toggle('selected', state.selectedRows.has(origIdx));
+  });
+}
+
+/* ══════════════════════════════════════════════════
+   CONTEXT MENU
+══════════════════════════════════════════════════ */
+function openCtxMenu(e, rowIdx) {
+  e.preventDefault();
+  state.ctxRowIdx = rowIdx;
+  const menu = document.getElementById('ctxMenu');
+  menu.classList.add('open');
+  const x = Math.min(e.clientX, window.innerWidth - 210);
+  const y = Math.min(e.clientY, window.innerHeight - 180);
+  menu.style.left = x + 'px';
+  menu.style.top  = y + 'px';
+}
+
+function ctxDo(action) {
+  const data = state.currentData[state.activeSheet];
+  const idx  = state.ctxRowIdx;
+  if (idx < 0 || !data) return;
+  const cols = Object.keys(data[0] || {});
+  const emptyRow = Object.fromEntries(cols.map(c => [c, ""]));
+
+  switch (action) {
+    case 'insert-above': data.splice(idx, 0, { ...emptyRow }); break;
+    case 'insert-below': data.splice(idx + 1, 0, { ...emptyRow }); break;
+    case 'copy-row':     data.splice(idx + 1, 0, JSON.parse(JSON.stringify(data[idx]))); break;
+    case 'delete-row':
+      data.splice(idx, 1);
+      state.selectedRows.delete(idx);
+      // Shift selected indices down
+      const newSel = new Set();
+      state.selectedRows.forEach(i => newSel.add(i > idx ? i - 1 : i));
+      state.selectedRows = newSel;
+      break;
+  }
+
+  markDirty();
+  renderTable();
+  renderStatusBar();
+  document.getElementById('ctxMenu').classList.remove('open');
+  toast(action.replace(/-/g, ' '), 'info');
+}
+
+document.addEventListener('click', () => document.getElementById('ctxMenu').classList.remove('open'));
+
+/* ══════════════════════════════════════════════════
+   ROW OPS
+══════════════════════════════════════════════════ */
+function addRow() {
+  if (!state.activeSheet) return toast('No sheet selected', 'warn');
+  if (!state.currentData[state.activeSheet]) state.currentData[state.activeSheet] = [];
+  const data = state.currentData[state.activeSheet];
+  const cols = data.length > 0 ? Object.keys(data[0]) : ['id'];
+  const schema = (state.currentData._vasuki_schema || {})[state.activeSheet] || {};
+  const row = Object.fromEntries(cols.map(c => [c, schema[c] === 'number' ? 0 : ""]));
+  data.push(row);
+  markDirty();
+  renderTable();
+  renderStatusBar();
+  setTimeout(() => {
+    const wrap = document.getElementById('tableView');
+    wrap.scrollTop = wrap.scrollHeight;
+  }, 50);
+}
+
+function deleteSelectedRows() {
+  if (!state.selectedRows.size) return;
+  confirmDialog(
+    `Delete ${state.selectedRows.size} rows`,
+    'This will permanently remove the selected rows.',
+    () => {
+      const data = state.currentData[state.activeSheet];
+      const indices = [...state.selectedRows].sort((a, b) => b - a);
+      indices.forEach(i => data.splice(i, 1));
+      state.selectedRows = new Set();
+      markDirty();
+      renderTable();
+      renderStatusBar();
+      toast(`Deleted ${indices.length} rows`, 'warn');
+    },
+    'Delete rows'
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   CELL UPDATE
+══════════════════════════════════════════════════ */
+function updateCell(idx, col, val) {
+  if (!state.currentData[state.activeSheet]) return;
+  const schema = (state.currentData._vasuki_schema || {})[state.activeSheet] || {};
+  const type = schema[col] || 'text';
+  let parsed = val;
+  if (type === 'number') parsed = val === '' ? '' : (parseFloat(val) || 0);
+  else if (type === 'boolean') parsed = val === 'true' || val === '1';
+  state.currentData[state.activeSheet][idx][col] = parsed;
+  markDirty();
+}
+
+/* ══════════════════════════════════════════════════
+   COLUMN OPS
+══════════════════════════════════════════════════ */
+function openAddColModal() {
+  document.getElementById('addColModalTitle').textContent = 'Add Column';
+  document.getElementById('newColName').value = '';
+  document.getElementById('newColDefault').value = '';
+  document.getElementById('newColType').value = 'text';
+  document.getElementById('colNullable').checked = true;
+  openModal('addColModal');
+  setTimeout(() => document.getElementById('newColName').focus(), 80);
+}
+
+function handleColumnSubmit() {
+  const name   = document.getElementById('newColName').value.trim();
+  const type   = document.getElementById('newColType').value;
+  const defVal = document.getElementById('newColDefault').value;
+  if (!name) return toast('Column name is required', 'error');
+  if (!state.activeSheet) return toast('No sheet selected', 'error');
+
+  const existingCols = Object.keys((state.currentData[state.activeSheet]?.[0]) || {});
+  if (existingCols.includes(name)) return toast(`Column "${name}" already exists`, 'error');
+
+  if (!state.currentData._vasuki_schema[state.activeSheet]) {
+    state.currentData._vasuki_schema[state.activeSheet] = {};
+  }
+  state.currentData._vasuki_schema[state.activeSheet][name] = type;
+
+  const defaultValue = defVal !== '' ? defVal : (type === 'number' ? 0 : '');
+  (state.currentData[state.activeSheet] || []).forEach(row => {
+    row[name] = defaultValue;
+  });
+
+  markDirty();
+  renderTable();
+  renderSchemaView();
+  renderStatusBar();
+  closeModal('addColModal');
+  toast(`Column "${name}" added`, 'success');
+}
+
+function deleteColumn(col) {
+  confirmDialog(
+    `Delete column "${col}"`,
+    'This removes the column from all rows and cannot be undone.',
+    () => {
+      (state.currentData[state.activeSheet] || []).forEach(r => delete r[col]);
+      const sc = (state.currentData._vasuki_schema || {})[state.activeSheet];
+      if (sc) delete sc[col];
+      markDirty();
+      renderTable();
+      renderSchemaView();
+      renderStatusBar();
+      toast(`Column "${col}" deleted`, 'warn');
+    },
+    'Delete column'
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   SHEET OPS
+══════════════════════════════════════════════════ */
+function openAddSheetModal() {
+  document.getElementById('newSheetName').value = '';
+  openModal('addSheetModal');
+  setTimeout(() => document.getElementById('newSheetName').focus(), 80);
+}
+
+function createSheet() {
+  const name = document.getElementById('newSheetName').value.trim();
+  if (!name) return toast('Sheet name is required', 'error');
+  if (state.currentData[name]) return toast(`Sheet "${name}" already exists`, 'error');
+
+  state.currentData[name] = [{ id: 1 }];
+  if (!state.currentData._vasuki_schema) state.currentData._vasuki_schema = {};
+  state.currentData._vasuki_schema[name] = { id: 'number' };
+  state.activeSheet = name;
+
+  markDirty();
+  renderSheetTabs();
+  renderSheetItems(state.currentDB);
+  renderTable();
+  renderStatusBar();
+  updateBreadcrumb();
+  closeModal('addSheetModal');
+  toast(`Sheet "${name}" created`, 'success');
+}
+
+function openRenameSheetModal() {
+  if (!state.activeSheet) return toast('No sheet selected', 'warn');
+  document.getElementById('renameSheetInput').value = state.activeSheet;
+  openModal('renameSheetModal');
+  setTimeout(() => {
+    const inp = document.getElementById('renameSheetInput');
+    inp.focus();
+    inp.select();
+  }, 80);
+}
+
+function renameSheet() {
+  const newName = document.getElementById('renameSheetInput').value.trim();
+  if (!newName) return toast('Name cannot be empty', 'error');
+  if (newName === state.activeSheet) return closeModal('renameSheetModal');
+  if (state.currentData[newName]) return toast(`"${newName}" already exists`, 'error');
+
+  // Rename data
+  state.currentData[newName] = state.currentData[state.activeSheet];
+  delete state.currentData[state.activeSheet];
+
+  // Rename schema
+  if (!state.currentData._vasuki_schema) state.currentData._vasuki_schema = {};
+  if (state.currentData._vasuki_schema[state.activeSheet]) {
+    state.currentData._vasuki_schema[newName] = state.currentData._vasuki_schema[state.activeSheet];
+    delete state.currentData._vasuki_schema[state.activeSheet];
+  }
+
+  state.activeSheet = newName;
+  markDirty();
+  renderSheetTabs();
+  renderSheetItems(state.currentDB);
+  renderTable();
+  renderStatusBar();
+  updateBreadcrumb();
+  closeModal('renameSheetModal');
+  toast(`Renamed to "${newName}"`, 'success');
+}
+
+function deleteActiveTable() {
+  if (!state.activeSheet) return toast('No sheet selected', 'warn');
+  confirmDialog(
+    `Delete sheet "${state.activeSheet}"`,
+    'This will permanently remove the sheet and all its data.',
+    () => {
+      delete state.currentData[state.activeSheet];
+      if (state.currentData._vasuki_schema) {
+        delete state.currentData._vasuki_schema[state.activeSheet];
+      }
+      const remaining = Object.keys(state.currentData).filter(k => k !== '_vasuki_schema');
+      state.activeSheet = remaining[0] || '';
+      state.filters = [];
+      state.searchQuery = '';
+      state.selectedRows = new Set();
+      markDirty();
+      renderSheetTabs();
+      renderSheetItems(state.currentDB);
+      renderTable();
+      renderStatusBar();
+      updateBreadcrumb();
+      toast('Sheet deleted', 'warn');
+    },
+    'Delete sheet'
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   DATABASE OPS
+══════════════════════════════════════════════════ */
+function openNewDBModal() {
+  document.getElementById('newDBName').value = '';
+  document.getElementById('newDBSheet').value = 'Sheet1';
+  openModal('newDBModal');
+  setTimeout(() => document.getElementById('newDBName').focus(), 80);
+}
+
+async function createNewDB() {
+  const name  = document.getElementById('newDBName').value.trim();
+  const sheet = document.getElementById('newDBSheet').value.trim() || 'Sheet1';
+  if (!name) return toast('Database name is required', 'error');
+  // Validate name
+  if (!/^[a-zA-Z0-9_\-]+$/.test(name)) return toast('Name may only contain letters, numbers, _ and -', 'error');
+
+  const initial = {
+    [sheet]: [{ id: 1 }],
+    _vasuki_schema: { [sheet]: { id: 'number' } }
+  };
+
+  const createRes = await api('/create-file', { name, extension: 'json' });
+  if (createRes.error) return;
+
+  const saveRes = await api('/save-file-content', { path: name + '.json', content: JSON.stringify(initial, null, 2) });
+  if (saveRes.error) return;
+
+  closeModal('newDBModal');
+  toast(`Database "${name}" created`, 'success');
+  await refreshDBList();
+  await loadDatabase(name + '.json');
+}
+
+function openDeleteDBModal() {
+  if (!state.currentDB) return toast('No database loaded', 'warn');
+  const dbName = state.currentDB.replace('.json', '');
+  document.getElementById('confirmDBNameLabel').textContent = dbName;
+  document.getElementById('deleteDBConfirm').value = '';
+  openModal('deleteDBModal');
+  setTimeout(() => document.getElementById('deleteDBConfirm').focus(), 80);
+}
+
+async function confirmDeleteDB() {
+  const expected = state.currentDB ? state.currentDB.replace('.json', '') : '';
+  const typed    = document.getElementById('deleteDBConfirm').value.trim();
+  if (typed !== expected) return toast('Name does not match — type exactly to confirm', 'error');
+
+  const res = await api('/delete-file', { path: state.currentDB });
+  if (res.error) return;
+
+  closeModal('deleteDBModal');
+  toast(`Database "${expected}" deleted`, 'warn');
+
+  // Reset state
+  state.currentDB = null;
+  state.currentData = {};
+  state.activeSheet = '';
+  state.dirty = false;
+
+  document.getElementById('welcomePanel').style.display = '';
+  document.getElementById('editorPanel').style.display = 'none';
+  document.getElementById('bcDB').textContent = 'No DB selected';
+  document.getElementById('bcTable').style.display = 'none';
+  document.getElementById('bcSep1').style.display = 'none';
+
+  await refreshDBList();
+}
+
+/* ══════════════════════════════════════════════════
+   FILTER
+══════════════════════════════════════════════════ */
+function toggleFilterPanel() {
+  const p = document.getElementById('filterPanel');
+  const btn = document.getElementById('filterBtn');
+  const isOpen = p.classList.contains('open');
+  p.classList.toggle('open', !isOpen);
+  btn.classList.toggle('active-filter', !isOpen);
+}
+
+function openAddFilterModal() {
+  if (!state.activeSheet) return toast('No sheet selected', 'warn');
+  const cols = Object.keys((state.currentData[state.activeSheet]?.[0]) || {});
+  if (!cols.length) return toast('No columns to filter', 'warn');
+  const sel = document.getElementById('filterCol');
+  sel.innerHTML = cols.map(c => `<option value="${escAttr(c)}">${escHtml(c)}</option>`).join('');
+  document.getElementById('filterVal').value = '';
+  openModal('addFilterModal');
+}
+
+function applyFilter() {
+  const col = document.getElementById('filterCol').value;
+  const op  = document.getElementById('filterOp').value;
+  const val = document.getElementById('filterVal').value;
+  if (!col) return toast('Select a column', 'error');
+
+  state.filters.push({ col, op, val });
+  renderFilterChips();
+  updateFilterCountBadge();
+  renderTable();
+  closeModal('addFilterModal');
+  toast(`Filter applied: ${col} ${op} "${val}"`, 'info');
+}
+
+function updateFilterCountBadge() {
+  const cnt = document.getElementById('filterCount');
+  if (state.filters.length) {
+    cnt.classList.remove('hidden');
+    cnt.textContent = state.filters.length;
+  } else {
+    cnt.classList.add('hidden');
+  }
+}
+
+function renderFilterChips() {
+  const c = document.getElementById('filterChips');
+  c.innerHTML = state.filters.map((f, i) => `
+    <div class="filter-chip">
+      <span>${escHtml(f.col)} <strong>${escHtml(f.op)}</strong> "${escHtml(f.val)}"</span>
+      <button class="remove-filter" onclick="removeFilter(${i})" title="Remove filter">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+function removeFilter(i) {
+  state.filters.splice(i, 1);
+  renderFilterChips();
+  updateFilterCountBadge();
+  renderTable();
+}
+
+function clearAllFilters() {
+  state.filters = [];
+  renderFilterChips();
+  updateFilterCountBadge();
+  renderTable();
+}
+
+/* ══════════════════════════════════════════════════
+   SEARCH
+══════════════════════════════════════════════════ */
+function searchRows(q) {
+  state.searchQuery = q;
+  renderTable();
+}
+
+/* ══════════════════════════════════════════════════
+   SQL EDITOR
+══════════════════════════════════════════════════ */
+function clearSQL() {
+  document.getElementById('sqlTextarea').value = '';
+  document.getElementById('sqlResults').innerHTML = '<div class="sql-empty">Write a query above and click Run →</div>';
+  document.getElementById('sqlInfo').textContent = '';
+}
+
+function runSQL() {
+  const query = document.getElementById('sqlTextarea').value.trim();
+  if (!query) return toast('Write a query first', 'warn');
+  const t0 = performance.now();
+  try {
+    const result = interpretSQL(query);
+    const elapsed = (performance.now() - t0).toFixed(1);
+    renderSQLResult(result, elapsed);
+    document.getElementById('sqlInfo').textContent = `${elapsed}ms`;
+    if (result.type === 'write') {
+      renderTable(); renderStatusBar(); renderSheetItems(state.currentDB);
+    }
+  } catch (e) {
+    renderSQLError(e.message);
+  }
+}
+
+function interpretSQL(q) {
+  const upper = q.toUpperCase().trimStart();
+
+  // ── SELECT ──
+  if (upper.startsWith('SELECT')) {
+    const fromMatch = /\bFROM\s+(\w+)/i.exec(q);
+    if (!fromMatch) throw new Error('Missing FROM clause');
+    const table = fromMatch[1];
+    if (!state.currentData[table]) throw new Error(`Table "${table}" not found. Available: ${Object.keys(state.currentData).filter(k=>k!=='_vasuki_schema').join(', ')}`);
+
+    let data = [...state.currentData[table]];
+
+    // WHERE
+    const whereMatch = /\bWHERE\s+(.+?)(?:\s+ORDER\s+BY|\s+LIMIT|$)/i.exec(q);
+    if (whereMatch) {
+      const cond = whereMatch[1].trim();
+      // Handle LIKE
+      const likeMatch = /(\w+)\s+(?:NOT\s+)?LIKE\s+'([^']+)'/i.exec(cond);
+      if (likeMatch) {
+        const col = likeMatch[1];
+        const pattern = likeMatch[2].replace(/%/g, '.*').replace(/_/g, '.');
+        const negate = cond.toUpperCase().includes('NOT LIKE');
+        const re = new RegExp(`^${pattern}$`, 'i');
+        data = data.filter(r => negate ? !re.test(String(r[col]??'')) : re.test(String(r[col]??'')));
+      } else {
+        const eqMatch = /(\w+)\s*(=|!=|>=|<=|>|<)\s*'?([^']*)'?/.exec(cond);
+        if (eqMatch) {
+          const [, col, op, val] = eqMatch;
+          data = data.filter(r => {
+            const rv = r[col] ?? '';
+            switch (op) {
+              case '=':  return String(rv).toLowerCase() === val.toLowerCase();
+              case '!=': return String(rv).toLowerCase() !== val.toLowerCase();
+              case '>':  return parseFloat(rv) > parseFloat(val);
+              case '<':  return parseFloat(rv) < parseFloat(val);
+              case '>=': return parseFloat(rv) >= parseFloat(val);
+              case '<=': return parseFloat(rv) <= parseFloat(val);
+              default:   return true;
+            }
+          });
+        }
+      }
+    }
+
+    // ORDER BY
+    const orderMatch = /\bORDER\s+BY\s+(\w+)(?:\s+(ASC|DESC))?/i.exec(q);
+    if (orderMatch) {
+      const col = orderMatch[1];
+      const desc = (orderMatch[2] || '').toUpperCase() === 'DESC';
+      data.sort((a, b) => {
+        const av = a[col] ?? '', bv = b[col] ?? '';
+        const n = !isNaN(av) && !isNaN(bv) && av !== '' && bv !== '';
+        return (n ? parseFloat(av) - parseFloat(bv) : String(av).localeCompare(String(bv))) * (desc ? -1 : 1);
+      });
+    }
+
+    // LIMIT / OFFSET
+    const limitMatch = /\bLIMIT\s+(\d+)(?:\s+OFFSET\s+(\d+))?/i.exec(q);
+    if (limitMatch) {
+      const offset = parseInt(limitMatch[2] || '0');
+      const limit  = parseInt(limitMatch[1]);
+      data = data.slice(offset, offset + limit);
+    }
+
+    // SELECT cols (handle COUNT(*) separately)
+    const selPart = /^SELECT\s+([\s\S]+?)\s+FROM/i.exec(q);
+    if (selPart && selPart[1].toUpperCase() !== '*') {
+      const colsStr = selPart[1].trim();
+      // COUNT(*)
+      if (/COUNT\s*\(\s*\*\s*\)/i.test(colsStr)) {
+        return { type: 'count', count: data.length };
+      }
+      const selCols = colsStr.split(',').map(c => c.trim()).filter(Boolean);
+      data = data.map(row => Object.fromEntries(selCols.map(c => [c, row[c] ?? null])));
+    }
+
+    return { type: 'select', rows: data, count: data.length };
+  }
+
+  // ── INSERT ──
+  if (upper.startsWith('INSERT')) {
+    const m = /INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)\s*VALUES\s*\(([^)]+)\)/i.exec(q);
+    if (!m) throw new Error('Invalid INSERT syntax.\nExpected: INSERT INTO table (col1, col2) VALUES (val1, val2)');
+    const [, table, colsStr, valsStr] = m;
+    if (!state.currentData[table]) throw new Error(`Table "${table}" not found`);
+    const cols = colsStr.split(',').map(c => c.trim());
+    const vals = valsStr.split(',').map(v => v.trim().replace(/^['"]|['"]$/g, ''));
+    if (cols.length !== vals.length) throw new Error('Column count does not match value count');
+    const row = Object.fromEntries(cols.map((c, i) => [c, vals[i]]));
+    state.currentData[table].push(row);
+    markDirty();
+    return { type: 'write', message: `1 row inserted into "${table}"`, count: 1 };
+  }
+
+  // ── UPDATE ──
+  if (upper.startsWith('UPDATE')) {
+    const m = /UPDATE\s+(\w+)\s+SET\s+(.+?)\s+WHERE\s+(.+)/i.exec(q);
+    if (!m) throw new Error('Invalid UPDATE syntax.\nExpected: UPDATE table SET col=val WHERE col=val');
+    const [, table, setStr, whereStr] = m;
+    if (!state.currentData[table]) throw new Error(`Table "${table}" not found`);
+    const setPairs = setStr.split(',').map(p => {
+      const idx = p.indexOf('=');
+      const k = p.slice(0, idx).trim();
+      const v = p.slice(idx + 1).trim().replace(/^['"]|['"]$/g, '');
+      return [k, v];
+    });
+    const wMatch = /(\w+)\s*(=|!=|>|<)\s*'?([^']*)'?/.exec(whereStr);
+    if (!wMatch) throw new Error('Invalid WHERE clause in UPDATE');
+    const [, wcol, wop, wval] = wMatch;
+    let count = 0;
+    state.currentData[table].forEach(row => {
+      const rv = String(row[wcol] ?? '');
+      const match = wop === '=' ? rv.toLowerCase() === wval.toLowerCase() :
+                    wop === '!='? rv.toLowerCase() !== wval.toLowerCase() :
+                    wop === '>' ? parseFloat(rv) > parseFloat(wval) :
+                                  parseFloat(rv) < parseFloat(wval);
+      if (match) { setPairs.forEach(([k, v]) => { row[k] = v; }); count++; }
+    });
+    markDirty();
+    return { type: 'write', message: `${count} row${count !== 1 ? 's' : ''} updated in "${table}"`, count };
+  }
+
+  // ── DELETE ──
+  if (upper.startsWith('DELETE')) {
+    const m = /DELETE\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?/i.exec(q);
+    if (!m) throw new Error('Invalid DELETE syntax.\nExpected: DELETE FROM table WHERE col=val');
+    const [, table, whereStr] = m;
+    if (!state.currentData[table]) throw new Error(`Table "${table}" not found`);
+    const before = state.currentData[table].length;
+    if (whereStr) {
+      const wMatch = /(\w+)\s*(=|!=|>|<)\s*'?([^']*)'?/.exec(whereStr);
+      if (wMatch) {
+        const [, wcol, wop, wval] = wMatch;
+        state.currentData[table] = state.currentData[table].filter(r => {
+          const rv = String(r[wcol] ?? '');
+          switch (wop) {
+            case '=':  return !(rv.toLowerCase() === wval.toLowerCase());
+            case '!=': return !(rv.toLowerCase() !== wval.toLowerCase());
+            case '>':  return !(parseFloat(rv) > parseFloat(wval));
+            case '<':  return !(parseFloat(rv) < parseFloat(wval));
+            default:   return true;
+          }
+        });
+      }
+    } else {
+      state.currentData[table] = [];
+    }
+    const deleted = before - state.currentData[table].length;
+    markDirty();
+    return { type: 'write', message: `${deleted} row${deleted !== 1 ? 's' : ''} deleted from "${table}"`, count: deleted };
+  }
+
+  // ── SHOW TABLES ──
+  if (upper.startsWith('SHOW TABLES') || upper.startsWith('SHOW TABLE')) {
+    const sheets = Object.keys(state.currentData).filter(k => k !== '_vasuki_schema');
+    const rows = sheets.map(s => ({ table_name: s, rows: (state.currentData[s] || []).length }));
+    return { type: 'select', rows, count: rows.length };
+  }
+
+  throw new Error(`Unsupported query type.\nSupported: SELECT, INSERT INTO, UPDATE, DELETE FROM, SHOW TABLES`);
+}
+
+function renderSQLResult(result, elapsed) {
+  const container = document.getElementById('sqlResults');
+  if (result.type === 'select') {
+    const cols = result.rows.length > 0 ? Object.keys(result.rows[0]) : [];
+    if (!result.rows.length) {
+      container.innerHTML = `
+        <div class="sql-result-header">
+          <span class="sql-result-tag success">Success</span>
+          <span class="sql-result-time">0 rows · ${elapsed}ms</span>
+        </div>
+        <div class="sql-empty">Query returned 0 rows</div>`;
+      return;
+    }
+    container.innerHTML = `
+      <div class="sql-result-header">
+        <span class="sql-result-tag success">Success</span>
+        <span class="sql-result-time">${result.count} row${result.count !== 1 ? 's' : ''} · ${elapsed}ms</span>
+      </div>
+      <div style="overflow:auto;">
+        <table style="min-width:100%;border-collapse:separate;border-spacing:0;">
+          <thead>
+            <tr>
+              ${cols.map(c => `
+                <th style="position:sticky;top:0;background:var(--bg);border-bottom:2px solid var(--border-dark);border-right:1px solid var(--border);padding:0;min-width:120px;">
+                  <div class="th-inner"><span class="th-label">${escHtml(c)}</span></div>
+                </th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            ${result.rows.map(row => `<tr>
+              ${cols.map(c => `
+                <td style="border-bottom:1px solid var(--border);border-right:1px solid var(--border);">
+                  <input class="cell-input" value="${escAttr(String(row[c] ?? ''))}" readonly>
+                </td>`).join('')}
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  } else if (result.type === 'count') {
+    container.innerHTML = `
+      <div class="sql-result-header">
+        <span class="sql-result-tag success">Count</span>
+        <span class="sql-result-time">${elapsed}ms</span>
+      </div>
+      <div style="padding:24px;font-family:'Fraunces',serif;font-size:2.5rem;font-weight:100;color:var(--ink);">${result.count}</div>`;
+  } else {
+    container.innerHTML = `
+      <div class="sql-result-header">
+        <span class="sql-result-tag success">Success</span>
+        <span class="sql-result-time">${elapsed}ms</span>
+      </div>
+      <div style="padding:20px 24px;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--green);line-height:1.6;">
+        ✓ ${escHtml(result.message)}
+      </div>`;
+  }
+}
+
+function renderSQLError(msg) {
+  document.getElementById('sqlResults').innerHTML = `
+    <div class="sql-result-header">
+      <span class="sql-result-tag error">Error</span>
+    </div>
+    <div style="padding:16px 24px;font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--red);line-height:1.8;white-space:pre-wrap;">${escHtml(msg)}</div>`;
+}
+
+/* ══════════════════════════════════════════════════
+   SCHEMA VIEW
+══════════════════════════════════════════════════ */
+function renderSchemaView() {
+  const el = document.getElementById('schemaView');
+  el.innerHTML = "";
+  const sheets = Object.keys(state.currentData).filter(k => k !== '_vasuki_schema');
+  if (!sheets.length) {
+    el.innerHTML = `<div style="padding:40px;font-family:'Fraunces',serif;font-style:italic;color:var(--ink-faint);text-align:center;">No tables found in this database.</div>`;
+    return;
+  }
+  sheets.forEach(sheet => {
+    const data   = state.currentData[sheet] || [];
+    const schema = (state.currentData._vasuki_schema || {})[sheet] || {};
+    const cols   = data.length > 0 ? Object.keys(data[0]) : Object.keys(schema);
+
+    const card = document.createElement('div');
+    card.className = 'schema-table-card';
+    card.innerHTML = `
+      <div class="schema-table-header">
+        <div class="schema-table-name">${escHtml(sheet)}</div>
+        <div class="schema-col-count">${cols.length} column${cols.length !== 1 ? 's' : ''} · ${data.length} row${data.length !== 1 ? 's' : ''}</div>
+      </div>
+      <div class="schema-col-row header">
+        <span>Column</span><span>Type</span><span>Nullable</span><span>Default</span><span></span>
+      </div>
+      ${cols.map((c, i) => `
+        <div class="schema-col-row">
+          <div class="schema-col-name">
+            ${i === 0 ? '<span class="pk-badge">PK</span>' : ''}
+            ${escHtml(c)}
+          </div>
+          <div class="schema-type-badge">${escHtml((schema[c] || 'text').toUpperCase())}</div>
+          <div><span class="schema-bool yes"></span></div>
+          <div style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--ink-faint);">—</div>
+          <div>
+            <button onclick="deleteColumn('${escAttr(c)}')" style="background:none;border:none;color:var(--ink-faint);cursor:pointer;padding:2px 4px;border-radius:4px;transition:all 0.1s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--ink-faint)'" title="Delete column">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
             </button>
-            <div class="w-8 h-8 bg-vasuki rounded-md flex items-center justify-center text-white font-bold text-lg overflow-hidden">
-                <img src="./logo.jpg" alt="V" class="object-cover w-full h-full">
-            </div>
-            <div>
-                <h1 id="currentDBNameDisplay" class="text-md font-medium text-slate-800">Untitled Database</h1>
-                <div class="flex gap-3 text-[11px] text-slate-500">
-                    <span class="hover:bg-slate-100 px-1 cursor-pointer" onclick="document.getElementById('uploadCloudFile').click()">Upload</span>
-                    <input type="file" id="uploadCloudFile" class="hidden" accept=".json,.csv" onchange="handleCloudUpload(this)"> 
-                    <span class="hover:text-red-500 px-1 cursor-pointer font-medium" onclick="deleteDatabase()">Delete DB</span>
-                    <span class="text-green-600 font-medium hidden sm:flex items-center gap-1">
-                        <svg class="w-2 h-2 fill-current" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg> Auto-sync active
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="flex items-center gap-3">
-            <div id="syncStatus" class="hidden md:block text-[11px] font-medium text-slate-400 mr-4 italic">All changes saved</div>
-            <div class="w-8 h-8 rounded-full border-2 border-white bg-blue-500 flex items-center justify-center text-[10px] text-white font-bold">AK</div>
-            <button onclick="saveCurrentDB()" class="bg-vasuki text-white px-4 py-1.5 rounded-md text-xs font-bold hover:bg-blue-700 transition">Sync</button>
-        </div>
-    </nav>
+          </div>
+        </div>`).join('')}`;
+    el.appendChild(card);
+  });
+}
 
-    <div class="bg-white px-4 py-1 flex items-center gap-2 border-b border-slate-200 shadow-sm overflow-x-auto">
-        <button onclick="addRow()" class="whitespace-nowrap px-3 py-1.5 hover:bg-slate-50 rounded-md text-sm flex items-center gap-2">
-            <svg class="w-4 h-4 text-vasuki" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>Row
-        </button>
-        <button onclick="openColumnModal()" class="whitespace-nowrap px-3 py-1.5 hover:bg-slate-50 rounded-md text-sm flex items-center gap-2">
-            <svg class="w-4 h-4 text-vasuki" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Column
-        </button>
-        <div class="h-6 w-[1px] bg-slate-200 mx-2 flex-shrink-0"></div>
-        <div id="tableTabs" class="flex gap-1 overflow-x-auto no-scrollbar"></div>
-        <button onclick="promptAction('Table Name', 'addNewTable')" class="p-1 text-slate-400 hover:text-vasuki flex-shrink-0">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-        </button>
-        <div class="flex-1"></div>
-        <button id="delSheetBtn" onclick="deleteActiveTable()" class="hidden text-red-400 hover:text-red-600 px-2 py-1 text-xs font-medium whitespace-nowrap">Delete Sheet</button>
+/* ══════════════════════════════════════════════════
+   STATS VIEW
+══════════════════════════════════════════════════ */
+function renderStatsView() {
+  const el = document.getElementById('statsView');
+  if (!state.activeSheet || !state.currentData[state.activeSheet]) {
+    el.innerHTML = `<div style="padding:40px;font-family:'Fraunces',serif;font-style:italic;color:var(--ink-faint);text-align:center;">No data to display.</div>`;
+    return;
+  }
+  const data  = state.currentData[state.activeSheet] || [];
+  const cols  = data.length > 0 ? Object.keys(data[0]) : [];
+  const totalRows  = data.length;
+  const totalCols  = cols.length;
+  const totalCells = totalRows * totalCols;
+  const emptyCount = data.reduce((acc, row) => acc + cols.filter(c => row[c] === '' || row[c] === null || row[c] === undefined).length, 0);
+  const fillRate   = totalCells > 0 ? ((1 - emptyCount / totalCells) * 100).toFixed(1) : '0.0';
+  const allSheets  = Object.keys(state.currentData).filter(k => k !== '_vasuki_schema');
+
+  el.innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Total Rows</div><div class="stat-value">${totalRows.toLocaleString()}</div><div class="stat-sub">in ${escHtml(state.activeSheet)}</div></div>
+      <div class="stat-card"><div class="stat-label">Columns</div><div class="stat-value">${totalCols}</div><div class="stat-sub">in schema</div></div>
+      <div class="stat-card"><div class="stat-label">Fill Rate</div><div class="stat-value">${fillRate}%</div><div class="stat-sub">non-empty cells</div></div>
+      <div class="stat-card"><div class="stat-label">Empty Cells</div><div class="stat-value">${emptyCount.toLocaleString()}</div><div class="stat-sub">of ${totalCells.toLocaleString()} total</div></div>
+      <div class="stat-card"><div class="stat-label">Sheets</div><div class="stat-value">${allSheets.length}</div><div class="stat-sub">in this database</div></div>
+      <div class="stat-card"><div class="stat-label">Est. Size</div><div class="stat-value">${(JSON.stringify(state.currentData).length / 1024).toFixed(1)}<span style="font-size:1rem;opacity:.5;"> KB</span></div><div class="stat-sub">in-memory JSON</div></div>
     </div>
+    ${cols.length ? `
+    <div class="col-stats-section">
+      <div class="col-stats-title">Column fill rates — ${escHtml(state.activeSheet)}</div>
+      ${cols.map(c => {
+        const filled = data.filter(r => r[c] !== '' && r[c] !== null && r[c] !== undefined).length;
+        const pct = totalRows > 0 ? Math.round(filled / totalRows * 100) : 0;
+        return `<div class="col-stat-row">
+          <div class="col-stat-name">${escHtml(c)}</div>
+          <div class="fill-bar-bg"><div class="fill-bar" style="width:${pct}%"></div></div>
+          <div class="col-stat-pct">${pct}%</div>
+        </div>`;
+      }).join('')}
+    </div>` : ''}`;
+}
 
-    <main class="flex h-[calc(100vh-100px)] relative">
-        <aside id="sidebar" class="w-64 bg-white border-r border-slate-200 flex flex-col md:translate-x-0">
-            <div class="p-4 border-b border-slate-100">
-                <button onclick="promptAction('Database Name', 'createNewDB')" class="w-full bg-white border border-slate-200 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4 text-vasuki" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>New DB
-                </button>
-            </div>
-            <div id="dbList" class="flex-1 overflow-y-auto p-2 space-y-0.5"></div>
-        </aside>
+/* ══════════════════════════════════════════════════
+   PANEL / VIEW SWITCHING
+══════════════════════════════════════════════════ */
+function switchPanelTab(tab) {
+  const tabs = ['table', 'sql', 'schema', 'stats'];
+  tabs.forEach(t => {
+    const tabBtn = document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+    const view   = document.getElementById(`${t}View`);
+    if (tabBtn) tabBtn.classList.toggle('active', t === tab);
+    if (view) {
+      view.classList.toggle('active', t === tab);
+    }
+  });
+  state.activeView = tab;
+  if (tab === 'schema') renderSchemaView();
+  if (tab === 'stats')  renderStatsView();
+}
 
-        <section class="flex-1 flex flex-col relative w-full overflow-hidden">
-            <div class="bg-white border-b border-slate-200 flex items-center px-4 py-1 text-xs text-slate-500">
-                <span class="font-bold text-vasuki mr-2">fx</span>
-                <input id="formulaDisplay" type="text" class="flex-1 outline-none italic" placeholder="Select a cell..." readonly>
-            </div>
+function switchRailView(view) {
+  const rails = ['table', 'sql', 'schema', 'stats'];
+  rails.forEach(v => {
+    const btn = document.getElementById(`rail${v.charAt(0).toUpperCase() + v.slice(1)}`);
+    if (btn) btn.classList.toggle('active', v === view);
+  });
+  if (state.currentDB) switchPanelTab(view);
+}
 
-            <div id="welcomeView" class="flex-1 flex flex-col items-center justify-center bg-white">
-                <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-4">
-                    <svg class="w-10 h-10 text-vasuki" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
-                </div>
-                <h2 class="text-xl font-medium text-slate-800">Select a database</h2>
-            </div>
+/* ══════════════════════════════════════════════════
+   EXPORT
+══════════════════════════════════════════════════ */
+function exportData() {
+  if (!state.activeSheet) return toast('No sheet selected', 'warn');
+  const data = state.currentData[state.activeSheet] || [];
+  if (!data.length) return toast('No data to export', 'warn');
+  const cols = Object.keys(data[0]);
+  const csv  = [
+    cols.map(c => `"${c}"`).join(','),
+    ...data.map(r => cols.map(c => `"${String(r[c] ?? '').replace(/"/g, '""')}"`).join(','))
+  ].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `${state.activeSheet}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast(`Exported "${state.activeSheet}.csv"`, 'success');
+}
 
-            <div id="editorView" class="hidden flex-1 overflow-hidden">
-                <div class="table-container">
-                    <table id="mainTable" class="min-w-full">
-                        <thead id="tableHead"></thead>
-                        <tbody id="tableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-    </main>
+/* ══════════════════════════════════════════════════
+   CLOUD UPLOAD / IMPORT
+══════════════════════════════════════════════════ */
+async function handleCloudUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  // Reset input so same file can be re-imported
+  input.value = '';
 
-    <div id="promptModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] flex items-center justify-center z-[200]">
-        <div class="bg-white rounded-lg p-6 w-[90%] max-w-sm shadow-2xl border border-slate-200 scale-in">
-            <h3 id="promptTitle" class="text-lg font-medium mb-4 text-slate-800">Enter Value</h3>
-            <input id="promptInput" type="text" class="w-full border border-slate-300 rounded-sm p-2 text-sm focus:border-vasuki outline-none mb-4">
-            <div class="flex justify-end gap-2">
-                <button onclick="closePrompt()" class="px-4 py-2 text-slate-500 text-sm">Cancel</button>
-                <button id="promptConfirmBtn" class="px-4 py-2 bg-vasuki text-white rounded-sm text-sm">Confirm</button>
-            </div>
-        </div>
-    </div>
+  const reader = new FileReader();
+  reader.onload = async e => {
+    try {
+      let jsonData;
+      if (file.name.endsWith('.json')) {
+        jsonData = JSON.parse(e.target.result);
+        // Ensure schema key
+        if (!jsonData._vasuki_schema) jsonData._vasuki_schema = {};
+      } else {
+        // Parse CSV
+        const text = e.target.result;
+        const lines = text.split('\n').filter(l => l.trim());
+        if (!lines.length) return toast('CSV file is empty', 'error');
+        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+        const rows = lines.slice(1).map(line => {
+          const vals = line.match(/(".*?"|[^,]+)/g) || [];
+          return Object.fromEntries(headers.map((h, i) => [h, (vals[i] || '').trim().replace(/^"|"$/g, '')]));
+        }).filter(r => Object.values(r).some(v => v !== ''));
+        const sheetName = file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9_]/g, '_') || 'Sheet1';
+        jsonData = {
+          [sheetName]: rows,
+          _vasuki_schema: { [sheetName]: Object.fromEntries(headers.map(h => [h, 'text'])) }
+        };
+      }
 
-    <div id="colModal" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-[1px] flex items-center justify-center z-[100]">
-        <div class="bg-white rounded-lg p-6 w-[90%] max-w-sm shadow-2xl border border-slate-200 scale-in">
-            <h3 id="modalTitle" class="text-lg font-medium mb-4">Add Column</h3>
-            <div class="space-y-4">
-                <input id="newColName" type="text" placeholder="Column Name" class="w-full border border-slate-300 rounded-sm p-2 text-sm focus:border-vasuki outline-none">
-                <select id="newColType" class="w-full border border-slate-300 rounded-sm p-2 text-sm bg-slate-50 outline-none">
-                    <option value="text">Plain Text</option>
-                    <option value="number">Number</option>
-                </select>
-                <div class="flex justify-end gap-2 pt-4">
-                    <button onclick="closeColumnModal()" class="px-4 py-2 text-slate-500 text-sm font-medium">Cancel</button>
-                    <button onclick="handleColumnSubmit()" class="px-4 py-2 bg-vasuki text-white rounded-sm font-medium text-sm shadow-sm">Apply</button>
-                </div>
-            </div>
-        </div>
-    </div>
+      const baseName = file.name.replace(/\.[^.]+$/, '');
+      const safeName = baseName.replace(/[^a-zA-Z0-9_\-]/g, '_');
+      const fname = safeName + '.json';
 
-    <script>
-        const API_BASE = "https://adamyakhairwal2011-vasuki-cloud.hf.space";
-        let currentData = {}, activeTable = "", currentFileName = "";
-        let currentUser = localStorage.getItem('vcloud_user') || "ceo@vasuki.it";
-        let editingColName = null;
+      await api('/create-file', { name: safeName, extension: 'json' });
+      await api('/save-file-content', { path: fname, content: JSON.stringify(jsonData, null, 2) });
 
-        // Redirect if not logged in
-        if(localStorage.getItem("vcloud_user") === null) {
-            window.location.href = "../login.html";
-        }
+      toast(`Imported "${safeName}" successfully`, 'success');
+      await refreshDBList();
+    } catch (err) {
+      toast(`Import failed: ${err.message}`, 'error');
+    }
+  };
+  reader.onerror = () => toast('Failed to read file', 'error');
+  reader.readAsText(file);
+}
 
-        // Sidebar Toggle for Mobile
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-        }
+/* ══════════════════════════════════════════════════
+   SAVE / SYNC
+══════════════════════════════════════════════════ */
+function markDirty() {
+  setSyncStatus('dirty');
+}
 
-        function showToast(msg, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            const iconColor = type === 'success' ? 'text-green-500' : (type === 'error' ? 'text-red-500' : 'text-blue-500');
-            toast.innerHTML = `<svg class="w-4 h-4 ${iconColor}" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"/></svg> <span>${msg}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
-        }
+async function saveCurrentDB() {
+  if (!state.currentDB) return toast('No database loaded', 'warn');
+  setSyncStatus('saving');
+  const res = await api('/save-file-content', {
+    path: state.currentDB,
+    content: JSON.stringify(state.currentData, null, 2)
+  });
+  if (res.error) {
+    setSyncStatus('dirty');
+    return;
+  }
+  setSyncStatus('saved');
+  await refreshDBList();
+  renderSheetItems(state.currentDB);
+  toast('Synced to cloud', 'success');
+}
 
-        function promptAction(title, callbackName) {
-            document.getElementById('promptTitle').innerText = title;
-            document.getElementById('promptInput').value = "";
-            document.getElementById('promptModal').classList.remove('hidden');
-            document.getElementById('promptConfirmBtn').onclick = () => {
-                const val = document.getElementById('promptInput').value;
-                if(val) window[callbackName](val);
-                closePrompt();
-            };
-        }
-        function closePrompt() { document.getElementById('promptModal').classList.add('hidden'); }
+/* ══════════════════════════════════════════════════
+   STATUS BAR
+══════════════════════════════════════════════════ */
+function renderStatusBar() {
+  const data = state.activeSheet ? (state.currentData[state.activeSheet] || []) : [];
+  const cols = data.length > 0 ? Object.keys(data[0]).length : 0;
+  document.getElementById('sbDB').textContent    = state.currentDB ? state.currentDB.replace('.json', '') : 'No database';
+  document.getElementById('sbTable').textContent = state.activeSheet || '—';
+  document.getElementById('sbRows').textContent  = `${data.length} row${data.length !== 1 ? 's' : ''}`;
+  document.getElementById('sbCols').textContent  = `${cols} column${cols !== 1 ? 's' : ''}`;
+}
 
-        window.onload = refreshDBList;
+/* ══════════════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+══════════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  // Ctrl/Cmd+S → Save
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    saveCurrentDB();
+  }
+  // Ctrl/Cmd+Enter → Run SQL (when SQL view active)
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    if (state.activeView === 'sql') {
+      e.preventDefault();
+      runSQL();
+    }
+  }
+  // Escape → close modals & menus
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-backdrop.open').forEach(m => m.classList.remove('open'));
+    document.getElementById('ctxMenu').classList.remove('open');
+    document.getElementById('_confirmOverlay')?.remove();
+  }
+});
 
-        async function api(endpoint, body) {
-            try {
-                const res = await fetch(`${API_BASE}${endpoint}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: currentUser, ...body })
-                });
-                return await res.json();
-            } catch(e) {
-                showToast("Connection Error", "error");
-            }
-        }
+// Modal enter-key submit shortcuts
+document.getElementById('newDBName').addEventListener('keydown',       e => e.key === 'Enter' && createNewDB());
+document.getElementById('newSheetName').addEventListener('keydown',    e => e.key === 'Enter' && createSheet());
+document.getElementById('renameSheetInput').addEventListener('keydown',e => e.key === 'Enter' && renameSheet());
+document.getElementById('newColName').addEventListener('keydown',      e => e.key === 'Enter' && handleColumnSubmit());
+document.getElementById('deleteDBConfirm').addEventListener('keydown', e => e.key === 'Enter' && confirmDeleteDB());
+document.getElementById('filterVal').addEventListener('keydown',       e => e.key === 'Enter' && applyFilter());
 
-        async function refreshDBList() {
-            const data = await api('/list-files', { folder: "" });
-            const list = document.getElementById('dbList');
-            list.innerHTML = "";
-            (data.files || []).filter(f => f.name.endsWith('.json')).forEach(f => {
-                const div = document.createElement('div');
-                div.className = `px-4 py-2 text-sm cursor-pointer rounded-r-full mr-2 transition flex items-center gap-2 ${currentFileName === f.name ? 'bg-blue-50 text-vasuki font-bold' : 'hover:bg-slate-100 text-slate-600'}`;
-                div.innerHTML = `<svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> ${f.name.replace('.json', '')}`;
-                div.onclick = () => {
-                    loadDatabase(f.name);
-                    if(window.innerWidth < 768) toggleSidebar();
-                };
-                list.appendChild(div);
-            });
-        }
+// Warn before leaving with unsaved changes
+window.addEventListener('beforeunload', e => {
+  if (state.dirty) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
 
-        async function loadDatabase(filename) {
-            const res = await api('/get-file-content', { path: filename });
-            currentData = JSON.parse(res.content);
-            currentFileName = filename;
-            document.getElementById('currentDBNameDisplay').innerText = filename.replace('.json', '');
-            const tables = Object.keys(currentData).filter(k => k !== '_vasuki_schema');
-            activeTable = tables[0] || "Sheet1";
-            if(!currentData[activeTable]) currentData[activeTable] = [];
-            if(!currentData._vasuki_schema) currentData._vasuki_schema = {};
-            renderUI();
-            showToast(`Loaded ${filename}`);
-        }
+/* ══════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════ */
+window.addEventListener('load', async () => {
+  // SQL Ctrl+Enter shortcut
+  document.getElementById('sqlTextarea').addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      runSQL();
+    }
+  });
 
-        function renderUI() {
-            document.getElementById('welcomeView').classList.add('hidden');
-            document.getElementById('editorView').classList.remove('hidden');
-            document.getElementById('delSheetBtn').classList.remove('hidden');
-            const tabs = document.getElementById('tableTabs');
-            tabs.innerHTML = "";
-            Object.keys(currentData).filter(k => k !== '_vasuki_schema').forEach(t => {
-                const btn = document.createElement('button');
-                btn.className = `px-3 py-1 rounded-t-md text-xs transition flex-shrink-0 ${activeTable === t ? 'bg-blue-50 text-vasuki border-b-2 border-vasuki font-bold' : 'text-slate-500 hover:bg-slate-50'}`;
-                btn.innerText = t;
-                btn.onclick = () => { activeTable = t; renderUI(); };
-                tabs.appendChild(btn);
-            });
-            renderTable();
-        }
-
-        function renderTable() {
-            const head = document.getElementById('tableHead'), body = document.getElementById('tableBody');
-            const data = currentData[activeTable], schema = currentData._vasuki_schema[activeTable] || {};
-            const columns = data.length > 0 ? Object.keys(data[0]) : ["id"];
-            head.innerHTML = `<tr><th class="w-10 bg-slate-50"></th>${columns.map(c => `<th class="px-3 py-2 text-xs font-medium text-slate-500 text-left group min-w-[150px]"><div class="flex justify-between items-center"><span>${c.toUpperCase()} <span class="text-[9px] text-slate-300 font-normal">| ${schema[c] || 'TEXT'}</span></span><div class="column-menu"><button onclick="deleteColumn('${c}')" class="text-slate-300 hover:text-red-500"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg></button></div></div></th>`).join('')}</tr>`;
-            body.innerHTML = data.map((row, rIdx) => `<tr class="group"><td class="bg-slate-50 text-center text-[10px] text-slate-400 font-mono">${rIdx + 1}</td>${columns.map(c => `<td><input type="${schema[c] === 'number' ? 'number' : 'text'}" value="${row[c] ?? ''}" onchange="updateCell('${activeTable}', ${rIdx}, '${c}', this.value)" class="cell-input"></td>`).join('')}</tr>`).join('');
-        }
-
-        async function deleteDatabase() {
-            document.getElementById('promptTitle').innerText = `Type 'confirm' to DELETE: ${currentFileName}`;
-            document.getElementById('promptInput').value = "";
-            document.getElementById('promptModal').classList.remove('hidden');
-            document.getElementById('promptConfirmBtn').onclick = async () => {
-                if(document.getElementById('promptInput').value === 'confirm') {
-                    await api('/delete-file', { path: currentFileName });
-                    showToast("Database Deleted", "success");
-                    location.reload();
-                }
-                closePrompt();
-            };
-        }
-
-        function deleteActiveTable() {
-            if(confirm(`Delete sheet "${activeTable}"?`)) {
-                delete currentData[activeTable];
-                if(currentData._vasuki_schema[activeTable]) delete currentData._vasuki_schema[activeTable];
-                const tables = Object.keys(currentData).filter(k => k !== '_vasuki_schema');
-                activeTable = tables[0] || "";
-                if(!activeTable) location.reload(); else renderUI();
-                autoSyncNotify();
-            }
-        }
-
-        async function handleCloudUpload(input) {
-            const file = input.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                try {
-                    let content = e.target.result;
-                    let jsonData = file.name.endsWith('.json') ? JSON.parse(content) : null;
-                    if (file.name.endsWith('.csv')) {
-                        const lines = content.split('\n').filter(l => l.trim());
-                        const headers = lines[0].split(',').map(h => h.trim());
-                        const rows = lines.slice(1).map(line => {
-                            const values = line.split(',');
-                            let obj = {};
-                            headers.forEach((h, i) => obj[h] = values[i]?.trim() || "");
-                            return obj;
-                        });
-                        jsonData = { "Sheet1": rows, "_vasuki_schema": { "Sheet1": Object.fromEntries(headers.map(h => [h, "text"])) } };
-                    }
-                    const fileName = file.name.replace(/\.[^/.]+$/, "") + ".json";
-                    await api('/create-file', { name: fileName.replace('.json',''), extension: "json" });
-                    await api('/save-file-content', { path: fileName, content: JSON.stringify(jsonData, null, 2) });
-                    showToast("Uploaded Successfully", "success");
-                    refreshDBList();
-                } catch (err) {
-                    showToast("Upload Failed", "error");
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        async function createNewDB(name) {
-            await api('/create-file', { name, extension: "json" });
-            await api('/save-file-content', { path: name + ".json", content: JSON.stringify({ "Sheet1": [{ "id": 1 }] }) });
-            refreshDBList();
-        }
-
-        async function addNewTable(name) {
-            currentData[name] = [{ "id": 1 }]; activeTable = name; renderUI(); autoSyncNotify();
-        }
-
-        function updateCell(table, row, col, val) {
-            const type = (currentData._vasuki_schema[table] || {})[col];
-            currentData[table][row][col] = type === 'number' ? parseFloat(val) : val;
-            autoSyncNotify();
-        }
-
-        function addRow() {
-            const cols = Object.keys(currentData[activeTable][0] || { id: "" });
-            let r = {}; cols.forEach(c => r[c] = "");
-            currentData[activeTable].push(r); renderTable(); autoSyncNotify();
-        }
-
-        function openColumnModal() { editingColName = null; document.getElementById('modalTitle').innerText = "Add Column"; document.getElementById('colModal').classList.remove('hidden'); }
-        function closeColumnModal() { document.getElementById('colModal').classList.add('hidden'); }
-        
-        function handleColumnSubmit() {
-            const name = document.getElementById('newColName').value.trim();
-            const type = document.getElementById('newColType').value;
-            if(!name) return;
-            if(!currentData._vasuki_schema[activeTable]) currentData._vasuki_schema[activeTable] = {};
-            currentData._vasuki_schema[activeTable][name] = type;
-            currentData[activeTable].forEach(row => row[name] = type === 'number' ? 0 : "");
-            renderUI(); closeColumnModal(); autoSyncNotify();
-        }
-
-        function deleteColumn(c) {
-            if(confirm(`Delete column "${c}"?`)) {
-                currentData[activeTable].forEach(r => delete r[c]);
-                renderTable(); autoSyncNotify();
-            }
-        }
-
-        function autoSyncNotify() {
-            const bar = document.getElementById('syncStatus');
-            bar.innerText = "⚠️ Unsaved Changes";
-            bar.classList.replace('text-slate-400', 'text-amber-500');
-        }
-
-        async function saveCurrentDB() {
-            const bar = document.getElementById('syncStatus');
-            const originalText = bar.innerText;
-            bar.innerText = "☁️ Syncing...";
-            await api('/save-file-content', { path: currentFileName, content: JSON.stringify(currentData, null, 2) });
-            bar.innerText = "All changes saved";
-            bar.classList.replace('text-amber-500', 'text-slate-400');
-            showToast("Synced to Cloud", "success");
-        }
-    </script>
+  await refreshDBList();
+});
+</script>
 </body>
 </html>
