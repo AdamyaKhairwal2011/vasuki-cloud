@@ -339,9 +339,8 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
 <script>
-  if (navigator.userAgent.toLowerCase().includes("windows") || navigator.userAgent.toLowerCase().includes("mac") || navigator.userAgent.toLowerCase().includes("linux")) {
-  } else {
-    document.getElementById('reveal-text').innerText = 'Simple. Powerful. Human.';
+  if (navigator.userAgent.toLowerCase().includes("android") || navigator.userAgent.toLowerCase().includes("ios")) {
+        document.getElementById('reveal-text').innerText = 'Powerful.';
   }
   gsap.registerPlugin(ScrollTrigger);
 
