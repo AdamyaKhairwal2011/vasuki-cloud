@@ -22,7 +22,7 @@
 
 @font-face {
   font-family: 'vasuki-sans';
-  src: url('./custom.ttf')
+  src: url('./custom\ copy.ttf')
 }
 html.lenis, html.lenis body {
   height: auto;
@@ -107,7 +107,7 @@ nav.light .ham span
 #hero {
   position: relative;
   width: 100%;
-  height: 70dvh;
+  height: 100dvh;
   min-height: 600px;
   /* CRITICAL: clips the Three.js canvas */
   overflow: hidden;
@@ -120,19 +120,20 @@ nav.light .ham span
 
 /* Three.js canvas — absolutely positioned INSIDE #hero */
 #threejs-canvas {
-  position: absolute;
+  position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  display: block;
   /* No pointer events so hero text/buttons remain clickable */
   pointer-events: none;
   z-index: 1;
 }
 
+main { position: absolute; z-index: 2; width: 100dvw;}
+
 .hero-inner { position: absolute; z-index: 10001; max-width: 740px; padding: 0 24px; }
 
 .overlay {
-    height: 70dvh;
+    height: 100dvh;
     width: 100dvw;
     background-color: #00000077;
     z-index: 1000;
@@ -158,7 +159,7 @@ nav.light .ham span
 .offwhite { background: var(--off-white); color: var(--text); }
 
 /* INTRO */
-.intro { padding: 100px 40px; max-width: 680px; margin: 0 auto; text-align: center; }
+.intro { padding:10px 40px; max-width: 680px; margin: 0 auto; text-align: center; }
 .intro h2 { font-size: clamp(26px, 3.8dvw, 40px); font-weight: 100; letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 20px; }
 .intro p { font-size: 17px; color: var(--text-muted); line-height: 1.7; }
 .rule { width: 40px; height: 3px; background: var(--teal-mid); border-radius: 2px; margin: 24px auto; }
@@ -247,6 +248,14 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
   #dead {
     display: none;
   }
+
+  #scroll-wrapper h1{
+    font-size: 1rem;
+  }
+}
+
+#scroll-wrapper h1{
+  font-size: 4rem;
 }
 </style>
 </head>
@@ -292,6 +301,7 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
   <a href="mailto:codeclutch.adamyarao@gmail.com">Support</a>
 </div>
 
+
 <!-- ═══════════════════════════════════
      HERO — Three.js renders inside here
 ═══════════════════════════════════ -->
@@ -310,14 +320,56 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
   </div>
   <div class="hero-scroll"><div class="scroll-line"></div>scroll</div>
 </section>
+<main>
+
+<div id="scroll-wrapper" style="padding: 30vh 0 0 0; text-align: center; background: #fff;">
+  <h1 id="reveal-text" class="head" style="
+    font-weight: 100;
+    color: transparent;
+    -webkit-text-stroke: 1.5px #000;
+    line-height: 1.2;
+    max-width: 900px;
+    margin: 0 auto;
+  ">
+    Focus on what matters most with seamless workspace integration.
+  </h1>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+  console.log();
+  if (navigator.userAgent.toLowerCase().includes("windows") || navigator.userAgent.toLowerCase().includes("mac") || navigator.userAgent.toLowerCase().includes("linux")) {
+  } else {
+    document.getElementById('reveal-text').innerText = 'Simple. Powerful. Human.';
+  }
+  gsap.registerPlugin(ScrollTrigger);
+
+  const el = document.querySelector('#reveal-text');
+  // Wrap words in spans
+  el.innerHTML = el.textContent.trim().split(/\s+/).map(word => `<span>${word} </span>`).join('');
+
+  // Animate
+  gsap.to("#reveal-text span", {
+    scrollTrigger: {
+      trigger: "#reveal-text",
+      start: "top 80%",
+      end: "top 20%",
+      scrub: 0.5,
+    },
+    color: "#000",
+    stagger: 0.1,
+    ease: "none"
+  });
+</script>
 
 <!-- WHITE ZONE -->
 <div class="white">
   <div class="intro reveal">
-    <h2>Enterprise power, creator simplicity.</h2>
     <div class="rule"></div>
     <p>At <b>Vasuki iTech</b>, we believe digital infrastructure should be invisible. We've built an ecosystem that removes the friction of DevOps, allowing CEO-led teams to deploy and scale without the overhead of traditional providers.</p>
-  </div>
+  </div><br><br><br>
   <div class="feature-stack">
     <div class="feat-item reveal">
       <div class="feat-num">01</div>
@@ -394,6 +446,8 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
     </a>
   </div>
 </div>
+
+
 
 <!-- CTA BAND -->
 <div class="cta-band">
@@ -683,7 +737,7 @@ document.querySelectorAll('.reveal').forEach((el, i) => {
 // --- SMOOTH SCROLL INITIALIZATION (LENIS) ---
 const lenis = new Lenis({
   duration: 1.8,    // Higher = slower, more "drifty"
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Luxurious easing curve
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -5 * t)), // Luxurious easing curve
   direction: 'vertical',
   gestureDirection: 'vertical',
   smoothHover: true,
@@ -736,5 +790,6 @@ function raf(time) {
 }
 requestAnimationFrame(raf);
 </script>
+</main>
 </body>
 </html>
