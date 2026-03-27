@@ -222,14 +222,14 @@ main { position: absolute; z-index: 2; width: 100dvw;}
 /* FOOTER */
 footer { background: var(--white); border-top: 1px solid var(--border); padding: 72px 40px 40px; }
 .footer-wrap { max-width: 820px; margin: 0 auto; }
-.footer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.footer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 48px; padding-bottom: 48px; flex-wrap: wrap; }
 .footer-brand-name { font-size: 20px; font-weight: 100; color: var(--teal-dark); margin-bottom: 8px; }
 .footer-brand-desc { font-size: 13px; color: var(--text-muted); max-width: 210px; line-height: 1.6; }
 .footer-cols { display: flex; gap: 56px; flex-wrap: wrap; }
 .footer-col-head { font-size: 11px; font-weight: 100; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-mid); margin-bottom: 18px; }
 .footer-col a { display: block; font-size: 14px; color: var(--text-muted); text-decoration: none; margin-bottom: 11px; transition: color 0.15s; }
 .footer-col a:hover { color: var(--teal-dark); }
-.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; flex-wrap: wrap; gap: 12px; }
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; flex-wrap: wrap; gap: 12px; background-color: #fff; padding: 20px}
 .footer-copy { font-size: 13px; color: var(--text-muted); }
 
 /* RESPONSIVE */
@@ -487,13 +487,21 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
           <a href="mailto:codeclutch.adamyarao@gmail.com">Mail us</a>
         </div>
       </div>
-    </div>
+</div>
+</footer>
+
+<div id="footer-physics-container" class="head" style="position: relative; width: 100%; height: 200px; background: #ffffff; overflow: hidden; border-top: 1px solid #e0e0e0;">
+    <div class="head" id="physics-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
+    
+    <h2 id="footer-logo-text" class="head" style="position: absolute; width: 100%; text-align: center; top: 40%; font-size: 20rem; font-weight: 700; color: #202124; pointer-events: none; opacity: 0;">
+    </h2>
+</div>
+
     <div class="footer-bottom">
       <span class="footer-copy">© 2026 Vasuki iTech</span>
       <span class="footer-copy">Independent cloud infrastructure</span>
     </div>
   </div>
-</footer>
 
 <!-- ═══════════════════════════════════
      THREE.JS — renders into #threejs-canvas
@@ -787,6 +795,117 @@ function raf(time) {
   requestAnimationFrame(raf);
 }
 requestAnimationFrame(raf);
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
+<script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const container = document.getElementById('footer-physics-container');
+    const canvasi = document.getElementById('physics-canvas');
+    let companyName = "Cloud Crafted Intellect.";
+
+    if(navigator.userAgent.toLowerCase().includes("android") || navigator.userAgent.toLowerCase().includes("ios")) {
+        companyName = 'Cloud.';
+    } else {
+        companyName = companyName;
+    }
+
+    // Matter.js Setup
+    const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = Matter;
+    const engine = Engine.create();
+    
+    // Set viewport dimensions
+    const viewportWidth = container.offsetWidth;
+    const viewportHeight = 200; // Match container height
+
+    const render = Render.create({
+        element: canvasi,
+        engine: engine,
+        options: {
+            width: viewportWidth,
+            height: viewportHeight,
+            wireframes: false,
+            background: 'transparent'
+        }
+    });
+
+    // Create Floor and Walls (Calculated to sit at the exact bottom of the 500px view)
+    const floor = Bodies.rectangle(viewportWidth / 2, viewportHeight - 10, viewportWidth, 20, { isStatic: true, render: { visible: false } });
+    const leftWall = Bodies.rectangle(-10, viewportHeight / 2, 20, viewportHeight, { isStatic: true, render: { visible: false } });
+    const rightWall = Bodies.rectangle(viewportWidth + 10, viewportHeight / 2, 20, viewportHeight, { isStatic: true, render: { visible: false } });
+    Composite.add(engine.world, [floor, leftWall, rightWall]);
+
+function createTextTexture(char) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1000;
+    canvas.height = 500;
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#202124";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "700 320px 'google sans'"; // fallback added
+
+    ctx.fillText(char, canvas.width / 2, canvas.height / 2);
+
+    return canvas.toDataURL();
+}
+
+function spawnLetters() {
+    const letters = companyName.split('');
+    const letterBodies = letters.map((char, i) => {
+        const x = 0.5 * container.offsetWidth + (i - letters.length / 2) * 70;
+
+        const texture = createTextTexture(char);
+
+        return Matter.Bodies.rectangle(x, -50, 60, 90, {
+            restitution: 0.6,
+            friction: 0.1,
+            render: {
+                sprite: {
+                    texture: texture,
+                    xScale: 0.5,
+                    yScale: 0.5
+                }
+            }
+        });
+    });
+
+    const mouse = Matter.Mouse.create(render.canvas);
+    const mouseConstraint = Matter.MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: { stiffness: 0.2, render: { visible: false } }
+    });
+
+    Matter.Composite.add(engine.world, [...letterBodies, mouseConstraint]);
+    Matter.Render.run(render);
+    const runner = Matter.Runner.create();
+    Matter.Runner.run(runner, engine);
+}
+
+
+
+    // Trigger on Scroll
+    ScrollTrigger.create({
+        trigger: "#footer-physics-container",
+        start: "top 90%",
+        onEnter: () => {
+            spawnLetters();
+        },
+        once: true 
+    });
+
+    window.addEventListener('resize', () => {
+        render.canvas.width = container.offsetWidth;
+        Matter.Body.setPosition(floor, { x: container.offsetWidth / 2, y: viewportHeight - 10 });
+        Matter.Body.setPosition(rightWall, { x: container.offsetWidth + 10, y: viewportHeight / 2 });
+    });
 </script>
 </main>
 </body>
