@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vasuki I/O Registrations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-primary: #ffffff;
+            --button-blue: #1a73e8;
+            --button-hover: #185abc;
+            --nav-text: #e8eaed;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'VasukiSans', 'Inter', sans-serif;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .google-logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+        }
+
+        .io-mini {
+            margin-left: 8px;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: var(--nav-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .btn-signin {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-register-outline {
+            border: 1px solid #5f6368;
+            padding: 8px 20px;
+            border-radius: 50px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .btn-register-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .io-logo-container {
+            margin-bottom: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: scale(1.2);
+        }
+
+        /* Decorative I/O with Gradients */
+        .io-shape-i {
+            width: 55px;
+            height: 130px;
+            background: linear-gradient(180deg, #4285F4 0%, #EA4335 50%, #FBBC04 100%);
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .io-shape-slash {
+            width: 8px;
+            height: 140px;
+            background: #ffffff;
+            transform: rotate(15deg);
+            margin: 0 10px;
+            border-radius: 10px;
+        }
+
+        .io-shape-o {
+            width: 130px;
+            height: 130px;
+            background: radial-gradient(circle at top left, #4285F4, #34A853, #FBBC04, #EA4335);
+            border-radius: 50%;
+            margin-left: 15px;
+        }
+
+        .hero-text {
+            font-size: 32px;
+            font-weight: 400;
+            max-width: 600px;
+            margin-bottom: 32px;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .btn-primary {
+            background-color: var(--button-blue);
+            color: white;
+            padding: 14px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--button-hover);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+            
+            .nav-links, .btn-signin {
+                display: none; /* Mobile simplicity */
+            }
+
+            .io-logo-container {
+                transform: scale(0.8);
+            }
+
+            .hero-text {
+                font-size: 24px;
+            }
+
+            .btn-primary {
+                width: 80%;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-left">
+            <div class="google-logo">
+                Vasuki <span class="io-mini">I/O</span>
+            </div>
+            <div class="nav-links">
+                <a href="https://vasuki.cloud/ai">Vaimanika AI</a>
+                <a href="https://vasuki.cloud/">Cloud Dashboard</a>
+            </div>
+        </div>
+        <div class="nav-right">
+            <a href="https://vasuki.cloud" class="btn-signin">Vasuki Cloud</a>
+            <a href="https://vasuki.cloud/view-form.html?id=f-ntangf"class="btn-register-outline">Register</a>
+        </div>
+    </nav>
+
+    <main class="hero">
+        <div class="io-logo-container">
+            <div class="io-shape-i"></div>
+            <div class="io-shape-slash"></div>
+            <div class="io-shape-o"></div>
+        </div>
+
+        <h1 class="hero-text">
+            Join us on April 31st '26, for livestreamed keynotes, tools and more.
+        </h1>
+
+        <a href="https://vasuki.cloud/view-form.html?id=f-ntangf" class="btn-primary">Register now</a>
+    </main>
+
+</body>
+</html>
