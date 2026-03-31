@@ -3,173 +3,322 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vasuki Forms | Eco-System</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap">
+    <title>Vasuki Forms</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --brand: #000000; /* Default Primary */
-            --bg: #FDF8F6;
+            --accent: #363636;
+            --accent-light: #F7F0DC;
+            --accent-mid: #5f5f5f;
+            --bg: #F0EDE6;
             --card: #FFFFFF;
-            --text: #2D2D2D;
-            --text-secondary: #757575;
-            --border: rgba(0,0,0,0.08);
-            --shadow: 0 20px 40px rgba(0,0,0,0.04);
+            --text: #202124;
+            --text-secondary: #5F6368;
+            --text-muted: #9AA0A6;
+            --border: #E0DDD6;
+            --radius: 5px;
+            --shadow: 0 0px 0px rgba(0,0,0,0.08), 0 0 0px rgba(0,0,0,0.06);
         }
 
-        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Google Sans', 'Roboto', sans-serif;
             background: var(--bg);
-            margin: 0;
-            padding: 0;
-            color: var(--text);
+            min-height: 100vh;
+            padding: 32px 16px 64px;
         }
 
-        /* --- WAVY HEADER --- */
-        .header-hero {
-            position: relative;
-            background: var(--brand);
-            height: 120px;
-            width: 100%;
+        .form-wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .wave-container {
-            position: absolute;
-            bottom: -2px;
-            width: 100%;
-            line-height: 0;
-        }
-
-        .wave-container svg {
-            fill: var(--bg);
-            width: 100%;
-            height: 60px;
-        }
-
-        /* --- FORM CONTAINER --- */
-        .container {
-            max-width: 600px;
-            margin: -60px auto 40px;
-            padding: 0 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .form-card {
+        /* HEADER CARD */
+        .header-card {
             background: var(--card);
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            padding: 32px;
-            margin-bottom: 20px;
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
+            overflow: hidden;
         }
 
-        .form-header-card {
-            text-align: center;
-            border-top: 8px solid var(--brand);
+        .header-banner {
+            height: 12px;
+            background: var(--accent);
         }
 
-        h1 { margin: 0 0 10px; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
-        .description { color: var(--text-secondary); font-size: 15px; line-height: 1.5; }
+        .header-body { padding: 24px 28px 22px; }
 
-        /* --- FIELD GROUPS --- */
-        .field-group {
-            margin-bottom: 20px;
-        }
-
-        .field-label {
-            display: block;
-            font-size: 14px;
+        .form-title {
+            font-size: 26px;
             font-weight: 700;
-            margin-bottom: 12px;
             color: var(--text);
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
         }
 
-        .input-text, .input-textarea, .input-select {
-            width: 100%;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 16px;
-            outline: none;
-            font-family: inherit;
+        .form-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        .required-note {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .required-note span { color: #C5221F; }
+
+        /* QUESTION CARD */
+        .q-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 22px 28px 24px;
+            border-left: 3px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .q-card:focus-within { border-left-color: var(--accent); }
+
+        .q-label {
             font-size: 15px;
-            background: #fdfdfd;
-            transition: all 0.2s ease;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 18px;
+            line-height: 1.45;
         }
 
-        .input-text:focus, .input-textarea:focus {
-            border-color: var(--brand);
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(0,0,0,0.03);
+        .q-label .star { color: #C5221F; margin-left: 4px; }
+
+        /* UNDERLINE INPUT */
+        .field-underline {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #BDBDBD;
+            padding: 6px 0 8px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: transparent;
+            outline: none;
+            transition: border-color 0.2s;
         }
 
-        /* --- OPTIONS (Checkboxes/Radios) --- */
-        .option-item {
+        .field-underline::placeholder { color: var(--text-muted); }
+        .field-underline:focus { border-bottom: 2px solid var(--accent); }
+
+        /* TEXTAREA */
+        .field-textarea {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #BDBDBD;
+            padding: 6px 0 8px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: transparent;
+            outline: none;
+            resize: none;
+            min-height: 80px;
+            transition: border-color 0.2s;
+        }
+
+        .field-textarea:focus { border-bottom: 2px solid var(--accent); }
+
+        /* SELECT */
+        .field-select-wrap { position: relative; }
+
+        .field-select {
+            width: 100%;
+            appearance: none;
+            border: none;
+            border-bottom: 1px solid #BDBDBD;
+            padding: 6px 32px 8px 0;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: transparent;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .field-select:focus { border-bottom: 2px solid var(--accent); }
+
+        .select-arrow {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--text-secondary);
+        }
+
+        /* RADIO / CHECKBOX */
+        .options-list { display: flex; flex-direction: column; gap: 2px; }
+
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .option-row:hover { background: var(--accent-light); }
+
+        .option-row input[type="radio"],
+        .option-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .option-row span { font-size: 14px; color: var(--text); line-height: 1.4; }
+
+        /* SUBMIT BAR */
+        .submit-bar {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 12px;
-            padding: 10px 15px;
-            border-radius: 10px;
-            background: #fafafa;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: 0.2s;
+            padding: 4px 0;
         }
-        .option-item:hover { background: #fff; border-color: var(--brand); }
-        .option-item input { width: 18px; height: 18px; accent-color: var(--brand); }
 
-        /* --- BUTTONS --- */
         .btn-submit {
-            background: var(--brand);
+            background: var(--accent);
             color: #fff;
-            padding: 14px 40px;
             border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 16px;
+            border-radius: 5px;
+            padding: 10px 26px;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            width: 100%;
-            transition: transform 0.2s, opacity 0.2s;
+            transition: background 0.15s, box-shadow 0.15s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.18);
         }
-        .btn-submit:hover { transform: translateY(-2px); opacity: 0.9; }
 
-        #loading { text-align: center; padding: 100px; font-weight: 600; color: var(--text-secondary); }
+        .btn-submit:hover { background: #9E7E22; box-shadow: 0 2px 6px rgba(0,0,0,0.22); }
+        .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+        .btn-clear {
+            background: none;
+            border: none;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 14px;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 10px 4px;
+            font-weight: 500;
+        }
+
+        .btn-clear:hover { color: #7A5C00; }
+
+        /* FOOTER */
+        .form-footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            padding-top: 4px;
+        }
+
+        .form-footer a { color: var(--accent); text-decoration: none; }
+
+        /* LOADING */
+        #loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 14px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* SUCCESS */
+        .success-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .success-banner { height: 12px; background: linear-gradient(90deg, #34A853, #4CAF50); }
+        .success-body { padding: 40px 28px 36px; }
+
+        .success-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #E6F4EA;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+        }
+
+        .success-icon svg { width: 30px; height: 30px; fill: #34A853; }
+        .success-title { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+        .success-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; }
     </style>
 </head>
-
 <body>
 
-    <section class="header-hero" id="formHero">
-        <div class="wave-container">
-            <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-                <path d="M0,160L80,176C160,192,320,224,480,213.3C640,203,800,149,960,138.7C1120,128,1280,160,1360,176L1440,192L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
-            </svg>
-        </div>
-    </section>
+<div class="form-wrapper">
 
-    <div class="container">
-        <div id="loading">Initialising Vasuki Node...</div>
-
-        <div id="form-container" style="display:none">
-            <form id="publicForm">
-                <div class="form-card form-header-card">
-                    <h1 id="displayTitle">Loading...</h1>
-                    <div class="description" id="displayDesc">Secure form transmission enabled.</div>
-                </div>
-
-                <div id="fieldsList"></div>
-
-                <button type="submit" class="btn-submit">Submit Response</button>
-                
-                <p onclick="location.reload()" style="text-align:center; color:var(--text-secondary); font-size:12px; margin-top:20px; cursor:pointer;">
-                    Clear form and restart
-                </p>
-            </form>
-        </div>
+    <div id="loading">
+        <div class="spinner"></div>
+        Loading form…
     </div>
+
+    <div id="form-container" style="display:none">
+        <form id="publicForm" novalidate>
+
+            <div class="header-card">
+                <div class="header-banner"></div>
+                <div class="header-body">
+                    <h1 class="form-title" id="displayTitle">Loading…</h1>
+                    <p class="form-desc" id="displayDesc">Please fill out all required fields.</p>
+                    <p class="required-note"><span>*</span> Indicates required question</p>
+                </div>
+            </div><br>
+
+            <div id="fieldsList"></div>
+
+            <div class="submit-bar">
+                <button type="submit" class="btn-submit">Submit</button>
+                <button type="button" class="btn-clear" onclick="location.reload()">Clear form</button>
+            </div>
+
+        </form>
+
+        <p class="form-footer">Powered by <a href="https://www.vasuki.cloud/forms">Vasuki Forms</a></p>
+    </div>
+
+</div>
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -183,97 +332,113 @@ const params = new URLSearchParams(location.search);
 const formId = params.get("id");
 let currentFields = [];
 
-
-
-async function loadForm(){
-    if(!formId) return;
-    const {data, error} = await supabase.from("forms").select("*").eq("id", formId).single();
-    if(!error && data) renderForm(data);
+async function loadForm() {
+    if (!formId) {
+        document.getElementById('loading').innerHTML = '<p>No form ID in URL. Add <code>?id=YOUR_ID</code></p>';
+        return;
+    }
+    const { data, error } = await supabase.from("forms").select("*").eq("id", formId).single();
+    if (!error && data) renderForm(data);
+    else document.getElementById('loading').innerHTML = '<p style="color:#C5221F">Could not load form.</p>';
 }
 
-function renderForm(form){
-    document.getElementById("loading").style.display="none";
-    document.getElementById("form-container").style.display="block";
+function renderForm(form) {
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("form-container").style.display = "block";
     document.getElementById("displayTitle").textContent = form.title;
-    
-    // Set brand color if available in a parent org or default
-    if(form.theme_color) document.documentElement.style.setProperty("--brand", form.theme_color);
+    window.document.title =  "Vasuki Forms - " + form.title;
+    if (form.description) document.getElementById("displayDesc").textContent = form.description;
+    if (form.theme_color) document.documentElement.style.setProperty("--accent", form.theme_color);
 
     currentFields = form.fields || [];
     const wrap = document.getElementById("fieldsList");
 
     wrap.innerHTML = currentFields.map(f => {
-        let input = "";
         const req = f.required ? 'required' : '';
+        let input = '';
 
-        switch(f.type){
+        switch (f.type) {
             case "textarea":
-                input = `<textarea class="input-textarea" name="${f.id}" rows="4" ${req} placeholder="Your answer"></textarea>`;
+                input = `<textarea class="field-textarea" name="${f.id}" rows="3" ${req} placeholder="Your answer"></textarea>`;
                 break;
             case "select":
-                input = `<select class="input-select" name="${f.id}" ${req}>
-                    <option value="">Choose an option</option>
-                    ${f.options.map(o => `<option value="${o}">${o}</option>`).join("")}
-                </select>`;
+                input = `<div class="field-select-wrap">
+                    <select class="field-select" name="${f.id}" ${req}>
+                        <option value="">Choose</option>
+                        ${f.options.map(o => `<option value="${o}">${o}</option>`).join("")}
+                    </select>
+                    <svg class="select-arrow" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                </div>`;
                 break;
             case "radio":
-                input = f.options.map(o => `
-                    <label class="option-item">
+                input = `<div class="options-list">${f.options.map(o => `
+                    <label class="option-row">
                         <input type="radio" name="${f.id}" value="${o}" ${req}>
                         <span>${o}</span>
-                    </label>`).join("");
+                    </label>`).join("")}</div>`;
                 break;
             case "checkbox":
-                input = f.options.map(o => `
-                    <label class="option-item">
+                input = `<div class="options-list">${f.options.map(o => `
+                    <label class="option-row">
                         <input type="checkbox" name="${f.id}" value="${o}">
                         <span>${o}</span>
-                    </label>`).join("");
+                    </label>`).join("")}</div>`;
                 break;
             default:
-                input = `<input class="input-text" type="${f.type}" name="${f.id}" ${req} placeholder="Your answer">`;
+                input = `<input class="field-underline" type="${f.type}" name="${f.id}" ${req} placeholder="Your answer">`;
         }
 
         return `
-            <div class="form-card">
-                <label class="field-label">
-                    ${f.label} ${f.required ? '<span style="color:#d93025">*</span>' : ''}
-                </label>
-                ${input}
-            </div>`;
+        <div class="q-card">
+            <div class="q-label">${f.label}${f.required ? '<span class="star">*</span>' : ''}</div>
+            ${input}
+        </div><br/>`;
     }).join("");
 }
 
 document.getElementById("publicForm").addEventListener("submit", async e => {
     e.preventDefault();
+    const btn = e.target.querySelector('.btn-submit');
+    btn.textContent = 'Submitting…';
+    btn.disabled = true;
+
     const fd = new FormData(e.target);
     const payload = {};
     fd.forEach((v, k) => {
-        if(payload[k]){
-            if(!Array.isArray(payload[k])) payload[k] = [payload[k]];
+        if (payload[k]) {
+            if (!Array.isArray(payload[k])) payload[k] = [payload[k]];
             payload[k].push(v);
         } else payload[k] = v;
     });
 
-    const {error} = await supabase.from("form_responses").insert({
+    const { error } = await supabase.from("form_responses").insert({
         form_id: formId,
         submission: payload,
         created_at: new Date().toISOString()
     });
 
-    if(!error) {
+    if (!error) {
         document.getElementById("form-container").innerHTML = `
-            <div class="form-card form-header-card">
-                <h1>Thank You</h1>
-                <p class="description">Your response has been successfully recorded in the Vasuki Network.</p>
-                <button onclick="location.reload()" class="btn-submit" style="margin-top:20px">Submit New</button>
-            </div>`;
+            <div class="success-card">
+                <div class="success-banner"></div>
+                <div class="success-body">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <h2 class="success-title">Response submitted</h2>
+                    <p class="success-desc">Your answer has been recorded.</p>
+                    <button onclick="location.reload()" class="btn-submit">Submit another response</button>
+                </div>
+            </div>
+            <p class="form-footer" style="margin-top:16px">Powered by <a href="#">Vasuki Forms</a></p>`;
+    } else {
+        btn.textContent = 'Submit';
+        btn.disabled = false;
+        alert('Submission failed. Please try again.');
     }
 });
-
 
 loadForm();
 </script>
 </body>
 </html>
-
