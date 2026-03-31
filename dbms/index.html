@@ -228,10 +228,10 @@
                 <div style="margin-top: 16px;"><span class="keyword">const</span> vdb = <span class="keyword">new</span> <span class="func">Vasuki</span>();</div>
                 
                 <div style="margin-top: 16px;"><span class="comment">// Connection with Vasuki Auth</span></div>
-                <div><span class="keyword"></span> vdb.<span class="func">login</span>(<span class="string">'admin@itech.in'</span>, <span class="string">'********'</span>);</div>
+                <div><span class="keyword">await</span> vdb.<span class="func">login</span>(<span class="string">'admin@itech.in'</span>, <span class="string">'********'</span>);</div>
 
                 <div style="margin-top: 16px;"><span class="comment">// JSON-Native CRUD</span></div>
-                <div><span class="keyword">const</span> users = <span class="keyword"></span> vdb.<span class="func">fetchTable</span>(<span class="string">'Main'</span>, <span class="string">'Users'</span>);</div>
+                <div><span class="keyword">const</span> users = <span class="keyword">await</span> vdb.<span class="func">fetchTable</span>(<span class="string">'Main'</span>, <span class="string">'Users'</span>);</div>
                 <div>console.<span class="func">log</span>(<span class="string">"Live Data:"</span>, users);</div>
             </div>
         </div>
