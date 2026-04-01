@@ -502,7 +502,7 @@
             if (user) {
                 localStorage.setItem('vcloud_user', emailInput);
                 localStorage.setItem('vcloud_username', user.name || '');
-                window.location.href = 'index.html';
+                window.location.href = './dashboard.html';
             } else {
                 alert("Invalid credentials. Please try again.");
                 loginBtn.classList.remove('loading');
