@@ -475,7 +475,7 @@
 
     // Check if user is already logged in
     if (localStorage.getItem("vcloud_user")) {
-        window.location.href = 'index.html';
+        window.location.href = './dashboard.html';
     }
 
     // Form submission
@@ -554,7 +554,7 @@
                     if (user) {
                         localStorage.setItem('vcloud_user', email);
                         localStorage.setItem('vcloud_username', userInfo.name || '');
-                        window.location.href = 'index.html';
+                        window.location.href = './dashboard.html';
                     } else {
                         alert("No account found. Redirecting to sign up.");
                         window.location.href = 'https://vasuki.cloud/login?email=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(userInfo.name || '');
