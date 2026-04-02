@@ -45,14 +45,16 @@ video {
 }
 
 #chatBox {
-    flex: 1;
+    height: 150px;
     overflow-y: auto;
+    margin-bottom: 5px;
 }
 
 input {
     padding: 8px;
     border: 1px solid #ddd;
     width: 100%;
+    margin-bottom: 5px;
 }
 
 .controls {
@@ -69,4 +71,15 @@ button {
     border: 1px solid #ddd;
     background: #fff;
     cursor: pointer;
+}
+
+#captionsBar {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    padding: 8px 12px;
+    font-size: 14px;
 }
