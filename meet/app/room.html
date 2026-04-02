@@ -16,9 +16,24 @@
 <div id="videos"></div>
 
 <div id="sidebar">
-<h4>Room Info</h4>
-<p>Share this ID with others</p>
-<p id="copyRoom"></p>
+
+<div class="panel">
+<h4>Invite</h4>
+<button onclick="copyLink()">Copy Link</button>
+</div>
+
+<div class="panel">
+<h4>Participants</h4>
+<ul id="users"></ul>
+</div>
+
+<div class="panel">
+<h4>Chat</h4>
+<div id="chatBox"></div>
+<input id="chatInput">
+<button onclick="sendChat()">Send</button>
+</div>
+
 </div>
 
 </div>
@@ -32,8 +47,28 @@
 <script src="app.js"></script>
 
 <script>
-const id = new URLSearchParams(location.search).get("room");
-document.getElementById("copyRoom").innerText = id;
+function copyLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    alert("Link copied");
+}
+
+function updateUsers(users) {
+    const list = document.getElementById("users");
+    list.innerHTML = "";
+    users.forEach(u => {
+        const li = document.createElement("li");
+        li.innerText = u;
+        list.appendChild(li);
+    });
+}
+
+function addChat(data) {
+    const box = document.getElementById("chatBox");
+    const div = document.createElement("div");
+    div.innerText = data.user + ": " + data.msg;
+    box.appendChild(div);
+}
 </script>
 
 </body>
