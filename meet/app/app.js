@@ -1,36 +1,45 @@
 const params = new URLSearchParams(window.location.search);
 const roomId = params.get("room");
-const username = localStorage.getItem("vasuki_user") || "Guest";
 
-document.getElementById("roomId").innerText = roomId;
+document.getElementById("roomId").innerText = "Room: " + roomId;
 
 const socket = new WebSocket("wss://vasuki-meet.onrender.com");
 
 let localStream;
-let peers = [];
+let peer;
 
 async function init() {
     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     addVideo(localStream, true);
 
-    socket.send(JSON.stringify({ join: roomId, user: username }));
-
     socket.onmessage = async (msg) => {
         const data = JSON.parse(msg.data);
 
-        if (data.type === "chat") addChat(data);
-        if (data.type === "users") updateUsers(data.users);
+        if (data.type === "new-user") {
+            createOffer();
+        }
 
         if (data.offer) {
-            const pc = createPeer();
-            await pc.setRemoteDescription(data.offer);
-            const answer = await pc.createAnswer();
-            await pc.setLocalDescription(answer);
+            peer = createPeer();
+            await peer.setRemoteDescription(data.offer);
+
+            const answer = await peer.createAnswer();
+            await peer.setLocalDescription(answer);
+
             socket.send(JSON.stringify({ answer }));
         }
 
-        if (data.answer) peers.forEach(pc => pc.setRemoteDescription(data.answer));
-        if (data.candidate) peers.forEach(pc => pc.addIceCandidate(data.candidate));
+        if (data.answer) {
+            await peer.setRemoteDescription(data.answer);
+        }
+
+        if (data.candidate) {
+            await peer.addIceCandidate(data.candidate);
+        }
+    };
+
+    socket.onopen = () => {
+        socket.send(JSON.stringify({ join: roomId }));
     };
 }
 
@@ -40,22 +49,32 @@ function createPeer() {
     });
 
     localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
     pc.ontrack = e => addVideo(e.streams[0]);
 
     pc.onicecandidate = e => {
-        if (e.candidate) socket.send(JSON.stringify({ candidate: e.candidate }));
+        if (e.candidate) {
+            socket.send(JSON.stringify({ candidate: e.candidate }));
+        }
     };
 
-    peers.push(pc);
     return pc;
 }
 
+async function createOffer() {
+    peer = createPeer();
+    const offer = await peer.createOffer();
+    await peer.setLocalDescription(offer);
+
+    socket.send(JSON.stringify({ offer }));
+}
+
 function addVideo(stream, muted=false) {
-    const v = document.createElement("video");
-    v.srcObject = stream;
-    v.autoplay = true;
-    v.muted = muted;
-    document.getElementById("videos").appendChild(v);
+    const video = document.createElement("video");
+    video.srcObject = stream;
+    video.autoplay = true;
+    video.muted = muted;
+    document.getElementById("videos").appendChild(video);
 }
 
 function toggleMute() {
@@ -67,12 +86,8 @@ function toggleCamera() {
 }
 
 async function shareScreen() {
-    const s = await navigator.mediaDevices.getDisplayMedia({ video: true });
-    addVideo(s);
+    const screen = await navigator.mediaDevices.getDisplayMedia({ video: true });
+    addVideo(screen);
 }
 
-function sendChat() {
-    const msg = document.getElementById("chatInput").value;
-    socket.send(JSON.stringify({ type: "chat", user: username, msg }));
-}
 init();
