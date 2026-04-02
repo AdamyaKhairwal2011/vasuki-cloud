@@ -11,7 +11,21 @@
 <h3 id="roomId"></h3>
 </header>
 
+<div id="layout">
+
 <div id="videos"></div>
+
+<div id="side">
+<h4>Participants</h4>
+<ul id="users"></ul>
+
+<h4>Chat</h4>
+<div id="chatBox"></div>
+<input id="chatInput" placeholder="Message">
+<button onclick="sendChat()">Send</button>
+</div>
+
+</div>
 
 <div class="controls">
 <button onclick="toggleMute()">Mute</button>
@@ -20,5 +34,7 @@
 </div>
 
 <script src="app.js"></script>
+<script src="ui.js"></script>
+
 </body>
 </html>
