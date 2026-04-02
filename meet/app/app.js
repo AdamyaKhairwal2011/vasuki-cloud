@@ -1,5 +1,7 @@
-const params = new URLSearchParams(window.location.search);
+const params = new URLSearchParams(location.search);
 const roomId = params.get("room");
+
+const username = localStorage.getItem("vasuki_user") || prompt("Enter name");
 
 document.getElementById("roomId").innerText = "Room: " + roomId;
 
@@ -12,12 +14,14 @@ async function init() {
     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     addVideo(localStream, true);
 
+    socket.onopen = () => {
+        socket.send(JSON.stringify({ join: roomId, user: username }));
+    };
+
     socket.onmessage = async (msg) => {
         const data = JSON.parse(msg.data);
 
-        if (data.type === "new-user") {
-            createOffer();
-        }
+        if (data.type === "new-user") createOffer();
 
         if (data.offer) {
             peer = createPeer();
@@ -29,17 +33,11 @@ async function init() {
             socket.send(JSON.stringify({ answer }));
         }
 
-        if (data.answer) {
-            await peer.setRemoteDescription(data.answer);
-        }
+        if (data.answer) await peer.setRemoteDescription(data.answer);
+        if (data.candidate) await peer.addIceCandidate(data.candidate);
 
-        if (data.candidate) {
-            await peer.addIceCandidate(data.candidate);
-        }
-    };
-
-    socket.onopen = () => {
-        socket.send(JSON.stringify({ join: roomId }));
+        if (data.type === "chat") addChat(data);
+        if (data.type === "users") updateUsers(data.users);
     };
 }
 
@@ -53,9 +51,7 @@ function createPeer() {
     pc.ontrack = e => addVideo(e.streams[0]);
 
     pc.onicecandidate = e => {
-        if (e.candidate) {
-            socket.send(JSON.stringify({ candidate: e.candidate }));
-        }
+        if (e.candidate) socket.send(JSON.stringify({ candidate: e.candidate }));
     };
 
     return pc;
@@ -65,16 +61,15 @@ async function createOffer() {
     peer = createPeer();
     const offer = await peer.createOffer();
     await peer.setLocalDescription(offer);
-
     socket.send(JSON.stringify({ offer }));
 }
 
 function addVideo(stream, muted=false) {
-    const video = document.createElement("video");
-    video.srcObject = stream;
-    video.autoplay = true;
-    video.muted = muted;
-    document.getElementById("videos").appendChild(video);
+    const v = document.createElement("video");
+    v.srcObject = stream;
+    v.autoplay = true;
+    v.muted = muted;
+    document.getElementById("videos").appendChild(v);
 }
 
 function toggleMute() {
@@ -86,8 +81,18 @@ function toggleCamera() {
 }
 
 async function shareScreen() {
-    const screen = await navigator.mediaDevices.getDisplayMedia({ video: true });
-    addVideo(screen);
+    const s = await navigator.mediaDevices.getDisplayMedia({ video: true });
+    addVideo(s);
+}
+
+function sendChat() {
+    const input = document.getElementById("chatInput");
+    socket.send(JSON.stringify({
+        type: "chat",
+        user: username,
+        msg: input.value
+    }));
+    input.value = "";
 }
 
 init();
