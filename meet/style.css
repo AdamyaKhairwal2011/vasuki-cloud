@@ -1,65 +1,62 @@
 body {
     margin: 0;
-    font-family: Arial;
-    background: #f4f4f4;
+    font-family: Inter, Arial;
+    background: #f6f6f6;
+    color: #111;
 }
 
 header {
-    padding: 16px;
-    border-bottom: 1px solid #ddd;
-    background: #fff;
-}
-
-.center {
-    height: 90vh;
+    height: 60px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: 10px;
-}
-
-input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    width: 200px;
-}
-
-button {
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 0 20px;
     background: #fff;
-    cursor: pointer;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 #layout {
     display: flex;
+    height: calc(100vh - 60px);
 }
 
 #videos {
-    flex: 3;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px;
-}
-
-#side {
     flex: 1;
-    border-left: 1px solid #ddd;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
     padding: 10px;
 }
 
 video {
-    width: 250px;
-    background: black;
+    width: 100%;
+    background: #000;
+}
+
+#sidebar {
+    width: 300px;
+    border-left: 1px solid #e5e5e5;
+    background: #fff;
+    padding: 10px;
 }
 
 .controls {
     position: fixed;
-    bottom: 10px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 10px;
+    gap: 12px;
+}
+
+button {
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+}
+
+button.primary {
+    background: #000;
+    color: #fff;
+    border: none;
 }
