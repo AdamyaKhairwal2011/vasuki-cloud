@@ -30,12 +30,22 @@
 <div class="panel">
 <h4>Chat</h4>
 <div id="chatBox"></div>
-<input id="chatInput">
+<input id="chatInput" placeholder="Message">
 <button onclick="sendChat()">Send</button>
 </div>
 
+<div class="panel">
+<h4>Captions</h4>
+<button onclick="startCaptions()">On</button>
+<button onclick="stopCaptions()">Off</button>
 </div>
 
+</div>
+
+</div>
+
+<div id="captionsBar">
+<span id="captions"></span>
 </div>
 
 <div class="controls">
@@ -45,31 +55,6 @@
 </div>
 
 <script src="app.js"></script>
-
-<script>
-function copyLink() {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url);
-    alert("Link copied");
-}
-
-function updateUsers(users) {
-    const list = document.getElementById("users");
-    list.innerHTML = "";
-    users.forEach(u => {
-        const li = document.createElement("li");
-        li.innerText = u;
-        list.appendChild(li);
-    });
-}
-
-function addChat(data) {
-    const box = document.getElementById("chatBox");
-    const div = document.createElement("div");
-    div.innerText = data.user + ": " + data.msg;
-    box.appendChild(div);
-}
-</script>
 
 </body>
 </html>
