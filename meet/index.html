@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Vasuki Cloud</title>
+<title>Vasuki Meet</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-<h2>VASUKI CLOUD</h2>
+<h3>Vasuki Meet</h3>
 </header>
 
 <div class="center">
-<h1>Welcome to Vasuki</h1>
-<button onclick="location.href='/meet/'">Open Meet</button>
+<input id="username" placeholder="Enter your name">
+<button onclick="enter()">Continue</button>
 </div>
+
+<script>
+function enter() {
+    const name = document.getElementById("username").value;
+    if (!name) return alert("Enter name");
+
+    localStorage.setItem("vasuki_user", name);
+    location.href = "app/room.html?room=" + Math.random().toString(36).substr(2,5);
+}
+</script>
 
 </body>
 </html>
