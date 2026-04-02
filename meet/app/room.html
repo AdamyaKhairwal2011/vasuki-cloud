@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Room</title>
+<title>Vasuki Meet</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 
@@ -15,14 +15,10 @@
 
 <div id="videos"></div>
 
-<div id="side">
-<h4>Participants</h4>
-<ul id="users"></ul>
-
-<h4>Chat</h4>
-<div id="chatBox"></div>
-<input id="chatInput" placeholder="Message">
-<button onclick="sendChat()">Send</button>
+<div id="sidebar">
+<h4>Room Info</h4>
+<p>Share this ID with others</p>
+<p id="copyRoom"></p>
 </div>
 
 </div>
@@ -34,7 +30,11 @@
 </div>
 
 <script src="app.js"></script>
-<script src="ui.js"></script>
+
+<script>
+const id = new URLSearchParams(location.search).get("room");
+document.getElementById("copyRoom").innerText = id;
+</script>
 
 </body>
 </html>
