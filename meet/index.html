@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vasuki Meet</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('custom.ttf') format('truetype');
+        }
+        
+        body {
+            font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+<!-- Header -->
+<header class="meet-header">
+    <div class="header-left">
+        <div class="logo">
+            <img src="logo.jpg" alt="Vasuki" width="40" height="40" style="border-radius: 8px;">
+            <span>Vasuki Meet</span>
+        </div>
+    </div>
+    <div class="header-right">
+        <button class="header-btn">
+            <i class="material-icons">help_outline</i>
+            <span>Help</span>
+        </button>
+        <button class="header-btn">
+            <i class="material-icons">settings</i>
+            <span>Settings</span>
+        </button>
+        <button class="header-btn">
+            <i class="material-icons">apps</i>
+            <span>Vasuki Apps</span>
+        </button>
+        <div class="user-avatar">
+            <img src="https://picsum.photos/seed/user/32/32.jpg" alt="User">
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="meet-main">
+    <div class="meet-container">
+        <!-- Left Panel -->
+        <div class="meet-left">
+            <div class="meet-info">
+                <h1>Premium video meetings. Now free for everyone.</h1>
+                <p>Reimagine how you work and connect with secure, high-quality video meetings for everyone.</p>
+            </div>
+            
+            <!-- Meeting Form -->
+            <div class="meet-form">
+                <div class="form-section">
+                    <div class="input-group">
+                        <i class="material-icons">person</i>
+                        <input type="text" id="username" placeholder="Enter your name" autocomplete="name">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button class="btn-primary" onclick="createMeeting()">
+                        <i class="material-icons">video_call</i>
+                        New meeting
+                    </button>
+                    <button class="btn-secondary" onclick="joinMeeting()">
+                        <i class="material-icons">keyboard</i>
+                        Enter a code or link
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Features -->
+            <div class="meet-features">
+                <div class="feature">
+                    <i class="material-icons">security</i>
+                    <span>Secure meetings with end-to-end encryption</span>
+                </div>
+                <div class="feature">
+                    <i class="material-icons">groups</i>
+                    <span>Up to 100 participants</span>
+                </div>
+                <div class="feature">
+                    <i class="material-icons">schedule</i>
+                    <span>No time limits</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel -->
+        <div class="meet-right">
+            <div class="preview-container">
+                <div class="video-preview">
+                    <video id="preview" autoplay muted></video>
+                    <div class="preview-overlay">
+                        <div class="preview-controls">
+                            <button class="control-btn" id="cameraToggle" onclick="toggleCamera()">
+                                <i class="material-icons">videocam</i>
+                            </button>
+                            <button class="control-btn" id="micToggle" onclick="toggleMic()">
+                                <i class="material-icons">mic</i>
+                            </button>
+                        </div>
+                        <div class="preview-text">
+                            <i class="material-icons">videocam_off</i>
+                            <span>Camera preview</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Join Dialog -->
+<div id="joinDialog" class="dialog">
+    <div class="dialog-content">
+        <h3>Join a meeting</h3>
+        <p>Enter the meeting code or link</p>
+        <div class="input-group">
+            <i class="material-icons">keyboard</i>
+            <input type="text" id="meetingCode" placeholder="Enter code or link">
+        </div>
+        <div class="dialog-actions">
+            <button class="btn-secondary" onclick="closeDialog()">Cancel</button>
+            <button class="btn-primary" onclick="joinWithCode()">Join</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let stream = null;
+let cameraEnabled = true;
+let micEnabled = true;
+
+// Initialize camera preview
+async function initPreview() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ 
+            video: true, 
+            audio: true 
+        });
+        const preview = document.getElementById('preview');
+        preview.srcObject = stream;
+    } catch (err) {
+        console.log('Camera access denied');
+        document.querySelector('.preview-text').style.display = 'flex';
+    }
+}
+
+// Toggle camera
+function toggleCamera() {
+    const btn = document.getElementById('cameraToggle');
+    const icon = btn.querySelector('i');
+    
+    if (stream) {
+        const videoTrack = stream.getVideoTracks()[0];
+        if (videoTrack) {
+            videoTrack.enabled = !videoTrack.enabled;
+            cameraEnabled = videoTrack.enabled;
+            icon.textContent = cameraEnabled ? 'videocam' : 'videocam_off';
+            btn.classList.toggle('muted', !cameraEnabled);
+        }
+    }
+}
+
+// Toggle microphone
+function toggleMic() {
+    const btn = document.getElementById('micToggle');
+    const icon = btn.querySelector('i');
+    
+    if (stream) {
+        const audioTrack = stream.getAudioTracks()[0];
+        if (audioTrack) {
+            audioTrack.enabled = !audioTrack.enabled;
+            micEnabled = audioTrack.enabled;
+            icon.textContent = micEnabled ? 'mic' : 'mic_off';
+            btn.classList.toggle('muted', !micEnabled);
+        }
+    }
+}
+
+// Create new meeting
+function createMeeting() {
+    // Check if user is logged in
+    const userName = localStorage.getItem("vcloud_user");
+    if (!userName) {
+        // Redirect to login if not logged in
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // If logged in, create meeting directly
+    const roomId = Math.random().toString(36).substr(2, 9);
+    location.href = `app/room.html?room=${roomId}`;
+}
+
+// Show join dialog
+function joinMeeting() {
+    document.getElementById('joinDialog').style.display = 'flex';
+}
+
+// Close dialog
+function closeDialog() {
+    document.getElementById('joinDialog').style.display = 'none';
+}
+
+// Join with code
+function joinWithCode() {
+    // Check if user is logged in
+    const userName = localStorage.getItem("vcloud_user");
+    if (!userName) {
+        // Redirect to login if not logged in
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    const code = document.getElementById('meetingCode').value.trim();
+    
+    if (!code) {
+        showNotification('Please enter meeting code');
+        return;
+    }
+    
+    location.href = `app/room.html?room=${code}`;
+}
+
+// Show notification
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Initialize on load
+window.addEventListener('load', () => {
+    // Check if user is logged in
+    const userName = localStorage.getItem("vcloud_user");
+    if (userName) {
+        // Show welcome message or update UI for logged-in user
+        console.log('Welcome back, ' + userName);
+    }
+    
+    // Initialize camera preview
+    initPreview();
+});
+
+// Cleanup on unload
+window.addEventListener('beforeunload', () => {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+});
+</script>
+
+</body>
+</html>

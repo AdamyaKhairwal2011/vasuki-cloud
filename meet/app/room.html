@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vasuki Meet - Room</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('../custom.ttf') format('truetype');
+        }
+        
+        body {
+            font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Proton Meet Styles */
+        :root {
+            --proton-blue: #6d4aff;
+            --proton-blue-hover: #5a3ad4;
+            --proton-blue-light: #f0ecff;
+            --proton-gray: #6d757d;
+            --proton-gray-light: #f6f6f7;
+            --proton-gray-border: #e6e6e6;
+            --proton-gray-dark: #1c1d1f;
+            --proton-gray-medium: #53565a;
+            --proton-white: #ffffff;
+            --proton-black: #000000;
+            --proton-shadow: rgba(0, 0, 0, 0.1);
+            --proton-shadow-hover: rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--proton-white);
+            color: var(--proton-gray-dark);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* Room Header */
+        .room-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: var(--proton-white);
+            border-bottom: 1px solid var(--proton-gray-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 1000;
+        }
+
+        .room-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .room-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--proton-gray-dark);
+        }
+
+        .room-code {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--proton-gray-light);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--proton-gray-medium);
+            font-weight: 500;
+            border: 1px solid var(--proton-gray-border);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: transparent;
+            border: 1px solid var(--proton-gray-border);
+            border-radius: 8px;
+            color: var(--proton-gray-medium);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .header-btn:hover {
+            background: var(--proton-gray-light);
+            border-color: var(--proton-gray);
+        }
+
+        .header-btn.primary {
+            background: var(--proton-blue);
+            color: white;
+            border-color: var(--proton-blue);
+        }
+
+        .header-btn.primary:hover {
+            background: var(--proton-blue-hover);
+            border-color: var(--proton-blue-hover);
+        }
+
+        .header-btn.danger {
+            background: #d95040;
+            color: white;
+            border-color: #d95040;
+        }
+
+        .header-btn.danger:hover {
+            background: #b84235;
+            border-color: #b84235;
+        }
+
+        /* Main Layout */
+        .room-layout {
+            display: flex;
+            height: calc(100vh - 64px);
+            margin-top: 64px;
+        }
+
+        /* Video Area */
+        .video-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #1a1a1a;
+            position: relative;
+        }
+
+        .videos-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 8px;
+            padding: 16px;
+            overflow-y: auto;
+            background: #1a1a1a;
+        }
+
+        .video-tile {
+            position: relative;
+            background: #2a2a2a;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-tile:hover {
+            border-color: var(--proton-blue);
+            transform: scale(1.02);
+        }
+
+        .video-tile.speaking {
+            border-color: var(--proton-blue);
+            box-shadow: 0 0 0 3px rgba(109, 74, 255, 0.2);
+        }
+
+        .video-tile video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .video-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.7), transparent);
+            padding: 16px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .video-participant-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .video-participant-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--proton-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .video-participant-name {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .video-status-indicators {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .video-status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .video-status-indicator i {
+            font-size: 12px;
+        }
+
+        .video-status-indicator.muted {
+            background: #d95040;
+            border-color: #d95040;
+        }
+
+        .no-video {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #999;
+            font-size: 14px;
+            gap: 8px;
+        }
+
+        .no-video i {
+            font-size: 48px;
+            color: #666;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 380px;
+            background: var(--proton-white);
+            border-left: 1px solid var(--proton-gray-border);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--proton-gray-border);
+            background: var(--proton-gray-light);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--proton-gray);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .tab:hover {
+            background: var(--proton-white);
+            color: var(--proton-gray-dark);
+        }
+
+        .tab.active {
+            color: var(--proton-blue);
+            border-bottom-color: var(--proton-blue);
+            background: var(--proton-white);
+        }
+
+        .tab-content {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            background: var(--proton-white);
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        /* Participants Tab */
+        .participants-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .participant-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .participant-item:hover {
+            background: var(--proton-gray-light);
+            border-color: var(--proton-gray-border);
+        }
+
+        .participant-status {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #40c463;
+            transition: all 0.2s ease;
+        }
+
+        .status-indicator.muted {
+            background: #d95040;
+        }
+
+        /* Chat Tab */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: var(--proton-gray-light);
+            scroll-behavior: smooth;
+            max-height: calc(100% - 80px);
+        }
+
+        .chat-message {
+            margin-bottom: 16px;
+            animation: slideIn 0.3s ease-out;
+            padding: 12px;
+            background: var(--proton-white);
+            border-radius: 8px;
+            border: 1px solid var(--proton-gray-border);
+            word-wrap: break-word;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .chat-author {
+            font-weight: 600;
+            color: var(--proton-gray-dark);
+            font-size: 14px;
+        }
+
+        .chat-time {
+            color: var(--proton-gray);
+            font-size: 12px;
+        }
+
+        .chat-text {
+            color: var(--proton-gray-dark);
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .chat-input-container {
+            padding: 16px;
+            border-top: 1px solid var(--proton-gray-border);
+            background: var(--proton-white);
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--proton-gray-border);
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+            background: var(--proton-white);
+            transition: all 0.2s ease;
+            resize: none;
+            max-height: 100px;
+        }
+
+        .chat-input:focus {
+            border-color: var(--proton-blue);
+            box-shadow: 0 0 0 3px rgba(109, 74, 255, 0.1);
+        }
+
+        .chat-send {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: var(--proton-blue);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .chat-send:hover {
+            background: var(--proton-blue-hover);
+        }
+
+        .chat-send:disabled {
+            background: var(--proton-gray);
+            cursor: not-allowed;
+        }
+
+        /* Actions Tab */
+        .actions-content {
+            flex: 1;
+            padding: 16px;
+            background: var(--proton-white);
+        }
+
+        .action-section {
+            margin-bottom: 24px;
+        }
+
+        .action-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--proton-gray);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--proton-white);
+            border: 1px solid var(--proton-gray-border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            color: var(--proton-gray-dark);
+        }
+
+        .action-btn:hover {
+            background: var(--proton-gray-light);
+            border-color: var(--proton-blue);
+            color: var(--proton-blue);
+        }
+
+        .action-btn i {
+            color: var(--proton-blue);
+            font-size: 18px;
+        }
+
+        /* Meeting Controls */
+        .meeting-controls {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(26, 26, 26, 0.95);
+            padding: 12px 16px;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .control-btn.primary {
+            background: var(--proton-blue);
+        }
+
+        .control-btn.primary:hover {
+            background: var(--proton-blue-hover);
+        }
+
+        .control-btn.danger {
+            background: #d95040;
+        }
+
+        .control-btn.danger:hover {
+            background: #b84235;
+        }
+
+        .control-btn.muted {
+            background: #d95040;
+        }
+
+        .control-btn.muted:hover {
+            background: #b84235;
+        }
+
+        .control-divider {
+            width: 1px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 4px;
+        }
+
+        /* Captions Bar */
+        .captions-bar {
+            position: fixed;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(26, 26, 26, 0.95);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .captions-bar.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                right: -380px;
+                top: 64px;
+                bottom: 0;
+                transition: right 0.3s ease;
+                z-index: 999;
+            }
+
+            .sidebar.open {
+                right: 0;
+            }
+
+            .videos-container {
+                grid-template-columns: 1fr;
+                gap: 4px;
+                padding: 8px;
+            }
+
+            .meeting-controls {
+                bottom: 16px;
+                padding: 8px 12px;
+                gap: 4px;
+            }
+
+            .control-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+            }
+
+            .room-header {
+                padding: 0 16px;
+            }
+
+            .room-code {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--proton-gray-light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--proton-gray-border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--proton-gray);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Room Header -->
+<header class="room-header">
+    <div class="room-info">
+        <div class="room-title">Vasuki Meet Room</div>
+        <div class="room-code">
+            <i class="material-icons">link</i>
+            <span id="roomId">Loading...</span>
+            <button onclick="copyLink()" style="background: none; border: none; cursor: pointer;">
+                <i class="material-icons" style="font-size: 16px;">content_copy</i>
+            </button>
+        </div>
+    </div>
+    <div class="header-actions">
+        <button class="header-btn" onclick="toggleSidebar()">
+            <i class="material-icons">people</i>
+            <span>Participants</span>
+        </button>
+        <button class="header-btn" onclick="raiseHand()">
+            <i class="material-icons">pan_tool</i>
+            <span>Raise hand</span>
+        </button>
+        <button class="header-btn primary" onclick="leaveMeeting()">
+            <i class="material-icons">call_end</i>
+            <span>Leave</span>
+        </button>
+    </div>
+</header>
+
+<!-- Main Layout -->
+<div class="room-layout">
+    <!-- Video Area -->
+    <div class="video-area">
+        <div class="videos-container" id="videos">
+            <!-- Video tiles will be added here dynamically -->
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-tabs">
+            <button class="tab active" onclick="switchTab('participants')">
+                <i class="material-icons">people</i>
+                People
+            </button>
+            <button class="tab" onclick="switchTab('chat')">
+                <i class="material-icons">chat</i>
+                Chat
+            </button>
+            <button class="tab" onclick="switchTab('actions')">
+                <i class="material-icons">more_horiz</i>
+                Activities
+            </button>
+        </div>
+
+        <!-- Participants Tab -->
+        <div class="tab-content active" id="participants-tab">
+            <div class="participants-list" id="participants">
+                <!-- Participants will be added here dynamically -->
+            </div>
+        </div>
+
+        <!-- Chat Tab -->
+        <div class="tab-content" id="chat-tab">
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Chat messages will be added here dynamically -->
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type a message..." onkeypress="handleChatKeypress(event)">
+                    <button class="chat-send" onclick="sendChat()">
+                        <i class="material-icons">send</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Tab -->
+        <div class="tab-content" id="actions-tab">
+            <div class="actions-content">
+                <div class="action-section">
+                    <div class="action-title">Meeting Settings</div>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="toggleCaptions()">
+                            <i class="material-icons">closed_caption</i>
+                            <span>Captions</span>
+                        </button>
+                        <button class="action-btn" onclick="startRecording()">
+                            <i class="material-icons">fiber_manual_record</i>
+                            <span>Record</span>
+                        </button>
+                        <button class="action-btn" onclick="shareScreen()">
+                            <i class="material-icons">screen_share</i>
+                            <span>Share</span>
+                        </button>
+                        <button class="action-btn" onclick="toggleSettings()">
+                            <i class="material-icons">settings</i>
+                            <span>Settings</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="action-section">
+                    <div class="action-title">Layout</div>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="changeLayout('grid')">
+                            <i class="material-icons">grid_view</i>
+                            <span>Grid</span>
+                        </button>
+                        <button class="action-btn" onclick="changeLayout('speaker')">
+                            <i class="material-icons">person</i>
+                            <span>Speaker</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- Meeting Controls -->
+<div class="meeting-controls">
+    <button class="control-btn secondary" id="micBtn" onclick="toggleMute()">
+        <i class="material-icons">mic</i>
+    </button>
+    <button class="control-btn secondary" id="cameraBtn" onclick="toggleCamera()">
+        <i class="material-icons">videocam</i>
+    </button>
+    <div class="control-divider"></div>
+    <button class="control-btn secondary" onclick="toggleCaptions()">
+        <i class="material-icons">closed_caption</i>
+    </button>
+    <button class="control-btn secondary" onclick="shareScreen()">
+        <i class="material-icons">screen_share</i>
+    </button>
+    <button class="control-btn secondary" onclick="raiseHand()">
+        <i class="material-icons">pan_tool</i>
+    </button>
+    <div class="control-divider"></div>
+    <button class="control-btn primary" onclick="toggleGrid()">
+        <i class="material-icons">grid_view</i>
+    </button>
+    <button class="control-btn danger" onclick="leaveMeeting()">
+        <i class="material-icons">call_end</i>
+    </button>
+</div>
+
+<!-- Captions Bar -->
+<div class="captions-bar" id="captionsBar">
+    <span id="captionsText"></span>
+</div>
+
+<script>
+// Room-specific JavaScript
+let isMuted = false;
+let isCameraOff = false;
+let captionsEnabled = false;
+let sidebarOpen = true;
+let currentUserName = '';
+let currentRoomId = '';
+let participants = [];
+let chatMessages = [];
+let mediaRecorder = null;
+let recordedChunks = [];
+let isRecording = false;
+let screenStream = null;
+
+// Sound Effects System
+class SoundEffects {
+    constructor() {
+        this.audioContext = null;
+        this.sounds = {};
+        this.initAudioContext();
+    }
+    
+    initAudioContext() {
+        try {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.createSounds();
+        } catch (error) {
+            console.log('Audio not supported');
+        }
+    }
+    
+    createSounds() {
+        this.sounds = {
+            click: () => this.playTone(800, 0.1, 'sine'),
+            success: () => this.playTone(600, 0.2, 'sine'),
+            error: () => this.playTone(300, 0.2, 'sawtooth'),
+            hover: () => this.playTone(1000, 0.05, 'sine'),
+            notification: () => this.playChord([523, 659, 784], 0.3),
+            leave: () => this.playChord([400, 300, 200], 0.4),
+            mute: () => this.playTone(400, 0.15, 'square'),
+            unmute: () => this.playTone(800, 0.15, 'square'),
+            cameraOff: () => this.playTone(350, 0.15, 'triangle'),
+            cameraOn: () => this.playTone(900, 0.15, 'triangle'),
+            join: () => this.playChord([523, 659, 784], 0.2),
+            record: () => this.playTone(1200, 0.1, 'sine'),
+            stopRecord: () => this.playTone(600, 0.2, 'sine'),
+            share: () => this.playTone(1000, 0.2, 'sine')
+        };
+    }
+    
+    playTone(frequency, duration, type = 'sine') {
+        if (!this.audioContext) return;
+        
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.frequency.value = frequency;
+        oscillator.type = type;
+        
+        gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + duration);
+    }
+    
+    playChord(frequencies, duration) {
+        if (!this.audioContext) return;
+        
+        frequencies.forEach(freq => {
+            this.playTone(freq, duration);
+        });
+    }
+    
+    play(soundName) {
+        if (this.sounds[soundName]) {
+            if (this.audioContext && this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+            this.sounds[soundName]();
+        }
+    }
+}
+
+// Initialize sound effects
+const soundEffects = new SoundEffects();
+
+// Initialize room
+function initRoom() {
+    // Clear any existing video tiles first
+    clearExistingVideos();
+    
+    // Check if user is logged in
+    const userName = localStorage.getItem('vcloud_user');
+    if (!userName) {
+        // Redirect to login if not logged in
+        window.location.href = '../login.html';
+        return;
+    }
+    
+    currentUserName = userName;
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomId = urlParams.get('room');
+    currentRoomId = roomId || 'Unknown';
+    document.getElementById('roomId').textContent = currentRoomId;
+    
+    // Add current user as participant
+    addParticipant(userName, true);
+    
+    // Add video tile for current user (video stream started inside addVideoTile)
+    addVideoTile(userName, true);
+    
+    // Initialize room listeners
+    initializeRoomListeners();
+    
+    // Initialize chat
+    initializeChat();
+}
+
+// Clear existing videos to prevent duplicates
+function clearExistingVideos() {
+    const videosContainer = document.getElementById('videos');
+    const participantsList = document.getElementById('participants');
+    
+    // Clear all video tiles
+    if (videosContainer) {
+        videosContainer.innerHTML = '';
+    }
+    
+    // Clear all participants
+    if (participantsList) {
+        participantsList.innerHTML = '';
+    }
+    
+    // Reset participants array
+    participants = [];
+}
+
+// Initialize room listeners for real-time updates
+function initializeRoomListeners() {
+    // Use a combination of localStorage and polling for cross-browser support
+    // Check for existing participants in the room
+    checkExistingParticipants();
+    
+    // Listen for localStorage events (same browser)
+    window.addEventListener('storage', (e) => {
+        if (e.key === `meet_room_${currentRoomId}`) {
+            handleRoomUpdate(JSON.parse(e.newValue));
+        }
+    });
+    
+    // Start polling for room updates (cross-browser support)
+    startRoomPolling();
+    
+    // Notify that current user joined
+    broadcastRoomUpdate({
+        type: 'user_joined',
+        user: currentUserName,
+        timestamp: Date.now()
+    });
+}
+
+// Check for existing participants
+function checkExistingParticipants() {
+    const roomData = localStorage.getItem(`meet_room_${currentRoomId}_participants`);
+    if (roomData) {
+        const participants = JSON.parse(roomData);
+        participants.forEach(participant => {
+            if (participant.user !== currentUserName && participant.active) {
+                // Check if participant already exists in UI
+                const existingTile = document.getElementById(`video-${participant.user.replace(/\s/g, '-')}`);
+                const existingParticipant = document.getElementById(`participant-${participant.user.replace(/\s/g, '-')}`);
+                
+                if (!existingTile && !existingParticipant) {
+                    addParticipant(participant.user, false);
+                    addVideoTile(participant.user, false);
+                    showNotification(`${participant.user} is already in the meeting`);
+                }
+            }
+        });
+    }
+}
+
+// Start room polling for cross-browser updates
+function startRoomPolling() {
+    setInterval(() => {
+        // Check for new participants
+        const roomData = localStorage.getItem(`meet_room_${currentRoomId}_participants`);
+        if (roomData) {
+            const participants = JSON.parse(roomData);
+            const currentParticipants = Array.from(document.querySelectorAll('.participant-item')).map(item => {
+                const nameElement = item.querySelector('.participant-name');
+                return nameElement ? nameElement.textContent.replace(' (You)', '').trim() : '';
+            });
+            
+            participants.forEach(participant => {
+                if (participant.user !== currentUserName && 
+                    participant.active && 
+                    !currentParticipants.includes(participant.user)) {
+                    // Check if participant already exists in UI before adding
+                    const existingTile = document.getElementById(`video-${participant.user.replace(/\s/g, '-')}`);
+                    const existingParticipant = document.getElementById(`participant-${participant.user.replace(/\s/g, '-')}`);
+                    
+                    if (!existingTile && !existingParticipant) {
+                        // New participant found
+                        addParticipant(participant.user, false);
+                        addVideoTile(participant.user, false);
+                        showNotification(`${participant.user} joined the meeting`);
+                        addChatMessage('System', `${participant.user} joined the meeting`, participant.timestamp, true);
+                    }
+                }
+            });
+        }
+    }, 2000); // Check every 2 seconds
+}
+
+// Broadcast room updates
+function broadcastRoomUpdate(update) {
+    const roomData = {
+        ...update,
+        roomId: currentRoomId
+    };
+    
+    // Store in localStorage for same browser
+    localStorage.setItem(`meet_room_${currentRoomId}`, JSON.stringify(roomData));
+    
+    // Update participants list
+    updateParticipantsList(update);
+}
+
+// Update participants list
+function updateParticipantsList(update) {
+    let participants = [];
+    const roomData = localStorage.getItem(`meet_room_${currentRoomId}_participants`);
+    if (roomData) {
+        participants = JSON.parse(roomData);
+    }
+    
+    if (update.type === 'user_joined') {
+        // Add or update participant
+        const existingIndex = participants.findIndex(p => p.user === update.user);
+        if (existingIndex >= 0) {
+            participants[existingIndex] = { ...update, active: true, lastSeen: Date.now() };
+        } else {
+            participants.push({ ...update, active: true, lastSeen: Date.now() });
+        }
+    } else if (update.type === 'user_left') {
+        // Mark participant as inactive
+        const participant = participants.find(p => p.user === update.user);
+        if (participant) {
+            participant.active = false;
+            participant.lastSeen = Date.now();
+        }
+    }
+    
+    localStorage.setItem(`meet_room_${currentRoomId}_participants`, JSON.stringify(participants));
+}
+
+// Handle room updates
+function handleRoomUpdate(update) {
+    if (update.type === 'user_joined' && update.user !== currentUserName) {
+        // Check if participant already exists before adding
+        const existingTile = document.getElementById(`video-${update.user.replace(/\s/g, '-')}`);
+        const existingParticipant = document.getElementById(`participant-${update.user.replace(/\s/g, '-')}`);
+        
+        if (!existingTile && !existingParticipant) {
+            // Add new participant
+            if (!participants.includes(update.user)) {
+                addParticipant(update.user, false);
+                addVideoTile(update.user, false);
+                participants.push(update.user);
+                
+                // Show notification
+                showNotification(`${update.user} joined the meeting`);
+                
+                // Add system message to chat
+                addChatMessage('System', `${update.user} joined the meeting`, update.timestamp, true);
+            }
+        }
+    } else if (update.type === 'user_left') {
+        // Remove participant
+        removeParticipant(update.user);
+        participants = participants.filter(p => p !== update.user);
+        
+        // Show notification
+        showNotification(`${update.user} left the meeting`);
+        
+        // Add system message to chat
+        addChatMessage('System', `${update.user} left the meeting`, update.timestamp, true);
+    } else if (update.type === 'chat_message') {
+        // Add chat message
+        addChatMessage(update.user, update.message, update.timestamp, false);
+    } else if (update.type === 'status_change') {
+        // Update participant status
+        updateParticipantStatus(update.user, update.status);
+    }
+}
+
+// Add participant
+function addParticipant(name, isSelf = false) {
+    const participantsList = document.getElementById('participants');
+    const participant = document.createElement('div');
+    participant.className = 'participant-item';
+    participant.id = `participant-${name.replace(/\s/g, '-')}`;
+    participant.innerHTML = `
+        <div class="participant-avatar">${name.charAt(0).toUpperCase()}</div>
+        <div class="participant-name">${name} ${isSelf ? '(You)' : ''}</div>
+        <div class="participant-status">
+            <div class="status-indicator" id="mic-${name.replace(/\s/g, '-')}"></div>
+            <div class="status-indicator" id="camera-${name.replace(/\s/g, '-')}"></div>
+        </div>
+    `;
+    participantsList.appendChild(participant);
+    
+    if (!isSelf) {
+        participants.push(name);
+    }
+}
+
+// Remove participant
+function removeParticipant(name) {
+    const participantElement = document.getElementById(`participant-${name.replace(/\s/g, '-')}`);
+    if (participantElement) {
+        participantElement.remove();
+    }
+    
+    const videoTile = document.getElementById(`video-${name.replace(/\s/g, '-')}`);
+    if (videoTile) {
+        videoTile.remove();
+    }
+}
+
+// Add video tile
+function addVideoTile(name, isSelf = false) {
+    const videosContainer = document.getElementById('videos');
+    const tile = document.createElement('div');
+    tile.className = 'video-tile';
+    tile.id = `video-${name.replace(/\s/g, '-')}`;
+    
+    if (isSelf) {
+        // For current user, create video element with controls
+        tile.innerHTML = `
+            <video id="video-${name.replace(/\s/g, '-')}-element" ${isSelf ? 'muted' : ''} autoplay playsinline></video>
+            <div class="video-panel">
+                <div class="video-participant-info">
+                    <div class="video-participant-avatar">${name.charAt(0).toUpperCase()}</div>
+                    <div class="video-participant-name">${name} ${isSelf ? '(You)' : ''}</div>
+                </div>
+                <div class="video-status-indicators">
+                    <div class="video-status-indicator" id="video-mic-${name.replace(/\s/g, '-')}">
+                        <i class="material-icons">mic</i>
+                    </div>
+                    <div class="video-status-indicator" id="video-camera-${name.replace(/\s/g, '-')}">
+                        <i class="material-icons">videocam</i>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else {
+        // For other participants, show placeholder only
+        tile.innerHTML = `
+            <div class="no-video">
+                <i class="material-icons">person</i>
+                <span>${name}</span>
+            </div>
+            <div class="video-panel">
+                <div class="video-participant-info">
+                    <div class="video-participant-avatar">${name.charAt(0).toUpperCase()}</div>
+                    <div class="video-participant-name">${name}</div>
+                </div>
+                <div class="video-status-indicators">
+                    <div class="video-status-indicator" id="video-mic-${name.replace(/\s/g, '-')}">
+                        <i class="material-icons">mic_off</i>
+                    </div>
+                    <div class="video-status-indicator" id="video-camera-${name.replace(/\s/g, '-')}">
+                        <i class="material-icons">videocam_off</i>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    videosContainer.appendChild(tile);
+    
+    if (isSelf) {
+        // Start user's video stream only for current user
+        startUserVideoStream();
+    }
+}
+
+// Start user's video stream
+async function startUserVideoStream() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: true, 
+            audio: true 
+        });
+        
+        const videoElement = document.getElementById(`video-${currentUserName.replace(/\s/g, '-')}-element`);
+        if (videoElement) {
+            videoElement.srcObject = stream;
+        }
+        
+        // Store stream for later use
+        window.userStream = stream;
+        
+    } catch (error) {
+        console.error('Error accessing camera:', error);
+        // Show no video placeholder if camera access fails
+        const videoElement = document.getElementById(`video-${currentUserName.replace(/\s/g, '-')}-element`);
+        if (videoElement) {
+            videoElement.style.display = 'none';
+            const tile = document.getElementById(`video-${currentUserName.replace(/\s/g, '-')}`);
+            if (tile) {
+                const noVideoDiv = document.createElement('div');
+                noVideoDiv.className = 'no-video';
+                noVideoDiv.innerHTML = `
+                    <i class="material-icons">videocam_off</i>
+                    <span>Camera off</span>
+                `;
+                tile.appendChild(noVideoDiv);
+            }
+        }
+    }
+}
+
+// Update participant status
+function updateParticipantStatus(name, status) {
+    if (status.muted !== undefined) {
+        // Update sidebar indicator
+        const micIndicator = document.getElementById(`mic-${name.replace(/\s/g, '-')}`);
+        if (micIndicator) {
+            micIndicator.classList.toggle('muted', status.muted);
+        }
+        
+        // Update video panel indicator
+        const videoMicIndicator = document.getElementById(`video-mic-${name.replace(/\s/g, '-')}`);
+        if (videoMicIndicator) {
+            videoMicIndicator.classList.toggle('muted', status.muted);
+            const icon = videoMicIndicator.querySelector('i');
+            if (icon) {
+                icon.textContent = status.muted ? 'mic_off' : 'mic';
+            }
+        }
+    }
+    
+    if (status.cameraOff !== undefined) {
+        // Update sidebar indicator
+        const cameraIndicator = document.getElementById(`camera-${name.replace(/\s/g, '-')}`);
+        if (cameraIndicator) {
+            cameraIndicator.classList.toggle('muted', status.cameraOff);
+        }
+        
+        // Update video panel indicator
+        const videoCameraIndicator = document.getElementById(`video-camera-${name.replace(/\s/g, '-')}`);
+        if (videoCameraIndicator) {
+            videoCameraIndicator.classList.toggle('muted', status.cameraOff);
+            const icon = videoCameraIndicator.querySelector('i');
+            if (icon) {
+                icon.textContent = status.cameraOff ? 'videocam_off' : 'videocam';
+            }
+        }
+    }
+}
+
+// Initialize chat
+function initializeChat() {
+    // Add welcome message
+    addChatMessage('System', `Welcome to Vasuki Meet! Room: ${currentRoomId}`, Date.now(), true);
+    
+    // Load existing messages from shared storage
+    const storedMessages = localStorage.getItem(`meet_chat_${currentRoomId}`);
+    if (storedMessages) {
+        const messages = JSON.parse(storedMessages);
+        messages.forEach(msg => {
+            if (msg.author !== 'System' || msg.message.includes('Welcome to Vasuki Meet')) {
+                displayChatMessage(msg.author, msg.message, msg.timestamp, msg.isSystem);
+            }
+        });
+    }
+    
+    // Start polling for new chat messages
+    startChatPolling();
+}
+
+// Start chat polling for cross-browser updates
+function startChatPolling() {
+    setInterval(() => {
+        const storedMessages = localStorage.getItem(`meet_chat_${currentRoomId}`);
+        if (storedMessages) {
+            const messages = JSON.parse(storedMessages);
+            const currentMessages = Array.from(document.querySelectorAll('.chat-message')).length;
+            
+            // If there are new messages, display them
+            if (messages.length > currentMessages) {
+                const newMessages = messages.slice(currentMessages);
+                newMessages.forEach(msg => {
+                    if (msg.author !== currentUserName || msg.isSystem) {
+                        displayChatMessage(msg.author, msg.message, msg.timestamp, msg.isSystem);
+                    }
+                });
+            }
+        }
+    }, 1000); // Check every second for chat updates
+}
+
+// Add chat message
+function addChatMessage(author, message, timestamp, isSystem = false) {
+    const chatMessage = {
+        author,
+        message,
+        timestamp,
+        isSystem
+    };
+    
+    // Store message in shared chat storage
+    let messages = [];
+    const storedMessages = localStorage.getItem(`meet_chat_${currentRoomId}`);
+    if (storedMessages) {
+        messages = JSON.parse(storedMessages);
+    }
+    messages.push(chatMessage);
+    
+    // Keep only last 50 messages
+    if (messages.length > 50) {
+        messages = messages.slice(-50);
+    }
+    
+    localStorage.setItem(`meet_chat_${currentRoomId}`, JSON.stringify(messages));
+    
+    // Display message
+    displayChatMessage(author, message, timestamp, isSystem);
+    
+    // Broadcast to other participants
+    if (!isSystem && author === currentUserName) {
+        broadcastRoomUpdate({
+            type: 'chat_message',
+            user: author,
+            message,
+            timestamp
+        });
+    }
+}
+
+// Display chat message
+function displayChatMessage(author, message, timestamp, isSystem) {
+    const chatMessages = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'chat-message';
+    
+    const time = new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    messageDiv.innerHTML = `
+        <div class="chat-header">
+            <div class="chat-author">${author}</div>
+            <div class="chat-time">${time}</div>
+        </div>
+        <div class="chat-text">${message}</div>
+    `;
+    
+    if (isSystem) {
+        messageDiv.style.background = 'var(--proton-blue-light)';
+        messageDiv.style.borderLeft = '4px solid var(--proton-blue)';
+    }
+    
+    chatMessages.appendChild(messageDiv);
+    
+    // Auto-scroll to bottom with smooth behavior
+    chatMessages.scrollTo({
+        top: chatMessages.scrollHeight,
+        behavior: 'smooth'
+    });
+}
+
+// Send chat message
+function sendChat() {
+    const chatInput = document.getElementById('chatInput');
+    const message = chatInput.value.trim();
+    
+    if (message) {
+        addChatMessage(currentUserName, message, Date.now(), false);
+        chatInput.value = '';
+    }
+}
+
+// Tab switching
+function switchTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Update tab content
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    document.getElementById(`${tabName}-tab`).classList.add('active');
+}
+
+// Toggle sidebar
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebarOpen = !sidebarOpen;
+    if (window.innerWidth <= 768) {
+        sidebar.classList.toggle('open', sidebarOpen);
+    }
+}
+
+// Copy meeting link
+function copyLink() {
+    const roomId = document.getElementById('roomId').textContent;
+    const link = `${window.location.origin}/meet/app/room.html?room=${roomId}`;
+    navigator.clipboard.writeText(link).then(() => {
+        showNotification('Meeting link copied to clipboard');
+    });
+}
+
+// Toggle mute
+function toggleMute() {
+    isMuted = !isMuted;
+    const btn = document.getElementById('micBtn');
+    const icon = btn.querySelector('i');
+    
+    if (window.userStream) {
+        const audioTracks = window.userStream.getAudioTracks();
+        if (audioTracks.length > 0) {
+            audioTracks[0].enabled = !isMuted;
+        }
+    }
+}
+
+// Toggle camera
+function toggleCamera() {
+    const cameraBtn = document.getElementById('cameraBtn');
+    const cameraIcon = cameraBtn.querySelector('i');
+    
+    if (window.userStream) {
+        const videoTrack = window.userStream.getVideoTracks()[0];
+        if (videoTrack) {
+            videoTrack.enabled = !videoTrack.enabled;
+            isCameraOff = !videoTrack.enabled;
+            tile.appendChild(newNoVideoDiv);
+        } else if (noVideoDiv) {
+            noVideoDiv.style.display = 'flex';
+        }
+    } else {
+        icon.textContent = 'videocam';
+        btn.classList.remove('muted');
+        
+        // Show video and hide placeholder
+        if (videoElement) {
+            videoElement.style.display = 'block';
+        }
+        
+        // Hide no-video placeholder
+        if (noVideoDiv) {
+            noVideoDiv.style.display = 'none';
+        }
+    }
+    
+    // Update participant status
+    const userName = localStorage.getItem('vcloud_user') || 'Anonymous';
+    const cameraIndicator = document.getElementById(`camera-${userName.replace(/\s/g, '-')}`);
+    if (cameraIndicator) {
+        cameraIndicator.classList.toggle('muted', isCameraOff);
+    }
+    
+    // Broadcast status change
+    broadcastRoomUpdate({
+        type: 'status_change',
+        user: currentUserName,
+        status: { cameraOff: isCameraOff },
+        timestamp: Date.now()
+    });
+}
+
+// Toggle captions
+function toggleCaptions() {
+    captionsEnabled = !captionsEnabled;
+    const captionsBar = document.getElementById('captionsBar');
+    captionsBar.classList.toggle('show', captionsEnabled);
+    
+    if (captionsEnabled) {
+        // Simulate captions
+        document.getElementById('captionsText').textContent = 'Captions are now enabled';
+    }
+}
+
+// Share screen
+async function shareScreen() {
+    try {
+        // Stop any existing screen share
+        if (screenStream) {
+            screenStream.getTracks().forEach(track => track.stop());
+        }
+        
+        // Start screen sharing
+        screenStream = await navigator.mediaDevices.getDisplayMedia({
+            video: true,
+            audio: true
+        });
+        
+        // Add screen share video to user's video tile
+        const videoElement = document.getElementById(`video-${currentUserName.replace(/\s/g, '-')}-element`);
+        if (videoElement) {
+            videoElement.srcObject = screenStream;
+        }
+        
+        // Handle screen share end
+        screenStream.getVideoTracks()[0].onended = () => {
+            // Restore camera view
+            if (window.userStream) {
+                videoElement.srcObject = window.userStream;
+            }
+            screenStream = null;
+            showNotification('Screen sharing stopped');
+        };
+        
+        showNotification('Screen sharing started');
+        soundEffects.play('share');
+        
+        // Broadcast screen share status
+        broadcastRoomUpdate({
+            type: 'status_change',
+            user: currentUserName,
+            status: { screenSharing: true },
+            timestamp: Date.now()
+        });
+        
+    } catch (error) {
+        console.error('Error sharing screen:', error);
+        showNotification('Failed to share screen');
+        soundEffects.play('error');
+    }
+}
+
+// Start recording
+async function startRecording() {
+    if (isRecording) {
+        stopRecording();
+        return;
+    }
+    
+    try {
+        // Get combined stream (camera + screen if sharing)
+        let streamToRecord = window.userStream;
+        
+        if (screenStream) {
+            // If screen sharing, create a combined stream
+            const combinedStream = new MediaStream();
+            
+            // Add video tracks from screen share
+            screenStream.getVideoTracks().forEach(track => {
+                combinedStream.addTrack(track);
+            });
+            
+            // Add audio tracks from user mic
+            window.userStream.getAudioTracks().forEach(track => {
+                combinedStream.addTrack(track);
+            });
+            
+            streamToRecord = combinedStream;
+        }
+        
+        // Create media recorder
+        recordedChunks = [];
+        mediaRecorder = new MediaRecorder(streamToRecord, {
+            mimeType: 'video/webm;codecs=vp9,opus'
+        });
+        
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+        
+        mediaRecorder.onstop = async () => {
+            // Create blob from recorded chunks
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            
+            // Save recording to database
+            await saveRecording(blob);
+            
+            // Download for user
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `meeting-recording-${currentRoomId}-${Date.now()}.webm`;
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+        
+        // Start recording
+        mediaRecorder.start();
+        isRecording = true;
+        
+        // Update UI
+        const recordBtn = document.querySelector('[onclick="startRecording()"]');
+        if (recordBtn) {
+            recordBtn.innerHTML = `
+                <i class="material-icons">stop</i>
+                <span>Stop Recording</span>
+            `;
+            recordBtn.style.background = '#d95040';
+        }
+        
+        showNotification('Recording started');
+        soundEffects.play('record');
+        
+    } catch (error) {
+        console.error('Error starting recording:', error);
+        showNotification('Failed to start recording');
+        soundEffects.play('error');
+    }
+}
+
+// Stop recording
+function stopRecording() {
+    if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        
+        // Update UI
+        const recordBtn = document.querySelector('[onclick="startRecording()"]');
+        if (recordBtn) {
+            recordBtn.innerHTML = `
+                <i class="material-icons">fiber_manual_record</i>
+                <span>Record</span>
+            `;
+            recordBtn.style.background = '';
+        }
+        
+        showNotification('Recording stopped and saved');
+        soundEffects.play('stopRecord');
+    }
+}
+
+// Save recording to database
+async function saveRecording(blob) {
+    try {
+        // Convert blob to base64
+        const base64Data = await blobToBase64(blob);
+        
+        // Get current user
+        const userEmail = localStorage.getItem('vcloud_user');
+        
+        // Create recording metadata
+        const recordingData = {
+            user: userEmail,
+            room: currentRoomId,
+            timestamp: Date.now(),
+            duration: recordedChunks.length * 100, // Approximate duration
+            size: blob.size,
+            data: base64Data,
+            fileName: `meeting-${currentRoomId}-${Date.now()}.webm`
+        };
+        
+        // Save to localStorage (in production, this would be saved to a real database)
+        let recordings = JSON.parse(localStorage.getItem('vasuki_recordings') || '[]');
+        recordings.push(recordingData);
+        
+        // Keep only last 10 recordings per user
+        const userRecordings = recordings.filter(r => r.user === userEmail);
+        if (userRecordings.length > 10) {
+            // Remove oldest recordings
+            const toRemove = userRecordings.length - 10;
+            userRecordings.sort((a, b) => a.timestamp - b.timestamp);
+            for (let i = 0; i < toRemove; i++) {
+                recordings = recordings.filter(r => r !== userRecordings[i]);
+            }
+        }
+        
+        localStorage.setItem('vasuki_recordings', JSON.stringify(recordings));
+        
+        showNotification('Recording saved to your Vasuki Cloud account');
+        
+    } catch (error) {
+        console.error('Error saving recording:', error);
+        showNotification('Failed to save recording');
+    }
+}
+
+// Convert blob to base64
+function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+}
+
+// Toggle settings
+function toggleSettings() {
+    showSettingsDialog();
+}
+
+// Show settings dialog
+function showSettingsDialog() {
+    // Create settings dialog
+    const dialog = document.createElement('div');
+    dialog.className = 'dialog';
+    dialog.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--proton-white);
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        z-index: 10000;
+        min-width: 400px;
+        max-width: 500px;
+    `;
+    
+    dialog.innerHTML = `
+        <h3 style="margin: 0 0 20px 0; color: var(--proton-gray-dark);">Meeting Settings</h3>
+        
+        <div style="margin-bottom: 16px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--proton-gray-dark);">
+                Camera Quality
+            </label>
+            <select id="cameraQuality" style="width: 100%; padding: 8px; border: 1px solid var(--proton-gray-border); border-radius: 6px;">
+                <option value="high">High (1080p)</option>
+                <option value="medium" selected>Medium (720p)</option>
+                <option value="low">Low (480p)</option>
+            </select>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--proton-gray-dark);">
+                Audio Quality
+            </label>
+            <select id="audioQuality" style="width: 100%; padding: 8px; border: 1px solid var(--proton-gray-border); border-radius: 6px;">
+                <option value="high">High</option>
+                <option value="medium" selected>Medium</option>
+                <option value="low">Low</option>
+            </select>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="checkbox" id="autoJoinAudio" checked>
+                <span style="color: var(--proton-gray-dark);">Automatically join with audio</span>
+            </label>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="checkbox" id="autoJoinVideo" checked>
+                <span style="color: var(--proton-gray-dark);">Automatically join with video</span>
+            </label>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="checkbox" id="noiseSuppression" checked>
+                <span style="color: var(--proton-gray-dark);">Noise cancellation</span>
+            </label>
+        </div>
+        
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+            <button onclick="this.closest('.dialog').remove()" style="padding: 8px 16px; border: 1px solid var(--proton-gray-border); border-radius: 6px; background: var(--proton-white); cursor: pointer;">
+                Cancel
+            </button>
+            <button onclick="saveSettings(this)" style="padding: 8px 16px; border: none; border-radius: 6px; background: var(--proton-blue); color: white; cursor: pointer;">
+                Save Settings
+            </button>
+        </div>
+    `;
+    
+    // Add backdrop
+    const backdrop = document.createElement('div');
+    backdrop.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 9999;
+    `;
+    backdrop.onclick = () => {
+        dialog.remove();
+        backdrop.remove();
+    };
+    
+    document.body.appendChild(backdrop);
+    document.body.appendChild(dialog);
+}
+
+// Save settings
+function saveSettings(button) {
+    const settings = {
+        cameraQuality: document.getElementById('cameraQuality').value,
+        audioQuality: document.getElementById('audioQuality').value,
+        autoJoinAudio: document.getElementById('autoJoinAudio').checked,
+        autoJoinVideo: document.getElementById('autoJoinVideo').checked,
+        noiseSuppression: document.getElementById('noiseSuppression').checked
+    };
+    
+    // Save to localStorage
+    localStorage.setItem('vasuki_meet_settings', JSON.stringify(settings));
+    
+    // Close dialog
+    button.closest('.dialog').remove();
+    document.querySelector('[style*="rgba(0,0,0,0.5)"]').remove();
+    
+    showNotification('Settings saved successfully');
+}
+
+// Raise hand
+function raiseHand() {
+    showNotification('Hand raised');
+}
+
+// Leave meeting
+function leaveMeeting() {
+    if (confirm('Are you sure you want to leave the meeting?')) {
+        // Play leave sound
+        soundEffects.play('leave');
+        
+        // Stop user's media stream
+        if (window.userStream) {
+            window.userStream.getTracks().forEach(track => track.stop());
+        }
+        
+        // Stop screen share if active
+        if (screenStream) {
+            screenStream.getTracks().forEach(track => track.stop());
+        }
+        
+        // Stop recording if active
+        if (isRecording) {
+            stopRecording();
+        }
+        
+        // Broadcast that user is leaving
+        broadcastRoomUpdate({
+            type: 'user_left',
+            user: currentUserName,
+            timestamp: Date.now()
+        });
+        
+        // Clear room data
+        localStorage.removeItem(`meet_room_${currentRoomId}`);
+        localStorage.removeItem(`meet_chat_${currentRoomId}`);
+        
+        // Redirect to main page
+        window.location.href = '../index.html';
+    }
+}
+
+// Toggle grid view
+function toggleGrid() {
+    const container = document.getElementById('videos');
+    if (container.style.gridTemplateColumns === '1fr') {
+        container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(320px, 1fr))';
+    } else {
+        container.style.gridTemplateColumns = '1fr';
+    }
+}
+
+// Change layout
+function changeLayout(layout) {
+    const container = document.getElementById('videos');
+    if (layout === 'speaker') {
+        container.style.gridTemplateColumns = '2fr 1fr';
+    } else {
+        container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(320px, 1fr))';
+    }
+}
+
+// Show notification
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: var(--proton-blue);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+    `;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Handle chat input
+function handleChatKeypress(event) {
+    if (event.key === 'Enter') {
+        sendChat();
+    }
+}
+
+// Initialize on load
+window.addEventListener('load', initRoom);
+
+// Handle responsive sidebar
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        document.getElementById('sidebar').classList.remove('open');
+    }
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    // Stop user's media stream
+    if (window.userStream) {
+        window.userStream.getTracks().forEach(track => track.stop());
+    }
+    
+    // Broadcast that user is leaving
+    broadcastRoomUpdate({
+        type: 'user_left',
+        user: currentUserName,
+        timestamp: Date.now()
+    });
+});
+</script>
+
+</body>
+</html>

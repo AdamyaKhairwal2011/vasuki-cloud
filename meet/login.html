@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sign in - Vasuki Meet</title>
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('custom.ttf') format('truetype');
+        }
+        
+        body {
+            font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        :root {
+            --google-blue: #4285f4;
+            --google-blue-hover: #357ae8;
+            --google-red: #ea4335;
+            --google-yellow: #fbbc04;
+            --google-green: #34a853;
+            --google-gray: #5f6368;
+            --google-gray-light: #f8f9fa;
+            --google-border: #dadce0;
+            --google-shadow: rgba(60,64,67,0.3);
+            --google-text: #202124;
+            --google-text-secondary: #5f6368;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+        body {
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        /* Google-style Header */
+        .google-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .google-logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            color: var(--google-text);
+            text-decoration: none;
+            font-weight: 400;
+        }
+
+        .google-logo svg {
+            width: 40px;
+            height: 40px;
+            margin-right: 8px;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .header-link {
+            color: var(--google-text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .header-link:hover {
+            color: var(--google-text);
+        }
+
+        /* Main Container */
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 60px;
+        }
+
+        /* Login Card */
+        .login-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 48px 40px 36px;
+            text-align: center;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Meet Logo */
+        .meet-logo {
+            margin-bottom: 24px;
+        }
+
+        .meet-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--google-blue);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .meet-logo-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .meet-title {
+            font-size: 24px;
+            font-weight: 400;
+            color: var(--google-text);
+            margin-bottom: 8px;
+        }
+
+        .meet-subtitle {
+            font-size: 16px;
+            color: var(--google-text-secondary);
+            margin-bottom: 32px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--google-text);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 13px 15px;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
+            color: var(--google-text);
+            background: white;
+            border: 1px solid var(--google-border);
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--google-blue);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--google-text-secondary);
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: right;
+            font-size: 14px;
+            color: var(--google-blue);
+            margin-top: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .forgot-link:hover {
+            color: var(--google-blue-hover);
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn-container {
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 10px 16px;
+            background: var(--google-blue);
+            color: white;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            position: relative;
+            min-height: 36px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--google-blue-hover);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+        }
+
+        .btn-primary:disabled {
+            background: var(--google-gray-light);
+            color: var(--google-text-secondary);
+            cursor: not-allowed;
+        }
+
+        .btn-primary.loading .btn-text {
+            opacity: 0;
+        }
+
+        .spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        .btn-primary.loading .spinner { display: block; }
+
+        @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--google-text-secondary);
+            font-size: 14px;
+            margin: 24px 0;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--google-border);
+        }
+
+        /* Google Button */
+        .btn-google {
+            width: 100%;
+            padding: 10px 16px;
+            background: white;
+            border: 1px solid var(--google-border);
+            border-radius: 4px;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--google-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.2s;
+            min-height: 36px;
+        }
+
+        .btn-google:hover:not(:disabled) {
+            background: var(--google-gray-light);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+
+        .btn-google:disabled { opacity: 0.55; cursor: not-allowed; }
+
+        .btn-google svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Footer */
+        .login-footer {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--google-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-text { 
+            font-size: 14px; 
+            color: var(--google-text-secondary); 
+        }
+
+        .btn-create {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--google-blue);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: 'Google Sans', sans-serif;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-create:hover { 
+            color: var(--google-blue-hover);
+            text-decoration: underline;
+        }
+
+        /* Page Footer */
+        .page-footer {
+            margin-top: 40px;
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .page-footer a {
+            font-size: 12px;
+            color: var(--google-text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .page-footer a:hover { 
+            color: var(--google-text);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card { 
+                padding: 32px 24px 24px; 
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            .meet-title { font-size: 22px; }
+            
+            .google-header {
+                padding: 0 16px;
+            }
+            
+            .header-links {
+                gap: 16px;
+            }
+        }
+
+        /* Back link */
+        .back-link {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--google-text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--google-text);
+        }
+
+        .back-link svg {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+<!-- Google-style Header -->
+<header class="google-header">
+    <a href="../" class="google-logo">
+        Vasuki Meet
+    </a>
+    <div class="header-links">
+        <a href="#" class="header-link" onclick="showSettings()">Settings</a>
+        <a href="#" class="header-link">Help</a>
+        <a href="#" class="header-link">Privacy</a>
+        <a href="#" class="header-link">Terms</a>
+    </div>
+</header>
+
+<!-- Back link -->
+<a href="../" class="back-link">
+    <svg viewBox="0 0 24 24">
+        <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+    </svg>
+    Back to Vasuki Meet
+</a>
+
+<!-- Login Container -->
+<div class="login-container">
+    <div class="login-card">
+        <div class="meet-logo">
+            <div class="meet-logo-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+                </svg>
+            </div>
+            <h1 class="meet-title">Sign in</h1>
+            <p class="meet-subtitle">to continue to Vasuki Meet</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label" for="emailInput">Email address</label>
+                <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="username" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="passwordInput">Password</label>
+                <input type="password" id="passwordInput" placeholder="Enter your password" autocomplete="current-password" class="form-input" required>
+            </div>
+
+            <a href="#" class="forgot-link">Forgot password?</a>
+
+            <div class="btn-container">
+                <button type="submit" class="btn-primary" id="loginBtn">
+                    <span class="btn-text">Next</span>
+                    <div class="spinner"></div>
+                </button>
+            </div>
+        </form>
+
+        <div class="divider">or</div>
+
+        <button class="btn-google" id="googleBtn">
+            <svg viewBox="0 0 48 48">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                <path fill="none" d="M0 0h48v48H0z"/>
+            </svg>
+            Continue with Google
+        </button>
+
+        <div class="login-footer">
+            <span class="footer-text">New to Vasuki Meet?</span>
+            <a href="../signup.html" class="btn-create">Create account</a>
+        </div>
+    </div>
+</div>
+
+<footer class="page-footer">
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+    <a href="#">Help</a>
+</footer>
+
+<script type="module">
+    import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
+    let vdb = new Vasuki();
+
+    // Check if user is already logged in
+    if (localStorage.getItem("vcloud_user")) {
+        window.location.href = './index.html';
+    }
+
+    // Form submission
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const emailInput = document.getElementById('emailInput').value.toLowerCase().trim();
+        const password = document.getElementById('passwordInput').value;
+        const loginBtn = document.getElementById('loginBtn');
+
+        if (!emailInput || !password) { 
+            alert("Please fill in all fields"); 
+            return; 
+        }
+
+        loginBtn.classList.add('loading');
+        loginBtn.disabled = true;
+
+        try {
+            await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+            const data = await vdb.fetchTable('users_rows', 'Sheet1');
+            const user = data.find(u => u && u.username && u.username.toLowerCase() === emailInput && u.password === password);
+
+            if (user) {
+                localStorage.setItem('vcloud_user', emailInput);
+                localStorage.setItem('vcloud_username', user.name || '');
+                window.location.href = './index.html';
+            } else {
+                alert("Invalid credentials. Please try again.");
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Login failed. Please try again.");
+            loginBtn.classList.remove('loading');
+            loginBtn.disabled = false;
+        }
+    });
+
+    // Google login
+    document.getElementById('googleBtn').addEventListener('click', function() {
+        const googleBtn = document.getElementById('googleBtn');
+        googleBtn.disabled = true;
+
+        const client = google.accounts.oauth2.initCodeClient({
+            client_id: "600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com",
+            scope: "email profile openid",
+            ux_mode: "popup",
+            callback: async (response) => {
+                try {
+                    const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: new URLSearchParams({
+                            code: response.code,
+                            client_id: "600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com",
+                            client_secret: "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",
+                            redirect_uri: "postmessage",
+                            grant_type: "authorization_code"
+                        })
+                    }).then(r => r.json());
+
+                    if (!tokenRes.access_token) throw new Error("No access token");
+
+                    const userInfo = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+                        headers: { Authorization: `Bearer ${tokenRes.access_token}` }
+                    }).then(r => r.json());
+
+                    const email = userInfo.email.toLowerCase();
+
+                    await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+                    const data = await vdb.fetchTable('users_rows', 'Sheet1');
+                    const user = data.find(u => u && u.username && u.username.toLowerCase() === email);
+
+                    if (user) {
+                        localStorage.setItem('vcloud_user', email);
+                        localStorage.setItem('vcloud_username', userInfo.name || '');
+                        window.location.href = './index.html';
+                    } else {
+                        alert("No account found. Redirecting to sign up.");
+                        window.location.href = '../signup.html?email=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(userInfo.name || '');
+                    }
+                } catch (err) {
+                    console.error("Google login error:", err);
+                    alert("Google sign-in failed. Please try again.");
+                    googleBtn.disabled = false;
+                }
+            }
+        });
+
+        client.requestCode();
+    });
+    
+    // Settings functionality
+    function showSettings() {
+        showSettingsDialog();
+    }
+    
+    // Show settings dialog
+    function showSettingsDialog() {
+        // Create settings dialog
+        const dialog = document.createElement('div');
+        dialog.className = 'dialog';
+        dialog.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            z-index: 10000;
+            min-width: 400px;
+            max-width: 500px;
+        `;
+        
+        // Load existing settings
+        const existingSettings = JSON.parse(localStorage.getItem('vasuki_meet_settings') || '{}');
+        
+        dialog.innerHTML = `
+            <h3 style="margin: 0 0 20px 0; color: var(--google-text);">Vasuki Meet Settings</h3>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--google-text);">
+                    Default Camera Quality
+                </label>
+                <select id="cameraQuality" style="width: 100%; padding: 8px; border: 1px solid var(--google-border); border-radius: 6px;">
+                    <option value="high" ${existingSettings.cameraQuality === 'high' ? 'selected' : ''}>High (1080p)</option>
+                    <option value="medium" ${existingSettings.cameraQuality === 'medium' || !existingSettings.cameraQuality ? 'selected' : ''}>Medium (720p)</option>
+                    <option value="low" ${existingSettings.cameraQuality === 'low' ? 'selected' : ''}>Low (480p)</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--google-text);">
+                    Default Audio Quality
+                </label>
+                <select id="audioQuality" style="width: 100%; padding: 8px; border: 1px solid var(--google-border); border-radius: 6px;">
+                    <option value="high" ${existingSettings.audioQuality === 'high' ? 'selected' : ''}>High</option>
+                    <option value="medium" ${existingSettings.audioQuality === 'medium' || !existingSettings.audioQuality ? 'selected' : ''}>Medium</option>
+                    <option value="low" ${existingSettings.audioQuality === 'low' ? 'selected' : ''}>Low</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="autoJoinAudio" ${existingSettings.autoJoinAudio !== false ? 'checked' : ''}>
+                    <span style="color: var(--google-text);">Automatically join meetings with audio</span>
+                </label>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="autoJoinVideo" ${existingSettings.autoJoinVideo !== false ? 'checked' : ''}>
+                    <span style="color: var(--google-text);">Automatically join meetings with video</span>
+                </label>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="noiseSuppression" ${existingSettings.noiseSuppression !== false ? 'checked' : ''}>
+                    <span style="color: var(--google-text);">Enable noise cancellation</span>
+                </label>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="rememberMe" ${existingSettings.rememberMe === true ? 'checked' : ''}>
+                    <span style="color: var(--google-text);">Remember me on this device</span>
+                </label>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button onclick="this.closest('.dialog').remove(); document.querySelector('.settings-backdrop').remove();" style="padding: 8px 16px; border: 1px solid var(--google-border); border-radius: 6px; background: white; cursor: pointer;">
+                    Cancel
+                </button>
+                <button onclick="saveLoginSettings(this)" style="padding: 8px 16px; border: none; border-radius: 6px; background: var(--google-blue); color: white; cursor: pointer;">
+                    Save Settings
+                </button>
+            </div>
+        `;
+        
+        // Add backdrop
+        const backdrop = document.createElement('div');
+        backdrop.className = 'settings-backdrop';
+        backdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+        `;
+        backdrop.onclick = () => {
+            dialog.remove();
+            backdrop.remove();
+        };
+        
+        document.body.appendChild(backdrop);
+        document.body.appendChild(dialog);
+    }
+    
+    // Save settings
+    function saveLoginSettings(button) {
+        const settings = {
+            cameraQuality: document.getElementById('cameraQuality').value,
+            audioQuality: document.getElementById('audioQuality').value,
+            autoJoinAudio: document.getElementById('autoJoinAudio').checked,
+            autoJoinVideo: document.getElementById('autoJoinVideo').checked,
+            noiseSuppression: document.getElementById('noiseSuppression').checked,
+            rememberMe: document.getElementById('rememberMe').checked
+        };
+        
+        // Save to localStorage
+        localStorage.setItem('vasuki_meet_settings', JSON.stringify(settings));
+        
+        // Close dialog
+        button.closest('.dialog').remove();
+        document.querySelector('.settings-backdrop').remove();
+        
+        // Show success message
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--google-green);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+        `;
+        notification.textContent = 'Settings saved successfully';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+</script>
+
+</body>
+</html>
