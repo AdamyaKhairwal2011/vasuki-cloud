@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sign in - Vasuki vCloud</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('custom.ttf') format('truetype');
+        }
+        
+        body {
+            font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+    </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         :root {
@@ -379,6 +388,7 @@
     </div>
 
     <footer class="page-footer">
+        <a href="#" onclick="showSettings()">Settings</a>
         <a href="#">Privacy Policy</a>
         <a href="#">Terms of Service</a>
         <a href="#">Help</a>
@@ -479,6 +489,268 @@
 
         client.requestCode();
     }
+</script>
+
+<script>
+    // Sound Effects System
+    class SoundEffects {
+        constructor() {
+            this.audioContext = null;
+            this.sounds = {};
+            this.initAudioContext();
+        }
+        
+        initAudioContext() {
+            try {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.createSounds();
+            } catch (error) {
+                console.log('Audio not supported');
+            }
+        }
+        
+        createSounds() {
+            // Create different sound effects using Web Audio API
+            this.sounds = {
+                click: () => this.playTone(800, 0.1, 'sine'),
+                success: () => this.playTone(600, 0.2, 'sine'),
+                error: () => this.playTone(300, 0.2, 'sawtooth'),
+                hover: () => this.playTone(1000, 0.05, 'sine'),
+                notification: () => this.playChord([523, 659, 784], 0.3),
+                leave: () => this.playChord([400, 300, 200], 0.4),
+                mute: () => this.playTone(400, 0.15, 'square'),
+                unmute: () => this.playTone(800, 0.15, 'square')
+            };
+        }
+        
+        playTone(frequency, duration, type = 'sine') {
+            if (!this.audioContext) return;
+            
+            const oscillator = this.audioContext.createOscillator();
+            const gainNode = this.audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(this.audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
+            
+            oscillator.start(this.audioContext.currentTime);
+            oscillator.stop(this.audioContext.currentTime + duration);
+        }
+        
+        playChord(frequencies, duration) {
+            if (!this.audioContext) return;
+            
+            frequencies.forEach(freq => {
+                this.playTone(freq, duration);
+            });
+        }
+        
+        play(soundName) {
+            if (this.sounds[soundName]) {
+                // Resume audio context if suspended
+                if (this.audioContext && this.audioContext.state === 'suspended') {
+                    this.audioContext.resume();
+                }
+                this.sounds[soundName]();
+            }
+        }
+    }
+    
+    // Initialize sound effects
+    const soundEffects = new SoundEffects();
+    
+    // Settings functionality - Global scope
+    function showSettings() {
+        soundEffects.play('click');
+        showSettingsDialog();
+    }
+    
+    // Show settings dialog
+    function showSettingsDialog() {
+        // Create settings dialog
+        const dialog = document.createElement('div');
+        dialog.className = 'dialog';
+        dialog.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--white);
+            border-radius: 28px;
+            padding: 44px;
+            box-shadow: var(--shadow-card);
+            z-index: 10000;
+            min-width: 400px;
+            max-width: 500px;
+            animation: cardIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+        `;
+        
+        // Load existing settings
+        const existingSettings = JSON.parse(localStorage.getItem('vasuki_meet_settings') || '{}');
+        
+        dialog.innerHTML = `
+            <h2 style="margin: 0 0 24px 0; font-family: 'CustomFont', sans-serif; color: var(--gray-900);">Vasuki Cloud Settings</h2>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-900); font-family: 'CustomFont', sans-serif;">
+                    Default Camera Quality
+                </label>
+                <select id="cameraQuality" style="width: 100%; padding: 12px; border: 1px solid var(--cream-border); border-radius: 12px; font-family: 'CustomFont', sans-serif;">
+                    <option value="high" ${existingSettings.cameraQuality === 'high' ? 'selected' : ''}>High (1080p)</option>
+                    <option value="medium" ${existingSettings.cameraQuality === 'medium' || !existingSettings.cameraQuality ? 'selected' : ''}>Medium (720p)</option>
+                    <option value="low" ${existingSettings.cameraQuality === 'low' ? 'selected' : ''}>Low (480p)</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-900); font-family: 'CustomFont', sans-serif;">
+                    Default Audio Quality
+                </label>
+                <select id="audioQuality" style="width: 100%; padding: 12px; border: 1px solid var(--cream-border); border-radius: 12px; font-family: 'CustomFont', sans-serif;">
+                    <option value="high" ${existingSettings.audioQuality === 'high' ? 'selected' : ''}>High</option>
+                    <option value="medium" ${existingSettings.audioQuality === 'medium' || !existingSettings.audioQuality ? 'selected' : ''}>Medium</option>
+                    <option value="low" ${existingSettings.audioQuality === 'low' ? 'selected' : ''}>Low</option>
+                </select>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; font-family: 'CustomFont', sans-serif;">
+                    <input type="checkbox" id="autoJoinAudio" ${existingSettings.autoJoinAudio !== false ? 'checked' : ''} style="width: 18px; height: 18px;">
+                    <span style="color: var(--gray-900);">Automatically join meetings with audio</span>
+                </label>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; font-family: 'CustomFont', sans-serif;">
+                    <input type="checkbox" id="autoJoinVideo" ${existingSettings.autoJoinVideo !== false ? 'checked' : ''} style="width: 18px; height: 18px;">
+                    <span style="color: var(--gray-900);">Automatically join meetings with video</span>
+                </label>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; font-family: 'CustomFont', sans-serif;">
+                    <input type="checkbox" id="rememberMe" ${existingSettings.rememberMe === true ? 'checked' : ''} style="width: 18px; height: 18px;">
+                    <span style="color: var(--gray-900);">Remember me on this device</span>
+                </label>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button onclick="this.closest('.dialog').remove(); document.querySelector('.settings-backdrop').remove();" style="padding: 12px 24px; border: 1px solid var(--cream-border); border-radius: 12px; background: var(--white); cursor: pointer; font-family: 'CustomFont', sans-serif;">
+                    Cancel
+                </button>
+                <button onclick="saveLoginSettings(this)" style="padding: 12px 24px; border: none; border-radius: 12px; background: var(--gray-900); color: var(--white); cursor: pointer; font-family: 'CustomFont', sans-serif;">
+                    Save Settings
+                </button>
+            </div>
+        `;
+        
+        // Add backdrop
+        const backdrop = document.createElement('div');
+        backdrop.className = 'settings-backdrop';
+        backdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+        `;
+        backdrop.onclick = () => {
+            dialog.remove();
+            backdrop.remove();
+        };
+        
+        document.body.appendChild(backdrop);
+        document.body.appendChild(dialog);
+    }
+    
+    // Save settings
+    function saveLoginSettings(button) {
+        soundEffects.play('success');
+        
+        const settings = {
+            cameraQuality: document.getElementById('cameraQuality').value,
+            audioQuality: document.getElementById('audioQuality').value,
+            autoJoinAudio: document.getElementById('autoJoinAudio').checked,
+            autoJoinVideo: document.getElementById('autoJoinVideo').checked,
+            rememberMe: document.getElementById('rememberMe').checked
+        };
+        
+        // Save to localStorage
+        localStorage.setItem('vasuki_meet_settings', JSON.stringify(settings));
+        
+        // Close dialog
+        button.closest('.dialog').remove();
+        document.querySelector('.settings-backdrop').remove();
+        
+        // Show success message with sound
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--gray-900);
+            color: var(--white);
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-card);
+            z-index: 10000;
+            animation: cardIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+            font-family: 'CustomFont', sans-serif;
+        `;
+        notification.textContent = 'Settings saved successfully';
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+    
+    // Add sound effects to all buttons after page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add click sounds to all buttons
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                if (!button.disabled) {
+                    soundEffects.play('click');
+                }
+            });
+            
+            // Add hover sounds
+            button.addEventListener('mouseenter', () => {
+                if (!button.disabled) {
+                    soundEffects.play('hover');
+                }
+            });
+        });
+        
+        // Add click sounds to links
+        const links = document.querySelectorAll('a');
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                soundEffects.play('click');
+            });
+            
+            link.addEventListener('mouseenter', () => {
+                soundEffects.play('hover');
+            });
+        });
+        
+        // Add sound to input focus
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                soundEffects.play('click');
+            });
+        });
+    });
 </script>
 </body>
 </html>

@@ -1,49 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vasuki Calendar</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&family=Google+Sans+Text:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg:       #faf9f5;
-  --bg2:      #f5f3ec;
-  --bg3:      #ede9de;
-  --bg4:      #e8e4d8;
-  --surface:  #ffffff;
-  --surface2: #fdfcf8;
-  --border:   #ddd9ce;
-  --border2:  #ccc8bc;
-  --ink:      #1f1f1f;
-  --ink2:     #444444;
-  --ink3:     #777777;
-  --ink4:     #aaaaaa;
-  --blue:     #1a73e8;
-  --blue-lt:  #e8f0fe;
-  --blue-md:  #d2e3fc;
-  --green:    #188038;
-  --green-lt: #e6f4ea;
-  --red:      #d93025;
-  --red-lt:   #fce8e6;
-  --amber:    #b06000;
-  --amber-lt: #fef3e2;
-  --purple:   #7b1fa2;
-  --purple-lt:#f3e5f5;
-  --teal:     #00695c;
-  --teal-lt:  #e0f2f1;
-  --pink:     #c2185b;
-  --pink-lt:  #fce4ec;
-  --accent:   #f9a825;
-  --shadow-sm: 0 1px 2px rgba(60,64,67,.15), 0 1px 3px rgba(60,64,67,.10);
-  --shadow-md: 0 2px 6px rgba(60,64,67,.15), 0 1px 2px rgba(60,64,67,.10);
-  --shadow-lg: 0 8px 28px rgba(60,64,67,.18), 0 2px 8px rgba(60,64,67,.10);
-  --f: 'Google Sans', 'Segoe UI', sans-serif;
-  --f-text: 'Google Sans Text', 'Segoe UI', sans-serif;
-  --radius: 8px;
-  --ease: cubic-bezier(.2,0,0,1);
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vasuki Calendar Dashboard</title>
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('../custom.ttf') format('truetype');
+        }
+        
+        body {
+            font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+          --bg:       #faf9f5;
+          --bg2:      #f5f3ec;
+          --bg3:      #ede9de;
+          --bg4:      #e8e4d8;
+          --surface:  #ffffff;
+          --surface2: #fdfcf8;
+          --border:   #ddd9ce;
+          --border2:  #ccc8bc;
+          --ink:      #1f1f1f;
+          --ink2:     #444444;
+          --ink3:     #777777;
+          --ink4:     #aaaaaa;
+          --blue:     #1a73e8;
+          --blue-lt:  #e8f0fe;
+          --blue-md:  #d2e3fc;
+          --green:    #188038;
+          --green-lt: #e6f4ea;
+          --red:      #d93025;
+          --red-lt:   #fce8e6;
+          --amber:    #b06000;
+          --amber-lt: #fef3e2;
+          --purple:   #7b1fa2;
+          --purple-lt:#f3e5f5;
+          --teal:     #00695c;
+          --teal-lt:  #e0f2f1;
+          --pink:     #c2185b;
+          --pink-lt:  #fce4ec;
+          --accent:   #f9a825;
+          --shadow-sm: 0 1px 2px rgba(60,64,67,.15), 0 1px 3px rgba(60,64,67,.10);
+          --shadow-md: 0 2px 6px rgba(60,64,67,.15), 0 1px 2px rgba(60,64,67,.10);
+          --shadow-lg: 0 8px 28px rgba(60,64,67,.18), 0 2px 8px rgba(60,64,67,.10);
+          --f: 'CustomFont', 'Segoe UI', sans-serif;
+          --f-text: 'CustomFont', 'Segoe UI', sans-serif;
+          --radius: 8px;
+          --ease: cubic-bezier(.2,0,0,1);
+        }
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:14px}
 body{font-family:var(--f);background:var(--bg);color:var(--ink);height:100vh;overflow:hidden;-webkit-font-smoothing:antialiased}
