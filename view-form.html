@@ -4,411 +4,512 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vasuki Forms</title>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --accent: #363636;
-            --accent-light: #F7F0DC;
-            --accent-mid: #5f5f5f;
+            --accent-rgb: 54, 54, 54;
+            --accent-light: #F4F4F2;
             --bg: #F0EDE6;
             --card: #FFFFFF;
             --text: #202124;
-            --text-secondary: #5F6368;
-            --text-muted: #9AA0A6;
-            --border: #E0DDD6;
-            --radius: 5px;
-            --shadow: 0 0px 0px rgba(0,0,0,0.08), 0 0 0px rgba(0,0,0,0.06);
+            --text-secondary: #6B7280;
+            --border: #E2E2DF;
+            --radius: 10px;
+            --shadow: 0 1px 4px rgba(0,0,0,0.08), 0 6px 20px rgba(0,0,0,0.10);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Google Sans', 'Roboto', sans-serif;
+            font-family: 'DM Sans', sans-serif;
             background: var(--bg);
             min-height: 100vh;
-            padding: 32px 16px 64px;
-        }
-
-        .form-wrapper {
-            max-width: 640px;
-            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-        }
-
-        /* HEADER CARD */
-        .header-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
 
-        .header-banner {
-            height: 12px;
-            background: var(--accent);
+        /* ── PROGRESS BAR ─────────────────────────────── */
+        .progress-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: rgba(0,0,0,0.06);
+            z-index: 100;
         }
 
-        .header-body { padding: 24px 28px 22px; }
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
+        /* ── WRAPPER ──────────────────────────────────── */
+        .form-wrapper {
+            width: 100%;
+            max-width: 640px;
+            padding: 24px 20px;
+            position: relative;
+        }
+
+        /* ── CARDS ────────────────────────────────────── */
+        .step-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 44px 48px;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        @media (max-width: 520px) {
+            .step-card { padding: 32px 28px; }
+        }
+
+        .step-card.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── TYPOGRAPHY ───────────────────────────────── */
         .form-title {
             font-size: 26px;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--text);
-            letter-spacing: -0.01em;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            line-height: 1.3;
         }
 
         .form-desc {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--text-secondary);
-            line-height: 1.55;
+            line-height: 1.65;
+            margin-bottom: 28px;
         }
-
-        .required-note {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid var(--border);
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .required-note span { color: #C5221F; }
-
-        /* QUESTION CARD */
-        .q-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 22px 28px 24px;
-            border-left: 3px solid transparent;
-            transition: border-color 0.2s;
-        }
-
-        .q-card:focus-within { border-left-color: var(--accent); }
 
         .q-label {
-            font-size: 15px;
+            font-size: 20px;
             font-weight: 500;
             color: var(--text);
-            margin-bottom: 18px;
+            margin-bottom: 28px;
             line-height: 1.45;
         }
 
-        .q-label .star { color: #C5221F; margin-left: 4px; }
-
-        /* UNDERLINE INPUT */
-        .field-underline {
-            width: 100%;
-            border: none;
-            border-bottom: 1px solid #BDBDBD;
-            padding: 6px 0 8px;
-            font-family: 'Roboto', sans-serif;
-            font-size: 14px;
-            color: var(--text);
-            background: transparent;
-            outline: none;
-            transition: border-color 0.2s;
+        .q-label .required-star {
+            color: #E53E3E;
+            margin-left: 2px;
         }
 
-        .field-underline::placeholder { color: var(--text-muted); }
-        .field-underline:focus { border-bottom: 2px solid var(--accent); }
-
-        /* TEXTAREA */
-        .field-textarea {
-            width: 100%;
-            border: none;
-            border-bottom: 1px solid #BDBDBD;
-            padding: 6px 0 8px;
-            font-family: 'Roboto', sans-serif;
-            font-size: 14px;
-            color: var(--text);
-            background: transparent;
-            outline: none;
-            resize: none;
-            min-height: 80px;
-            transition: border-color 0.2s;
-        }
-
-        .field-textarea:focus { border-bottom: 2px solid var(--accent); }
-
-        /* SELECT */
-        .field-select-wrap { position: relative; }
-
-        .field-select {
-            width: 100%;
-            appearance: none;
-            border: none;
-            border-bottom: 1px solid #BDBDBD;
-            padding: 6px 32px 8px 0;
-            font-family: 'Roboto', sans-serif;
-            font-size: 14px;
-            color: var(--text);
-            background: transparent;
-            outline: none;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-
-        .field-select:focus { border-bottom: 2px solid var(--accent); }
-
-        .select-arrow {
-            position: absolute;
-            right: 4px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
+        .step-counter {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
             color: var(--text-secondary);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
         }
 
-        /* RADIO / CHECKBOX */
-        .options-list { display: flex; flex-direction: column; gap: 2px; }
+        /* ── INPUTS ───────────────────────────────────── */
+        .input-field {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid var(--border);
+            padding: 10px 0;
+            font-size: 18px;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            background: transparent;
+            outline: none;
+            transition: border-color 0.25s;
+            resize: none;
+            overflow: hidden;
+            min-height: 40px;
+        }
+
+        .input-field:focus { border-bottom-color: var(--accent); }
+        .input-field::placeholder { color: #B0ADA8; }
+
+        /* ── OPTIONS ──────────────────────────────────── */
+        .options-list { display: flex; flex-direction: column; gap: 10px; }
 
         .option-row {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 10px 12px;
-            border-radius: 6px;
+            padding: 14px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.15s;
+            transition: background 0.18s, border-color 0.18s;
+            user-select: none;
         }
 
-        .option-row:hover { background: var(--accent-light); }
+        .option-row:hover { background: var(--accent-light); border-color: #C8C8C4; }
 
         .option-row input[type="radio"],
         .option-row input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+            margin-right: 14px;
+            width: 18px; height: 18px;
             accent-color: var(--accent);
             flex-shrink: 0;
             cursor: pointer;
         }
 
-        .option-row span { font-size: 14px; color: var(--text); line-height: 1.4; }
+        .option-row span { font-size: 15px; color: var(--text); line-height: 1.4; }
 
-        /* SUBMIT BAR */
-        .submit-bar {
+        /* Highlight selected option */
+        .option-row:has(input:checked) {
+            background: var(--accent-light);
+            border-color: var(--accent);
+        }
+
+        /* ── VALIDATION ───────────────────────────────── */
+        .field-error {
+            font-size: 12px;
+            color: #E53E3E;
+            margin-top: 8px;
+            display: none;
+        }
+        .field-error.show { display: block; }
+        .input-field.error { border-bottom-color: #E53E3E; }
+
+        /* ── BUTTONS ──────────────────────────────────── */
+        .controls {
+            margin-top: 36px;
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 4px 0;
         }
 
-        .btn-submit {
+        .btn-next {
             background: var(--accent);
-            color: #fff;
+            color: white;
             border: none;
-            border-radius: 5px;
-            padding: 10px 26px;
-            font-family: 'Google Sans', sans-serif;
+            padding: 11px 28px;
+            border-radius: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
             font-size: 14px;
-            font-weight: 500;
             cursor: pointer;
-            transition: background 0.15s, box-shadow 0.15s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+            transition: opacity 0.2s, transform 0.15s;
+            letter-spacing: 0.01em;
         }
 
-        .btn-submit:hover { background: #9E7E22; box-shadow: 0 2px 6px rgba(0,0,0,0.22); }
-        .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+        .btn-next:hover { opacity: 0.88; transform: translateY(-1px); }
+        .btn-next:active { transform: translateY(0); }
+        .btn-next:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        .btn-clear {
+        .btn-back {
             background: none;
             border: none;
-            font-family: 'Google Sans', sans-serif;
-            font-size: 14px;
-            color: var(--accent);
-            cursor: pointer;
-            padding: 10px 4px;
+            color: var(--text-secondary);
+            font-family: 'DM Sans', sans-serif;
             font-weight: 500;
-        }
-
-        .btn-clear:hover { color: #7A5C00; }
-
-        /* FOOTER */
-        .form-footer {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-muted);
-            padding-top: 4px;
-        }
-
-        .form-footer a { color: var(--accent); text-decoration: none; }
-
-        /* LOADING */
-        #loading {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--text-muted);
             font-size: 14px;
+            cursor: pointer;
+            padding: 11px 8px;
+            transition: color 0.2s;
         }
 
-        .spinner {
-            width: 28px;
-            height: 28px;
-            border: 3px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            margin: 0 auto 14px;
+        .btn-back:hover { color: var(--text); }
+
+        .keyboard-hint {
+            margin-left: auto;
+            font-size: 12px;
+            color: #C0BDB8;
+            font-family: 'DM Mono', monospace;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* ── LOADING / STATES ─────────────────────────── */
+        #loading {
+            font-size: 16px;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 40px;
+        }
 
-        /* SUCCESS */
         .success-card {
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
             text-align: center;
         }
-
-        .success-banner { height: 12px; background: linear-gradient(90deg, #34A853, #4CAF50); }
-        .success-body { padding: 40px 28px 36px; }
 
         .success-icon {
-            width: 56px;
-            height: 56px;
+            width: 52px; height: 52px;
+            background: #F0FDF4;
             border-radius: 50%;
-            background: #E6F4EA;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 18px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 22px;
         }
-
-        .success-icon svg { width: 30px; height: 30px; fill: #34A853; }
-        .success-title { font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-        .success-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; }
     </style>
 </head>
 <body>
 
+<div class="progress-container"><div id="progress-bar"></div></div>
+
 <div class="form-wrapper">
+    <div id="loading">Loading form…</div>
 
-    <div id="loading">
-        <div class="spinner"></div>
-        Loading form…
-    </div>
-
-    <div id="form-container" style="display:none">
-        <form id="publicForm" novalidate>
-
-            <div class="header-card">
-                <div class="header-banner"></div>
-                <div class="header-body">
-                    <h1 class="form-title" id="displayTitle">Loading…</h1>
-                    <p class="form-desc" id="displayDesc">Please fill out all required fields.</p>
-                    <p class="required-note"><span>*</span> Indicates required question</p>
-                </div>
-            </div><br>
-
-            <div id="fieldsList"></div>
-
-            <div class="submit-bar">
-                <button type="submit" class="btn-submit">Submit</button>
-                <button type="button" class="btn-clear" onclick="location.reload()">Clear form</button>
+    <div id="form-content" style="display:none">
+        <!-- Intro slide -->
+        <div class="step-card active" id="intro-step">
+            <h1 class="form-title" id="displayTitle"></h1>
+            <p class="form-desc" id="displayDesc"></p>
+            <div class="controls">
+                <button class="btn-next" onclick="nextStep()">Start</button>
+                <span class="keyboard-hint">Press Enter ↵</span>
             </div>
+        </div>
 
+        <!-- Dynamic question steps injected here -->
+        <form id="publicForm" novalidate>
+            <div id="dynamic-steps"></div>
         </form>
-
-        <p class="form-footer">Powered by <a href="https://www.vasuki.cloud/forms">Vasuki Forms</a></p>
     </div>
-
 </div>
 
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const supabase = createClient(
-  "https://aitckloahlwemlekaour.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA"
+    "https://aitckloahlwemlekaour.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA"
 );
 
 const params = new URLSearchParams(location.search);
 const formId = params.get("id");
-let currentFields = [];
 
-async function loadForm() {
+let currentStepIdx = -1; // -1 = intro
+let fields = [];
+
+/* ── INIT ───────────────────────────────────────────── */
+async function init() {
     if (!formId) {
-        document.getElementById('loading').innerHTML = '<p>No form ID in URL. Add <code>?id=YOUR_ID</code></p>';
+        document.getElementById('loading').innerText = "No form ID provided in the URL.";
         return;
     }
-    const { data, error } = await supabase.from("forms").select("*").eq("id", formId).single();
-    if (!error && data) renderForm(data);
-    else document.getElementById('loading').innerHTML = '<p style="color:#C5221F">Could not load form.</p>';
+
+    const { data, error } = await supabase
+        .from("forms")
+        .select("*")
+        .eq("id", formId)
+        .single();
+
+    if (error || !data) {
+        document.getElementById('loading').innerText = "Form not found.";
+        return;
+    }
+
+    fields = data.fields || [];
+    renderForm(data);
 }
 
+/* ── RENDER ─────────────────────────────────────────── */
 function renderForm(form) {
-    document.getElementById("loading").style.display = "none";
-    document.getElementById("form-container").style.display = "block";
-    document.getElementById("displayTitle").textContent = form.title;
-    window.document.title =  "Vasuki Forms - " + form.title;
-    if (form.description) document.getElementById("displayDesc").textContent = form.description;
-    if (form.theme_color) document.documentElement.style.setProperty("--accent", form.theme_color);
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('form-content').style.display = 'block';
+    document.getElementById('displayTitle').innerText = form.title || "Untitled Form";
+    document.getElementById('displayDesc').innerText = form.description || "Take a moment to fill this out.";
 
-    currentFields = form.fields || [];
-    const wrap = document.getElementById("fieldsList");
+    if (form.theme_color) {
+        document.documentElement.style.setProperty("--accent", form.theme_color);
+    }
 
-    wrap.innerHTML = currentFields.map(f => {
-        const req = f.required ? 'required' : '';
-        let input = '';
+    const container = document.getElementById('dynamic-steps');
+    const total = fields.length;
 
-        switch (f.type) {
-            case "textarea":
-                input = `<textarea class="field-textarea" name="${f.id}" rows="3" ${req} placeholder="Your answer"></textarea>`;
-                break;
-            case "select":
-                input = `<div class="field-select-wrap">
-                    <select class="field-select" name="${f.id}" ${req}>
-                        <option value="">Choose</option>
-                        ${f.options.map(o => `<option value="${o}">${o}</option>`).join("")}
-                    </select>
-                    <svg class="select-arrow" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
-                </div>`;
-                break;
-            case "radio":
-                input = `<div class="options-list">${f.options.map(o => `
-                    <label class="option-row">
-                        <input type="radio" name="${f.id}" value="${o}" ${req}>
-                        <span>${o}</span>
-                    </label>`).join("")}</div>`;
-                break;
-            case "checkbox":
-                input = `<div class="options-list">${f.options.map(o => `
-                    <label class="option-row">
-                        <input type="checkbox" name="${f.id}" value="${o}">
-                        <span>${o}</span>
-                    </label>`).join("")}</div>`;
-                break;
-            default:
-                input = `<input class="field-underline" type="${f.type}" name="${f.id}" ${req} placeholder="Your answer">`;
+    container.innerHTML = fields.map((f, i) => {
+        let inputHtml = '';
+
+        if (f.type === 'radio' || f.type === 'checkbox') {
+            const opts = (f.options || []).map(o => `
+                <label class="option-row">
+                    <input type="${f.type}" name="${f.id}" value="${escHtml(o)}">
+                    <span>${escHtml(o)}</span>
+                </label>`).join('');
+            inputHtml = `<div class="options-list">${opts}</div>`;
+
+        } else if (f.type === 'textarea') {
+            inputHtml = `<textarea
+                class="input-field"
+                name="${f.id}"
+                rows="1"
+                placeholder="Type your answer…"
+                oninput="autoResize(this)"
+                ${f.required ? 'data-required="true"' : ''}
+            ></textarea>`;
+
+        } else {
+            inputHtml = `<input
+                class="input-field"
+                type="${f.type || 'text'}"
+                name="${f.id}"
+                placeholder="Type your answer…"
+                ${f.required ? 'data-required="true"' : ''}
+            >`;
         }
 
+        const isLast = i === total - 1;
+        const actionBtn = isLast
+            ? `<button type="submit" class="btn-next">Submit</button>`
+            : `<button type="button" class="btn-next" onclick="nextStep()">Continue</button>`;
+
         return `
-        <div class="q-card">
-            <div class="q-label">${f.label}${f.required ? '<span class="star">*</span>' : ''}</div>
-            ${input}
-        </div><br/>`;
-    }).join("");
+            <div class="step-card" id="step-${i}" data-index="${i}">
+                <div class="step-counter">${i + 1} / ${total}</div>
+                <div class="q-label">
+                    ${escHtml(f.label)}${f.required ? '<span class="required-star">*</span>' : ''}
+                </div>
+                ${inputHtml}
+                <div class="field-error" id="err-${i}">This field is required.</div>
+                <div class="controls">
+                    ${actionBtn}
+                    <button type="button" class="btn-back" onclick="prevStep()">← Back</button>
+                    ${!isLast ? '<span class="keyboard-hint">Press Enter ↵</span>' : ''}
+                </div>
+            </div>`;
+    }).join('');
 }
 
+/* ── VALIDATION ─────────────────────────────────────── */
+function validateCurrentStep() {
+    if (currentStepIdx < 0) return true; // intro always passes
+    const f = fields[currentStepIdx];
+    if (!f || !f.required) return true;
+
+    const card = document.getElementById(`step-${currentStepIdx}`);
+    const errEl = document.getElementById(`err-${currentStepIdx}`);
+
+    if (f.type === 'radio' || f.type === 'checkbox') {
+        const checked = card.querySelector(`input[name="${f.id}"]:checked`);
+        if (!checked) {
+            errEl.classList.add('show');
+            return false;
+        }
+    } else {
+        const inp = card.querySelector(`[name="${f.id}"]`);
+        if (!inp || inp.value.trim() === '') {
+            inp && inp.classList.add('error');
+            errEl.classList.add('show');
+            return false;
+        }
+    }
+    return true;
+}
+
+function clearErrors(idx) {
+    const errEl = document.getElementById(`err-${idx}`);
+    if (errEl) errEl.classList.remove('show');
+    const card = document.getElementById(`step-${idx}`);
+    if (card) card.querySelectorAll('.input-field').forEach(el => el.classList.remove('error'));
+}
+
+/* ── NAVIGATION ─────────────────────────────────────── */
+window.nextStep = () => {
+    if (!validateCurrentStep()) return;
+    if (currentStepIdx < fields.length - 1) {
+        changeStep(currentStepIdx + 1);
+    }
+};
+
+window.prevStep = () => {
+    if (currentStepIdx > 0) {
+        changeStep(currentStepIdx - 1);
+    } else {
+        changeStep(-1); // back to intro
+    }
+};
+
+function changeStep(newIdx) {
+    const currentEl = getCardEl(currentStepIdx);
+    if (!currentEl) return;
+
+    // Animate out
+    currentEl.classList.remove('active');
+
+    setTimeout(() => {
+        currentEl.style.display = 'none';
+        currentStepIdx = newIdx;
+        clearErrors(currentStepIdx);
+
+        const nextEl = getCardEl(currentStepIdx);
+        if (!nextEl) return;
+        nextEl.style.display = 'flex';
+
+        // Trigger paint before adding class (ensures transition fires)
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => nextEl.classList.add('active'));
+        });
+
+        // Progress bar: 0% on intro, proportional on questions
+        const pct = currentStepIdx < 0
+            ? 0
+            : Math.round(((currentStepIdx + 1) / fields.length) * 100);
+        document.getElementById('progress-bar').style.width = `${pct}%`;
+
+        // Auto-focus first input
+        const input = nextEl.querySelector('input:not([type="radio"]):not([type="checkbox"]), textarea');
+        if (input) setTimeout(() => input.focus(), 50);
+
+    }, 350);
+}
+
+function getCardEl(idx) {
+    return idx === -1
+        ? document.getElementById('intro-step')
+        : document.getElementById(`step-${idx}`);
+}
+
+/* ── KEYBOARD: Enter to advance ─────────────────────── */
+document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    // Allow Enter in textarea (Shift+Enter = newline, plain Enter = advance)
+    if (e.target.tagName === 'TEXTAREA' && !e.shiftKey) {
+        e.preventDefault();
+        if (currentStepIdx < fields.length - 1) {
+            window.nextStep();
+        }
+        return;
+    }
+    // Don't intercept submit button's natural Enter
+    if (e.target.type === 'submit') return;
+    // Advance on Enter for text inputs and intro
+    if (e.target.tagName === 'INPUT' || currentStepIdx === -1) {
+        e.preventDefault();
+        window.nextStep();
+    }
+});
+
+/* ── AUTO-RESIZE TEXTAREA ───────────────────────────── */
+window.autoResize = function(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+};
+
+/* ── SUBMIT ──────────────────────────────────────────── */
 document.getElementById("publicForm").addEventListener("submit", async e => {
     e.preventDefault();
-    const btn = e.target.querySelector('.btn-submit');
-    btn.textContent = 'Submitting…';
+    if (!validateCurrentStep()) return;
+
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.innerText = "Sending…";
     btn.disabled = true;
 
     const fd = new FormData(e.target);
     const payload = {};
     fd.forEach((v, k) => {
-        if (payload[k]) {
+        if (k in payload) {
             if (!Array.isArray(payload[k])) payload[k] = [payload[k]];
             payload[k].push(v);
-        } else payload[k] = v;
+        } else {
+            payload[k] = v;
+        }
     });
 
     const { error } = await supabase.from("form_responses").insert({
@@ -418,27 +519,35 @@ document.getElementById("publicForm").addEventListener("submit", async e => {
     });
 
     if (!error) {
-        document.getElementById("form-container").innerHTML = `
-            <div class="success-card">
-                <div class="success-banner"></div>
-                <div class="success-body">
-                    <div class="success-icon">
-                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                    </div>
-                    <h2 class="success-title">Response submitted</h2>
-                    <p class="success-desc">Your answer has been recorded.</p>
-                    <button onclick="location.reload()" class="btn-submit">Submit another response</button>
+        document.getElementById('progress-bar').style.width = '100%';
+        document.getElementById('form-content').innerHTML = `
+            <div class="step-card active success-card">
+                <div class="success-icon">✓</div>
+                <h1 class="form-title">All done!</h1>
+                <p class="form-desc" style="margin-top:8px">Your response has been recorded. Thank you for your time.</p>
+                <div class="controls" style="justify-content:center; margin-top:28px">
+                    <button class="btn-next" onclick="location.reload()">Submit another response</button>
                 </div>
-            </div>
-            <p class="form-footer" style="margin-top:16px">Powered by <a href="#">Vasuki Forms</a></p>`;
+            </div>`;
     } else {
-        btn.textContent = 'Submit';
+        console.error("Supabase error:", error);
+        alert("Submission failed. Please check your connection and try again.");
+        btn.innerText = "Submit";
         btn.disabled = false;
-        alert('Submission failed. Please try again.');
     }
 });
 
-loadForm();
+/* ── UTILS ───────────────────────────────────────────── */
+function escHtml(str) {
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+init();
 </script>
 </body>
 </html>
