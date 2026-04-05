@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Vasuki iTech Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F7F3EC;
+      --yellow: #D4A017;
+      --yellow-light: #F0C842;
+      --yellow-pale: #FBF3D5;
+      --gray-900: #1C1B18;
+      --gray-700: #3D3B35;
+      --gray-500: #6B6760;
+      --gray-300: #C5C2BA;
+      --gray-100: #EDEBE6;
+      --white: #FFFFFF;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 4px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--cream);
+      color: var(--gray-900);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-300);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo {
+      width: 32px;
+      height: 32px;
+      background: var(--gray-900);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-logo span {
+      font-family: var(--serif);
+      color: var(--yellow);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .nav-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--gray-900);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-name small {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--gray-500);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gray-900); }
+
+    .nav-links a.active { color: var(--gray-900); }
+
+    .nav-cta {
+      background: var(--gray-900);
+      color: var(--white) !important;
+      padding: 8px 18px;
+      border-radius: var(--radius);
+      font-weight: 500 !important;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--yellow) !important; color: var(--gray-900) !important; }
+
+    /* ── CONTENT ── */
+    .page-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 72px 32px 80px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      background: var(--yellow-pale);
+      border: 1px solid #E8D283;
+      padding: 4px 12px;
+      border-radius: 2px;
+      margin-bottom: 24px;
+    }
+
+    .page-wrap h1 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 6vw, 52px);
+      line-height: 1.1;
+      color: var(--gray-900);
+      margin-bottom: 28px;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--gray-500);
+      font-weight: 300;
+      max-width: 580px;
+      margin-bottom: 56px;
+      border-bottom: 1px solid var(--gray-300);
+      padding-bottom: 56px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gray-300);
+    }
+
+    .body-text {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--gray-700);
+      font-weight: 300;
+      margin-bottom: 48px;
+    }
+
+    .body-text strong {
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    /* Team */
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 56px;
+    }
+
+    .team-card {
+      background: var(--white);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+
+    .team-avatar {
+      width: 48px;
+      height: 48px;
+      background: var(--gray-900);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      color: var(--yellow);
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .team-name {
+      font-family: var(--serif);
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
+    .team-role {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 12px;
+    }
+
+    .team-bio {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--gray-500);
+      font-weight: 300;
+    }
+
+    /* Values */
+    .values-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-bottom: 56px;
+    }
+
+    .value-item {
+      background: var(--white);
+      border: 1px solid var(--gray-300);
+      padding: 24px 28px;
+      border-radius: var(--radius);
+    }
+
+    .value-icon {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 8px;
+    }
+
+    .value-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .value-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--gray-500);
+      font-weight: 300;
+    }
+
+    /* CTA block */
+    .cta-block {
+      background: var(--gray-900);
+      border-radius: var(--radius);
+      padding: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .cta-block h2 {
+      font-family: var(--serif);
+      font-size: 28px;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .cta-block p {
+      font-size: 14px;
+      color: var(--gray-300);
+      font-weight: 300;
+      max-width: 360px;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--gray-900);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .cta-btn:hover { background: var(--yellow-light); }
+
+    footer {
+      background: var(--white);
+      border-top: 1px solid var(--gray-300);
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    footer p { font-size: 13px; color: var(--gray-500); }
+
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--gray-500);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--gray-900); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .page-wrap { padding: 40px 16px 60px; }
+      .team-grid, .values-grid { grid-template-columns: 1fr; }
+      .cta-block { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+      footer { padding: 24px 16px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo"><span>V</span></div>
+      <div class="nav-name">
+        Vasuki iTech Labs
+        <small>Technology Services</small>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Services</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+      <li><a href="service-request.html" class="nav-cta">Request a Service</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <div class="eyebrow">About Us</div>
+    <h1>We build technology<br>that works for you.</h1>
+    <p class="lead">
+      Vasuki iTech Labs is a focused, two-person technology studio. We help businesses and institutions solve real problems with software — without the overhead of a large agency or the risk of an untested freelancer.
+    </p>
+
+    <div class="section-label">The Studio</div>
+    <p class="body-text">
+      Founded with a simple premise: <strong>good technology should be accessible to every business,</strong> not just the ones that can afford a full engineering department. We work closely with our clients — understanding the problem first, building second — and we take responsibility for the outcome.
+      <br /><br />
+      Our work spans AI automation, web development, cloud infrastructure, and rapid product development. Every engagement is hands-on. Every deliverable is production-ready.
+    </p>
+
+    <div class="section-label">The Team</div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">A</div>
+        <div class="team-name">Adamya Khairwal</div>
+        <div class="team-role">Chief Executive Officer</div>
+        <p class="team-bio">Leads strategy, client relationships, and business development. Focused on translating business problems into clear technology solutions.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">S</div>
+        <div class="team-name">Shaurya Chauhan</div>
+        <div class="team-role">Co-Founder, Engineering</div>
+        <p class="team-bio">Leads all product and engineering work. Specialises in full-stack development, AI integrations, and building polished user-facing software.</p>
+      </div>
+    </div>
+
+    <div class="section-label">How We Work</div>
+    <div class="values-grid">
+      <div class="value-item">
+        <div class="value-icon">01</div>
+        <div class="value-title">Outcome First</div>
+        <p class="value-desc">We define success before writing a line of code. Every project starts with a clear problem statement and a measurable result.</p>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">02</div>
+        <div class="value-title">No Bloat</div>
+        <p class="value-desc">Small team. No account managers, no middlemen. You speak directly with the people building your product.</p>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">03</div>
+        <div class="value-title">Transparent Pricing</div>
+        <p class="value-desc">Flat fees or clear retainers. No surprise invoices. You know exactly what you are paying for and why.</p>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">04</div>
+        <div class="value-title">Built to Last</div>
+        <p class="value-desc">We do not hand off a prototype and disappear. Our work is documented, maintainable, and supported after delivery.</p>
+      </div>
+    </div>
+
+    <div class="cta-block">
+      <div>
+        <h2>Ready to work together?</h2>
+        <p>Tell us about your requirement and we will come back with a concrete proposal within 24 hours.</p>
+      </div>
+      <a href="service-request.html" class="cta-btn">
+        <span class="material-icons" style="font-size:17px;">send</span>
+        Request a Service
+      </a>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>2025 Vasuki iTech Labs. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="index.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="service-request.html">Contact</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>

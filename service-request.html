@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request a Service — Vasuki iTech Labs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F7F3EC;
+      --cream-dark: #EDE7D9;
+      --yellow: #D4A017;
+      --yellow-light: #F0C842;
+      --yellow-pale: #FBF3D5;
+      --gray-900: #1C1B18;
+      --gray-700: #3D3B35;
+      --gray-500: #6B6760;
+      --gray-300: #C5C2BA;
+      --gray-100: #EDEBE6;
+      --white: #FFFFFF;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --radius: 4px;
+      --error: #B94040;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--cream);
+      color: var(--gray-900);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-300);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo {
+      width: 32px;
+      height: 32px;
+      background: var(--gray-900);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-logo span {
+      font-family: var(--serif);
+      color: var(--yellow);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .nav-name {
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--gray-900);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-name small {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--gray-500);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gray-900); }
+
+    .nav-links a.active {
+      color: var(--gray-900);
+      background: var(--yellow-pale);
+      border: 1px solid #E8D283;
+      padding: 7px 16px;
+      border-radius: var(--radius);
+    }
+
+    /* ── LAYOUT ── */
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 64px 32px 80px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-bottom: 36px;
+    }
+
+    .breadcrumb a {
+      color: var(--gray-500);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover { color: var(--gray-900); }
+    .breadcrumb .material-icons { font-size: 14px; }
+
+    .page-header { margin-bottom: 48px; }
+
+    .page-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      background: var(--yellow-pale);
+      border: 1px solid #E8D283;
+      padding: 4px 12px;
+      border-radius: 2px;
+      margin-bottom: 16px;
+    }
+
+    .page-header h1 {
+      font-family: var(--serif);
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.15;
+      color: var(--gray-900);
+      margin-bottom: 12px;
+    }
+
+    .page-header p {
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--gray-500);
+      font-weight: 300;
+      max-width: 520px;
+    }
+
+    /* ── FORM ── */
+    .form-card {
+      background: var(--white);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .form-section {
+      padding: 32px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .form-section:last-of-type { border-bottom: none; }
+
+    .form-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .form-group:last-child { margin-bottom: 0; }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    label .req { color: var(--yellow); margin-left: 2px; }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+      font-family: var(--sans);
+      font-size: 14px;
+      color: var(--gray-900);
+      background: var(--cream);
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      width: 100%;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gray-700);
+      background: var(--white);
+    }
+
+    input::placeholder, textarea::placeholder { color: var(--gray-300); }
+
+    select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B6760' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+
+    textarea { resize: vertical; min-height: 100px; }
+
+    .char-count {
+      font-size: 11px;
+      color: var(--gray-300);
+      text-align: right;
+      margin-top: -14px;
+    }
+
+    .helper-text {
+      font-size: 12px;
+      color: var(--gray-500);
+      font-weight: 300;
+    }
+
+    /* Budget slider */
+    .budget-display {
+      font-family: var(--serif);
+      font-size: 28px;
+      color: var(--gray-900);
+      margin-bottom: 12px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--yellow);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 0;
+    }
+
+    .budget-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-top: 6px;
+    }
+
+    /* Radio group */
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .radio-option { display: none; }
+
+    .radio-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-700);
+      background: var(--cream);
+      border: 1.5px solid var(--gray-300);
+      padding: 8px 16px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+      user-select: none;
+    }
+
+    .radio-option:checked + .radio-label {
+      background: var(--yellow-pale);
+      border-color: var(--yellow);
+      color: var(--gray-900);
+    }
+
+    /* Submit area */
+    .form-footer {
+      padding: 28px 32px;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .form-note {
+      font-size: 13px;
+      color: var(--gray-500);
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-note .material-icons { font-size: 16px; color: var(--gray-500); }
+
+    .submit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gray-900);
+      color: var(--white);
+      border: none;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s;
+      letter-spacing: 0.01em;
+    }
+
+    .submit-btn:hover { background: var(--yellow); color: var(--gray-900); }
+    .submit-btn .material-icons { font-size: 18px; }
+
+    /* Success state */
+    .success-card {
+      display: none;
+      background: var(--white);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius);
+      padding: 56px 32px;
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--yellow-pale);
+      border: 1.5px solid #E8D283;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .success-icon .material-icons { font-size: 28px; color: var(--yellow); }
+
+    .success-card h2 {
+      font-family: var(--serif);
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .success-card p {
+      font-size: 15px;
+      color: var(--gray-500);
+      font-weight: 300;
+      max-width: 400px;
+      margin: 0 auto 28px;
+      line-height: 1.65;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-700);
+      text-decoration: none;
+      border: 1.5px solid var(--gray-300);
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .back-link:hover { border-color: var(--gray-700); color: var(--gray-900); }
+
+    /* Footer */
+    footer {
+      background: var(--white);
+      border-top: 1px solid var(--gray-300);
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    footer p { font-size: 13px; color: var(--gray-500); }
+
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--gray-500);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--gray-900); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 16px; }
+      .nav-links { display: none; }
+      .page-wrap { padding: 40px 16px 60px; }
+      .form-row { grid-template-columns: 1fr; }
+      .form-section { padding: 24px 16px; }
+      .form-footer { flex-direction: column; align-items: stretch; }
+      .submit-btn { justify-content: center; }
+      footer { padding: 24px 16px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo"><span>V</span></div>
+      <div class="nav-name">
+        Vasuki iTech Labs
+        <small>Technology Services</small>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="service-request.html" class="active">Request a Service</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE -->
+  <div class="page-wrap">
+
+    <div class="breadcrumb">
+      <a href="index.html">Services</a>
+      <span class="material-icons">chevron_right</span>
+      <span>Request a Service</span>
+    </div>
+
+    <div class="page-header">
+      <div class="page-eyebrow">Get in Touch</div>
+      <h1>Tell us about<br>your requirement.</h1>
+      <p>Fill out the form below and we will get back to you within 24 hours with a clear scope and pricing.</p>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="form-card" id="formCard">
+
+      <div class="form-section">
+        <div class="form-section-title">Your Information</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fname">Full name <span class="req">*</span></label>
+            <input type="text" id="fname" placeholder="Rahul Sharma" required />
+          </div>
+          <div class="form-group">
+            <label for="org">Organisation / Business</label>
+            <input type="text" id="org" placeholder="Sharma and Associates" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email address <span class="req">*</span></label>
+            <input type="email" id="email" placeholder="rahul@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone / WhatsApp</label>
+            <input type="tel" id="phone" placeholder="+91 98765 43210" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Service Required</div>
+        <div class="form-group">
+          <label>Which service are you interested in? <span class="req">*</span></label>
+          <div class="radio-group" id="serviceGroup">
+            <input type="radio" name="service" id="svc1" value="ai-employee" class="radio-option" />
+            <label for="svc1" class="radio-label">AI Employee</label>
+            <input type="radio" name="service" id="svc2" value="website-health" class="radio-option" />
+            <label for="svc2" class="radio-label">Website Health Check</label>
+            <input type="radio" name="service" id="svc3" value="amc" class="radio-option" />
+            <label for="svc3" class="radio-label">Tech Support (AMC)</label>
+            <input type="radio" name="service" id="svc4" value="cloud-storage" class="radio-option" />
+            <label for="svc4" class="radio-label">Cloud Storage</label>
+            <input type="radio" name="service" id="svc5" value="mvp" class="radio-option" />
+            <label for="svc5" class="radio-label">MVP Development</label>
+            <input type="radio" name="service" id="svc6" value="other" class="radio-option" />
+            <label for="svc6" class="radio-label">Not Sure / Other</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description">Describe your requirement <span class="req">*</span></label>
+          <textarea id="description" maxlength="1000" placeholder="Tell us about your business, what problem you are trying to solve, and any specific requirements or constraints..." required></textarea>
+          <div class="char-count"><span id="charCount">0</span> / 1000</div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Budget and Timeline</div>
+        <div class="form-group">
+          <label>Approximate budget</label>
+          <div class="budget-display" id="budgetDisplay">Rs. 5,000</div>
+          <input type="range" id="budgetSlider" min="0" max="9" value="1" />
+          <div class="budget-labels">
+            <span>Below Rs. 2,000</span>
+            <span>Rs. 50,000+</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>When do you need this?</label>
+          <div class="radio-group">
+            <input type="radio" name="timeline" id="tl1" value="asap" class="radio-option" />
+            <label for="tl1" class="radio-label">As soon as possible</label>
+            <input type="radio" name="timeline" id="tl2" value="2weeks" class="radio-option" />
+            <label for="tl2" class="radio-label">Within 2 weeks</label>
+            <input type="radio" name="timeline" id="tl3" value="1month" class="radio-option" />
+            <label for="tl3" class="radio-label">Within a month</label>
+            <input type="radio" name="timeline" id="tl4" value="flexible" class="radio-option" checked />
+            <label for="tl4" class="radio-label">Flexible</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="referral">How did you hear about us?</label>
+          <select id="referral">
+            <option value="">Select an option</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="referral">Referral / Word of mouth</option>
+            <option value="search">Google / Web search</option>
+            <option value="social">Social media</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <div class="form-note">
+          <span class="material-icons">lock</span>
+          Your information is kept confidential.
+        </div>
+        <button class="submit-btn" onclick="submitForm()">
+          <span class="material-icons">send</span>
+          Submit Request
+        </button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-card" id="successCard">
+      <div class="success-icon">
+        <span class="material-icons">check</span>
+      </div>
+      <h2>Request received.</h2>
+      <p>Thank you for reaching out. We will review your details and get back to you within 24 hours with next steps.</p>
+      <a href="index.html" class="back-link">
+        <span class="material-icons" style="font-size:16px;">arrow_back</span>
+        Back to Services
+      </a>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>2025 Vasuki iTech Labs. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="index.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="service-request.html">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    // Pre-select service from URL param
+    const params = new URLSearchParams(window.location.search);
+    const svcParam = params.get('service');
+    if (svcParam) {
+      const radio = document.querySelector(`input[name="service"][value="${svcParam}"]`);
+      if (radio) radio.checked = true;
+    }
+
+    // Char count
+    const desc = document.getElementById('description');
+    const cc = document.getElementById('charCount');
+    desc.addEventListener('input', () => { cc.textContent = desc.value.length; });
+
+    // Budget slider
+    const budgetValues = [
+      'Below Rs. 2,000',
+      'Rs. 5,000',
+      'Rs. 10,000',
+      'Rs. 15,000',
+      'Rs. 20,000',
+      'Rs. 25,000',
+      'Rs. 30,000',
+      'Rs. 40,000',
+      'Rs. 50,000',
+      'Rs. 50,000+'
+    ];
+    const slider = document.getElementById('budgetSlider');
+    const display = document.getElementById('budgetDisplay');
+    slider.addEventListener('input', () => {
+      display.textContent = budgetValues[slider.value];
+    });
+
+    // Submit
+    function submitForm() {
+      const fname = document.getElementById('fname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const desc = document.getElementById('description').value.trim();
+      const svc = document.querySelector('input[name="service"]:checked');
+
+      if (!fname || !email || !desc || !svc) {
+        alert('Please fill in all required fields before submitting.');
+        return;
+      }
+
+      document.getElementById('formCard').style.display = 'none';
+      document.getElementById('successCard').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
