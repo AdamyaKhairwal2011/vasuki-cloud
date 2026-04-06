@@ -9,12 +9,12 @@
             font-family: 'CustomFont';
             src: url('font.ttf') format('truetype');
         }
-        
+
         @font-face {
             font-family: 'HeadingFont';
             src: url('custom.ttf') format('truetype');
         }
-        
+
         body {
             font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
         }
@@ -414,10 +414,21 @@
 
             nav {
                 padding: 1rem;
+                flex-wrap: wrap;
+                position: relative;
             }
 
             .logo {
                 font-size: 1.25rem;
+            }
+
+            .nav-actions {
+                gap: 0.5rem;
+            }
+
+            .nav-actions .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.875rem;
             }
 
             .btn-group {
@@ -440,6 +451,54 @@
                 width: 100%;
                 max-width: 250px;
                 justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.9rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero {
+                padding: 3rem 1rem;
+                min-height: auto;
+            }
+
+            .services-container {
+                padding: 1rem;
+            }
+
+            .service-card {
+                padding: 1.25rem;
+            }
+
+            .service-title {
+                font-size: 1.2rem;
+            }
+
+            .cta-section {
+                padding: 2rem 1rem;
+                margin: 1.5rem auto;
+            }
+
+            .cta-title {
+                font-size: 1.6rem;
+            }
+
+            .cta-description {
+                font-size: 1rem;
+            }
+
+            .revenue-amount {
+                font-size: 1rem;
+            }
+
+            .footer-content {
+                padding: 2rem 1rem;
             }
         }
 
@@ -470,11 +529,11 @@
         .elevation-1 {
             box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
         }
-        
+
         .elevation-2 {
             box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
         }
-        
+
         .elevation-4 {
             box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
         }
@@ -493,7 +552,7 @@
                 <span>Vasuki</span>
                 <span class="logo-accent">iTech</span>
             </a>
-            <div class="nav-actions">
+            <div class="nav-actions" id="navActions">
                 <a href="#services" class="btn btn-secondary">Services</a>
                 <a href="#contact" class="btn btn-primary">Get Started</a>
             </div>
@@ -604,12 +663,12 @@
                     <i class="material-icons">description</i>
                     Form
                 </a>
-                <a href="mailto:codeclutch.adamyarao@gmail.com" class="btn btn-secondary">
+                <a href="/cdn-cgi/l/email-protection#81e2eee5e4e2edf4f5e2e9afe0e5e0ecf8e0f3e0eec1e6ece0e8edafe2eeec" class="btn btn-secondary">
                     <i class="material-icons">email</i>
                     Contact Sales
                 </a>
             </div>
-            
+
             <!-- Social Media Buttons -->
             <div class="social-section">
                 <div class="social-title">
@@ -638,7 +697,7 @@
     </footer>
 
     <!-- Lenis Smooth Scroll -->
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.27/dist/lenis.min.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/@studio-freight/lenis@1.0.27/dist/lenis.min.js"></script>
     <script>
         // Initialize Lenis for smooth scrolling
         const lenis = new Lenis({
@@ -689,7 +748,7 @@
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-2px)';
             });
-            
+
             card.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0)';
             });
@@ -699,12 +758,4 @@
         window.addEventListener('scroll', function() {
             const hero = document.querySelector('.hero');
             const scrolled = window.pageYOffset;
-            const rate = scrolled * -0.5;
-            
-            if (hero) {
-                hero.style.transform = `translateY(${rate}px)`;
-            }
-        });
-    </script>
-</body>
-</html>
+            const rate = 
