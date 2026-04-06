@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vasuki iTech Services - Professional Solutions</title>
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('font.ttf') format('truetype');
+        }
+        
+        @font-face {
+            font-family: 'HeadingFont';
+            src: url('custom.ttf') format('truetype');
+        }
+        
+        body {
+            font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        h1, h2, h3, .cta-title, .logo {
+            font-family: 'HeadingFont', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #FFF8E1;
+            --cream-light: #FFFDE7;
+            --yellow: #FFC107;
+            --yellow-dark: #FFA000;
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #EEEEEE;
+            --gray-300: #E0E0E0;
+            --gray-400: #BDBDBD;
+            --gray-500: #9E9E9E;
+            --gray-600: #757575;
+            --gray-700: #616161;
+            --gray-800: #424242;
+            --gray-900: #212121;
+            --shadow-sm: none;
+            --shadow-md: none;
+            --shadow-lg: none;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--cream) 0%, var(--gray-50) 100%);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: black;
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .logo-accent {
+            color: var(--yellow-dark);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Hero Section - Bigger */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            text-align: center;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 400;
+            color: var(--gray-900);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--gray-600);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Services Grid */
+        .services-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-200);
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--yellow), var(--yellow-dark));
+        }
+
+        .service-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--yellow);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--cream-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-icon i {
+            font-size: 28px;
+            color: var(--yellow-dark);
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+        }
+
+        .service-description {
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .revenue-info {
+            background: var(--cream);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--yellow);
+        }
+
+        .revenue-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .revenue-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: white;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--gray-200);
+            padding: 4rem;
+            text-align: center;
+            margin: 3rem auto;
+            max-width: 900px;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: var(--gray-900);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-title .vasuki {
+            color: black;
+        }
+
+        .cta-title .itech {
+            color: var(--yellow-dark);
+        }
+
+        .cta-description {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            margin-bottom: 3rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--yellow);
+            color: var(--gray-900);
+        }
+
+        .btn-primary:hover {
+            background: var(--yellow-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        /* Social Media Buttons */
+        .social-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .social-title {
+            font-size: 1rem;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            background: white;
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+            transform: translateY(-1px);
+        }
+
+        .social-btn i {
+            font-size: 18px;
+        }
+
+        .social-btn.instagram {
+            color: #E4405F;
+            border-color: #E4405F;
+        }
+
+        .social-btn.instagram:hover {
+            background: #FFF5F7;
+        }
+
+        .social-btn.dev {
+            color: #333333;
+            border-color: #333333;
+        }
+
+        .social-btn.dev:hover {
+            background: #F5F5F5;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.25rem;
+            }
+
+            .hero {
+                padding: 4rem 1.5rem;
+                min-height: 60vh;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .service-card {
+                padding: 1.5rem;
+            }
+
+            .cta-section {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            nav {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 1.25rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .social-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .social-btn {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .service-card {
+            animation: fadeIn 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .service-card:nth-child(1) { animation-delay: 0.1s; }
+        .service-card:nth-child(2) { animation-delay: 0.2s; }
+        .service-card:nth-child(3) { animation-delay: 0.3s; }
+        .service-card:nth-child(4) { animation-delay: 0.4s; }
+        .service-card:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Material UI Elevation */
+        .elevation-1 {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+        
+        .elevation-2 {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        }
+        
+        .elevation-4 {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="../index.html" class="logo">
+                <img src="logo.jpg" alt="Vasuki iTech Logo">
+                <span>Vasuki</span>
+                <span class="logo-accent">iTech</span>
+            </a>
+            <div class="nav-actions">
+                <a href="#services" class="btn btn-secondary">Services</a>
+                <a href="#contact" class="btn btn-primary">Get Started</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Professional Services for Modern Businesses</h1>
+        <p class="hero-subtitle">
+            Start generating revenue this month with our proven service offerings. 
+            Built on the Vasuki Cloud ecosystem, designed for immediate results.
+        </p>
+    </section>
+
+    <div class="services-container" id="services">
+        <div class="services-grid">
+            <!-- Service 1: AI Employee -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="material-icons">smart_toy</i>
+                </div>
+                <h3 class="service-title">AI Employee for Local Businesses</h3>
+                <p class="service-description">
+                    Custom AI chatbots built with Vaimanika technology. Handle WhatsApp/Instagram queries 
+                    and book appointments 24/7 for real estate agents, clinics, and gyms.
+                </p>
+                <div class="revenue-info">
+                    <div class="revenue-label">Revenue Potential</div>
+                    <div class="revenue-amount">₹5,000 - ₹10,000 setup + monthly maintenance</div>
+                </div>
+            </div>
+
+            <!-- Service 2: Website Health Check -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="material-icons">speed</i>
+                </div>
+                <h3 class="service-title">Website Health Check & Optimization</h3>
+                <p class="service-description">
+                    Professional speed and SEO audits for small businesses. Fix loading speeds, 
+                    mobile responsiveness, and basic SEO issues that hurt conversions.
+                </p>
+                <div class="revenue-info">
+                    <div class="revenue-label">Revenue Potential</div>
+                    <div class="revenue-amount">₹2,000 per audit + ₹10,000+ for fixes</div>
+                </div>
+            </div>
+
+            <!-- Service 3: Technical Support AMC -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="material-icons">support_agent</i>
+                </div>
+                <h3 class="service-title">Subscription-based Technical Support</h3>
+                <p class="service-description">
+                    Annual Maintenance Contracts for small offices. Handle professional emails, 
+                    cloud backups using Guppt technology, and security management.
+                </p>
+                <div class="revenue-info">
+                    <div class="revenue-label">Revenue Potential</div>
+                    <div class="revenue-amount">₹1,000 - ₹2,000 per month per client</div>
+                </div>
+            </div>
+
+            <!-- Service 4: White-Label Cloud Storage -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="material-icons">cloud</i>
+                </div>
+                <h3 class="service-title">White-Label Cloud Storage for Education</h3>
+                <p class="service-description">
+                    Branded Guppt storage solutions for schools and colleges. Secure storage for 
+                    study materials, student records, and collaborative learning.
+                </p>
+                <div class="revenue-info">
+                    <div class="revenue-label">Revenue Potential</div>
+                    <div class="revenue-amount">Per-student or annual license fees</div>
+                </div>
+            </div>
+
+            <!-- Service 5: Content-to-Code Service -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="material-icons">code</i>
+                </div>
+                <h3 class="service-title">Content-to-Code MVP Development</h3>
+                <p class="service-description">
+                    Rapid MVP development using Argon/Vypaar frameworks. Transform startup ideas 
+                    into functional products with our proven development stack.
+                </p>
+                <div class="revenue-info">
+                    <div class="revenue-label">Revenue Potential</div>
+                    <div class="revenue-amount">₹25,000 - ₹50,000 per project</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section" id="contact">
+            <h2 class="cta-title">
+                <span class="vasuki">Vasuki iTech</span> - <span class="itech">Services</span>
+            </h2>
+            <p class="cta-description">
+                <span style="color: black; font-weight: 600;">Vasuki iTech</span> - Ready to Start Your First Service?
+            </p>
+            <div class="btn-group">
+                <a href="https://vasuki.cloud/view-form.html?id=f-p9scgp" target="_blank" class="btn btn-primary">
+                    <i class="material-icons">description</i>
+                    Form
+                </a>
+                <a href="mailto:codeclutch.adamyarao@gmail.com" class="btn btn-secondary">
+                    <i class="material-icons">email</i>
+                    Contact Sales
+                </a>
+            </div>
+            
+            <!-- Social Media Buttons -->
+            <div class="social-section">
+                <div class="social-title">
+                    <span style="color: black; font-weight: 600;">Vasuki iTech</span> - Connect with us on social media
+                </div>
+                <div class="social-buttons">
+                    <a href="https://www.instagram.com/vasuki.itech" target="_blank" class="social-btn instagram">
+                        <img src="instagram.png" alt="Instagram" style="width: 18px; height: 18px;">
+                    </a>
+                    <a href="https://dev.to/adamya_khairwal_9d2286eac" target="_blank" class="social-btn dev">
+                        <i class="material-icons">code</i>
+                        DEV
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">
+                <span style="color: black; font-weight: 600;">Vasuki iTech</span> - Professional services built on the Vasuki Cloud ecosystem. 
+                All services designed for immediate revenue generation.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.27/dist/lenis.min.js"></script>
+    <script>
+        // Initialize Lenis for smooth scrolling
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        // Connect Lenis to requestAnimationFrame
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    lenis.scrollTo(target, {
+                        offset: -80,
+                        duration: 1.5
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.borderBottom = '2px solid var(--gray-300)';
+            } else {
+                header.style.borderBottom = '1px solid var(--gray-200)';
+            }
+        });
+
+        // Service card hover effect enhancement
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', function() {
+            const hero = document.querySelector('.hero');
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            
+            if (hero) {
+                hero.style.transform = `translateY(${rate}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
