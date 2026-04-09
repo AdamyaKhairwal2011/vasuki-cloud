@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vasuki Classrooms</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #08090d;
+  --surface: #0f1017;
+  --surface2: #161820;
+  --surface3: #1c1f2b;
+  --border: #1e2030;
+  --border2: #2a2e45;
+  --accent: #7c6dfa;
+  --accent-glow: rgba(124,109,250,0.15);
+  --accent2: #00c896;
+  --accent3: #ff5f6d;
+  --accent4: #f4c94e;
+  --text: #eceef8;
+  --text2: #8b8fa8;
+  --text3: #4a4e66;
+  --radius: 13px;
+  --sidebar: 252px;
+  --topbar: 58px;
+  --font: 'Sora', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:15px;scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:300;background:rgba(8,9,13,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:12px;}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.05rem;letter-spacing:-0.3px;min-width:var(--sidebar);cursor:pointer;}
+.logo-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#a78bfa);display:grid;place-items:center;font-weight:900;font-size:.9rem;color:#fff;box-shadow:0 0 16px var(--accent-glow);}
+.logo em{color:var(--accent);font-style:normal;}
+.topbar-search{flex:1;max-width:380px;position:relative;}
+.topbar-search input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:8px 12px 8px 36px;color:var(--text);font-family:var(--font);font-size:.82rem;outline:none;transition:border-color .2s,box-shadow .2s;}
+.topbar-search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+.topbar-search input::placeholder{color:var(--text3);}
+.topbar-search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.t-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;display:grid;place-items:center;transition:all .15s;position:relative;flex-shrink:0;}
+.t-btn:hover{border-color:var(--accent);color:var(--accent);}
+.t-btn .dot{position:absolute;top:5px;right:5px;width:6px;height:6px;background:var(--accent3);border-radius:50%;border:1.5px solid var(--bg);}
+.ava{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#a78bfa);display:grid;place-items:center;font-size:.72rem;font-weight:700;color:#fff;cursor:pointer;border:2px solid var(--border2);transition:border-color .15s;flex-shrink:0;}
+.ava:hover{border-color:var(--accent);}
+.ham{display:none;width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;place-items:center;flex-shrink:0;}
+.ham:hover{border-color:var(--accent);color:var(--accent);}
+.layout{display:flex;margin-top:var(--topbar);min-height:calc(100vh - var(--topbar));}
+aside{position:fixed;top:var(--topbar);left:0;width:var(--sidebar);height:calc(100vh - var(--topbar));background:var(--surface);border-right:1px solid var(--border);padding:14px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;z-index:200;transition:transform .3s;}
+.s-label{font-size:.65rem;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--text3);padding:10px 10px 5px;}
+.s-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:9px;cursor:pointer;font-size:.85rem;font-weight:500;color:var(--text2);transition:background .12s,color .12s;position:relative;}
+.s-item:hover{background:var(--surface2);color:var(--text);}
+.s-item.on{background:linear-gradient(90deg,rgba(124,109,250,.16),rgba(124,109,250,.04));color:var(--accent);}
+.s-item.on::before{content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px;border-radius:0 3px 3px 0;background:var(--accent);}
+.s-item svg{width:16px;height:16px;flex-shrink:0;}
+.s-badge{margin-left:auto;background:var(--accent3);color:#fff;font-size:.62rem;font-weight:700;padding:1px 6px;border-radius:20px;}
+.s-divider{height:1px;background:var(--border);margin:8px 0;}
+.class-entry{display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:9px;cursor:pointer;font-size:.82rem;font-weight:500;color:var(--text2);transition:background .12s,color .12s;}
+.class-entry:hover{background:var(--surface2);color:var(--text);}
+.c-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+main{margin-left:var(--sidebar);flex:1;padding:26px 28px;min-height:calc(100vh - var(--topbar));}
+.page{display:none;animation:fadeUp .22s ease;}
+.page.on{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px;text-align:center;gap:14px;}
+.empty-icon{width:64px;height:64px;border-radius:18px;background:var(--surface2);border:1px solid var(--border);display:grid;place-items:center;color:var(--text3);}
+.empty h3{font-size:1.05rem;font-weight:700;color:var(--text2);}
+.empty p{font-size:.82rem;color:var(--text3);max-width:300px;line-height:1.6;}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:9px;font-size:.84rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface2);color:var(--text2);transition:all .15s;font-family:var(--font);white-space:nowrap;}
+.btn:hover{border-color:var(--border2);color:var(--text);}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn.pri:hover{background:#8b7dfb;border-color:#8b7dfb;}
+.btn.sm{padding:6px 13px;font-size:.78rem;}
+.btn.danger{border-color:rgba(255,95,109,.3);color:var(--accent3);}
+.btn.danger:hover{background:rgba(255,95,109,.08);}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px;flex-wrap:wrap;}
+.ph-left h1{font-size:1.35rem;font-weight:800;letter-spacing:-.5px;}
+.ph-left p{font-size:.82rem;color:var(--text3);margin-top:3px;}
+.ph-right{display:flex;gap:8px;flex-wrap:wrap;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-hd h2{font-size:.92rem;font-weight:700;}
+.class-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;}
+.class-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s,box-shadow .2s;}
+.class-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 10px 36px rgba(0,0,0,.4);}
+.cc-banner{height:100px;display:flex;align-items:flex-end;padding:12px 14px;position:relative;overflow:hidden;}
+.cc-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 20%,rgba(0,0,0,.6));}
+.cc-banner-txt{position:relative;z-index:1;}
+.cc-name{font-size:.95rem;font-weight:700;color:#fff;line-height:1.2;}
+.cc-sub{font-family:var(--mono);font-size:.62rem;color:rgba(255,255,255,.6);margin-top:2px;}
+.cc-body{padding:12px 14px 14px;}
+.cc-meta{display:flex;gap:14px;font-size:.73rem;color:var(--text3);}
+.cc-meta span{display:flex;align-items:center;gap:4px;}
+.cc-footer{display:flex;gap:7px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);place-items:center;}
+.overlay.on{display:grid;}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:28px;width:100%;max-width:440px;box-shadow:0 24px 80px rgba(0,0,0,.7);animation:mIn .22s ease;}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.modal h2{font-size:1.1rem;font-weight:800;margin-bottom:4px;}
+.modal p.sub{font-size:.8rem;color:var(--text3);margin-bottom:20px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:.75rem;font-weight:600;color:var(--text2);margin-bottom:5px;}
+.fg input,.fg textarea,.fg select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:var(--font);font-size:.85rem;outline:none;transition:border-color .15s,box-shadow .15s;resize:vertical;}
+.fg textarea{min-height:80px;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--text3);}
+.fg select option{background:var(--surface2);}
+.color-pick{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+.cpick{width:26px;height:26px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:all .12s;}
+.cpick:hover,.cpick.on{border-color:#fff;transform:scale(1.12);}
+.m-actions{display:flex;gap:8px;margin-top:20px;}
+.m-actions .btn{flex:1;justify-content:center;}
+.stream-banner{border-radius:var(--radius);height:160px;display:flex;align-items:flex-end;padding:20px;margin-bottom:20px;position:relative;overflow:hidden;}
+.stream-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 20%,rgba(0,0,0,.65));}
+.sb-txt{position:relative;z-index:1;}
+.sb-name{font-size:1.6rem;font-weight:800;letter-spacing:-.5px;color:#fff;}
+.sb-meta{font-size:.8rem;color:rgba(255,255,255,.65);margin-top:3px;}
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:22px;}
+.tab{padding:9px 20px;font-size:.85rem;font-weight:600;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s,border-color .12s;}
+.tab.on{color:var(--accent);border-bottom-color:var(--accent);}
+.post-input-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start;}
+.post-input-box textarea{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--font);font-size:.85rem;resize:none;min-height:40px;}
+.post-input-box textarea::placeholder{color:var(--text3);}
+.post{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:12px;}
+.post-top{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+.post-av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:.7rem;font-weight:700;color:#fff;flex-shrink:0;}
+.post-author{font-size:.85rem;font-weight:700;}
+.post-time{font-size:.7rem;color:var(--text3);margin-top:1px;}
+.post-body{font-size:.85rem;color:var(--text2);line-height:1.65;margin-bottom:10px;}
+.post-footer{display:flex;align-items:center;gap:14px;padding-top:10px;border-top:1px solid var(--border);}
+.like-btn{display:flex;align-items:center;gap:5px;font-size:.75rem;color:var(--text3);cursor:pointer;transition:color .12s;}
+.like-btn:hover,.like-btn.liked{color:var(--accent);}
+.del-btn{margin-left:auto;font-size:.72rem;color:var(--text3);cursor:pointer;transition:color .12s;}
+.del-btn:hover{color:var(--accent3);}
+.comment-box{display:flex;gap:8px;align-items:center;margin-top:10px;}
+.comment-box input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:7px 11px;color:var(--text);font-family:var(--font);font-size:.8rem;outline:none;transition:border-color .15s;}
+.comment-box input:focus{border-color:var(--accent);}
+.comment-box input::placeholder{color:var(--text3);}
+.cmt{display:flex;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.cmt-txt{font-size:.8rem;color:var(--text2);line-height:1.5;}
+.cmt-txt strong{color:var(--text);font-size:.78rem;}
+.asgn-item{display:flex;align-items:flex-start;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 16px;margin-bottom:9px;transition:border-color .15s;}
+.asgn-item:hover{border-color:var(--border2);}
+.asgn-icon{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;flex-shrink:0;}
+.asgn-info{flex:1;}
+.asgn-title{font-size:.87rem;font-weight:600;margin-bottom:3px;}
+.asgn-desc{font-size:.76rem;color:var(--text3);margin-bottom:5px;}
+.asgn-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.due-chip{font-size:.69rem;font-weight:600;padding:2px 7px;border-radius:5px;display:inline-block;}
+.due-chip.hot{background:rgba(255,95,109,.1);color:var(--accent3);}
+.due-chip.ok{background:rgba(0,200,150,.1);color:var(--accent2);}
+.due-chip.none{background:var(--surface3);color:var(--text3);}
+.p-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:10px;}
+.p-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;transition:border-color .15s,transform .15s;}
+.p-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.p-av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:1rem;font-weight:700;color:#fff;margin:0 auto 8px;}
+.p-name{font-size:.83rem;font-weight:600;margin-bottom:2px;}
+.p-role{font-size:.7rem;color:var(--text3);}
+.g-table-wrap{border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;}
+table{width:100%;border-collapse:collapse;background:var(--surface);}
+th{padding:11px 14px;text-align:left;font-size:.7rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);background:var(--surface2);border-bottom:1px solid var(--border);}
+td{padding:11px 14px;font-size:.83rem;border-bottom:1px solid var(--border);color:var(--text2);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.01);}
+.g-badge{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.73rem;font-weight:700;}
+.g-a{background:rgba(0,200,150,.1);color:var(--accent2);}
+.g-b{background:rgba(124,109,250,.1);color:var(--accent);}
+.g-c{background:rgba(244,201,78,.1);color:var(--accent4);}
+.g-f{background:rgba(255,95,109,.1);color:var(--accent3);}
+.g-p{background:var(--surface3);color:var(--text3);}
+.todo-item{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid var(--border);}
+.todo-item:last-child{border-bottom:none;}
+.todo-cb{width:17px;height:17px;border-radius:5px;border:2px solid var(--border2);flex-shrink:0;margin-top:2px;cursor:pointer;transition:all .12s;display:grid;place-items:center;}
+.todo-cb.done{background:var(--accent2);border-color:var(--accent2);}
+.todo-cb.done::after{content:'✓';font-size:9px;color:#fff;font-weight:900;}
+.todo-name{font-size:.85rem;font-weight:500;}
+.todo-name.done{text-decoration:line-through;color:var(--text3);}
+.todo-meta{font-size:.72rem;color:var(--text3);margin-top:2px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+.cal-day-lbl{text-align:center;font-size:.68rem;font-weight:700;color:var(--text3);padding:6px 0;}
+.cal-cell{min-height:72px;border-radius:8px;border:1px solid var(--border);padding:6px;background:var(--surface2);}
+.cal-cell.today{border-color:var(--accent);background:rgba(124,109,250,.06);}
+.cal-num{font-size:.75rem;font-weight:700;color:var(--text2);margin-bottom:3px;}
+.cal-cell.today .cal-num{color:var(--accent);}
+.cal-ev{font-size:.59rem;padding:2px 5px;border-radius:4px;margin-top:3px;line-height:1.4;background:rgba(124,109,250,.15);color:var(--accent);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cal-empty-cell{border:none;background:none;}
+.notif-drop{position:fixed;top:calc(var(--topbar) + 8px);right:14px;z-index:400;width:300px;background:var(--surface);border:1px solid var(--border2);border-radius:13px;box-shadow:0 16px 50px rgba(0,0,0,.6);display:none;}
+.notif-drop.on{display:block;animation:mIn .18s ease;}
+.notif-hd{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.notif-hd span{font-size:.88rem;font-weight:700;}
+.notif-hd a{font-size:.73rem;color:var(--accent);cursor:pointer;}
+.notif-list{max-height:320px;overflow-y:auto;}
+.notif-it{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px;transition:background .12s;}
+.notif-it:last-child{border-bottom:none;}
+.n-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.n-txt{font-size:.78rem;color:var(--text2);line-height:1.45;}
+.n-txt strong{color:var(--text);font-weight:600;}
+.n-time{font-size:.67rem;color:var(--text3);margin-top:3px;}
+.notif-empty{padding:24px;text-align:center;color:var(--text3);font-size:.8rem;}
+.user-drop{position:fixed;top:calc(var(--topbar) + 8px);right:14px;z-index:400;width:210px;background:var(--surface);border:1px solid var(--border2);border-radius:13px;box-shadow:0 16px 50px rgba(0,0,0,.6);display:none;overflow:hidden;}
+.user-drop.on{display:block;animation:mIn .18s ease;}
+.ud-hd{padding:14px 16px;border-bottom:1px solid var(--border);}
+.ud-name{font-size:.88rem;font-weight:700;}
+.ud-email{font-size:.72rem;color:var(--text3);margin-top:2px;}
+.ud-item{padding:9px 16px;font-size:.82rem;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:9px;transition:background .12s,color .12s;}
+.ud-item:hover{background:var(--surface2);color:var(--text);}
+.ud-item svg{width:14px;height:14px;flex-shrink:0;}
+.ud-sep{border:none;border-top:1px solid var(--border);margin:4px 0;}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:10px 20px;font-size:.82rem;font-weight:500;z-index:999;box-shadow:0 8px 28px rgba(0,0,0,.5);display:flex;align-items:center;gap:8px;opacity:0;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .3s;pointer-events:none;}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast-dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);flex-shrink:0;}
+.join-code{font-family:var(--mono);font-size:1.1rem;background:var(--surface3);border:1px dashed var(--border2);border-radius:8px;padding:10px 20px;letter-spacing:3px;cursor:pointer;transition:border-color .12s;display:inline-block;}
+.join-code:hover{border-color:var(--accent);}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
+.settings-row:last-child{border-bottom:none;}
+.settings-label{font-size:.87rem;font-weight:600;}
+.settings-sub{font-size:.75rem;color:var(--text3);margin-top:2px;}
+@media(max-width:900px){.ham{display:grid;}aside{transform:translateX(-100%);}aside.open{transform:translateX(0);}main{margin-left:0;padding:18px 14px;}.logo{min-width:unset;}.topbar-search{max-width:180px;}}
+@media(max-width:600px){.class-grid{grid-template-columns:1fr;}.p-grid{grid-template-columns:1fr 1fr;}}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px;}::-webkit-scrollbar-track{background:transparent;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="ham" onclick="toggleSidebar()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>
+  <div class="logo" onclick="goPage('home')"><div class="logo-mark">V</div>Vasuki <em>Classrooms</em></div>
+  <div class="topbar-search">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="searchBar" type="text" placeholder="Search classes…" oninput="doSearch(this.value)"/>
+  </div>
+  <div class="topbar-right">
+    <button class="t-btn" id="notifBtn" onclick="toggleNotif()" title="Notifications">
+      <div class="dot" id="notifDot" style="display:none"></div>
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </button>
+    <button class="t-btn" onclick="openCreateModal()" title="Create / Join Class"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+    <div class="ava" id="userAva" onclick="toggleUserDrop()">??</div>
+  </div>
+</div>
+
+<!-- Notification Drop -->
+<div class="notif-drop" id="notifDrop">
+  <div class="notif-hd"><span>Notifications</span><a onclick="clearNotifs()">Clear all</a></div>
+  <div class="notif-list" id="notifList"><div class="notif-empty">No notifications yet</div></div>
+</div>
+
+<!-- User Drop -->
+<div class="user-drop" id="userDrop">
+  <div class="ud-hd"><div class="ud-name" id="udName">—</div><div class="ud-email" id="udEmail">—</div></div>
+  <div class="ud-item" onclick="goPage('settings');closeDrops()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>Settings</div>
+  <hr class="ud-sep"/>
+  <div class="ud-item" onclick="signOut()" style="color:var(--accent3)"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="overlay on" id="authOverlay">
+  <div class="modal" style="max-width:380px">
+    <h2>Welcome to Vasuki Classrooms</h2>
+    <p class="sub">Sign in or register to get started.</p>
+    <div class="fg"><label>Full Name</label><input id="authName" type="text" placeholder="Your full name"/></div>
+    <div class="fg"><label>Email</label><input id="authEmail" type="email" placeholder="you@example.com"/></div>
+    <div class="fg"><label>Password</label><input id="authPass" type="password" placeholder="••••••••"/></div>
+    <div class="fg"><label>I am a…</label>
+      <select id="authRole"><option value="student">Student</option><option value="teacher">Teacher</option></select>
+    </div>
+    <div class="m-actions"><button class="btn pri" onclick="doAuth()">Continue →</button></div>
+    <p style="font-size:.73rem;color:var(--text3);margin-top:10px;text-align:center">New user? An account will be created automatically.</p>
+  </div>
+</div>
+
+<!-- CREATE / JOIN CLASS MODAL -->
+<div class="overlay" id="classModal" onclick="handleOvClick(event,'classModal')">
+  <div class="modal">
+    <h2 id="classModalTitle">Create a Class</h2>
+    <p class="sub" id="classModalSub">Set up a new classroom for your students.</p>
+    <div id="createFields">
+      <div class="fg"><label>Class Name *</label><input id="cName" type="text" placeholder="e.g. Advanced Algorithms"/></div>
+      <div class="fg"><label>Section / Subject</label><input id="cSection" type="text" placeholder="e.g. B.Tech CSE Section A"/></div>
+      <div class="fg"><label>Room</label><input id="cRoom" type="text" placeholder="e.g. Lab 3 / Online"/></div>
+      <div class="fg"><label>Banner Color</label>
+        <div class="color-pick" id="colorPick">
+          <div class="cpick on" style="background:linear-gradient(135deg,#7c6dfa,#a78bfa)" onclick="pickColor(this)"></div>
+          <div class="cpick" style="background:linear-gradient(135deg,#00c896,#00b4d8)" onclick="pickColor(this)"></div>
+          <div class="cpick" style="background:linear-gradient(135deg,#ff5f6d,#ff8e53)" onclick="pickColor(this)"></div>
+          <div class="cpick" style="background:linear-gradient(135deg,#f4c94e,#ef9833)" onclick="pickColor(this)"></div>
+          <div class="cpick" style="background:linear-gradient(135deg,#f72585,#b5179e)" onclick="pickColor(this)"></div>
+          <div class="cpick" style="background:linear-gradient(135deg,#4cc9f0,#4361ee)" onclick="pickColor(this)"></div>
+        </div>
+      </div>
+    </div>
+    <div id="joinFields" style="display:none">
+      <div class="fg"><label>Class Code *</label><input id="jCode" type="text" placeholder="6-character code (e.g. AB12CD)" style="font-family:var(--mono);letter-spacing:2px;text-transform:uppercase" maxlength="6"/></div>
+    </div>
+    <div class="m-actions">
+      <button class="btn" onclick="closeModal('classModal')">Cancel</button>
+      <button class="btn pri" id="classModalBtn" onclick="submitClassModal()">Create Class</button>
+    </div>
+    <div style="text-align:center;margin-top:12px"><a id="classModalSwitch" style="font-size:.75rem;color:var(--accent);cursor:pointer" onclick="switchClassModal()">Join a class with a code instead →</a></div>
+  </div>
+</div>
+
+<!-- ADD ASSIGNMENT MODAL -->
+<div class="overlay" id="asgnModal" onclick="handleOvClick(event,'asgnModal')">
+  <div class="modal">
+    <h2>New Assignment</h2>
+    <p class="sub">This will appear in the classwork tab for all members.</p>
+    <div class="fg"><label>Title *</label><input id="asgnTitle" type="text" placeholder="e.g. Binary Search Tree Lab"/></div>
+    <div class="fg"><label>Instructions</label><textarea id="asgnDesc" placeholder="What do students need to do?"></textarea></div>
+    <div class="fg"><label>Points (optional)</label><input id="asgnPts" type="number" placeholder="e.g. 100" min="0"/></div>
+    <div class="fg"><label>Due Date (optional)</label><input id="asgnDue" type="date"/></div>
+    <div class="m-actions">
+      <button class="btn" onclick="closeModal('asgnModal')">Cancel</button>
+      <button class="btn pri" onclick="submitAssignment()">Post Assignment</button>
+    </div>
+  </div>
+</div>
+
+<!-- INVITE MODAL -->
+<div class="overlay" id="inviteModal" onclick="handleOvClick(event,'inviteModal')">
+  <div class="modal" style="max-width:360px">
+    <h2>Class Code</h2>
+    <p class="sub">Share this code so students can join your class.</p>
+    <div style="text-align:center;margin:22px 0">
+      <div class="join-code" id="inviteCode" onclick="copyCode()">——</div>
+      <div style="font-size:.72rem;color:var(--text3);margin-top:10px">Click to copy to clipboard</div>
+    </div>
+    <div class="m-actions"><button class="btn" style="width:100%;justify-content:center" onclick="closeModal('inviteModal')">Done</button></div>
+  </div>
+</div>
+
+<!-- GRADE MODAL -->
+<div class="overlay" id="gradeModal" onclick="handleOvClick(event,'gradeModal')">
+  <div class="modal" style="max-width:360px">
+    <h2>Enter Grade</h2>
+    <p class="sub" id="gradeModalSub">—</p>
+    <div class="fg"><label>Score *</label><input id="gradeScore" type="number" min="0" placeholder="e.g. 88"/></div>
+    <div class="fg"><label>Out of (max points) *</label><input id="gradeMax" type="number" min="1" placeholder="e.g. 100"/></div>
+    <div class="fg"><label>Feedback (optional)</label><textarea id="gradeFeedback" placeholder="Comments for the student…"></textarea></div>
+    <div class="m-actions">
+      <button class="btn" onclick="closeModal('gradeModal')">Cancel</button>
+      <button class="btn pri" onclick="submitGrade()">Save Grade</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="toast-dot"></div><span id="toastMsg"></span></div>
+
+<div class="layout">
+<aside id="sidebar">
+  <div class="s-item on" id="nav-home" onclick="goPage('home')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home
+  </div>
+  <div class="s-item" id="nav-todo" onclick="goPage('todo')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>To-do
+    <span class="s-badge" id="todoBadge" style="display:none">0</span>
+  </div>
+  <div class="s-item" id="nav-calendar" onclick="goPage('calendar')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Calendar
+  </div>
+  <div class="s-item" id="nav-grades" onclick="goPage('grades')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Grades
+  </div>
+  <div class="s-divider"></div>
+  <div class="s-label">My Classes</div>
+  <div id="sidebarClasses"></div>
+  <div style="margin-top:auto">
+    <div class="s-divider"></div>
+    <div class="s-item" id="nav-settings" onclick="goPage('settings')">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>Settings
+    </div>
+  </div>
+</aside>
+
+<main>
+
+<!-- HOME -->
+<div class="page on" id="page-home">
+  <div class="ph">
+    <div class="ph-left"><h1 id="homeGreet">My Classes</h1><p id="homeSubtext">Create or join a class to get started.</p></div>
+    <div class="ph-right"><button class="btn pri" onclick="openCreateModal()">+ Create / Join</button></div>
+  </div>
+  <div class="class-grid" id="homeGrid"></div>
+</div>
+
+<!-- CLASS VIEW -->
+<div class="page" id="page-class">
+  <div class="stream-banner" id="classBanner"><div class="sb-txt"><div class="sb-name" id="classBannerName"></div><div class="sb-meta" id="classBannerMeta"></div></div></div>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:0">
+    <button class="btn sm" onclick="goPage('home')">← Back</button>
+    <div class="tabs" style="flex:1;margin-bottom:0;border-bottom:none">
+      <div class="tab on" onclick="switchTab(this,'t-stream')">Stream</div>
+      <div class="tab" onclick="switchTab(this,'t-work')">Classwork</div>
+      <div class="tab" onclick="switchTab(this,'t-people')">People</div>
+      <div class="tab" onclick="switchTab(this,'t-grades')">Grades</div>
+    </div>
+    <button class="btn sm" id="inviteBtn" onclick="openInvite()" style="display:none">🔑 Code</button>
+    <button class="btn sm danger" onclick="leaveOrDelete()">Leave</button>
+  </div>
+  <div style="border-bottom:1px solid var(--border);margin-bottom:22px"></div>
+
+  <div id="t-stream">
+    <div class="post-input-box">
+      <div class="ava" id="postAva" style="width:30px;height:30px;font-size:.62rem;flex-shrink:0">??</div>
+      <textarea id="postText" placeholder="Share an announcement, link, or update…" rows="2"></textarea>
+      <button class="btn sm pri" onclick="submitPost()">Post</button>
+    </div>
+    <div id="streamFeed"></div>
+  </div>
+
+  <div id="t-work" style="display:none">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px" id="addAsgnWrap">
+      <button class="btn pri sm" onclick="openModal('asgnModal')">+ Add Assignment</button>
+    </div>
+    <div id="classworkList"></div>
+  </div>
+
+  <div id="t-people" style="display:none">
+    <div class="s-label" style="padding:0 0 6px">Teachers</div><div class="p-grid" id="teacherGrid"></div>
+    <div class="s-label" style="padding:16px 0 6px">Students</div><div class="p-grid" id="studentGrid"></div>
+  </div>
+
+  <div id="t-grades" style="display:none"><div id="gradesContent"></div></div>
+</div>
+
+<!-- TO-DO -->
+<div class="page" id="page-todo">
+  <div class="ph"><div class="ph-left"><h1>To-do</h1><p>All pending assignments across your classes.</p></div></div>
+  <div class="card"><div class="card-hd"><h2>Assignments</h2></div><div id="todoList"></div></div>
+</div>
+
+<!-- GRADES ALL -->
+<div class="page" id="page-grades">
+  <div class="ph"><div class="ph-left"><h1>Grades</h1><p>All graded work across your classes.</p></div></div>
+  <div id="allGradesContent"></div>
+</div>
+
+<!-- CALENDAR -->
+<div class="page" id="page-calendar">
+  <div class="ph"><div class="ph-left"><h1>Calendar</h1><p>Assignment deadlines from all your classes.</p></div></div>
+  <div class="card"><div id="calBody"></div></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="ph"><div class="ph-left"><h1>Settings</h1><p>Your account information.</p></div></div>
+  <div class="card" style="max-width:500px">
+    <div class="settings-row"><div><div class="settings-label">Name</div><div class="settings-sub" id="stgName">—</div></div><button class="btn sm" onclick="editName()">Edit</button></div>
+    <div class="settings-row"><div><div class="settings-label">Email</div><div class="settings-sub" id="stgEmail">—</div></div></div>
+    <div class="settings-row"><div><div class="settings-label">Role</div><div class="settings-sub" id="stgRole">—</div></div></div>
+    <div class="settings-row"><div><div class="settings-label">Sign Out</div><div class="settings-sub">You'll be asked to sign in again.</div></div><button class="btn sm danger" onclick="signOut()">Sign Out</button></div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// STATE & PERSISTENCE
+// ═══════════════════════════════════════
+let DB = { user: null, classes: [], notifications: [] };
+const COLORS = ['linear-gradient(135deg,#7c6dfa,#a78bfa)','linear-gradient(135deg,#00c896,#00b4d8)','linear-gradient(135deg,#ff5f6d,#ff8e53)','linear-gradient(135deg,#f4c94e,#ef9833)','linear-gradient(135deg,#f72585,#b5179e)','linear-gradient(135deg,#4cc9f0,#4361ee)'];
+let activeClassId = null, classModalMode = 'create', gradeTarget = null, toastTimer = null;
+
+function save() { try { localStorage.setItem('vasuki_cr', JSON.stringify(DB)); } catch(e){} }
+function load() { try { const d = localStorage.getItem('vasuki_cr'); if(d) DB = JSON.parse(d); } catch(e){} }
+
+// ═══════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════
+function doAuth() {
+  const name = v('authName').trim(), email = v('authEmail').trim().toLowerCase(), pass = v('authPass');
+  const role = document.getElementById('authRole').value;
+  if(!name || !email || !pass) { toast('All fields are required.'); return; }
+  if(!email.includes('@')) { toast('Enter a valid email address.'); return; }
+  const ini = name.split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const avatarClrs = ['#7c6dfa','#00c896','#ff5f6d','#f4c94e','#f72585','#4cc9f0'];
+  DB.user = { name, email, role, initials: ini, color: avatarClrs[name.charCodeAt(0)%avatarClrs.length] };
+  save();
+  document.getElementById('authOverlay').classList.remove('on');
+  boot();
+}
+
+function boot() {
+  const u = DB.user;
+  el('userAva').textContent = u.initials;
+  el('userAva').style.background = `linear-gradient(135deg,${u.color},${u.color}88)`;
+  el('udName').textContent = u.name;
+  el('udEmail').textContent = u.email;
+  el('postAva').textContent = u.initials;
+  el('postAva').style.background = `linear-gradient(135deg,${u.color},${u.color}88)`;
+  el('homeGreet').textContent = `Hello, ${u.name.split(' ')[0]} 👋`;
+  el('homeSubtext').textContent = u.role==='teacher' ? 'Create classes and manage your students.' : 'Join or view your enrolled classes.';
+  el('stgName').textContent = u.name;
+  el('stgEmail').textContent = u.email;
+  el('stgRole').textContent = u.role.charAt(0).toUpperCase()+u.role.slice(1);
+  renderAll(); updateTodoBadge(); updateNotifDot();
+}
+
+function signOut() { DB.user = null; save(); location.reload(); }
+
+function editName() {
+  const n = prompt('Enter your new name:', DB.user.name);
+  if(n && n.trim()) {
+    DB.user.name = n.trim();
+    DB.user.initials = n.trim().split(' ').filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    save(); boot(); toast('Name updated!');
+  }
+}
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  el('page-'+id).classList.add('on');
+  document.querySelectorAll('.s-item[id^="nav-"]').forEach(i=>i.classList.remove('on'));
+  const n = el('nav-'+id); if(n) n.classList.add('on');
+  closeDrops();
+  if(window.innerWidth<=900) el('sidebar').classList.remove('open');
+  if(id==='todo') renderTodo();
+  if(id==='grades') renderAllGrades();
+  if(id==='calendar') renderCalendar();
+}
+
+function openClass(cid) {
+  activeClassId = cid;
+  const c = getClass(cid);
+  el('classBannerName').textContent = c.name;
+  el('classBannerMeta').textContent = [c.section, c.room].filter(Boolean).join(' · ') || c.teacherName;
+  el('classBanner').style.background = c.color;
+  const mine = c.teacherId === DB.user.email;
+  el('inviteBtn').style.display = mine ? '' : 'none';
+  el('addAsgnWrap').style.display = mine ? 'flex' : 'none';
+  document.querySelectorAll('#page-class .tab').forEach(t=>t.classList.remove('on'));
+  document.querySelector('#page-class .tab').classList.add('on');
+  switchTab(null,'t-stream',true);
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  el('page-class').classList.add('on');
+  document.querySelectorAll('.s-item[id^="nav-"]').forEach(i=>i.classList.remove('on'));
+  renderStream();
+}
+
+function switchTab(tabEl, tabId, skipUi) {
+  if(!skipUi) {
+    document.querySelectorAll('#page-class .tab').forEach(t=>t.classList.remove('on'));
+    if(tabEl) tabEl.classList.add('on');
+  }
+  ['t-stream','t-work','t-people','t-grades'].forEach(t=>{
+    el(t).style.display = t===tabId ? 'block' : 'none';
+  });
+  if(tabId==='t-work') renderClasswork();
+  if(tabId==='t-people') renderPeople();
+  if(tabId==='t-grades') renderClassGrades();
+}
+
+function toggleSidebar() { el('sidebar').classList.toggle('open'); }
+
+// ═══════════════════════════════════════
+// CLASSES
+// ═══════════════════════════════════════
+function getClass(id) { return DB.classes.find(c=>c.id===id); }
+function myClasses() { return DB.classes.filter(c=>c.members.some(m=>m.email===DB.user.email)); }
+function genCode() { return Math.random().toString(36).slice(2,8).toUpperCase(); }
+function genId() { return '_'+Math.random().toString(36).slice(2,9); }
+
+function openCreateModal() {
+  classModalMode = 'create';
+  el('classModalTitle').textContent = 'Create a Class';
+  el('classModalSub').textContent = 'Set up a new classroom for your students.';
+  el('classModalBtn').textContent = 'Create Class';
+  el('createFields').style.display = 'block';
+  el('joinFields').style.display = 'none';
+  el('classModalSwitch').textContent = 'Join a class with a code instead →';
+  openModal('classModal'); closeDrops();
+}
+
+function switchClassModal() {
+  if(classModalMode==='create') {
+    classModalMode='join';
+    el('classModalTitle').textContent='Join a Class';
+    el('classModalSub').textContent='Enter the code your teacher gave you.';
+    el('classModalBtn').textContent='Join Class';
+    el('createFields').style.display='none';
+    el('joinFields').style.display='block';
+    el('classModalSwitch').textContent='← Create a new class instead';
+  } else {
+    classModalMode='create';
+    el('classModalTitle').textContent='Create a Class';
+    el('classModalSub').textContent='Set up a new classroom for your students.';
+    el('classModalBtn').textContent='Create Class';
+    el('createFields').style.display='block';
+    el('joinFields').style.display='none';
+    el('classModalSwitch').textContent='Join a class with a code instead →';
+  }
+}
+
+function submitClassModal() { classModalMode==='create' ? createClass() : joinClass(); }
+
+function createClass() {
+  if(DB.user.role!=='teacher') { toast('Only teachers can create classes.'); return; }
+  const name = v('cName').trim();
+  if(!name) { toast('Class name is required.'); return; }
+  const sel = document.querySelector('#colorPick .cpick.on');
+  const color = sel ? sel.style.background : COLORS[0];
+  const c = {
+    id: genId(), name, section: v('cSection').trim(), room: v('cRoom').trim(),
+    color, code: genCode(), teacherId: DB.user.email, teacherName: DB.user.name,
+    members: [{ email: DB.user.email, name: DB.user.name, role:'teacher', initials: DB.user.initials, color: DB.user.color }],
+    posts:[], assignments:[], grades:{}
+  };
+  DB.classes.push(c); save(); closeModal('classModal');
+  el('cName').value=''; el('cSection').value=''; el('cRoom').value='';
+  renderAll(); toast(`"${name}" created! Share code: ${c.code}`);
+  addNotif(`You created <strong>${esc(name)}</strong>`, '#7c6dfa');
+}
+
+function joinClass() {
+  const code = v('jCode').trim().toUpperCase();
+  if(code.length < 4) { toast('Enter a valid class code.'); return; }
+  const c = DB.classes.find(x=>x.code===code);
+  if(!c) { toast('No class found with that code.'); return; }
+  if(c.members.some(m=>m.email===DB.user.email)) { toast('You are already in this class.'); return; }
+  c.members.push({ email: DB.user.email, name: DB.user.name, role:'student', initials: DB.user.initials, color: DB.user.color });
+  save(); closeModal('classModal'); el('jCode').value='';
+  renderAll(); toast(`Joined "${c.name}"!`);
+  addNotif(`You joined <strong>${esc(c.name)}</strong>`, '#00c896');
+}
+
+function leaveOrDelete() {
+  const c = getClass(activeClassId); if(!c) return;
+  const mine = c.teacherId===DB.user.email;
+  if(!confirm(`${mine?'Delete':'Leave'} "${c.name}"?`)) return;
+  if(mine) DB.classes = DB.classes.filter(x=>x.id!==activeClassId);
+  else c.members = c.members.filter(m=>m.email!==DB.user.email);
+  save(); goPage('home'); renderAll(); toast(mine?'Class deleted.':'Left class.');
+}
+
+function openInvite() {
+  el('inviteCode').textContent = getClass(activeClassId).code;
+  openModal('inviteModal');
+}
+
+function copyCode() {
+  const code = el('inviteCode').textContent;
+  navigator.clipboard.writeText(code).then(()=>toast('Copied: '+code)).catch(()=>toast('Code: '+code));
+}
+
+function pickColor(div) {
+  document.querySelectorAll('#colorPick .cpick').forEach(c=>c.classList.remove('on'));
+  div.classList.add('on');
+}
+
+// ═══════════════════════════════════════
+// STREAM / POSTS
+// ═══════════════════════════════════════
+function submitPost() {
+  const text = v('postText').trim();
+  if(!text) { toast('Write something first.'); return; }
+  const c = getClass(activeClassId);
+  c.posts.unshift({ id:genId(), authorEmail:DB.user.email, authorName:DB.user.name, authorInitials:DB.user.initials, authorColor:DB.user.color, text, time:new Date().toISOString(), likes:[], comments:[] });
+  save(); el('postText').value=''; renderStream();
+  addNotif(`<strong>${esc(DB.user.name)}</strong> posted in ${esc(c.name)}`, '#7c6dfa');
+}
+
+function renderStream() {
+  const c = getClass(activeClassId);
+  const feed = el('streamFeed');
+  if(!c.posts.length) {
+    feed.innerHTML = `<div class="empty"><div class="empty-icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>Stream is empty</h3><p>Post an announcement or update to get started.</p></div>`;
+    return;
+  }
+  feed.innerHTML = c.posts.map(p=>{
+    const liked = p.likes.includes(DB.user.email);
+    const canDel = p.authorEmail===DB.user.email || c.teacherId===DB.user.email;
+    const cmts = p.comments.map(cm=>`<div class="cmt"><div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,${cm.color},${cm.color}88);display:grid;place-items:center;font-size:.55rem;font-weight:700;color:#fff;flex-shrink:0">${cm.initials}</div><div class="cmt-txt"><strong>${esc(cm.name)}</strong> ${esc(cm.text)}</div></div>`).join('');
+    return `<div class="post"><div class="post-top"><div class="post-av" style="background:linear-gradient(135deg,${p.authorColor},${p.authorColor}88)">${p.authorInitials}</div><div><div class="post-author">${esc(p.authorName)}</div><div class="post-time">${fmtTime(p.time)}</div></div></div><div class="post-body">${esc(p.text).replace(/\n/g,'<br>')}</div>${cmts}<div class="comment-box"><div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,${DB.user.color},${DB.user.color}88);display:grid;place-items:center;font-size:.55rem;font-weight:700;color:#fff;flex-shrink:0">${DB.user.initials}</div><input placeholder="Comment…" onkeydown="if(event.key==='Enter')postComment('${p.id}',this)"/></div><div class="post-footer"><div class="like-btn${liked?' liked':''}" onclick="toggleLike('${p.id}')"><svg width="13" height="13" fill="${liked?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/></svg>${p.likes.length} like${p.likes.length!==1?'s':''}</div>${canDel?`<div class="del-btn" onclick="delPost('${p.id}')">Delete</div>`:''}</div></div>`;
+  }).join('');
+}
+
+function toggleLike(pid) {
+  const c=getClass(activeClassId), p=c.posts.find(x=>x.id===pid), idx=p.likes.indexOf(DB.user.email);
+  if(idx>-1) p.likes.splice(idx,1); else p.likes.push(DB.user.email);
+  save(); renderStream();
+}
+
+function delPost(pid) {
+  const c=getClass(activeClassId); c.posts=c.posts.filter(p=>p.id!==pid); save(); renderStream(); toast('Post deleted.');
+}
+
+function postComment(pid, inp) {
+  const t=inp.value.trim(); if(!t) return;
+  const c=getClass(activeClassId), p=c.posts.find(x=>x.id===pid);
+  p.comments.push({ name:DB.user.name, initials:DB.user.initials, color:DB.user.color, text:t });
+  save(); renderStream();
+}
+
+// ═══════════════════════════════════════
+// ASSIGNMENTS
+// ═══════════════════════════════════════
+function submitAssignment() {
+  const title = v('asgnTitle').trim(); if(!title) { toast('Title is required.'); return; }
+  const c = getClass(activeClassId);
+  c.assignments.push({ id:genId(), title, desc:v('asgnDesc').trim(), points:v('asgnPts')||null, due:v('asgnDue')||null, createdAt:new Date().toISOString() });
+  save(); closeModal('asgnModal');
+  ['asgnTitle','asgnDesc','asgnPts','asgnDue'].forEach(i=>el(i).value='');
+  renderClasswork(); updateTodoBadge(); renderCalendar();
+  addNotif(`New assignment in <strong>${esc(c.name)}</strong>: ${esc(title)}`, '#00c896');
+  toast('Assignment posted!');
+}
+
+function renderClasswork() {
+  const c = getClass(activeClassId);
+  const mine = c.teacherId===DB.user.email;
+  const list = el('classworkList');
+  if(!c.assignments.length) {
+    list.innerHTML=`<div class="empty"><div class="empty-icon"><svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>No assignments yet</h3>${mine?'<p>Click "+ Add Assignment" to post one.</p>':'<p>Your teacher hasn\'t posted any assignments yet.</p>'}</div>`;
+    return;
+  }
+  list.innerHTML = c.assignments.map(a=>{
+    const gKey = `${a.id}_${DB.user.email}`, g = c.grades[gKey];
+    const dueHtml = a.due ? dueBadge(a.due) : '<span class="due-chip none">No due date</span>';
+    return `<div class="asgn-item">
+      <div class="asgn-icon" style="background:rgba(124,109,250,.12);color:var(--accent)"><svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="asgn-info">
+        <div class="asgn-title">${esc(a.title)}</div>
+        ${a.desc?`<div class="asgn-desc">${esc(a.desc).slice(0,100)}${a.desc.length>100?'…':''}</div>`:''}
+        <div class="asgn-meta">${dueHtml}${a.points?`<span style="font-size:.72rem;color:var(--text3)">${a.points} pts</span>`:''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0">
+        ${g?`<span style="font-size:.78rem;font-weight:700;color:var(--accent2)">${g.score}/${g.max}</span>`:''}
+        ${mine?`<button class="btn sm" onclick="openGradeModal('${a.id}')">Grade</button>`:''}
+        ${mine?`<button class="btn sm danger" onclick="delAssignment('${a.id}')">Delete</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function delAssignment(aid) {
+  if(!confirm('Delete this assignment?')) return;
+  const c=getClass(activeClassId); c.assignments=c.assignments.filter(a=>a.id!==aid);
+  save(); renderClasswork(); updateTodoBadge(); toast('Deleted.');
+}
+
+// ═══════════════════════════════════════
+// PEOPLE
+// ═══════════════════════════════════════
+function renderPeople() {
+  const c=getClass(activeClassId);
+  const teachers=c.members.filter(m=>m.role==='teacher'), students=c.members.filter(m=>m.role==='student');
+  el('teacherGrid').innerHTML = teachers.map(pCard).join('');
+  el('studentGrid').innerHTML = students.length ? students.map(pCard).join('') : `<div style="color:var(--text3);font-size:.82rem;padding:8px 0">No students yet. Share the class code <strong>${c.code}</strong> to invite them.</div>`;
+}
+
+function pCard(m) {
+  return `<div class="p-card"><div class="p-av" style="background:linear-gradient(135deg,${m.color},${m.color}88)">${m.initials}</div><div class="p-name">${esc(m.name)}</div><div class="p-role">${m.role.charAt(0).toUpperCase()+m.role.slice(1)}</div></div>`;
+}
+
+// ═══════════════════════════════════════
+// GRADES
+// ═══════════════════════════════════════
+function openGradeModal(aid) {
+  const c=getClass(activeClassId);
+  const students=c.members.filter(m=>m.role==='student');
+  if(!students.length) { toast('No students in this class yet.'); return; }
+  const names = students.map(s=>s.name+' ('+s.email+')').join('\n');
+  const choice = prompt(`Enter student email to grade:\n\n${names}`);
+  if(!choice) return;
+  const student = students.find(s=>s.email===choice.trim().toLowerCase()||s.name.toLowerCase()===choice.trim().toLowerCase());
+  if(!student) { toast('Student not found.'); return; }
+  gradeTarget = { classId:activeClassId, aid, studentEmail:student.email };
+  const a=c.assignments.find(x=>x.id===aid);
+  el('gradeModalSub').textContent = `"${a.title}" — ${student.name}`;
+  el('gradeMax').value = a.points || '';
+  openModal('gradeModal');
+}
+
+function submitGrade() {
+  const score=parseFloat(v('gradeScore')), max=parseFloat(v('gradeMax'));
+  if(isNaN(score)||isNaN(max)||max<=0) { toast('Enter valid score and max.'); return; }
+  const c=getClass(gradeTarget.classId);
+  c.grades[`${gradeTarget.aid}_${gradeTarget.studentEmail}`] = { score, max, feedback:v('gradeFeedback').trim() };
+  save(); closeModal('gradeModal');
+  ['gradeScore','gradeMax','gradeFeedback'].forEach(i=>el(i).value='');
+  renderClassGrades(); toast('Grade saved!');
+  addNotif(`Grade saved: <strong>${score}/${max}</strong>`, '#f4c94e');
+}
+
+function renderClassGrades() {
+  const c=getClass(activeClassId), mine=c.teacherId===DB.user.email;
+  const gc=el('gradesContent');
+  if(!c.assignments.length) { gc.innerHTML=`<div class="empty"><h3>No assignments yet</h3></div>`; return; }
+  if(mine) {
+    const students=c.members.filter(m=>m.role==='student');
+    if(!students.length) { gc.innerHTML=`<div class="empty"><h3>No students enrolled</h3><p>Share code <strong>${c.code}</strong></p></div>`; return; }
+    let rows='';
+    c.assignments.forEach(a=>students.forEach(s=>{
+      const g=c.grades[`${a.id}_${s.email}`];
+      rows+=`<tr><td>${esc(s.name)}</td><td>${esc(a.title)}</td><td>${g?g.score+'/'+g.max:'—'}</td><td>${g?gradeLetter(g.score/g.max):'<span class="g-badge g-p">Pending</span>'}</td><td style="font-size:.75rem;color:var(--text3)">${g&&g.feedback?esc(g.feedback):'—'}</td></tr>`;
+    }));
+    gc.innerHTML=`<div class="g-table-wrap"><table><thead><tr><th>Student</th><th>Assignment</th><th>Score</th><th>Grade</th><th>Feedback</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  } else {
+    let rows='';
+    c.assignments.forEach(a=>{
+      const g=c.grades[`${a.id}_${DB.user.email}`];
+      rows+=`<tr><td>${esc(a.title)}</td><td>${g?g.score+'/'+g.max:'—'}</td><td>${g?gradeLetter(g.score/g.max):'<span class="g-badge g-p">Not graded</span>'}</td><td>${a.due||'—'}</td></tr>`;
+    });
+    gc.innerHTML=`<div class="g-table-wrap"><table><thead><tr><th>Assignment</th><th>Score</th><th>Grade</th><th>Due</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
+}
+
+function renderAllGrades() {
+  const mc=myClasses(), el_=el('allGradesContent');
+  if(!mc.length) { el_.innerHTML=`<div class="empty"><h3>No classes yet</h3></div>`; return; }
+  let html='';
+  mc.forEach(c=>{
+    if(!c.assignments.length) return;
+    let rows='';
+    c.assignments.forEach(a=>{
+      const g=c.grades[`${a.id}_${DB.user.email}`];
+      rows+=`<tr><td>${esc(c.name)}</td><td>${esc(a.title)}</td><td>${g?g.score+'/'+g.max:'—'}</td><td>${g?gradeLetter(g.score/g.max):'<span class="g-badge g-p">Pending</span>'}</td></tr>`;
+    });
+    html+=`<div class="g-table-wrap" style="margin-bottom:18px"><table><thead><tr><th colspan="4" style="color:var(--text)">${esc(c.name)}</th></tr><tr><th>Class</th><th>Assignment</th><th>Score</th><th>Grade</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  });
+  el_.innerHTML = html || `<div class="empty"><h3>No assignments found</h3><p>Graded assignments will appear here.</p></div>`;
+}
+
+function gradeLetter(r) {
+  if(isNaN(r)) return '<span class="g-badge g-p">—</span>';
+  if(r>=.9) return '<span class="g-badge g-a">A</span>';
+  if(r>=.8) return '<span class="g-badge g-b">B</span>';
+  if(r>=.7) return '<span class="g-badge g-c">C</span>';
+  return '<span class="g-badge g-f">F</span>';
+}
+
+// ═══════════════════════════════════════
+// TO-DO
+// ═══════════════════════════════════════
+function renderTodo() {
+  const mc=myClasses(); let items=[];
+  mc.forEach(c=>c.assignments.forEach(a=>items.push({a,c,done:!!c.grades[`${a.id}_${DB.user.email}`]})));
+  items.sort((x,y)=>{ if(x.a.due&&y.a.due) return x.a.due.localeCompare(y.a.due); if(x.a.due) return -1; if(y.a.due) return 1; return 0; });
+  const list=el('todoList');
+  if(!items.length) { list.innerHTML=`<div class="empty" style="padding:30px 0"><h3>All clear!</h3><p>Assignments from your classes will appear here.</p></div>`; return; }
+  list.innerHTML=items.map(({a,c,done})=>`<div class="todo-item"><div class="todo-cb${done?' done':''}" onclick="this.classList.toggle('done');this.nextElementSibling.querySelector('.todo-name').classList.toggle('done')"></div><div style="flex:1"><div class="todo-name${done?' done':''}">${esc(a.title)}</div><div class="todo-meta">${esc(c.name)}${a.due?' · Due '+a.due:''}${a.points?' · '+a.points+' pts':''}</div></div>${a.due?dueBadge(a.due):''}</div>`).join('');
+}
+
+function updateTodoBadge() {
+  const mc=myClasses(); let n=0;
+  mc.forEach(c=>c.assignments.forEach(a=>{ if(!c.grades[`${a.id}_${DB.user.email}`]) n++; }));
+  const b=el('todoBadge'); b.style.display=n?'':'none'; b.textContent=n;
+}
+
+// ═══════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════
+function renderCalendar() {
+  const now=new Date(), y=now.getFullYear(), m=now.getMonth();
+  const days=new Date(y,m+1,0).getDate(), startDay=new Date(y,m,1).getDay();
+  const evMap={};
+  myClasses().forEach(c=>c.assignments.forEach(a=>{
+    if(!a.due) return;
+    const d=new Date(a.due); if(d.getFullYear()===y&&d.getMonth()===m) { const k=d.getDate(); if(!evMap[k]) evMap[k]=[]; evMap[k].push(a.title); }
+  }));
+  const mnth=['January','February','March','April','May','June','July','August','September','October','November','December'][m];
+  let html=`<div style="font-size:1rem;font-weight:700;margin-bottom:14px">${mnth} ${y}</div><div class="cal-grid">`;
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>html+=`<div class="cal-day-lbl">${d}</div>`);
+  for(let i=0;i<startDay;i++) html+=`<div class="cal-empty-cell"></div>`;
+  for(let d=1;d<=days;d++) {
+    const evs=evMap[d]||[], isToday=d===now.getDate();
+    html+=`<div class="cal-cell${isToday?' today':''}"><div class="cal-num">${d}</div>${evs.map(e=>`<div class="cal-ev" title="${esc(e)}">${esc(e).slice(0,12)}…</div>`).join('')}</div>`;
+  }
+  html+=`</div>`;
+  el('calBody').innerHTML=html;
+}
+
+// ═══════════════════════════════════════
+// HOME + SIDEBAR
+// ═══════════════════════════════════════
+function renderAll() { renderHomeGrid(); renderSidebarClasses(); updateTodoBadge(); }
+
+function renderHomeGrid() {
+  const mc=myClasses(), grid=el('homeGrid');
+  if(!mc.length) {
+    grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon"><svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><h3>No classes yet</h3><p>${DB.user.role==='teacher'?'Create your first class to get started.':'Join a class using your teacher\'s code.'}</p><button class="btn pri" onclick="openCreateModal()">Get Started →</button></div>`;
+    return;
+  }
+  grid.innerHTML=mc.map(c=>`<div class="class-card" onclick="openClass('${c.id}')"><div class="cc-banner" style="background:${c.color}"><div class="cc-banner-txt"><div class="cc-name">${esc(c.name)}</div><div class="cc-sub">${esc(c.section||c.teacherName)}</div></div></div><div class="cc-body"><div class="cc-meta"><span><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>${c.members.length} members</span><span><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>${c.assignments.length} assignment${c.assignments.length!==1?'s':''}</span>${c.teacherId===DB.user.email?'<span style="color:var(--accent)">Owner</span>':''}</div><div class="cc-footer"><button class="btn sm" style="flex:1;justify-content:center" onclick="event.stopPropagation();openClass('${c.id}')">Open →</button></div></div></div>`).join('');
+}
+
+function renderSidebarClasses() {
+  el('sidebarClasses').innerHTML=myClasses().map(c=>`<div class="class-entry" onclick="openClass('${c.id}')"><div class="c-dot" style="background:${c.color.match(/#[0-9a-f]{6}/i)?.[0]||'#7c6dfa'}"></div>${esc(c.name)}</div>`).join('');
+}
+
+// ═══════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════
+function addNotif(text, color) {
+  DB.notifications.unshift({text,color,time:new Date().toISOString()});
+  if(DB.notifications.length>30) DB.notifications.pop();
+  save(); updateNotifDot(); renderNotifs();
+}
+
+function renderNotifs() {
+  const list=el('notifList');
+  if(!DB.notifications.length) { list.innerHTML='<div class="notif-empty">No notifications</div>'; return; }
+  list.innerHTML=DB.notifications.slice(0,12).map(n=>`<div class="notif-it"><div class="n-dot" style="background:${n.color}"></div><div><div class="n-txt">${n.text}</div><div class="n-time">${fmtTime(n.time)}</div></div></div>`).join('');
+}
+
+function clearNotifs() { DB.notifications=[]; save(); updateNotifDot(); renderNotifs(); toast('Cleared.'); }
+function updateNotifDot() { el('notifDot').style.display=DB.notifications.length?'':'none'; }
+function toggleNotif() { const d=el('notifDrop'); el('userDrop').classList.remove('on'); if(d.classList.toggle('on')) renderNotifs(); }
+function toggleUserDrop() { const d=el('userDrop'); el('notifDrop').classList.remove('on'); d.classList.toggle('on'); }
+function closeDrops() { el('notifDrop').classList.remove('on'); el('userDrop').classList.remove('on'); }
+document.addEventListener('click',e=>{ if(!e.target.closest('.notif-drop')&&!e.target.closest('#notifBtn')&&!e.target.closest('.user-drop')&&!e.target.closest('.ava')) closeDrops(); });
+
+// ═══════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════
+function doSearch(q) {
+  const mc=myClasses(), f=q?mc.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())):mc;
+  const grid=el('homeGrid');
+  if(!f.length) { grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><h3>${q?`No classes matching "${esc(q)}"`:''}</h3></div>`; return; }
+  grid.innerHTML=f.map(c=>`<div class="class-card" onclick="openClass('${c.id}')"><div class="cc-banner" style="background:${c.color}"><div class="cc-banner-txt"><div class="cc-name">${esc(c.name)}</div><div class="cc-sub">${esc(c.section||c.teacherName)}</div></div></div><div class="cc-body"><div class="cc-meta"><span>${c.members.length} members</span></div><div class="cc-footer"><button class="btn sm" style="flex:1;justify-content:center">Open →</button></div></div></div>`).join('');
+}
+
+// ═══════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════
+function openModal(id) { el(id).classList.add('on'); }
+function closeModal(id) { el(id).classList.remove('on'); }
+function handleOvClick(e,id) { if(e.target===e.currentTarget) closeModal(id); }
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+function toast(msg) {
+  el('toastMsg').textContent=msg; el('toast').classList.add('on');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el('toast').classList.remove('on'),2800);
+}
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+function el(id) { return document.getElementById(id); }
+function v(id) { return el(id).value||''; }
+function esc(s) { if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtTime(iso) {
+  const d=new Date(iso), diff=(Date.now()-d)/1000;
+  if(diff<60) return 'just now';
+  if(diff<3600) return Math.floor(diff/60)+'m ago';
+  if(diff<86400) return Math.floor(diff/3600)+'h ago';
+  return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+}
+function dueBadge(due) {
+  const d=new Date(due), diff=(d-Date.now())/(86400000);
+  if(diff<0) return `<span class="due-chip hot">Overdue</span>`;
+  if(diff<1) return `<span class="due-chip hot">Due today</span>`;
+  if(diff<3) return `<span class="due-chip hot">Due in ${Math.ceil(diff)} day${Math.ceil(diff)>1?'s':''}</span>`;
+  return `<span class="due-chip ok">Due ${due}</span>`;
+}
+
+// ═══════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════
+load();
+if(DB.user) { el('authOverlay').classList.remove('on'); boot(); }
+</script>
+</body>
+</html>
