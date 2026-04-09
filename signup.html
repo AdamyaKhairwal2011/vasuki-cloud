@@ -179,6 +179,28 @@
             display: none;
             font-weight: 500;
         }
+
+        .btn-referral {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--google-blue);
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            box-sizing: border-box;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .btn-referral:hover {
+            background: #f1f3f4;
+            border-color: var(--google-blue);
+        }
     </style>
 </head>
 <body>
@@ -196,6 +218,9 @@
             </div>
 
             <button class="btn-primary" style="width: 100%;" onclick="validateAccess()">Verify & Continue</button>
+
+            <a href="https://vasuki.cloud/view-form.html?id=f-evmd3e" class="btn-referral">Request Referral Code</a>
+
             <p id="gateError" style="color: var(--error-red); font-size: 12px; margin-top: 10px; display: none;">Invalid access code. Please try again.</p>
         </div>
     </div>
@@ -203,8 +228,6 @@
     <div class="signup-container" id="signupForm">
         <h1>Create Account</h1>
         <p class="subtitle">Complete your Vasuki Cloud profile</p>
-
-
 
         <div class="input-row">
             <input type="text" id="firstName" placeholder="First Name">
@@ -326,8 +349,6 @@
                 signupBtn.disabled = false;
             }
         };
-
-        //
     </script>
 </body>
 </html>
