@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Vasuki Classrooms</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        h1, h2, h3, .google-font {
+            font-family: 'Google Sans', sans-serif;
+        }
+        .btn-google {
+            transition: box-shadow 0.2s;
+        }
+        .btn-google:hover {
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,0.30), 0 4px 8px 3px rgba(60,64,67,0.15);
+        }
+        .form-input {
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: white;
+            color: black;
+        }
+        .form-input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background-color: white;
+            color: black;
+        }
+        .form-input::placeholder {
+            color: #6b7280;
+        }
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        .step-indicator.active {
+            background-color: #2563eb;
+            color: white;
+        }
+        .step-indicator.completed {
+            background-color: #10b981;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-medium text-gray-600 flex items-center">
+                        <span class="text-blue-600 font-bold mr-1">Vasuki</span> Classrooms
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="text-gray-600 hover:text-blue-600 transition-colors">Back to Home</a>
+                    <a href="signin.html" class="text-blue-600 hover:text-blue-700 font-medium">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Progress Steps -->
+        <div class="flex items-center justify-center mb-8">
+            <div class="flex items-center space-x-4">
+                <div class="step-indicator active w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-medium">1</div>
+                <div class="w-16 h-1 bg-gray-300"></div>
+                <div class="step-indicator w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-medium">2</div>
+                <div class="w-16 h-1 bg-gray-300"></div>
+                <div class="step-indicator w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-medium">3</div>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Your Account</h1>
+                <p class="text-gray-600">Join thousands of educators using Vasuki Classrooms</p>
+            </div>
+
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <!-- Step 1: Basic Information -->
+                <div id="step1" class="step-content">
+                    <h2 class="text-xl font-semibold mb-6">Basic Information</h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                            <input type="text" name="firstName" required 
+                                   class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                                   placeholder="Enter your first name">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                            <input type="text" name="lastName" required 
+                                   class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                                   placeholder="Enter your last name">
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                        <input type="email" name="email" required 
+                               class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                               placeholder="your.email@example.com">
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password *</label>
+                        <input type="password" name="password" required minlength="8"
+                               class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                               placeholder="Create a strong password (min. 8 characters)">
+                        <p class="text-xs text-gray-500 mt-1">Use 8+ characters with a mix of letters, numbers & symbols</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password *</label>
+                        <input type="password" name="confirmPassword" required 
+                               class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                               placeholder="Re-enter your password">
+                    </div>
+
+                    <button type="button" onclick="nextStep()" 
+                            class="w-full bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                        Continue to Step 2
+                    </button>
+                </div>
+
+                <!-- Step 2: Account Type -->
+                <div id="step2" class="step-content hidden">
+                    <h2 class="text-xl font-semibold mb-6">Account Information</h2>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">I am a *</label>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <label class="relative">
+                                <input type="radio" name="accountType" value="teacher" required class="peer sr-only">
+                                <div class="border-2 border-gray-300 rounded-lg p-4 cursor-pointer hover:border-blue-500 peer-checked:border-blue-600 peer-checked:bg-blue-50">
+                                    <div class="text-center">
+                                        <i class="fas fa-chalkboard-teacher text-2xl text-blue-600 mb-2"></i>
+                                        <h3 class="font-medium">Teacher</h3>
+                                        <p class="text-sm text-gray-600">Create and manage classes</p>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="relative">
+                                <input type="radio" name="accountType" value="student" required class="peer sr-only">
+                                <div class="border-2 border-gray-300 rounded-lg p-4 cursor-pointer hover:border-blue-500 peer-checked:border-blue-600 peer-checked:bg-blue-50">
+                                    <div class="text-center">
+                                        <i class="fas fa-graduation-cap text-2xl text-green-600 mb-2"></i>
+                                        <h3 class="font-medium">Student</h3>
+                                        <p class="text-sm text-gray-600">Join classes and submit work</p>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="relative">
+                                <input type="radio" name="accountType" value="admin" required class="peer sr-only">
+                                <div class="border-2 border-gray-300 rounded-lg p-4 cursor-pointer hover:border-blue-500 peer-checked:border-blue-600 peer-checked:bg-blue-50">
+                                    <div class="text-center">
+                                        <i class="fas fa-user-shield text-2xl text-purple-600 mb-2"></i>
+                                        <h3 class="font-medium">Administrator</h3>
+                                        <p class="text-sm text-gray-600">Manage institution</p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">School/Organization Name *</label>
+                        <input type="text" name="institution" required 
+                               class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                               placeholder="Enter your school or organization name">
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Country *</label>
+                            <select name="country" required 
+                                    class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none">
+                                <option value="">Select your country</option>
+                                <option value="us">United States</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="ca">Canada</option>
+                                <option value="au">Australia</option>
+                                <option value="in">India</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" name="phone" 
+                                   class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+                                   placeholder="+1 (555) 123-4567">
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-4">
+                        <button type="button" onclick="previousStep()" 
+                                class="flex-1 border border-gray-300 text-gray-700 py-3 rounded-md font-medium hover:bg-gray-50 transition-colors">
+                            Back
+                        </button>
+                        <button type="button" onclick="nextStep()" 
+                                class="flex-1 bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                            Continue to Step 3
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Preferences -->
+                <div id="step3" class="step-content hidden">
+                    <h2 class="text-xl font-semibold mb-6">Preferences & Agreement</h2>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">How did you hear about us?</label>
+                        <select name="referral" 
+                                class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none">
+                            <option value="">Select an option</option>
+                            <option value="colleague">From a colleague</option>
+                            <option value="social">Social media</option>
+                            <option value="search">Search engine</option>
+                            <option value="advertisement">Advertisement</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="newsletter" class="mr-2">
+                            <span class="text-sm text-gray-700">Send me updates about new features and educational resources</span>
+                        </label>
+                    </div>
+
+                    <div class="space-y-4 mb-6">
+                        <label class="flex items-start">
+                            <input type="checkbox" name="terms" required class="mr-2 mt-1">
+                            <span class="text-sm text-gray-700">
+                                I agree to the <a href="#" class="text-blue-600 hover:underline">Terms of Service</a> 
+                                and <a href="#" class="text-blue-600 hover:underline">Privacy Policy</a> *
+                            </span>
+                        </label>
+                        <label class="flex items-start">
+                            <input type="checkbox" name="age" required class="mr-2 mt-1">
+                            <span class="text-sm text-gray-700">I confirm that I am at least 13 years old *</span>
+                        </label>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-shield-alt text-blue-600 mt-1 mr-3"></i>
+                            <div>
+                                <h3 class="font-medium text-blue-900 mb-1">Your data is secure</h3>
+                                <p class="text-sm text-blue-800">We protect your information with industry-standard security and never share it with third parties without your consent.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-4">
+                        <button type="button" onclick="previousStep()" 
+                                class="flex-1 border border-gray-300 text-gray-700 py-3 rounded-md font-medium hover:bg-gray-50 transition-colors">
+                            Back
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 bg-blue-600 text-white py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                            Create Account
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Sign In Link -->
+            <div class="text-center mt-6 pt-6 border-t border-gray-200">
+                <p class="text-gray-600">
+                    Already have an account? 
+                    <a href="signin.html" class="text-blue-600 hover:text-blue-700 font-medium">Sign In</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center text-sm text-gray-500">
+                <p>&copy; 2026 Vasuki Classrooms. All rights reserved.</p>
+                <div class="flex justify-center space-x-6 mt-2">
+                    <a href="#" class="hover:text-gray-700">Privacy</a>
+                    <a href="#" class="hover:text-gray-700">Terms</a>
+                    <a href="#" class="hover:text-gray-700">Support</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function updateStepIndicators() {
+            const indicators = document.querySelectorAll('.step-indicator');
+            indicators.forEach((indicator, index) => {
+                if (index < currentStep) {
+                    indicator.className = 'step-indicator completed w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center font-medium';
+                    indicator.innerHTML = '<i class="fas fa-check text-xs"></i>';
+                } else if (index === currentStep - 1) {
+                    indicator.className = 'step-indicator active w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-medium';
+                    indicator.textContent = index + 1;
+                } else {
+                    indicator.className = 'step-indicator w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-medium';
+                    indicator.textContent = index + 1;
+                }
+            });
+        }
+
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Show current step
+            document.getElementById(`step${step}`).classList.remove('hidden');
+            
+            // Update indicators
+            updateStepIndicators();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextStep() {
+            // Validate current step
+            if (validateStep(currentStep)) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    showStep(currentStep);
+                }
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function validateStep(step) {
+            const form = document.getElementById('signupForm');
+            const stepElement = document.getElementById(`step${step}`);
+            const requiredFields = stepElement.querySelectorAll('[required]');
+            
+            for (let field of requiredFields) {
+                if (!field.value.trim()) {
+                    field.focus();
+                    showNotification('Please fill in all required fields', 'error');
+                    return false;
+                }
+                
+                // Special validation for password match
+                if (field.name === 'confirmPassword') {
+                    const password = form.querySelector('[name="password"]').value;
+                    if (field.value !== password) {
+                        field.focus();
+                        showNotification('Passwords do not match', 'error');
+                        return false;
+                    }
+                }
+                
+                // Special validation for email
+                if (field.type === 'email') {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(field.value)) {
+                        field.focus();
+                        showNotification('Please enter a valid email address', 'error');
+                        return false;
+                    }
+                }
+            }
+            
+            return true;
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            if (!validateStep(currentStep)) {
+                return;
+            }
+            
+            // Show loading state
+            const submitButton = event.target.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.textContent = 'Creating Account...';
+            submitButton.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                showNotification('Account created successfully! Redirecting to dashboard...', 'success');
+                
+                // Reset form and redirect
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+            }, 1500);
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 px-6 py-3 rounded-md text-white z-50 ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+            }`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showStep(1);
+        });
+    </script>
+</body>
+</html>
