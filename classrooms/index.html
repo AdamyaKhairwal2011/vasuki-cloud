@@ -5,85 +5,321 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vasuki Classrooms | Manage teaching and learning</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @font-face {
-            font-family: 'VasukiCustom';
-            src: url('custom.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
         body {
-            font-family: 'VasukiCustom', sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
-
-        .dropdown:hover .dropdown-menu {
-            display: block;
+        h1, h2, h3, .google-font {
+            font-family: 'Google Sans', sans-serif;
         }
-        
-        .dropdown-menu {
-            display: none;
-            transition: all 0.2s ease-in-out;
-        }
-
         .btn-google {
             transition: box-shadow 0.2s;
         }
         .btn-google:hover {
             box-shadow: 0 1px 3px 0 rgba(60,64,67,0.30), 0 4px 8px 3px rgba(60,64,67,0.15);
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .feature-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="bg-white text-gray-800">
 
     <nav class="flex items-center justify-between px-6 py-4 border-b border-gray-200 sticky top-0 bg-white z-50">
-        <div class="flex items-center space-x-3">
-            <img src="logo.jpg" 
-                 alt="Vasuki Logo" 
-                 class="h-8 w-auto"
-                 onerror="this.onerror=null; this.src='logo.png';">
-            
-            <div class="text-xl font-medium text-gray-600 flex items-center">
+        <div class="flex items-center space-x-4">
+            <div class="text-2xl font-medium text-gray-600 flex items-center">
                 <span class="text-blue-600 font-bold mr-1">Vasuki</span> Classrooms
             </div>
         </div>
-        
         <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
-            <a href="#" class="hover:text-blue-600">Overview</a>
-            <a href="#" class="hover:text-blue-600">Features</a>
-            
-            <div class="relative dropdown">
-                <button class="flex items-center hover:text-blue-600 focus:outline-none py-2">
-                    Resources
-                    <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-                
-                <div class="dropdown-menu absolute left-0 mt-0 w-48 bg-white border border-gray-200 rounded-lg shadow-xl py-2 z-50">
-                    <a href="https://vasuki.cloud/meet/" class="block px-4 py-3 hover:bg-gray-100 flex items-center">
-                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                        Meet
-                    </a>
-                    <a href="https://vasuki.cloud/calendar/" class="block px-4 py-3 hover:bg-gray-100 flex items-center">
-                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                        Calendar
-                    </a>
-                    <a href="https://vasuki.cloud/forms/" class="block px-4 py-3 hover:bg-gray-100 flex items-center">
-                        <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
-                        Forms
-                    </a>
-                </div>
-            </div>
+            <a href="#overview" class="hover:text-blue-600 transition-colors">Overview</a>
+            <a href="#features" class="hover:text-blue-600 transition-colors">Features</a>
+            <a href="#resources" class="hover:text-blue-600 transition-colors">Resources</a>
         </div>
-
         <div class="flex items-center space-x-4">
-            <button class="text-sm font-medium text-gray-600">Sign in</button>
-            <button class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium text-sm btn-google">
+            <a href="signup.html" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Sign up</a>
+            <button onclick="showSignInModal()" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Sign in</button>
+            <button onclick="showGetStartedModal()" class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium text-sm btn-google">
                 Get started for free
             </button>
         </div>
     </nav>
 
-    </body>
+    <section class="max-w-7xl mx-auto px-6 py-16 md:py-24 flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 space-y-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                Where teaching and learning come together
+            </h1>
+            <p class="text-lg text-gray-600 max-w-lg">
+                Vasuki Classrooms is your all-in-one place for teaching and learning. Our easy-to-use tool helps educators manage, measure, and enrich learning experiences.
+            </p>
+            <div class="flex space-x-4">
+                <button onclick="goToClassroom()" class="bg-blue-600 text-white px-8 py-3 rounded-md font-medium btn-google">
+                    Go to Classroom
+                </button>
+                <button onclick="showHowItWorks()" class="border border-gray-300 text-blue-600 px-8 py-3 rounded-md font-medium hover:bg-blue-50 transition-colors">
+                    See how it works
+                </button>
+            </div>
+        </div>
+        <div class="md:w-1/2 mt-12 md:mt-0">
+            <div class="relative bg-blue-100 rounded-3xl p-4 shadow-xl">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1000" 
+                     alt="Classroom Interface" 
+                     class="rounded-2xl border border-gray-200">
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-20">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-12">Simplified for educators and students</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl border border-gray-200 feature-card scroll-reveal">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-plus text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Easy setup</h3>
+                    <p class="text-gray-600">Teachers can set up classes and invite students and co-teachers in just a few clicks.</p>
+                    <button onclick="learnMore('setup')" class="mt-4 text-blue-600 font-medium hover:text-blue-700 transition-colors">Learn more</button>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl border border-gray-200 feature-card scroll-reveal">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-clock text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Saves time</h3>
+                    <p class="text-gray-600">The simple, paperless assignment workflow allows teachers to create, review, and grade quickly.</p>
+                    <button onclick="learnMore('time')" class="mt-4 text-blue-600 font-medium hover:text-blue-700 transition-colors">Learn more</button>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl border border-gray-200 feature-card scroll-reveal">
+                    <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-bolt text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Improves organization</h3>
+                    <p class="text-gray-600">Students can see all of their assignments on a tasks page, and all class materials are automatically filed.</p>
+                    <button onclick="learnMore('organization')" class="mt-4 text-blue-600 font-medium hover:text-blue-700 transition-colors">Learn more</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Features Section -->
+    <section id="resources" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Powerful Features for Modern Education</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center p-6 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-video text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Video Meetings</h3>
+                    <p class="text-gray-600 text-sm">Integrated video calls for virtual classes</p>
+                </div>
+                <div class="text-center p-6 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-bar text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Analytics</h3>
+                    <p class="text-gray-600 text-sm">Track student performance and engagement</p>
+                </div>
+                <div class="text-center p-6 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div class="w-16 h-16 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Collaboration</h3>
+                    <p class="text-gray-600 text-sm">Group projects and peer review tools</p>
+                </div>
+                <div class="text-center p-6 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-mobile-alt text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">Mobile App</h3>
+                    <p class="text-gray-600 text-sm">Learn anywhere with our mobile app</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- CTA Section -->
+    <section class="py-20 bg-blue-600">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold text-white mb-6">Ready to Transform Your Classroom?</h2>
+            <p class="text-xl text-blue-100 mb-8">Join thousands of educators already using Vasuki Classrooms</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="showGetStartedModal()" class="bg-white text-blue-600 px-8 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors">
+                    Start Free Trial
+                </button>
+                <button onclick="showDemoModal()" class="border-2 border-white text-white px-8 py-3 rounded-md font-medium hover:bg-white hover:text-blue-600 transition-colors">
+                    Request Demo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+            <div class="mb-4 md:mb-0">
+                <span class="font-bold text-gray-700">Vasuki</span> &copy; 2026
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:underline">Privacy</a>
+                <a href="#" class="hover:underline">Terms</a>
+                <a href="#" class="hover:underline">About</a>
+                <a href="#" class="hover:underline">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function showSignInModal() {
+            showModal('signInModal');
+        }
+
+        function showGetStartedModal() {
+            showModal('getStartedModal');
+        }
+
+        function showHowItWorks() {
+            showModal('howItWorksModal');
+        }
+
+        function showDemoModal() {
+            alert('Demo request feature coming soon! Contact us at demo@vasuki.com');
+        }
+
+        function handleSignIn(event) {
+            event.preventDefault();
+            closeModal('signInModal');
+            showNotification('Successfully signed in!', 'success');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        }
+
+        function handleGetStarted(event) {
+            event.preventDefault();
+            closeModal('getStartedModal');
+            showNotification('Account created successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        }
+
+        function goToClassroom() {
+            showNotification('Redirecting to your classroom...', 'info');
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        }
+
+        function learnMore(feature) {
+            const messages = {
+                'setup': 'Setting up classes takes less than 5 minutes! Simply create a class, add your students, and start teaching.',
+                'time': 'Save up to 10 hours per week with automated grading, assignment tracking, and communication tools.',
+                'organization': 'All your class materials, assignments, and student progress in one organized dashboard.'
+            };
+            showNotification(messages[feature], 'info');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 px-6 py-3 rounded-md text-white z-50 ${
+                type === 'success' ? 'bg-green-500' : 'bg-blue-500'
+            }`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll reveal animation
+        function handleScrollReveal() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScrollReveal);
+        window.addEventListener('load', handleScrollReveal);
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('.modal.show').forEach(modal => {
+                    modal.classList.remove('show');
+                });
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+
+</body>
 </html>
