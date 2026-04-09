@@ -3,84 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vasuki iTech Classrooms</title>
+    <title>Vasuki Classrooms | Manage teaching and learning</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Product Sans', Arial, sans-serif; }
-        .google-blue { color: #4285F4; }
-        .google-red { color: #EA4335; }
-        .google-yellow { color: #FBBC05; }
-        .google-green { color: #34A853; }
-        .search-shadow:hover { box-shadow: 0 1px 6px rgba(32,33,36,.28); border-color: rgba(223,225,229,0); }
+        @font-face {
+            font-family: 'VasukiCustom';
+            src: url('custom.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'VasukiCustom', sans-serif;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-menu {
+            display: none;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-google {
+            transition: box-shadow 0.2s;
+        }
+        .btn-google:hover {
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,0.30), 0 4px 8px 3px rgba(60,64,67,0.15);
+        }
     </style>
 </head>
-<body class="bg-white flex flex-col h-screen">
+<body class="bg-white text-gray-800">
 
-    <header class="flex justify-end p-4 text-sm items-center space-x-4 text-gray-700">
-        <a href="#" class="hover:underline">Classroom</a>
-        <a href="#" class="hover:underline">Resources</a>
-        <button class="p-2 hover:bg-gray-100 rounded-full">
-            <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24"><path d="M6,8c1.1,0,2-0.9,2-2s-0.9-2-2-2S4,4.9,4,6S4.9,8,6,8z M12,20c1.1,0,2-0.9,2-2s-0.9-2-2-2s-2,0.9-2,2S10.9,20,12,20z M6,20c1.1,0,2-0.9,2-2s-0.9-2-2-2s-2,0.9-2,2S4.9,20,6,20z M6,14c1.1,0,2-0.9,2-2s-0.9-2-2-2s-2,0.9-2,2S4.9,14,6,14z M12,14c1.1,0,2-0.9,2-2s-0.9-2-2-2s-2,0.9-2,2S10.9,14,12,14z M18,14c1.1,0,2-0.9,2-2s-0.9-2-2-2s-2,0.9-2,2S16.9,14,18,14z M18,8c1.1,0,2-0.9,2-2s-0.9-2-2-2s-2,0.9-2,2S16.9,8,18,8z M12,8c1.1,0,2-0.9,2-2s-0.9-2-2-2s-2,0.9-2,2S10.9,8,12,8z M18,20c1.1,0,2-0.9,2-2s-0.9-2-2-2s-2,0.9-2,2S16.9,20,18,20z"></path></svg>
-        </button>
-        <button class="bg-blue-600 text-white px-6 py-2 rounded font-medium hover:shadow-md transition">Sign In</button>
-    </header>
-
-    <main class="flex-grow flex flex-col items-center mt-28 px-4">
-        <div class="text-7xl font-bold mb-8 flex tracking-tighter">
-            <span class="google-blue">V</span>
-            <span class="google-red">a</span>
-            <span class="google-yellow">s</span>
-            <span class="google-blue">u</span>
-            <span class="google-green">k</span>
-            <span class="google-red">i</span>
-            <span class="ml-4 text-gray-500 font-normal">iTech</span>
+    <nav class="flex items-center justify-between px-6 py-4 border-b border-gray-200 sticky top-0 bg-white z-50">
+        <div class="flex items-center space-x-3">
+            <img src="logo.jpg" 
+                 alt="Vasuki Logo" 
+                 class="h-8 w-auto"
+                 onerror="this.onerror=null; this.src='logo.png';">
+            
+            <div class="text-xl font-medium text-gray-600 flex items-center">
+                <span class="text-blue-600 font-bold mr-1">Vasuki</span> Classrooms
+            </div>
         </div>
-
-        <div class="w-full max-w-[584px]">
-            <div class="flex items-center border border-gray-200 px-4 py-3 rounded-full search-shadow transition-all duration-200">
-                <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
-                <input type="text" placeholder="Search your classroom or course..." class="flex-grow outline-none text-lg">
-                <i class="fa-solid fa-microphone google-blue text-lg ml-3 cursor-pointer"></i>
-                <i class="fa-solid fa-camera google-blue text-lg ml-4 cursor-pointer"></i>
+        
+        <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+            <a href="#" class="hover:text-blue-600">Overview</a>
+            <a href="#" class="hover:text-blue-600">Features</a>
+            
+            <div class="relative dropdown">
+                <button class="flex items-center hover:text-blue-600 focus:outline-none py-2">
+                    Resources
+                    <svg class="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                
+                <div class="dropdown-menu absolute left-0 mt-0 w-48 bg-white border border-gray-200 rounded-lg shadow-xl py-2 z-50">
+                    <a href="https://vasuki.cloud/meet/" class="block px-4 py-3 hover:bg-gray-100 flex items-center">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                        Meet
+                    </a>
+                    <a href="https://vasuki.cloud/calendar/" class="block px-4 py-3 hover:bg-gray-100 flex items-center">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                        Calendar
+                    </a>
+                    <a href="https://vasuki.cloud/forms/" class="block px-4 py-3 hover:bg-gray-100 flex items-center">
+                        <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                        Forms
+                    </a>
+                </div>
             </div>
         </div>
 
-        <div class="flex space-x-3 mt-8">
-            <button class="bg-[#f8f9fa] border border-transparent hover:border-gray-300 hover:shadow-sm px-4 py-2 text-sm text-gray-800 rounded">
-                Vasuki Search
+        <div class="flex items-center space-x-4">
+            <button class="text-sm font-medium text-gray-600">Sign in</button>
+            <button class="bg-blue-600 text-white px-6 py-2 rounded-md font-medium text-sm btn-google">
+                Get started for free
             </button>
-            <button class="bg-[#f8f9fa] border border-transparent hover:border-gray-300 hover:shadow-sm px-4 py-2 text-sm text-gray-800 rounded">
-                I'm Feeling Lucky
-            </button>
         </div>
+    </nav>
 
-        <p class="mt-6 text-sm text-gray-700">
-            Vasuki iTech offered in: 
-            <a href="#" class="text-blue-800 hover:underline mx-1">Hindi</a>
-            <a href="#" class="text-blue-800 hover:underline mx-1">Telugu</a>
-            <a href="#" class="text-blue-800 hover:underline mx-1">Marathi</a>
-        </p>
-    </main>
-
-    <footer class="bg-gray-100 text-gray-600 text-sm">
-        <div class="px-8 py-3 border-b border-gray-300">
-            India
-        </div>
-        <div class="flex flex-wrap justify-between px-8 py-3">
-            <div class="flex space-x-6">
-                <a href="#" class="hover:underline">About</a>
-                <a href="#" class="hover:underline">Advertising</a>
-                <a href="#" class="hover:underline">Business</a>
-                <a href="#" class="hover:underline">How Search works</a>
-            </div>
-            <div class="flex space-x-6">
-                <a href="#" class="hover:underline">Privacy</a>
-                <a href="#" class="hover:underline">Terms</a>
-                <a href="#" class="hover:underline">Settings</a>
-            </div>
-        </div>
-    </footer>
-
-</body>
+    </body>
 </html>
