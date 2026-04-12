@@ -1,759 +1,631 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vasuki iTech Services - Professional Solutions</title>
-    <style>
-        @font-face {
-            font-family: 'CustomFont';
-            src: url('font.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'HeadingFont';
-            src: url('custom.ttf') format('truetype');
-        }
-
-        body {
-            font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        h1, h2, h3, .cta-title, .logo {
-            font-family: 'HeadingFont', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-        :root {
-            --cream: #F9F7EC;
-            --cream-light: #F4F1DC;
-            --yellow: #F0EC8F;
-            --yellow-dark: #E0DC6E;
-            --gray-50: #FAFAFA;
-            --gray-100: #F5F5F5;
-            --gray-200: #E8E8E8;
-            --gray-300: #D6D6D6;
-            --gray-400: #B0B0B0;
-            --gray-500: #8A8A8A;
-            --gray-600: #6B6B6B;
-            --gray-700: #545454;
-            --gray-800: #383838;
-            --gray-900: #1E1E1E;
-            --shadow-sm: none;
-            --shadow-md: none;
-            --shadow-lg: none;
-            --border-radius: 8px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--cream) 0%, var(--gray-50) 100%);
-            color: var(--gray-800);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        /* Header */
-        header {
-            background: white;
-            border-bottom: 1px solid var(--gray-200);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: black;
-            text-decoration: none;
-        }
-
-        .logo img {
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-        }
-
-        .logo-accent {
-            color: var(--yellow-dark);
-        }
-
-        .nav-actions {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        /* Hero Section - Bigger */
-        .hero {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 6rem 2rem;
-            text-align: center;
-            min-height: 70vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 400;
-            color: var(--gray-900);
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-        }
-
-        .hero-subtitle {
-            font-size: 1.5rem;
-            color: var(--gray-600);
-            margin-bottom: 3rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-
-        /* Services Grid */
-        .services-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .service-card {
-            background: white;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--gray-200);
-            padding: 2rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--yellow), var(--yellow-dark));
-        }
-
-        .service-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--yellow);
-        }
-
-        .service-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--cream-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .service-icon i {
-            font-size: 28px;
-            color: var(--yellow-dark);
-        }
-
-        .service-title {
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: var(--gray-900);
-            margin-bottom: 1rem;
-        }
-
-        .service-description {
-            color: var(--gray-600);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        .revenue-info {
-            background: var(--cream);
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            border-left: 4px solid var(--yellow);
-        }
-
-        .revenue-label {
-            font-size: 0.875rem;
-            font-weight: 400;
-            color: var(--gray-700);
-            margin-bottom: 0.5rem;
-        }
-
-        .revenue-amount {
-            font-size: 1.25rem;
-            font-weight: 400;
-            color: var(--gray-900);
-        }
-
-        /* CTA Section */
-        .cta-section {
-            background: white;
-            border-radius: var(--border-radius);
-            border: 1px solid var(--gray-200);
-            padding: 4rem;
-            text-align: center;
-            margin: 3rem auto;
-            max-width: 900px;
-        }
-
-        .cta-title {
-            font-size: 2.5rem;
-            font-weight: 400;
-            color: var(--gray-900);
-            margin-bottom: 1.5rem;
-        }
-
-        .cta-title .vasuki {
-            color: black;
-        }
-
-        .cta-title .itech {
-            color: var(--yellow-dark);
-        }
-
-        .cta-description {
-            font-size: 1.25rem;
-            color: var(--gray-600);
-            margin-bottom: 3rem;
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.875rem 2rem;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-weight: 400;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .btn-primary {
-            background: var(--gray-800);
-            color: var(--yellow);
-        }
-
-        .btn-primary:hover {
-            background: var(--gray-900);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--gray-600);
-            border: 1px solid var(--gray-300);
-        }
-
-        .btn-secondary:hover {
-            background: var(--gray-100);
-            border-color: var(--gray-400);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-
-        /* Social Media Buttons */
-        .social-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--gray-200);
-        }
-
-        .social-title {
-            font-size: 1rem;
-            color: var(--gray-600);
-            margin-bottom: 1rem;
-        }
-
-        .social-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .social-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border: 1px solid var(--gray-300);
-            border-radius: var(--border-radius);
-            background: white;
-            color: var(--gray-700);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .social-btn:hover {
-            background: var(--gray-50);
-            border-color: var(--gray-400);
-            transform: translateY(-1px);
-        }
-
-        .social-btn i {
-            font-size: 18px;
-        }
-
-        .social-btn.instagram {
-            color: #E4405F;
-            border-color: #E4405F;
-        }
-
-        .social-btn.instagram:hover {
-            background: #FFF5F7;
-        }
-
-        .social-btn.dev {
-            color: #333333;
-            border-color: #333333;
-        }
-
-        .social-btn.dev:hover {
-            background: #F5F5F5;
-        }
-
-        /* Footer */
-        footer {
-            background: white;
-            border-top: 1px solid var(--gray-200);
-            margin-top: 6rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        .footer-text {
-            color: var(--gray-600);
-            font-size: 0.875rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.25rem;
-            }
-
-            .hero {
-                padding: 4rem 1.5rem;
-                min-height: 60vh;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .service-card {
-                padding: 1.5rem;
-            }
-
-            .cta-section {
-                padding: 2.5rem 1.5rem;
-            }
-
-            .cta-title {
-                font-size: 2rem;
-            }
-
-            nav {
-                padding: 1rem;
-            }
-
-            .logo {
-                font-size: 1.25rem;
-            }
-
-            .nav-actions .btn-secondary {
-                display: none;
-            }
-
-            .nav-actions .btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.875rem;
-            }
-
-            .btn-group {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
-            }
-
-            .social-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .social-btn {
-                width: 100%;
-                max-width: 250px;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 1.9rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1rem;
-            }
-
-            .hero {
-                padding: 3rem 1rem;
-                min-height: auto;
-            }
-
-            .services-container {
-                padding: 1rem;
-            }
-
-            .service-card {
-                padding: 1.25rem;
-            }
-
-            .service-title {
-                font-size: 1.2rem;
-            }
-
-            .cta-section {
-                padding: 2rem 1rem;
-                margin: 1.5rem auto;
-            }
-
-            .cta-title {
-                font-size: 1.6rem;
-            }
-
-            .cta-description {
-                font-size: 1rem;
-            }
-
-            .revenue-amount {
-                font-size: 1rem;
-            }
-
-            .footer-content {
-                padding: 2rem 1rem;
-            }
-        }
-
-        /* Loading Animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .service-card {
-            animation: fadeIn 0.8s ease-out;
-            animation-fill-mode: both;
-        }
-
-        .service-card:nth-child(1) { animation-delay: 0.1s; }
-        .service-card:nth-child(2) { animation-delay: 0.2s; }
-        .service-card:nth-child(3) { animation-delay: 0.3s; }
-        .service-card:nth-child(4) { animation-delay: 0.4s; }
-        .service-card:nth-child(5) { animation-delay: 0.5s; }
-
-        /* Material UI Elevation */
-        .elevation-1 {
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-        }
-
-        .elevation-2 {
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-        }
-
-        .elevation-4 {
-            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-        }
-
-        /* Smooth scroll behavior */
-        html {
-            scroll-behavior: smooth;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasuki iTech Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:16px}
+
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:#f7f7f5;
+  color:#111;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ── TOP NAV (exact Ultrahuman style) ── */
+.topnav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(18,18,18,0.96);
+  backdrop-filter:blur(12px);
+  height:44px;
+  display:flex;align-items:center;
+  padding:0 1.5rem;
+  gap:2rem;
+}
+.topnav-logo{
+  width:22px;height:22px;
+  background:#fff;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  flex-shrink:0;
+}
+.topnav-links{
+  display:flex;gap:1.4rem;list-style:none;
+}
+.topnav-links a{
+  font-size:0.72rem;font-weight:400;
+  color:rgba(255,255,255,0.75);
+  text-decoration:none;letter-spacing:0.01em;
+  white-space:nowrap;
+  transition:color .2s;
+}
+.topnav-links a:hover{color:#fff}
+.topnav-right{
+  margin-left:auto;display:flex;gap:1rem;align-items:center;
+}
+.topnav-right a{
+  font-size:0.72rem;color:rgba(255,255,255,0.7);
+  text-decoration:none;
+}
+.btn-buy{
+  background:#2563eb;color:#fff;
+  border:none;border-radius:100px;
+  padding:0.35rem 1.1rem;
+  font-size:0.72rem;font-weight:500;
+  cursor:pointer;text-decoration:none;
+  transition:background .2s;
+}
+.btn-buy:hover{background:#1d4ed8}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  min-height:100vh;
+  background:#f7f7f5;
+  display:flex;flex-direction:column;
+  align-items:center;
+  overflow:hidden;
+}
+.hero-text{
+  padding-top:100px;
+  text-align:center;
+  z-index:2;
+  position:relative;
+}
+.hero-eyebrow{
+  font-size:0.7rem;font-weight:500;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:#555;margin-bottom:0.6rem;
+}
+.hero-title{
+  font-size:clamp(2.6rem,5.5vw,4.8rem);
+  font-weight:600;letter-spacing:-0.03em;
+  line-height:1.05;color:#0a0a0a;
+  margin-bottom:0.5rem;
+}
+.hero-sub{
+  font-size:1rem;font-weight:300;
+  color:#555;margin-bottom:1.8rem;
+  letter-spacing:0.01em;
+}
+.hero-btns{
+  display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;
+}
+.btn-primary{
+  background:#2563eb;color:#fff;
+  border:none;border-radius:100px;
+  padding:0.65rem 1.8rem;
+  font-size:0.88rem;font-weight:500;
+  cursor:pointer;text-decoration:none;
+  transition:background .2s,transform .2s;
+}
+.btn-primary:hover{background:#1d4ed8;transform:translateY(-1px)}
+.btn-outline{
+  background:#eee;color:#222;
+  border:none;border-radius:100px;
+  padding:0.65rem 1.8rem;
+  font-size:0.88rem;font-weight:400;
+  cursor:pointer;text-decoration:none;
+  transition:background .2s;
+}
+.btn-outline:hover{background:#e0e0e0}
+
+/* Hero image area */
+.hero-img-wrap{
+  width:100%;
+  max-width:900px;
+  margin-top:2rem;
+  position:relative;
+  z-index:1;
+}
+/* Abstract product visual — geometric SVG placeholder */
+.hero-product{
+  width:100%;
+  display:block;
+}
+
+/* ── TICKER ── */
+.ticker{
+  background:#111;color:rgba(255,255,255,0.55);
+  font-size:0.72rem;font-weight:400;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.65rem 0;overflow:hidden;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+.ticker-track{
+  display:flex;gap:3rem;
+  animation:ticker 18s linear infinite;
+  width:max-content;
+}
+.ticker-dot{color:#2563eb;margin:0 0.5rem}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTION COMMON ── */
+section{padding:6rem 1.5rem}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{
+  font-size:0.7rem;font-weight:500;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:#2563eb;margin-bottom:1rem;
+}
+.section-title{
+  font-size:clamp(2rem,3.5vw,3rem);
+  font-weight:600;letter-spacing:-0.025em;
+  line-height:1.1;color:#0a0a0a;
+  margin-bottom:1rem;
+}
+.section-desc{
+  font-size:1rem;color:#666;
+  max-width:520px;line-height:1.65;
+  font-weight:300;
+}
+
+/* ── SERVICES GRID ── */
+.services-section{background:#fff;border-top:1px solid #e8e8e8}
+.grid-services{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:#e8e8e8;
+  border:1px solid #e8e8e8;
+  border-radius:16px;
+  overflow:hidden;
+  margin-top:3.5rem;
+}
+.svc{
+  background:#fff;
+  padding:2.5rem 2rem;
+  transition:background .25s;
+}
+.svc:hover{background:#fafafa}
+.svc-num{
+  font-size:0.7rem;font-weight:500;
+  color:#aaa;letter-spacing:0.08em;
+  margin-bottom:1.5rem;
+}
+.svc-icon{
+  width:40px;height:40px;
+  background:#f0f4ff;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;margin-bottom:1.25rem;
+}
+.svc-name{
+  font-size:1.05rem;font-weight:600;
+  color:#0a0a0a;margin-bottom:0.6rem;
+  letter-spacing:-0.01em;line-height:1.3;
+}
+.svc-desc{
+  font-size:0.85rem;color:#666;
+  line-height:1.6;font-weight:300;
+  margin-bottom:1.25rem;
+}
+.svc-price{
+  display:inline-block;
+  font-size:0.75rem;font-weight:500;
+  color:#2563eb;
+  background:#eff6ff;
+  padding:0.3rem 0.75rem;
+  border-radius:100px;
+  letter-spacing:0.01em;
+}
+/* Wide card */
+.svc-wide{grid-column:span 2}
+
+/* ── STATS ── */
+.stats-section{background:#0a0a0a}
+.stats-section .section-title,.stats-section .section-label{color:#f0f0f0}
+.stats-section .section-label{color:#2563eb}
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  overflow:hidden;
+  margin-top:3.5rem;
+}
+.stat{
+  padding:3rem 2rem;
+  text-align:center;
+  border-right:1px solid rgba(255,255,255,0.08);
+}
+.stat:last-child{border-right:none}
+.stat-num{
+  font-size:3rem;font-weight:600;
+  color:#fff;letter-spacing:-0.04em;
+  line-height:1;margin-bottom:0.5rem;
+}
+.stat-num span{color:#2563eb}
+.stat-label{
+  font-size:0.78rem;font-weight:400;
+  color:rgba(255,255,255,0.4);
+  letter-spacing:0.08em;text-transform:uppercase;
+}
+
+/* ── PROCESS ── */
+.process-section{background:#f7f7f5;border-top:1px solid #e8e8e8}
+.steps{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1.5rem;margin-top:3.5rem;
+}
+.step{
+  background:#fff;
+  border:1px solid #e8e8e8;
+  border-radius:14px;
+  padding:2rem 1.5rem;
+}
+.step-num{
+  width:32px;height:32px;
+  border-radius:50%;
+  background:#0a0a0a;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.78rem;font-weight:600;
+  margin-bottom:1.25rem;
+}
+.step-title{
+  font-size:0.95rem;font-weight:600;
+  color:#0a0a0a;margin-bottom:0.5rem;
+}
+.step-text{
+  font-size:0.82rem;color:#666;line-height:1.6;font-weight:300;
+}
+
+/* ── CTA ── */
+.cta-section{
+  background:#0a0a0a;
+  text-align:center;
+  padding:8rem 1.5rem;
+}
+.cta-section .section-title{color:#fff;max-width:700px;margin:0 auto 1rem}
+.cta-section .section-label{display:block;margin-bottom:1.5rem}
+.cta-section p{
+  color:rgba(255,255,255,0.45);
+  font-size:1rem;font-weight:300;
+  max-width:420px;margin:0 auto 2.5rem;line-height:1.7;
+}
+.social-row{
+  display:flex;gap:0.75rem;justify-content:center;margin-top:2rem;
+}
+.social-pill{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  padding:0.5rem 1.2rem;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:100px;
+  font-size:0.78rem;color:rgba(255,255,255,0.5);
+  text-decoration:none;
+  transition:all .25s;
+}
+.social-pill:hover{border-color:rgba(255,255,255,0.3);color:#fff}
+
+/* ── FOOTER ── */
+footer{
+  background:#080808;
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding:2rem 1.5rem;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:1rem;
+}
+.footer-brand{
+  font-size:0.85rem;font-weight:500;
+  color:rgba(255,255,255,0.35);
+}
+.footer-brand strong{color:rgba(255,255,255,0.6)}
+.footer-copy{
+  font-size:0.72rem;
+  color:rgba(255,255,255,0.18);
+}
+
+/* ── REVEAL ── */
+.reveal{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);
+}
+.reveal.on{opacity:1;transform:translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .topnav-links{display:none}
+  .grid-services{grid-template-columns:1fr;border-radius:12px}
+  .svc-wide{grid-column:span 1}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .stat{border-right:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+  .steps{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr}
+  footer{flex-direction:column;text-align:center}
+}
+</style>
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="../index.html" class="logo">
-                <img src="logo.jpg" alt="Vasuki iTech Logo">
-                <span>Vasuki</span>
-                <span class="logo-accent">iTech</span>
-            </a>
-            <div class="nav-actions" id="navActions">
-                <a href="#services" class="btn btn-secondary">Services</a>
-                <a href="#contact" class="btn btn-primary">Get Started</a>
-            </div>
-        </nav>
-    </header>
 
-    <section class="hero">
-        <h1>Professional Services for Modern Businesses</h1>
-        <p class="hero-subtitle">
-            Start generating revenue this month with our proven service offerings. 
-            Built on the Vasuki Cloud ecosystem, designed for immediate results.
-        </p>
-    </section>
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="topnav-logo"></div>
+  <ul class="topnav-links">
+    <li><a href="#services">AI Employee</a></li>
+    <li><a href="#services">Website Audit</a></li>
+    <li><a href="#services">Tech Support</a></li>
+    <li><a href="#services">Cloud Storage</a></li>
+    <li><a href="#services">MVP Dev</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="topnav-right">
+    <a href="https://www.instagram.com/vasuki.itech" target="_blank">Follow</a>
+    <a href="https://vasuki.cloud/view-form.html?id=f-p9scgp" target="_blank" class="btn-buy">Get Started</a>
+  </div>
+</nav>
 
-    <div class="services-container" id="services">
-        <div class="services-grid">
-            <!-- Service 1: AI Employee -->
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="material-icons">smart_toy</i>
-                </div>
-                <h3 class="service-title">AI Employee for Local Businesses</h3>
-                <p class="service-description">
-                    Custom AI chatbots built with Vaimanika technology. Handle WhatsApp/Instagram queries 
-                    and book appointments 24/7 for real estate agents, clinics, and gyms.
-                </p>
-                <div class="revenue-info">
-                    <div class="revenue-label">Revenue Potential</div>
-                    <div class="revenue-amount">₹5,000 - ₹10,000 setup + monthly maintenance</div>
-                </div>
-            </div>
-
-            <!-- Service 2: Website Health Check -->
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="material-icons">speed</i>
-                </div>
-                <h3 class="service-title">Website Health Check & Optimization</h3>
-                <p class="service-description">
-                    Professional speed and SEO audits for small businesses. Fix loading speeds, 
-                    mobile responsiveness, and basic SEO issues that hurt conversions.
-                </p>
-                <div class="revenue-info">
-                    <div class="revenue-label">Revenue Potential</div>
-                    <div class="revenue-amount">₹2,000 per audit + ₹10,000+ for fixes</div>
-                </div>
-            </div>
-
-            <!-- Service 3: Technical Support AMC -->
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="material-icons">support_agent</i>
-                </div>
-                <h3 class="service-title">Subscription-based Technical Support</h3>
-                <p class="service-description">
-                    Annual Maintenance Contracts for small offices. Handle professional emails, 
-                    cloud backups using Guppt technology, and security management.
-                </p>
-                <div class="revenue-info">
-                    <div class="revenue-label">Revenue Potential</div>
-                    <div class="revenue-amount">₹1,000 - ₹2,000 per month per client</div>
-                </div>
-            </div>
-
-            <!-- Service 4: White-Label Cloud Storage -->
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="material-icons">cloud</i>
-                </div>
-                <h3 class="service-title">White-Label Cloud Storage for Education</h3>
-                <p class="service-description">
-                    Branded Guppt storage solutions for schools and colleges. Secure storage for 
-                    study materials, student records, and collaborative learning.
-                </p>
-                <div class="revenue-info">
-                    <div class="revenue-label">Revenue Potential</div>
-                    <div class="revenue-amount">Per-student or annual license fees</div>
-                </div>
-            </div>
-
-            <!-- Service 5: Content-to-Code Service -->
-            <div class="service-card">
-                <div class="service-icon">
-                    <i class="material-icons">code</i>
-                </div>
-                <h3 class="service-title">Content-to-Code MVP Development</h3>
-                <p class="service-description">
-                    Rapid MVP development using Argon/Vypaar frameworks. Transform startup ideas 
-                    into functional products with our proven development stack.
-                </p>
-                <div class="revenue-info">
-                    <div class="revenue-label">Revenue Potential</div>
-                    <div class="revenue-amount">₹25,000 - ₹50,000 per project</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- CTA Section -->
-        <div class="cta-section" id="contact">
-            <h2 class="cta-title">
-                <span class="vasuki">Vasuki iTech</span> - <span class="itech">Services</span>
-            </h2>
-            <p class="cta-description">
-                <span style="color: black;">Vasuki iTech</span> - Ready to Start Your First Service?
-            </p>
-            <div class="btn-group">
-                <a href="https://vasuki.cloud/view-form.html?id=f-p9scgp" target="_blank" class="btn btn-primary">
-                    <i class="material-icons">description</i>
-                    Form
-                </a>
-                <a href="/cdn-cgi/l/email-protection#81e2eee5e4e2edf4f5e2e9afe0e5e0ecf8e0f3e0eec1e6ece0e8edafe2eeec" class="btn btn-secondary">
-                    <i class="material-icons">email</i>
-                    Contact Sales
-                </a>
-            </div>
-
-            <!-- Social Media Buttons -->
-            <div class="social-section">
-                <div class="social-title">
-                    <span style="color: black;">Vasuki iTech</span> - Connect with us on social media
-                </div>
-                <div class="social-buttons">
-                    <a href="https://www.instagram.com/vasuki.itech" target="_blank" class="social-btn instagram">
-                        <img src="instagram.png" alt="Instagram" style="width: 18px; height: 18px;">
-                    </a>
-                    <a href="https://dev.to/adamya_khairwal_9d2286eac" target="_blank" class="social-btn dev">
-                        <i class="material-icons">code</i>
-                        DEV
-                    </a>
-                </div>
-            </div>
-        </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">New Services · 2025</div>
+    <h1 class="hero-title">Vasuki iTech</h1>
+    <p class="hero-sub">Professional Services by Design</p>
+    <div class="hero-btns">
+      <a href="https://vasuki.cloud/view-form.html?id=f-p9scgp" target="_blank" class="btn-primary">Start a project</a>
+      <a href="#services" class="btn-outline">Learn more</a>
     </div>
+  </div>
 
-    <footer>
-        <div class="footer-content">
-            <p class="footer-text">
-                <span style="color: black;">Vasuki iTech</span> - Professional services built on the Vasuki Cloud ecosystem. 
-                All services designed for immediate revenue generation.
-            </p>
-        </div>
-    </footer>
+  <!-- Abstract product visual -->
+  <div class="hero-img-wrap">
+    <svg class="hero-product" viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#2563eb" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#f0f0f0" stop-opacity="1"/>
+        </linearGradient>
+        <linearGradient id="cardGrad2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a0a0a" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#1a1a1a" stop-opacity="1"/>
+        </linearGradient>
+        <filter id="soft"><feGaussianBlur stdDeviation="8" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter>
+      </defs>
 
-    <!-- Lenis Smooth Scroll -->
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/@studio-freight/lenis@1.0.27/dist/lenis.min.js"></script>
-    <script>
-        // Initialize Lenis for smooth scrolling
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            direction: 'vertical',
-            gestureDirection: 'vertical',
-            smooth: true,
-            mouseMultiplier: 1,
-            smoothTouch: false,
-            touchMultiplier: 2,
-            infinite: false,
-        });
+      <!-- Background glow -->
+      <ellipse cx="450" cy="260" rx="320" ry="160" fill="url(#glow)"/>
 
-        // Connect Lenis to requestAnimationFrame
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
+      <!-- Main card — white -->
+      <rect x="220" y="60" width="460" height="280" rx="24" fill="url(#cardGrad)" stroke="#e0e0e0" stroke-width="1"/>
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    lenis.scrollTo(target, {
-                        offset: -80,
-                        duration: 1.5
-                    });
-                }
-            });
-        });
+      <!-- Card header -->
+      <rect x="220" y="60" width="460" height="56" rx="24" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
+      <rect x="220" y="92" width="460" height="24" fill="#fafafa"/>
 
-        // Add scroll effect to header
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.borderBottom = '2px solid var(--gray-300)';
-            } else {
-                header.style.borderBottom = '1px solid var(--gray-200)';
-            }
-        });
+      <!-- Logo dot on card -->
+      <circle cx="252" cy="88" r="10" fill="#0a0a0a"/>
+      <text x="280" y="93" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#0a0a0a">Vasuki iTech Services</text>
+      <circle cx="648" cy="88" r="4" fill="#22c55e"/>
+      <text x="630" y="91" font-family="Inter,sans-serif" font-size="9" fill="#aaa">Active</text>
 
-        // Service card hover effect enhancement
-        document.querySelectorAll('.service-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-2px)';
-            });
+      <!-- Metrics row on card -->
+      <rect x="244" y="132" width="120" height="64" rx="10" fill="#f0f4ff"/>
+      <text x="304" y="157" font-family="Inter,sans-serif" font-size="18" font-weight="700" fill="#2563eb" text-anchor="middle">₹50K</text>
+      <text x="304" y="174" font-family="Inter,sans-serif" font-size="9" fill="#6b7280" text-anchor="middle">Max project</text>
 
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
+      <rect x="380" y="132" width="120" height="64" rx="10" fill="#f0fdf4"/>
+      <text x="440" y="157" font-family="Inter,sans-serif" font-size="18" font-weight="700" fill="#16a34a" text-anchor="middle">24/7</text>
+      <text x="440" y="174" font-family="Inter,sans-serif" font-size="9" fill="#6b7280" text-anchor="middle">AI uptime</text>
 
-        // Add parallax effect to hero section
-        window.addEventListener('scroll', function() {
-            const hero = document.querySelector('.hero');
-            const scrolled = window.pageYOffset;
-            const rate = 
+      <rect x="516" y="132" width="120" height="64" rx="10" fill="#fef9ec"/>
+      <text x="576" y="157" font-family="Inter,sans-serif" font-size="18" font-weight="700" fill="#d97706" text-anchor="middle">5</text>
+      <text x="576" y="174" font-family="Inter,sans-serif" font-size="9" fill="#6b7280" text-anchor="middle">Services live</text>
+
+      <!-- Service list rows -->
+      <line x1="244" y1="218" x2="636" y2="218" stroke="#e8e8e8" stroke-width="0.5"/>
+      <circle cx="258" cy="236" r="5" fill="#2563eb" fill-opacity="0.15"/>
+      <circle cx="258" cy="236" r="2.5" fill="#2563eb"/>
+      <text x="274" y="240" font-family="Inter,sans-serif" font-size="10" fill="#333">AI Employee for Local Businesses</text>
+      <rect x="570" y="229" width="56" height="14" rx="7" fill="#eff6ff"/>
+      <text x="598" y="239" font-family="Inter,sans-serif" font-size="8" fill="#2563eb" text-anchor="middle">₹5K–10K</text>
+
+      <line x1="244" y1="258" x2="636" y2="258" stroke="#e8e8e8" stroke-width="0.5"/>
+      <circle cx="258" cy="276" r="5" fill="#16a34a" fill-opacity="0.15"/>
+      <circle cx="258" cy="276" r="2.5" fill="#16a34a"/>
+      <text x="274" y="280" font-family="Inter,sans-serif" font-size="10" fill="#333">MVP Development · Content to Code</text>
+      <rect x="548" y="269" width="78" height="14" rx="7" fill="#f0fdf4"/>
+      <text x="587" y="279" font-family="Inter,sans-serif" font-size="8" fill="#16a34a" text-anchor="middle">₹25K–50K</text>
+
+      <!-- Floating dark card -->
+      <rect x="580" y="200" width="200" height="120" rx="16" fill="url(#cardGrad2)" opacity="0.95"/>
+      <text x="600" y="228" font-family="Inter,sans-serif" font-size="9" fill="rgba(255,255,255,0.5)" letter-spacing="1">MONTHLY REVENUE</text>
+      <text x="600" y="256" font-family="Inter,sans-serif" font-size="28" font-weight="700" fill="#fff">₹2K</text>
+      <text x="652" y="256" font-family="Inter,sans-serif" font-size="10" fill="#22c55e">+per client</text>
+      <rect x="600" y="270" width="80" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+      <rect x="600" y="270" width="52" height="3" rx="1.5" fill="#2563eb"/>
+      <text x="600" y="298" font-family="Inter,sans-serif" font-size="8" fill="rgba(255,255,255,0.35)">Tech Support AMC · per client</text>
+
+      <!-- Small floating badge -->
+      <rect x="120" y="170" width="130" height="56" rx="12" fill="#0a0a0a"/>
+      <text x="185" y="196" font-family="Inter,sans-serif" font-size="8" fill="rgba(255,255,255,0.45)" text-anchor="middle">VASUKI CLOUD</text>
+      <text x="185" y="216" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#fff" text-anchor="middle">Guppt + Vaimanika</text>
+    </svg>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>AI Employees</span><span class="ticker-dot">·</span>
+    <span>Website Audits</span><span class="ticker-dot">·</span>
+    <span>Tech Support AMC</span><span class="ticker-dot">·</span>
+    <span>White-Label Cloud</span><span class="ticker-dot">·</span>
+    <span>MVP Development</span><span class="ticker-dot">·</span>
+    <span>Vasuki Cloud Ecosystem</span><span class="ticker-dot">·</span>
+    <span>Guppt Storage</span><span class="ticker-dot">·</span>
+    <span>Vaimanika AI</span><span class="ticker-dot">·</span>
+    <!-- repeat -->
+    <span>AI Employees</span><span class="ticker-dot">·</span>
+    <span>Website Audits</span><span class="ticker-dot">·</span>
+    <span>Tech Support AMC</span><span class="ticker-dot">·</span>
+    <span>White-Label Cloud</span><span class="ticker-dot">·</span>
+    <span>MVP Development</span><span class="ticker-dot">·</span>
+    <span>Vasuki Cloud Ecosystem</span><span class="ticker-dot">·</span>
+    <span>Guppt Storage</span><span class="ticker-dot">·</span>
+    <span>Vaimanika AI</span><span class="ticker-dot">·</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services-section" id="services">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">Services</div>
+      <h2 class="section-title">Five ways to grow<br>your business</h2>
+      <p class="section-desc">Built on the Vasuki Cloud ecosystem. Revenue from month one.</p>
+    </div>
+    <div class="grid-services reveal">
+
+      <div class="svc svc-wide">
+        <div class="svc-num">01</div>
+        <div class="svc-icon">🤖</div>
+        <div class="svc-name">AI Employee for Local Businesses</div>
+        <p class="svc-desc">Custom AI chatbots via Vaimanika. Handles WhatsApp & Instagram queries, books appointments 24/7 for real estate agents, clinics, and gyms — while you sleep.</p>
+        <span class="svc-price">₹5,000 – ₹10,000 setup + monthly</span>
+      </div>
+
+      <div class="svc">
+        <div class="svc-num">02</div>
+        <div class="svc-icon">⚡</div>
+        <div class="svc-name">Website Health Check</div>
+        <p class="svc-desc">Speed, SEO & mobile audits. Fix the issues that silently kill conversions. Delivered fast.</p>
+        <span class="svc-price">₹2,000 audit · ₹10,000+ fixes</span>
+      </div>
+
+      <div class="svc">
+        <div class="svc-num">03</div>
+        <div class="svc-icon">🛡️</div>
+        <div class="svc-name">Tech Support AMC</div>
+        <p class="svc-desc">Subscription IT care for small offices. Emails, Guppt cloud backups, security — all managed.</p>
+        <span class="svc-price">₹1,000 – ₹2,000 / client / month</span>
+      </div>
+
+      <div class="svc">
+        <div class="svc-num">04</div>
+        <div class="svc-icon">☁️</div>
+        <div class="svc-name">White-Label Cloud Storage</div>
+        <p class="svc-desc">Branded Guppt storage for schools & colleges. Study materials, records, collaboration — secured.</p>
+        <span class="svc-price">Per-student or annual license</span>
+      </div>
+
+      <div class="svc">
+        <div class="svc-num">05</div>
+        <div class="svc-icon">🚀</div>
+        <div class="svc-name">MVP Development</div>
+        <p class="svc-desc">Rapid builds using Argon/Vypaar. Idea to working product in weeks, not months.</p>
+        <span class="svc-price">₹25,000 – ₹50,000 / project</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">By the numbers</div>
+      <h2 class="section-title" style="color:#fff">Performance<br>by Design</h2>
+    </div>
+    <div class="stats-grid reveal">
+      <div class="stat">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Core Services</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">24<span>/7</span></div>
+        <div class="stat-label">AI Uptime</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">₹<span>50K</span></div>
+        <div class="stat-label">Max Project Value</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num"><span>∞</span></div>
+        <div class="stat-label">Scalability</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process-section">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">How it works</div>
+      <h2 class="section-title">Simple to start</h2>
+    </div>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Fill the form</div>
+        <p class="step-text">Tell us what you need. Takes 2 minutes. We read every submission.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">We scope it</div>
+        <p class="step-text">We send a clear plan with timelines and pricing within one business day.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">We build it</div>
+        <p class="step-text">Work starts immediately. No slow back-and-forth.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-title">You grow</div>
+        <p class="step-text">Live product, ongoing support, and measurable results from month one.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-label">Ready to begin</div>
+  <h2 class="section-title">Start your first<br>service today</h2>
+  <p>Fill the form and we'll respond within one business day with a clear plan and pricing.</p>
+  <div class="hero-btns">
+    <a href="https://vasuki.cloud/view-form.html?id=f-p9scgp" target="_blank" class="btn-primary">Fill the form</a>
+    <a href="mailto:hello@vasuki.cloud" class="btn-outline" style="background:rgba(255,255,255,0.08);color:#fff;">Email Sales →</a>
+  </div>
+  <div class="social-row">
+    <a href="https://www.instagram.com/vasuki.itech" target="_blank" class="social-pill">📸 Instagram</a>
+    <a href="https://dev.to/adamya_khairwal_9d2286eac" target="_blank" class="social-pill">⌨️ DEV.to</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand"><strong>Vasuki iTech</strong> Services</div>
+  <div class="footer-copy">© 2025 Vasuki iTech. Built on the Vasuki Cloud ecosystem.</div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => {
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('on'), i*80);
+    }
+  });
+},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+window.addEventListener('scroll',()=>{
+  document.querySelector('.topnav').style.borderBottom =
+    window.scrollY > 10 ? '1px solid rgba(255,255,255,0.06)' : 'none';
+});
+</script>
+</body>
+</html>
