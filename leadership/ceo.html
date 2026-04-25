@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vasuki Leadership - Adamya R. Khairwal</title>
+    <style>
+        /* Base Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: arial;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #1d1d1f;
+        }
+
+        /* Nav Bar */
+        nav {
+            background: rgb(0, 0, 0);
+            height: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            color: #f5f5f7;
+            font-size: 12px;
+            padding: 0 20px;
+            cursor: pointer;
+        }
+
+        /* Header Section */
+        .hero-section {
+            background-color: #f5f5f7;
+            padding-top: 60px;
+            text-align: center;
+            max-height: 40dvh;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 22px;
+        }
+
+        .header-title {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-text {
+            text-align: left;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .profile-text h1 {
+            font-size: 40px;
+            font-weight: 600;
+        }
+
+        .profile-text h2 {
+            font-size: 24px;
+            font-weight: 400;
+            color: #6e6e73;
+        }
+
+        /* Placeholder for Image */
+        .image-container {
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 1 / 1;
+            margin-top: 20px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: hidden;
+            transform: translateY(-5vh);
+        }
+
+        /* To mimic Tim Cook's photo style */
+        .image-placeholder {
+            width: 90%;
+            height: 90%;
+            border-radius: 50% 50% 0 0;
+        }
+
+        /* Content Section */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 60px 0;
+            line-height: 1.6;
+            font-size: 17px;
+            color: #1d1d1f;
+        }
+
+        .content-grid p {
+            margin-bottom: 20px;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 734px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-text h1 { font-size: 32px; }
+            .profile-text h2 { font-size: 19px; }
+                        .hero-section{
+                max-height: 47dvh;
+            }
+        }
+
+        @media (min-width: 735px) {
+            .profile-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-end;
+            }
+
+
+            .profile-text {
+                margin-bottom: 120px;
+            }
+        }
+
+        .logo
+    {
+        width: 65px;
+    }
+
+    strong {
+        font-weight: 500;
+    }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <span onclick="window.location.href='https://www.vasuki.cloud'">Vasuki Cloud</span><span onclick="window.location.href='https://www.vasuki.cloud/ai'">Vaimanika AI</span>
+        <img src="./src/assets/InShot_20260107_212844101 - Copy.png" alt="" class="logo">
+        <span onclick="window.location.href='https://www.vasuki.cloud/io'">IO '26</span><span onclick="window.location.href='https://www.vasuki.cloud/signup'">Get Started</span>
+    </nav>
+
+    <div class="hero-section">
+        <div class="container">
+            <p class="header-title">Vasuki iTech Leadership</p>
+            <div class="profile-header">
+                <div class="profile-text">
+                    <h1>Adamya R. Khairwal</h1>
+                    <h2>Chief Executive Officer | Chief Architect</h2>
+                </div>
+                <div class="image-container">
+                    <!-- Replace the div below with an <img> tag later -->
+                    <img src="./src/assets/profile-bg-blank.png" alt="" class="image-placeholder">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content-grid">
+            <div class="left-col">
+                <section id="adamya-khairwal-intro">
+    <header>
+            <article>
+        <h2>About</h2>
+        <p>
+            Based in <strong>Mahendragarh, Haryana</strong>, Adamya is a tech innovator specializing in 
+            <strong>Node.js, React, and advanced AI deployment</strong>. He focuses on building high-speed 
+            "liquid" user interfaces and managing distributed networks for cross-platform ecosystems.
+        </p>
+        
+        <h3>Key Contributions</h3>
+        <ul>
+            <li><strong>Vasuki Cloud & AI:</strong> Leading technical strategy for terminal-based hosting and enterprise web applications.</li>
+            <li><strong>Open Source:</strong> Developer of packages like <code>astra-ai</code>, <code>astra-cli</code>, and <code>vasuki-db</code> available on <a href="https://www.npmjs.com/~adamya_khairwal?activeTab=packages">NPM</a>.</li>
+            <li><strong>Achievements:</strong> Ranked in the National Top 10 for <strong>iOAI '25</strong> and is an alumnus of PW Gurukul.</li>
+        </ul>
+    </article>
+    </header>
+
+
+
+            </div>
+            <div class="right-col">
+
+
+    <aside class="education">
+        <h3>Education</h3>
+        <ul>
+            <li>
+                <strong>Indian Institute of Technology, Roorkee (2023–2025)</strong><br>
+                Diploma in Full Stack Web Development (Information Technology) – Grade: A+.
+            </li>
+            <li>
+                <strong>Indian Institute of Technology, Ropar (2025)</strong><br>
+                Business Administration and Management – Focused on entrepreneurial spirit.
+            </li>
+            <li>
+                <strong>Delhi Public School (2024–Present)</strong>.
+            </li>
+        </ul><br>
+        <h3>Contact Information</h3>
+        <p>
+            <strong>Email:</strong> codeclutch.adamyarao@gmail.com<br>
+            <strong>Phone:</strong> +91 9991901444 | +91 9416817348
+        </p>
+    </aside>
+</section>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
