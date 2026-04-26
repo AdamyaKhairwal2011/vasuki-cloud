@@ -374,7 +374,7 @@
 
     const client = google.accounts.oauth2.initCodeClient({
       // Replace with your own Google OAuth client ID
-      client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
+      client_id: '600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com',
       scope: 'email profile openid',
       ux_mode: 'popup',
       callback: async (response) => {
@@ -384,8 +384,8 @@
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
               code:          response.code,
-              client_id:     'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com',
-              client_secret: 'YOUR_GOOGLE_CLIENT_SECRET',
+              client_id:     '600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com',
+              client_secret: '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',
               redirect_uri:  'postmessage',
               grant_type:    'authorization_code'
             })
