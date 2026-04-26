@@ -242,16 +242,9 @@
     window.location.href = 'dashboard.html';
   }
 
-  async function getDB() {
-    // Replace with your Vasuki credentials
     await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
-    return vdb;
-  }
-
   async function fetchUsers() {
-    const db = await getDB();
-    // Replace 'vibe_users' and 'Sheet1' with your table/sheet name
-    return await db.fetchTable('users_rows', 'Sheet1');
+    return data = await db.fetchTable('users_rows', 'Sheet1');
   }
 
   // ── LOGIN ──
