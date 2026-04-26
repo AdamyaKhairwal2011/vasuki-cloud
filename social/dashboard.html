@@ -117,21 +117,12 @@
     .post-more:hover{background:var(--off);}
     .post-more svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;}
     .post-body{font-size:14px;color:var(--ink2);line-height:1.65;margin-bottom:12px;}
-
-    /* Hashtag & mention styles */
-    .post-hashtag{
-      color:var(--accent);font-weight:500;cursor:pointer;
-      transition:opacity .15s;text-decoration:none;display:inline;
-    }
+    .post-hashtag{color:var(--accent);font-weight:500;cursor:pointer;transition:opacity .15s;text-decoration:none;display:inline;}
     .post-hashtag:hover{opacity:.75;text-decoration:underline;}
-    .post-mention{
-      color:var(--accent);font-weight:500;cursor:pointer;
-      transition:opacity .15s;text-decoration:none;display:inline;
-    }
+    .post-mention{color:var(--accent);font-weight:500;cursor:pointer;transition:opacity .15s;text-decoration:none;display:inline;}
     .post-mention:hover{opacity:.75;text-decoration:underline;}
     .post-mention.valid-user{color:var(--accent);}
     .post-mention.invalid-user{color:var(--muted);}
-
     .post-actions{display:flex;gap:0;margin:-4px;}
     .post-action{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-family:'Geist',sans-serif;font-size:12.5px;color:var(--muted);transition:all .15s;}
     .post-action:hover{background:var(--off);color:var(--ink2);}
@@ -140,33 +131,30 @@
     .post-action.reposted{color:var(--green);}
     .post-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
 
-    /* Hashtag / Profile modal */
+    /* Modal */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;animation:fadeIn .18s ease;}
     @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-    .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:320px;max-width:400px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;}
+    .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:320px;max-width:400px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;position:relative;}
     @keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
     .modal-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:7px;border:none;background:var(--off);cursor:pointer;display:flex;align-items:center;justify-content:center;}
     .modal-close svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;}
-    .modal-box{position:relative;}
     .modal-tag{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
     .modal-title{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);margin-bottom:4px;}
     .modal-sub{font-size:13px;color:var(--muted);margin-bottom:16px;}
     .modal-posts{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;}
     .modal-post-item{background:var(--off);border-radius:9px;padding:10px 12px;font-size:13px;color:var(--ink2);line-height:1.5;}
-    .modal-profile-av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;margin:0 auto 12px;margin-bottom:12px;}
+    .modal-profile-av{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;margin:0 auto 12px;}
     .modal-profile-name{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);text-align:center;margin-bottom:2px;}
     .modal-profile-handle{font-size:13px;color:var(--muted);text-align:center;margin-bottom:16px;}
     .modal-follow-btn{width:100%;padding:9px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s;}
     .modal-follow-btn:hover{background:#222;}
 
-    /* Empty state */
+    /* Empty / Loading */
     .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;}
     .empty-icon{width:48px;height:48px;border-radius:14px;background:var(--off);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
     .empty-icon svg{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
     .empty-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:6px;}
     .empty-sub{font-size:13px;color:var(--muted);line-height:1.6;max-width:280px;}
-
-    /* Loading state */
     .loading-state{display:flex;flex-direction:column;gap:10px;padding-top:4px;}
     .skel{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;}
     .skel-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
@@ -177,7 +165,7 @@
     @keyframes shimmer{0%{opacity:.6;}50%{opacity:1;}100%{opacity:.6;}}
     .skel *{animation:shimmer 1.4s ease infinite;}
 
-    /* ── RIGHT PANEL ── */
+    /* Right panel */
     .right-col{width:300px;flex-shrink:0;display:flex;flex-direction:column;background:var(--white);overflow:hidden;}
     .right-scroll{flex:1;overflow-y:auto;padding:16px;}
     .right-scroll::-webkit-scrollbar{width:3px;}
@@ -197,8 +185,6 @@
     .profile-card-info{flex:1;min-width:0;}
     .profile-card-name{font-size:13.5px;font-weight:500;color:var(--ink);}
     .profile-card-handle{font-size:12px;color:var(--muted);}
-
-    /* Trending hashtags */
     .trending-item{display:flex;align-items:center;justify-content:space-between;padding:8px 4px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;border-radius:6px;}
     .trending-item:hover{background:var(--off);}
     .trending-item:last-child{border-bottom:none;}
@@ -280,7 +266,6 @@
 
 <!-- MAIN -->
 <div class="main">
-  <!-- FEED -->
   <div class="feed-col">
     <div class="feed-header">
       <div class="feed-title" id="page-title">Home</div>
@@ -294,13 +279,11 @@
     </div>
 
     <div class="feed-scroll" id="feed-scroll">
-      <!-- Compose Box -->
       <div class="compose-box">
         <div class="compose-top">
           <div class="av" id="compose-av">?</div>
           <textarea class="compose-input" id="compose-input" placeholder="What's on your mind? Use #hashtags and @mentions" rows="2" oninput="handleComposeInput(this)"></textarea>
         </div>
-        <!-- Autocomplete dropdown for @ mentions -->
         <div class="autocomplete-dropdown" id="autocomplete-dropdown"></div>
         <div class="compose-footer">
           <div class="compose-tools">
@@ -320,13 +303,10 @@
           </div>
         </div>
       </div>
-
-      <!-- Posts injected here -->
       <div id="posts-container"></div>
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
   <aside class="right-col">
     <div class="right-scroll">
       <div class="search-wrap">
@@ -372,23 +352,25 @@
 
   // ── AUTH GUARD ──
   const VIBE_USER     = localStorage.getItem('vibe_user');
-  const VIBE_NAME     = localStorage.getItem('vibe_name')    || 'User';
-  const VIBE_HANDLE   = localStorage.getItem('vibe_handle')  || '';
-  const VIBE_INITIALS = localStorage.getItem('vibe_initials')|| '?';
+  const VIBE_NAME     = localStorage.getItem('vibe_name')     || 'User';
+  const VIBE_HANDLE   = localStorage.getItem('vibe_handle')   || '';
+  const VIBE_INITIALS = localStorage.getItem('vibe_initials') || '?';
 
   if (!VIBE_USER) window.location.href = 'login.html';
 
-  document.getElementById('sb-av').textContent      = VIBE_INITIALS;
-  document.getElementById('sb-name').textContent    = VIBE_NAME;
-  document.getElementById('sb-handle').textContent  = VIBE_HANDLE ? '@' + VIBE_HANDLE : VIBE_USER;
-  document.getElementById('compose-av').textContent = VIBE_INITIALS;
-  document.getElementById('right-av').textContent   = VIBE_INITIALS;
-  document.getElementById('right-name').textContent = VIBE_NAME;
+  document.getElementById('sb-av').textContent        = VIBE_INITIALS;
+  document.getElementById('sb-name').textContent      = VIBE_NAME;
+  document.getElementById('sb-handle').textContent    = VIBE_HANDLE ? '@' + VIBE_HANDLE : VIBE_USER;
+  document.getElementById('compose-av').textContent   = VIBE_INITIALS;
+  document.getElementById('right-av').textContent     = VIBE_INITIALS;
+  document.getElementById('right-name').textContent   = VIBE_NAME;
   document.getElementById('right-handle').textContent = VIBE_HANDLE ? '@' + VIBE_HANDLE : VIBE_USER;
 
-  // ── DB ──
+  // ── DB: single login promise, never repeated ──
+  const dbInitPromise = vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+
   async function getDB() {
-    await vdb.login('YOUR_VASUKI_EMAIL', 'YOUR_VASUKI_PASSWORD');
+    await dbInitPromise;
     return vdb;
   }
 
@@ -397,9 +379,9 @@
 
   async function loadKnownUsers() {
     try {
-      const db = await getDB();
-      const users = await db.fetchTable('vibe_users', 'Sheet1');
-      knownUsers = (users || []).filter(u => u && u.handle);
+      const db    = await getDB();
+      const users = await db.fetchTable('users_rows', 'Sheet1');
+      knownUsers  = (users || []).filter(u => u && u.handle);
       window._knownUsers = knownUsers;
     } catch(e) { console.warn('Could not load users for mentions:', e); }
   }
@@ -467,23 +449,17 @@
     return el;
   }
 
-  // ── RENDER POST BODY: hashtags + mentions ──
+  // ── RENDER POST BODY ──
   function renderPostBody(text) {
     if (!text) return '';
-    // Escape HTML first
     let safe = escHtml(text);
-    // Replace #hashtag
-    safe = safe.replace(/#(\w+)/g, (match, tag) => {
-      return `<span class="post-hashtag" onclick="openHashtagModal('${tag}')">#${tag}</span>`;
-    });
-    // Replace @mention
-    safe = safe.replace(/@(\w+)/g, (match, handle) => {
+    safe = safe.replace(/#(\w+)/g, (_, tag) =>
+      `<span class="post-hashtag" onclick="openHashtagModal('${tag}')">#${tag}</span>`);
+    safe = safe.replace(/@(\w+)/g, (_, handle) => {
       const user = (window._knownUsers || []).find(u => u.handle && u.handle.toLowerCase() === handle.toLowerCase());
-      if (user) {
-        return `<span class="post-mention valid-user" onclick="openMentionModal('${handle}')" title="View @${handle}'s profile">@${handle}</span>`;
-      } else {
-        return `<span class="post-mention invalid-user" title="User not found">@${handle}</span>`;
-      }
+      return user
+        ? `<span class="post-mention valid-user" onclick="openMentionModal('${handle}')" title="View @${handle}'s profile">@${handle}</span>`
+        : `<span class="post-mention invalid-user" title="User not found">@${handle}</span>`;
     });
     return safe;
   }
@@ -493,8 +469,8 @@
   window.submitPost = async function () {
     const inp  = document.getElementById('compose-input');
     const body = inp.value.trim();
-    if (!body)            { showToast('Write something first!'); return; }
-    if (body.length > 280){ showToast('Too long — max 280 characters'); return; }
+    if (!body)             { showToast('Write something first!'); return; }
+    if (body.length > 280) { showToast('Too long — max 280 characters'); return; }
     const btn = document.querySelector('.btn-post');
     btn.textContent = 'Posting…'; btn.disabled = true;
     try {
@@ -516,14 +492,12 @@
     }
   };
 
-  // ── DELETE POST ──
-  window.deletePost = async function (id, btn) {
+  window.deletePost = async function (id) {
     if (!confirm('Delete this post?')) return;
     document.getElementById('post-' + id)?.remove();
     showToast('Post deleted');
   };
 
-  // ── LIKE ──
   window.toggleLike = async function (id, btn) {
     const countEl = document.getElementById('like-count-' + id);
     const liked   = btn.classList.contains('liked');
@@ -533,9 +507,8 @@
     if (!liked) showToast('Liked ❤️');
   };
 
-  // ── REPOST ──
   window.toggleRepost = async function (id, btn) {
-    const countEl = document.getElementById('repost-count-' + id);
+    const countEl  = document.getElementById('repost-count-' + id);
     const reposted = btn.classList.contains('reposted');
     const current  = parseInt(countEl.textContent.replace('k','000')) || 0;
     btn.classList.toggle('reposted');
@@ -549,151 +522,36 @@
       const db    = await getDB();
       const posts = await db.fetchTable('vibe_posts', 'Sheet1');
       const mine  = (posts || []).filter(p =>
-        (p.author_email||'').toLowerCase() === VIBE_USER.toLowerCase() ||
-        (p.author_handle||'') === VIBE_HANDLE
+        (p.author_email  || '').toLowerCase() === VIBE_USER.toLowerCase() ||
+        (p.author_handle || '') === VIBE_HANDLE
       );
-      const totalLikes = mine.reduce((s,p) => s + (parseInt(p.likes)||0), 0);
-      document.getElementById('stat-posts').textContent = mine.length;
-      document.getElementById('stat-likes').textContent = formatNum(totalLikes);
+      const totalLikes = mine.reduce((s, p) => s + (parseInt(p.likes) || 0), 0);
+      document.getElementById('stat-posts').textContent     = mine.length;
+      document.getElementById('stat-likes').textContent     = formatNum(totalLikes);
       document.getElementById('stat-followers').textContent = '—';
       document.getElementById('stat-following').textContent = '—';
-    } catch(e){ console.warn(e); }
+    } catch(e) { console.warn(e); }
   }
 
   // ── SKELETON ──
   function showSkeleton(container) {
-    container.innerHTML = Array(3).fill('').map(()=>`
+    container.innerHTML = Array(3).fill('').map(() => `
       <div class="skel">
         <div class="skel-row"><div class="skel-av"></div><div class="skel-lines"><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
         <div class="skel-line w80"></div><div class="skel-line w55" style="margin-top:6px;"></div>
       </div>`).join('');
   }
 
-  // ── INIT ──
-  loadKnownUsers();
-  loadPosts();
-  loadStats();
-  window._vdb = vdb;
-</script>
-
-<script>
-  // ── COMPOSE INPUT: handle # and @ ──
-  let autocompleteActive = false;
-  let autocompleteQuery  = '';
-  let autocompleteIdx    = -1;
-
-  function handleComposeInput(el) {
-    updateCharCount(el);
-    const val    = el.value;
-    const caret  = el.selectionStart;
-    const before = val.slice(0, caret);
-    // Detect @mention trigger
-    const mentionMatch = before.match(/@(\w*)$/);
-    if (mentionMatch) {
-      const q = mentionMatch[1].toLowerCase();
-      showAutocomplete(q, el);
-    } else {
-      hideAutocomplete();
-    }
-  }
-
-  function showAutocomplete(query, textarea) {
-    const dd      = document.getElementById('autocomplete-dropdown');
-    const users   = (window._knownUsers || []);
-    const matches = users.filter(u =>
-      u.handle && u.handle.toLowerCase().startsWith(query) &&
-      u.handle.toLowerCase() !== (localStorage.getItem('vibe_handle')||'').toLowerCase()
-    ).slice(0, 6);
-
-    if (!matches.length) { hideAutocomplete(); return; }
-
-    dd.innerHTML = matches.map((u, i) => {
-      const color = avatarColor(u.handle || '');
-      const init  = getInitials(u.name || u.handle || '?');
-      return `<div class="autocomplete-item" data-handle="${escHtml(u.handle)}" onmousedown="selectMention('${escHtml(u.handle)}')">
-        <div class="autocomplete-av" style="background:${color.bg};color:${color.fg}">${escHtml(init)}</div>
-        <div>
-          <div class="autocomplete-name">${escHtml(u.name || u.handle)}</div>
-          <div class="autocomplete-handle">@${escHtml(u.handle)}</div>
-        </div>
-      </div>`;
-    }).join('');
-
-    dd.classList.add('show');
-    autocompleteActive = true;
-    autocompleteQuery  = query;
-    autocompleteIdx    = -1;
-  }
-
-  function hideAutocomplete() {
-    document.getElementById('autocomplete-dropdown').classList.remove('show');
-    autocompleteActive = false;
-    autocompleteIdx    = -1;
-  }
-
-  function selectMention(handle) {
-    const textarea = document.getElementById('compose-input');
-    const val      = textarea.value;
-    const caret    = textarea.selectionStart;
-    const before   = val.slice(0, caret);
-    const after    = val.slice(caret);
-    // Replace partial @mention with full handle
-    const replaced = before.replace(/@(\w*)$/, '@' + handle + ' ');
-    textarea.value = replaced + after;
-    textarea.focus();
-    const newPos = replaced.length;
-    textarea.setSelectionRange(newPos, newPos);
-    updateCharCount(textarea);
-    hideAutocomplete();
-  }
-
-  // Keyboard nav for autocomplete
-  document.addEventListener('keydown', e => {
-    if (document.activeElement.id === 'compose-input') {
-      if (autocompleteActive) {
-        const items = document.querySelectorAll('.autocomplete-item');
-        if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          autocompleteIdx = Math.min(autocompleteIdx + 1, items.length - 1);
-          items.forEach((el,i) => el.classList.toggle('selected', i === autocompleteIdx));
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          autocompleteIdx = Math.max(autocompleteIdx - 1, 0);
-          items.forEach((el,i) => el.classList.toggle('selected', i === autocompleteIdx));
-        } else if (e.key === 'Enter' && autocompleteIdx >= 0) {
-          e.preventDefault();
-          const selected = items[autocompleteIdx];
-          if (selected) selectMention(selected.dataset.handle);
-        } else if (e.key === 'Escape') {
-          hideAutocomplete();
-        }
-        return;
-      }
-      if (e.key === 'n' && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT') {
-        e.preventDefault();
-        focusCompose();
-      }
-    } else {
-      if (e.key === 'n' && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT') {
-        e.preventDefault();
-        focusCompose();
-      }
-    }
-  });
-
   // ── HASHTAG MODAL ──
   window.openHashtagModal = function(tag) {
     const posts = document.querySelectorAll('.post-card');
-    let matchedPosts = [];
+    let matched = [];
     posts.forEach(card => {
       const body = card.querySelector('.post-body');
       if (body && body.textContent.toLowerCase().includes('#' + tag.toLowerCase())) {
-        const name = card.querySelector('.post-name')?.textContent || '';
-        const text = body.textContent;
-        matchedPosts.push({ name, text });
+        matched.push({ name: card.querySelector('.post-name')?.textContent || '', text: body.textContent });
       }
     });
-
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
     overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
@@ -702,25 +560,22 @@
         <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
         <div class="modal-tag">Hashtag</div>
         <div class="modal-title">#${escHtml(tag)}</div>
-        <div class="modal-sub">${matchedPosts.length} post${matchedPosts.length !== 1 ? 's' : ''} in your feed</div>
+        <div class="modal-sub">${matched.length} post${matched.length !== 1 ? 's' : ''} in your feed</div>
         <div class="modal-posts">
-          ${matchedPosts.length
-            ? matchedPosts.map(p => `<div class="modal-post-item"><strong>${escHtml(p.name)}</strong>: ${escHtml(p.text.slice(0,120))}${p.text.length > 120 ? '…' : ''}</div>`).join('')
+          ${matched.length
+            ? matched.map(p => `<div class="modal-post-item"><strong>${escHtml(p.name)}</strong>: ${escHtml(p.text.slice(0,120))}${p.text.length>120?'…':''}</div>`).join('')
             : `<div class="modal-post-item" style="color:var(--muted);text-align:center;">No posts with #${escHtml(tag)} yet</div>`}
         </div>
       </div>`;
     document.body.appendChild(overlay);
   };
 
-  // ── MENTION / PROFILE MODAL ──
+  // ── MENTION MODAL ──
   window.openMentionModal = function(handle) {
-    const users = window._knownUsers || [];
-    const user  = users.find(u => u.handle && u.handle.toLowerCase() === handle.toLowerCase());
+    const user = (window._knownUsers || []).find(u => u.handle && u.handle.toLowerCase() === handle.toLowerCase());
     if (!user) { showToast('@' + handle + ' — user not found'); return; }
-
     const color = avatarColor(user.handle || '');
     const init  = getInitials(user.name || user.handle || '?');
-
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
     overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
@@ -733,13 +588,84 @@
           <div class="modal-profile-handle">@${escHtml(user.handle)}</div>
         </div>
         <div style="height:16px;"></div>
-        <button class="modal-follow-btn" onclick="showToast('Follow feature — connect your backend'); this.closest('.modal-overlay').remove();">Follow @${escHtml(user.handle)}</button>
-        <button style="width:100%;margin-top:8px;padding:9px;background:transparent;border:1px solid var(--border);border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;cursor:pointer;" onclick="showToast('Message feature — connect your backend'); this.closest('.modal-overlay').remove();">Send message</button>
+        <button class="modal-follow-btn" onclick="showToast('Follow — connect your backend');this.closest('.modal-overlay').remove()">Follow @${escHtml(user.handle)}</button>
+        <button style="width:100%;margin-top:8px;padding:9px;background:transparent;border:1px solid var(--border);border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;cursor:pointer;" onclick="showToast('Message — connect your backend');this.closest('.modal-overlay').remove()">Send message</button>
       </div>`;
     document.body.appendChild(overlay);
   };
 
-  // ── NAV / TABS ──
+  // ── INIT ──
+  loadKnownUsers();
+  loadPosts();
+  loadStats();
+  window._vdb = vdb;
+</script>
+
+<script>
+  // ── COMPOSE: @ autocomplete ──
+  let autocompleteActive = false;
+  let autocompleteIdx    = -1;
+
+  function handleComposeInput(el) {
+    updateCharCount(el);
+    const before = el.value.slice(0, el.selectionStart);
+    const match  = before.match(/@(\w*)$/);
+    if (match) showAutocomplete(match[1].toLowerCase(), el);
+    else       hideAutocomplete();
+  }
+
+  function showAutocomplete(query, textarea) {
+    const dd      = document.getElementById('autocomplete-dropdown');
+    const matches = (window._knownUsers || [])
+      .filter(u => u.handle && u.handle.toLowerCase().startsWith(query) &&
+        u.handle.toLowerCase() !== (localStorage.getItem('vibe_handle')||'').toLowerCase())
+      .slice(0, 6);
+    if (!matches.length) { hideAutocomplete(); return; }
+    dd.innerHTML = matches.map((u, i) => {
+      const color = avatarColor(u.handle || '');
+      const init  = getInitials(u.name || u.handle || '?');
+      return `<div class="autocomplete-item" data-handle="${escHtml(u.handle)}" onmousedown="selectMention('${escHtml(u.handle)}')">
+        <div class="autocomplete-av" style="background:${color.bg};color:${color.fg}">${escHtml(init)}</div>
+        <div><div class="autocomplete-name">${escHtml(u.name || u.handle)}</div><div class="autocomplete-handle">@${escHtml(u.handle)}</div></div>
+      </div>`;
+    }).join('');
+    dd.classList.add('show');
+    autocompleteActive = true;
+    autocompleteIdx    = -1;
+  }
+
+  function hideAutocomplete() {
+    document.getElementById('autocomplete-dropdown').classList.remove('show');
+    autocompleteActive = false;
+    autocompleteIdx    = -1;
+  }
+
+  function selectMention(handle) {
+    const ta     = document.getElementById('compose-input');
+    const before = ta.value.slice(0, ta.selectionStart).replace(/@(\w*)$/, '@' + handle + ' ');
+    const after  = ta.value.slice(ta.selectionStart);
+    ta.value     = before + after;
+    ta.focus();
+    ta.setSelectionRange(before.length, before.length);
+    updateCharCount(ta);
+    hideAutocomplete();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (document.activeElement.id === 'compose-input' && autocompleteActive) {
+      const items = document.querySelectorAll('.autocomplete-item');
+      if (e.key === 'ArrowDown')  { e.preventDefault(); autocompleteIdx = Math.min(autocompleteIdx+1, items.length-1); items.forEach((el,i) => el.classList.toggle('selected', i===autocompleteIdx)); }
+      else if (e.key === 'ArrowUp')   { e.preventDefault(); autocompleteIdx = Math.max(autocompleteIdx-1, 0); items.forEach((el,i) => el.classList.toggle('selected', i===autocompleteIdx)); }
+      else if (e.key === 'Enter' && autocompleteIdx >= 0) { e.preventDefault(); selectMention(items[autocompleteIdx].dataset.handle); }
+      else if (e.key === 'Escape') hideAutocomplete();
+      return;
+    }
+    if (e.key === 'n' && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT') {
+      e.preventDefault(); focusCompose();
+    }
+  });
+
+  // ── NAV ──
   function logout() {
     ['vibe_user','vibe_name','vibe_handle','vibe_initials'].forEach(k => localStorage.removeItem(k));
     window.location.href = 'login.html';
@@ -753,7 +679,7 @@
     document.getElementById('page-title').textContent = titles[tab] || tab;
     document.getElementById('feed-tabs').style.display = tab === 'home' ? 'flex' : 'none';
     if (tab !== 'home') showToast(`${titles[tab]} — coming soon`);
-    if (tab === 'home') loadPosts();
+    else loadPosts();
   }
 
   function switchFeedTab(el, tab) {
@@ -786,17 +712,16 @@
   }
 
   // ── UTILS ──
-  function formatNum(n) { if (n >= 1000) return (n/1000).toFixed(1).replace('.0','')+'k'; return n; }
-  function escHtml(str) { if(!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function formatNum(n) { return n >= 1000 ? (n/1000).toFixed(1).replace('.0','')+'k' : n; }
+  function escHtml(str) { return str ? String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
   function getInitials(str) { return (str||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
   function timeAgo(iso) {
     if (!iso) return '';
-    const diff = Date.now() - new Date(iso).getTime();
-    const m = Math.floor(diff/60000);
-    if (m<1) return 'just now';
-    if (m<60) return `${m}m ago`;
+    const m = Math.floor((Date.now() - new Date(iso)) / 60000);
+    if (m < 1)  return 'just now';
+    if (m < 60) return `${m}m ago`;
     const h = Math.floor(m/60);
-    if (h<24) return `${h}h ago`;
+    if (h < 24) return `${h}h ago`;
     return `${Math.floor(h/24)}d ago`;
   }
   function avatarColor(str) {
@@ -810,7 +735,7 @@
       {bg:'linear-gradient(135deg,#d1fae5,#6ee7b7)',fg:'#065f46'},
     ];
     let hash = 0;
-    for (let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5) - hash);
+    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash<<5) - hash);
     return palettes[Math.abs(hash) % palettes.length];
   }
   let toastTimer;
@@ -820,13 +745,6 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
   }
-
-  // Keyboard shortcut
-  document.addEventListener('keydown', e => {
-    if (e.key==='n' && document.activeElement.tagName!=='TEXTAREA' && document.activeElement.tagName!=='INPUT') {
-      e.preventDefault(); focusCompose();
-    }
-  });
 </script>
 </body>
 </html>
