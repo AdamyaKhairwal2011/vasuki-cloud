@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vibe — Sign in</title>
+  <title>Vasuki Connect — Sign in</title>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -133,7 +133,7 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <div class="card">
-  <a class="card-logo" href="index.html">Vibe</a>
+  <a class="card-logo" href="index.html">Vasuki Connect</a>
 
   <div class="tabs">
     <button class="tab on" id="tab-login" onclick="switchTab('login')">Sign in</button>
@@ -143,7 +143,7 @@
   <!-- LOGIN PANEL -->
   <div class="panel on" id="panel-login">
     <div class="panel-title">Welcome back</div>
-    <div class="panel-sub">Sign in to your Vibe account to continue.</div>
+    <div class="panel-sub">Sign in to your Vasuki Connect account to continue.</div>
 
     <div class="social-row">
       <button class="soc-btn" id="google-login-btn" onclick="handleGoogleLogin()">
@@ -185,7 +185,7 @@
   <!-- SIGNUP PANEL -->
   <div class="panel" id="panel-signup">
     <div class="panel-title">Create account</div>
-    <div class="panel-sub">Join Vibe — it's free.</div>
+    <div class="panel-sub">Join Vasuki Connect — it's free.</div>
 
     <div class="social-row">
       <button class="soc-btn" id="google-signup-btn" onclick="handleGoogleLogin()">
@@ -230,7 +230,7 @@
     <div class="switch-text">Already have an account? <a href="#" onclick="switchTab('login');return false;">Sign in</a></div>
   </div>
 
-  <a class="back" href="index.html">← Back to Vibe</a>
+  <a class="back" href="index.html">← Back to Vasuki Connect</a>
 </div>
 
 <script type="module">
@@ -238,13 +238,16 @@
   let vdb = new Vasuki();
 
   // Redirect if already logged in
-  if (localStorage.getItem('vibe_user')) {
+  if (localStorage.getItem('Vasuki Connect_user')) {
     window.location.href = 'dashboard.html';
   }
 
-  await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+  // DB init — runs in background; handlers queue until it's ready
+  let dbReady = false;
+  const dbInitPromise = vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo').then(() => { dbReady = true; });
 
   async function fetchUsers() {
+    await dbInitPromise; // wait for login if not done yet
     return await vdb.fetchTable('users_rows', 'Sheet1');
   }
 
@@ -275,10 +278,10 @@
       const user = users.find(u => u && u.username && u.username.toLowerCase() === email && u.password === password);
 
       if (user) {
-        localStorage.setItem('vibe_user',     user.username);
-        localStorage.setItem('vibe_name',     user.name   || '');
-        localStorage.setItem('vibe_handle',   user.handle || '');
-        localStorage.setItem('vibe_initials', getInitials(user.name || user.username));
+        localStorage.setItem('Vasuki Connect_user',     user.username);
+        localStorage.setItem('Vasuki Connect_name',     user.name   || '');
+        localStorage.setItem('Vasuki Connect_handle',   user.handle || '');
+        localStorage.setItem('Vasuki Connect_initials', getInitials(user.name || user.username));
         window.location.href = 'dashboard.html';
       } else {
         errEl.textContent = 'Incorrect email or password. Please try again.';
@@ -340,15 +343,15 @@
         return;
       }
 
-      await vdb.insertRow('vibe_users', 'Sheet1', {
+      await vdb.insertRow('Vasuki Connect_users', 'Sheet1', {
         username: email, name, handle, password,
         created_at: new Date().toISOString()
       });
 
-      localStorage.setItem('vibe_user',     email);
-      localStorage.setItem('vibe_name',     name);
-      localStorage.setItem('vibe_handle',   handle);
-      localStorage.setItem('vibe_initials', getInitials(name));
+      localStorage.setItem('Vasuki Connect_user',     email);
+      localStorage.setItem('Vasuki Connect_name',     name);
+      localStorage.setItem('Vasuki Connect_handle',   handle);
+      localStorage.setItem('Vasuki Connect_initials', getInitials(name));
       window.location.href = 'dashboard.html';
 
     } catch (err) {
@@ -397,10 +400,10 @@
           const user = users.find(u => u && u.username && u.username.toLowerCase() === email);
 
           if (user) {
-            localStorage.setItem('vibe_user',     email);
-            localStorage.setItem('vibe_name',     user.name   || userInfo.name || '');
-            localStorage.setItem('vibe_handle',   user.handle || '');
-            localStorage.setItem('vibe_initials', getInitials(user.name || userInfo.name || email));
+            localStorage.setItem('Vasuki Connect_user',     email);
+            localStorage.setItem('Vasuki Connect_name',     user.name   || userInfo.name || '');
+            localStorage.setItem('Vasuki Connect_handle',   user.handle || '');
+            localStorage.setItem('Vasuki Connect_initials', getInitials(user.name || userInfo.name || email));
             window.location.href = 'dashboard.html';
           } else {
             alert('No account found. Redirecting to sign up.');
@@ -420,6 +423,17 @@
   function getInitials(str) {
     return (str || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
   }
+
+  // Listeners inside module — always have access to window.handleLogin/Signup
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (document.getElementById('panel-login').classList.contains('on'))  window.handleLogin();
+      if (document.getElementById('panel-signup').classList.contains('on')) window.handleSignup();
+    }
+  });
+  document.querySelectorAll('input').forEach(el => {
+    el.addEventListener('input', () => el.classList.remove('err'));
+  });
 </script>
 
 <script>
@@ -451,16 +465,6 @@
     fill.style.background = c[s];
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      if (document.getElementById('panel-login').classList.contains('on'))  handleLogin();
-      if (document.getElementById('panel-signup').classList.contains('on')) handleSignup();
-    }
-  });
-
-  document.querySelectorAll('input').forEach(el => {
-    el.addEventListener('input', () => el.classList.remove('err'));
-  });
 </script>
 </body>
 </html>
