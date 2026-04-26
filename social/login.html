@@ -242,12 +242,16 @@
     window.location.href = 'dashboard.html';
   }
 
-    await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+  // DB init — runs in background; handlers queue until it's ready
+  let dbReady = false;
+  const dbInitPromise = vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo').then(() => { dbReady = true; });
+
   async function fetchUsers() {
-    return data = await db.fetchTable('users_rows', 'Sheet1');
+    await dbInitPromise; // wait for login if not done yet
+    return await vdb.fetchTable('users_rows', 'Sheet1');
   }
 
-  // ── LOGIN ──
+  // ── LOGIN (vCloud logic: match on u.username) ──
   window.handleLogin = async function () {
     const email    = document.getElementById('l-email').value.toLowerCase().trim();
     const password = document.getElementById('l-password').value;
@@ -269,13 +273,15 @@
 
     try {
       const users = await fetchUsers();
-      const user  = users.find(u => u && u.email && u.email.toLowerCase() === email && u.password === password);
+
+      // ── vCloud logic: match on u.username ──
+      const user = users.find(u => u && u.username && u.username.toLowerCase() === email && u.password === password);
 
       if (user) {
         localStorage.setItem('vibe_user',     user.username);
         localStorage.setItem('vibe_name',     user.name   || '');
         localStorage.setItem('vibe_handle',   user.handle || '');
-        localStorage.setItem('vibe_initials', getInitials(user.name || user.email));
+        localStorage.setItem('vibe_initials', getInitials(user.name || user.username));
         window.location.href = 'dashboard.html';
       } else {
         errEl.textContent = 'Incorrect email or password. Please try again.';
@@ -319,18 +325,16 @@
     btn.classList.add('loading'); btn.disabled = true;
 
     try {
-      const db    = await getDB();
       const users = await fetchUsers();
 
-      // Check duplicate email
-      if (users.find(u => u && u.email && u.email.toLowerCase() === email)) {
+      // Check duplicate username (vCloud uses username as the login key)
+      if (users.find(u => u && u.username && u.username.toLowerCase() === email)) {
         errEl.textContent = 'An account with this email already exists.';
         errEl.style.display = 'block';
         document.getElementById('s-email').classList.add('err');
         btn.classList.remove('loading'); btn.disabled = false;
         return;
       }
-      // Check duplicate handle
       if (users.find(u => u && u.handle && u.handle.toLowerCase() === handle.toLowerCase())) {
         errEl.textContent = 'That username is already taken.';
         errEl.style.display = 'block';
@@ -339,8 +343,8 @@
         return;
       }
 
-      await db.insertRow('vibe_users', 'Sheet1', {
-        name, handle, email, password,
+      await vdb.insertRow('vibe_users', 'Sheet1', {
+        username: email, name, handle, password,
         created_at: new Date().toISOString()
       });
 
@@ -358,7 +362,7 @@
     }
   };
 
-  // ── GOOGLE LOGIN ──
+  // ── GOOGLE LOGIN (vCloud logic) ──
   window.handleGoogleLogin = function () {
     const loginBtn  = document.getElementById('google-login-btn');
     const signupBtn = document.getElementById('google-signup-btn');
@@ -366,7 +370,6 @@
     if (signupBtn) signupBtn.disabled = true;
 
     const client = google.accounts.oauth2.initCodeClient({
-      // Replace with your own Google OAuth client ID
       client_id: '600593339063-blt9bcoe1k382f82ri4gd7a2el2bqfv1.apps.googleusercontent.com',
       scope: 'email profile openid',
       ux_mode: 'popup',
@@ -392,7 +395,9 @@
 
           const email = userInfo.email.toLowerCase();
           const users = await fetchUsers();
-          const user  = users.find(u => u && u.email && u.email.toLowerCase() === email);
+
+          // ── vCloud logic: match on u.username ──
+          const user = users.find(u => u && u.username && u.username.toLowerCase() === email);
 
           if (user) {
             localStorage.setItem('vibe_user',     email);
@@ -401,20 +406,8 @@
             localStorage.setItem('vibe_initials', getInitials(user.name || userInfo.name || email));
             window.location.href = 'dashboard.html';
           } else {
-            // Auto-register Google user
-            const db     = await getDB();
-            const name   = userInfo.name || '';
-            const handle = email.split('@')[0].replace(/[^a-z0-9]/gi, '');
-            await db.insertRow('vibe_users', 'Sheet1', {
-              name, handle, email,
-              password: '',
-              created_at: new Date().toISOString()
-            });
-            localStorage.setItem('vibe_user',     email);
-            localStorage.setItem('vibe_name',     name);
-            localStorage.setItem('vibe_handle',   handle);
-            localStorage.setItem('vibe_initials', getInitials(name));
-            window.location.href = 'dashboard.html';
+            alert('No account found. Redirecting to sign up.');
+            window.location.href = 'signup.html?email=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(userInfo.name || '');
           }
         } catch (err) {
           console.error('Google login error:', err);
@@ -427,10 +420,20 @@
     client.requestCode();
   };
 
-  // ── UTILS ──
   function getInitials(str) {
     return (str || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
   }
+
+  // Listeners inside module — always have access to window.handleLogin/Signup
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (document.getElementById('panel-login').classList.contains('on'))  window.handleLogin();
+      if (document.getElementById('panel-signup').classList.contains('on')) window.handleSignup();
+    }
+  });
+  document.querySelectorAll('input').forEach(el => {
+    el.addEventListener('input', () => el.classList.remove('err'));
+  });
 </script>
 
 <script>
@@ -462,20 +465,6 @@
     fill.style.background = c[s];
   }
 
-  // Keyboard submit
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      const loginPanel  = document.getElementById('panel-login');
-      const signupPanel = document.getElementById('panel-signup');
-      if (loginPanel.classList.contains('on'))  handleLogin();
-      if (signupPanel.classList.contains('on')) handleSignup();
-    }
-  });
-
-  // Remove err class on type
-  document.querySelectorAll('input').forEach(el => {
-    el.addEventListener('input', () => el.classList.remove('err'));
-  });
 </script>
 </body>
 </html>
