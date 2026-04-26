@@ -251,7 +251,7 @@
   async function fetchUsers() {
     const db = await getDB();
     // Replace 'vibe_users' and 'Sheet1' with your table/sheet name
-    return await db.fetchTable('vibe_users', 'Sheet1');
+    return await db.fetchTable('users_rows', 'Sheet1');
   }
 
   // ── LOGIN ──
@@ -279,7 +279,7 @@
       const user  = users.find(u => u && u.email && u.email.toLowerCase() === email && u.password === password);
 
       if (user) {
-        localStorage.setItem('vibe_user',     user.email);
+        localStorage.setItem('vibe_user',     user.username);
         localStorage.setItem('vibe_name',     user.name   || '');
         localStorage.setItem('vibe_handle',   user.handle || '');
         localStorage.setItem('vibe_initials', getInitials(user.name || user.email));
