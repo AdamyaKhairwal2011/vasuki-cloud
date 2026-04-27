@@ -8,24 +8,12 @@
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     :root{
-      --white:#ffffff;
-      --off:#f7f6f4;
-      --bg:#f0eeeb;
-      --ink:#0c0c0c;
-      --ink2:#3a3a3a;
-      --muted:#888;
-      --border:#e2dfdb;
-      --accent:#1a6bf5;
-      --accent-soft:rgba(26,107,245,.08);
-      --radius:12px;
-      --danger:#e53935;
-      --green:#22c55e;
-      --sidebar:230px;
+      --white:#ffffff;--off:#f7f6f4;--bg:#f0eeeb;--ink:#0c0c0c;--ink2:#3a3a3a;
+      --muted:#888;--border:#e2dfdb;--accent:#1a6bf5;--accent-soft:rgba(26,107,245,.08);
+      --radius:12px;--danger:#e53935;--green:#22c55e;--sidebar:230px;
     }
     html,body{height:100%;overflow:hidden;}
     body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;}
-
-    /* ── SIDEBAR ── */
     .sidebar{width:var(--sidebar);flex-shrink:0;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;position:relative;z-index:10;}
     .sb-header{padding:20px 18px 16px;border-bottom:1px solid var(--border);}
     .sb-logo{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);display:block;margin-bottom:18px;text-decoration:none;}
@@ -39,7 +27,6 @@
     .nav-item:hover{background:var(--off);color:var(--ink);}
     .nav-item.active{background:var(--off);color:var(--ink);font-weight:500;}
     .nav-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
-    .nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center;}
     .sb-footer{border-top:1px solid var(--border);padding:14px 10px;}
     .sb-profile{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;cursor:pointer;transition:background .15s;}
     .sb-profile:hover{background:var(--off);}
@@ -50,11 +37,7 @@
     .logout-btn{width:100%;margin-top:6px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:transparent;font-family:'Geist',sans-serif;font-size:12.5px;color:var(--muted);cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:8px;}
     .logout-btn:hover{background:#fef2f2;color:var(--danger);border-color:#fecaca;}
     .logout-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;}
-
-    /* ── MAIN ── */
     .main{flex:1;display:flex;height:100vh;overflow:hidden;}
-
-    /* ── FEED ── */
     .feed-col{flex:1;display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden;}
     .feed-header{padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(255,255,255,.85);backdrop-filter:blur(12px);flex-shrink:0;}
     .feed-title{font-family:'Instrument Serif',serif;font-size:19px;color:var(--ink);}
@@ -65,12 +48,9 @@
     .icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
     .icon-btn:hover{background:var(--off);}
     .icon-btn svg{width:15px;height:15px;stroke:var(--ink2);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-
     .feed-scroll{flex:1;overflow-y:auto;padding:16px 20px;}
     .feed-scroll::-webkit-scrollbar{width:4px;}
     .feed-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
-
-    /* Compose */
     .compose-box{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:14px;position:relative;}
     .compose-top{display:flex;gap:10px;align-items:flex-start;}
     .av{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#c7d2fe,#a5b4fc);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#4338ca;}
@@ -84,26 +64,13 @@
     .btn-post{padding:7px 18px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s;}
     .btn-post:hover{background:#222;}
     .char-count{font-size:11px;color:var(--muted);}
-
-    /* Autocomplete dropdown */
-    .autocomplete-dropdown{
-      position:absolute;left:60px;right:16px;
-      background:var(--white);border:1px solid var(--border);border-radius:10px;
-      box-shadow:0 8px 24px rgba(0,0,0,.1);
-      z-index:100;max-height:200px;overflow-y:auto;
-      display:none;
-    }
+    .autocomplete-dropdown{position:absolute;left:60px;right:16px;background:var(--white);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:100;max-height:200px;overflow-y:auto;display:none;}
     .autocomplete-dropdown.show{display:block;}
-    .autocomplete-item{
-      display:flex;align-items:center;gap:10px;
-      padding:10px 14px;cursor:pointer;transition:background .12s;
-    }
+    .autocomplete-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .12s;}
     .autocomplete-item:hover,.autocomplete-item.selected{background:var(--off);}
     .autocomplete-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;}
     .autocomplete-name{font-size:13px;font-weight:500;color:var(--ink);}
     .autocomplete-handle{font-size:12px;color:var(--muted);}
-
-    /* Post Card */
     .post-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;transition:border-color .15s;animation:fadeUp .3s ease both;}
     .post-card:hover{border-color:#d0cdc8;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
@@ -121,17 +88,15 @@
     .post-hashtag:hover{opacity:.75;text-decoration:underline;}
     .post-mention{color:var(--accent);font-weight:500;cursor:pointer;transition:opacity .15s;text-decoration:none;display:inline;}
     .post-mention:hover{opacity:.75;text-decoration:underline;}
-    .post-mention.valid-user{color:var(--accent);}
     .post-mention.invalid-user{color:var(--muted);}
     .post-actions{display:flex;gap:0;margin:-4px;}
     .post-action{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-family:'Geist',sans-serif;font-size:12.5px;color:var(--muted);transition:all .15s;}
     .post-action:hover{background:var(--off);color:var(--ink2);}
+    .post-action:disabled{opacity:.5;cursor:not-allowed;}
     .post-action.liked{color:var(--danger);}
     .post-action.liked .heart{stroke:var(--danger);fill:var(--danger);}
     .post-action.reposted{color:var(--green);}
     .post-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-
-    /* Modal */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;animation:fadeIn .18s ease;}
     @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
     .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:320px;max-width:400px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;position:relative;}
@@ -148,15 +113,12 @@
     .modal-profile-handle{font-size:13px;color:var(--muted);text-align:center;margin-bottom:16px;}
     .modal-follow-btn{width:100%;padding:9px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s;}
     .modal-follow-btn:hover{background:#222;}
-
-    /* Empty / Loading */
     .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;}
     .empty-icon{width:48px;height:48px;border-radius:14px;background:var(--off);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
     .empty-icon svg{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
     .empty-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:6px;}
     .empty-sub{font-size:13px;color:var(--muted);line-height:1.6;max-width:280px;}
-    .loading-state{display:flex;flex-direction:column;gap:10px;padding-top:4px;}
-    .skel{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;}
+    .skel{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;}
     .skel-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
     .skel-av{width:36px;height:36px;border-radius:50%;background:var(--bg);}
     .skel-lines{flex:1;}
@@ -164,8 +126,6 @@
     .skel-line.w60{width:60%}.skel-line.w40{width:40%}.skel-line.w80{width:80%}.skel-line.w55{width:55%;}
     @keyframes shimmer{0%{opacity:.6;}50%{opacity:1;}100%{opacity:.6;}}
     .skel *{animation:shimmer 1.4s ease infinite;}
-
-    /* Right panel */
     .right-col{width:300px;flex-shrink:0;display:flex;flex-direction:column;background:var(--white);overflow:hidden;}
     .right-scroll{flex:1;overflow-y:auto;padding:16px;}
     .right-scroll::-webkit-scrollbar{width:3px;}
@@ -190,11 +150,8 @@
     .trending-item:last-child{border-bottom:none;}
     .trending-tag{font-size:13px;font-weight:500;color:var(--accent);}
     .trending-count{font-size:11px;color:var(--muted);}
-
-    /* Toast */
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:9px;opacity:0;pointer-events:none;transition:all .25s;z-index:999;white-space:nowrap;}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
     @media(max-width:900px){.right-col{display:none;}}
     @media(max-width:640px){
       .sidebar{width:60px;}
@@ -208,7 +165,6 @@
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sb-header">
     <a class="sb-logo" href="index.html">Vibe</a>
@@ -264,7 +220,6 @@
   </div>
 </aside>
 
-<!-- MAIN -->
 <div class="main">
   <div class="feed-col">
     <div class="feed-header">
@@ -277,7 +232,6 @@
         <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
       </button>
     </div>
-
     <div class="feed-scroll" id="feed-scroll">
       <div class="compose-box">
         <div class="compose-top">
@@ -348,9 +302,8 @@
 
 <script type="module">
   import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
-  let vdb = new Vasuki();
+  const vdb = new Vasuki();
 
-  // ── AUTH GUARD ──
   const VIBE_USER     = localStorage.getItem('vibe_user');
   const VIBE_NAME     = localStorage.getItem('vibe_name')     || 'User';
   const VIBE_HANDLE   = localStorage.getItem('vibe_handle')   || '';
@@ -360,41 +313,42 @@
 
   document.getElementById('sb-av').textContent        = VIBE_INITIALS;
   document.getElementById('sb-name').textContent      = VIBE_NAME;
-  document.getElementById('sb-handle').textContent    = VIBE_HANDLE ? '@' + VIBE_HANDLE : VIBE_USER;
+  document.getElementById('sb-handle').textContent    = VIBE_HANDLE ? '@'+VIBE_HANDLE : VIBE_USER;
   document.getElementById('compose-av').textContent   = VIBE_INITIALS;
   document.getElementById('right-av').textContent     = VIBE_INITIALS;
   document.getElementById('right-name').textContent   = VIBE_NAME;
-  document.getElementById('right-handle').textContent = VIBE_HANDLE ? '@' + VIBE_HANDLE : VIBE_USER;
+  document.getElementById('right-handle').textContent = VIBE_HANDLE ? '@'+VIBE_HANDLE : VIBE_USER;
 
-  // ── DB: single login promise, never repeated ──
   await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
 
+  // Per-session like/repost tracking
+  const sessionLikes   = new Set();
+  const sessionReposts = new Set();
 
-  // Cache of all known users for mentions
   let knownUsers = [];
-
   async function loadKnownUsers() {
     try {
       const users = await vdb.fetchTable('users_rows', 'Sheet1');
-      knownUsers  = (users || []).filter(u => u && u.handle);
+      knownUsers = (users || []).filter(u => u && u.handle);
       window._knownUsers = knownUsers;
     } catch(e) { console.warn('Could not load users for mentions:', e); }
   }
 
   // ── LOAD POSTS ──
-  window.loadPosts = async function () {
+  window.loadPosts = async function() {
     const container = document.getElementById('posts-container');
     showSkeleton(container);
     try {
       const posts = await vdb.fetchTable('vibe_posts', 'Sheet1');
-      const sorted = (posts || []).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      const sorted = (posts || []).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
       container.innerHTML = '';
       if (!sorted.length) {
         container.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div class="empty-title">No posts yet</div><div class="empty-sub">Be the first to post something.</div></div>`;
         return;
       }
       sorted.forEach(p => container.appendChild(buildPostCard(p)));
-    } catch (err) {
+      updateStats(sorted);
+    } catch(err) {
       console.error(err);
       container.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></div><div class="empty-title">Couldn't load posts</div><div class="empty-sub">Check your database connection.</div></div>`;
     }
@@ -407,24 +361,26 @@
     el.id = 'post-' + p.id;
     const initials = (p.author_initials || getInitials(p.author_name || p.author_handle || '?')).toUpperCase();
     const color    = avatarColor(p.author_handle || p.author_name || '');
-    const isMe     = (p.author_email || '').toLowerCase() === VIBE_USER.toLowerCase()
-                  || (p.author_handle || '') === VIBE_HANDLE;
+    const isMe     = (p.author_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase()
+                  || (p.author_handle||'') === VIBE_HANDLE;
+    const liked    = sessionLikes.has(p.id);
+    const reposted = sessionReposts.has(p.id);
 
     el.innerHTML = `
       <div class="post-top">
         <div class="post-av" style="background:${color.bg};color:${color.fg}">${escHtml(initials)}</div>
         <div class="post-meta">
           <div class="post-name">${escHtml(p.author_name || p.author_handle || 'Unknown')}</div>
-          <div class="post-handle">@${escHtml(p.author_handle || '')}</div>
+          <div class="post-handle">@${escHtml(p.author_handle||'')}</div>
         </div>
         <div class="post-time">${timeAgo(p.created_at)}</div>
         ${isMe
-          ? `<button class="post-more" onclick="deletePost('${p.id}',this)"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg></button>`
+          ? `<button class="post-more" onclick="deletePost('${p.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg></button>`
           : `<button class="post-more" onclick="showToast('Options coming soon')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>`}
       </div>
-      <div class="post-body">${renderPostBody(p.body || '')}</div>
+      <div class="post-body">${renderPostBody(p.body||'')}</div>
       <div class="post-actions">
-        <button class="post-action" id="like-btn-${p.id}" onclick="toggleLike('${p.id}',this)">
+        <button class="post-action${liked?' liked':''}" id="like-btn-${p.id}" onclick="toggleLike('${p.id}',this)">
           <svg class="heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
           <span id="like-count-${p.id}">${formatNum(parseInt(p.likes)||0)}</span>
         </button>
@@ -432,7 +388,7 @@
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
           <span>${formatNum(parseInt(p.comments)||0)}</span>
         </button>
-        <button class="post-action" id="repost-btn-${p.id}" onclick="toggleRepost('${p.id}',this)">
+        <button class="post-action${reposted?' reposted':''}" id="repost-btn-${p.id}" onclick="toggleRepost('${p.id}',this)">
           <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
           <span id="repost-count-${p.id}">${formatNum(parseInt(p.reposts)||0)}</span>
         </button>
@@ -447,10 +403,10 @@
   function renderPostBody(text) {
     if (!text) return '';
     let safe = escHtml(text);
-    safe = safe.replace(/#(\w+)/g, (_, tag) =>
+    safe = safe.replace(/#(\w+)/g, (_,tag) =>
       `<span class="post-hashtag" onclick="openHashtagModal('${tag}')">#${tag}</span>`);
-    safe = safe.replace(/@(\w+)/g, (_, handle) => {
-      const user = (window._knownUsers || []).find(u => u.handle && u.handle.toLowerCase() === handle.toLowerCase());
+    safe = safe.replace(/@(\w+)/g, (_,handle) => {
+      const user = (window._knownUsers||[]).find(u => u.handle && u.handle.toLowerCase()===handle.toLowerCase());
       return user
         ? `<span class="post-mention valid-user" onclick="openMentionModal('${handle}')" title="View @${handle}'s profile">@${handle}</span>`
         : `<span class="post-mention invalid-user" title="User not found">@${handle}</span>`;
@@ -460,7 +416,7 @@
   window.renderPostBody = renderPostBody;
 
   // ── SUBMIT POST ──
-  window.submitPost = async function () {
+  window.submitPost = async function() {
     const inp  = document.getElementById('compose-input');
     const body = inp.value.trim();
     if (!body)             { showToast('Write something first!'); return; }
@@ -477,7 +433,7 @@
       inp.value = ''; updateCharCount(inp);
       showToast('Posted ✓');
       await loadPosts();
-    } catch (err) {
+    } catch(err) {
       console.error(err);
       showToast('Failed to post — check your DB connection');
     } finally {
@@ -485,43 +441,100 @@
     }
   };
 
-  window.deletePost = async function (id) {
+  // ── DELETE POST (Vasuki DB) ──
+  window.deletePost = async function(id) {
     if (!confirm('Delete this post?')) return;
-    document.getElementById('post-' + id)?.remove();
-    showToast('Post deleted');
+    const card = document.getElementById('post-'+id);
+    if (card) card.style.opacity = '0.5';
+    try {
+      await vdb.deleteRow('vibe_posts', 'Sheet1', id);
+      card?.remove();
+      sessionLikes.delete(id);
+      sessionReposts.delete(id);
+      showToast('Post deleted');
+      await loadStats();
+    } catch(err) {
+      console.error(err);
+      if (card) card.style.opacity = '1';
+      showToast('Delete failed — check DB connection');
+    }
   };
 
-  window.toggleLike = async function (id, btn) {
-    const countEl = document.getElementById('like-count-' + id);
-    const liked   = btn.classList.contains('liked');
-    const current = parseInt(countEl.textContent.replace('k','000')) || 0;
-    btn.classList.toggle('liked');
-    countEl.textContent = formatNum(liked ? current - 1 : current + 1);
-    if (!liked) showToast('Liked ❤️');
+  // ── TOGGLE LIKE (Vasuki DB updateRow) ──
+  window.toggleLike = async function(id, btn) {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const countEl  = document.getElementById('like-count-'+id);
+    const wasLiked = sessionLikes.has(id);
+    const current  = parseInt(countEl.textContent.replace(/k/,'000')) || 0;
+    const newCount = wasLiked ? Math.max(0, current-1) : current+1;
+
+    // Optimistic UI
+    btn.classList.toggle('liked', !wasLiked);
+    countEl.textContent = formatNum(newCount);
+    if (!wasLiked) { sessionLikes.add(id); showToast('Liked ❤️'); }
+    else           { sessionLikes.delete(id); }
+
+    try {
+      await vdb.updateRow('vibe_posts', 'Sheet1', id, { likes: newCount });
+    } catch(err) {
+      console.error(err);
+      // Rollback
+      btn.classList.toggle('liked', wasLiked);
+      countEl.textContent = formatNum(current);
+      if (!wasLiked) sessionLikes.delete(id); else sessionLikes.add(id);
+      showToast('Like failed — check DB connection');
+    } finally {
+      btn.disabled = false;
+    }
   };
 
-  window.toggleRepost = async function (id, btn) {
-    const countEl  = document.getElementById('repost-count-' + id);
-    const reposted = btn.classList.contains('reposted');
-    const current  = parseInt(countEl.textContent.replace('k','000')) || 0;
-    btn.classList.toggle('reposted');
-    countEl.textContent = formatNum(reposted ? current - 1 : current + 1);
-    showToast(reposted ? 'Repost removed' : 'Reposted ✓');
+  // ── TOGGLE REPOST (Vasuki DB updateRow) ──
+  window.toggleRepost = async function(id, btn) {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const countEl     = document.getElementById('repost-count-'+id);
+    const wasReposted = sessionReposts.has(id);
+    const current     = parseInt(countEl.textContent.replace(/k/,'000')) || 0;
+    const newCount    = wasReposted ? Math.max(0, current-1) : current+1;
+
+    // Optimistic UI
+    btn.classList.toggle('reposted', !wasReposted);
+    countEl.textContent = formatNum(newCount);
+    if (!wasReposted) { sessionReposts.add(id); showToast('Reposted ✓'); }
+    else              { sessionReposts.delete(id); showToast('Repost removed'); }
+
+    try {
+      await vdb.updateRow('vibe_posts', 'Sheet1', id, { reposts: newCount });
+    } catch(err) {
+      console.error(err);
+      // Rollback
+      btn.classList.toggle('reposted', wasReposted);
+      countEl.textContent = formatNum(current);
+      if (!wasReposted) sessionReposts.delete(id); else sessionReposts.add(id);
+      showToast('Repost failed — check DB connection');
+    } finally {
+      btn.disabled = false;
+    }
   };
 
   // ── STATS ──
+  function updateStats(posts) {
+    const mine = (posts||[]).filter(p =>
+      (p.author_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase() ||
+      (p.author_handle||'') === VIBE_HANDLE
+    );
+    const totalLikes = mine.reduce((s,p) => s+(parseInt(p.likes)||0), 0);
+    document.getElementById('stat-posts').textContent     = mine.length;
+    document.getElementById('stat-likes').textContent     = formatNum(totalLikes);
+    document.getElementById('stat-followers').textContent = '—';
+    document.getElementById('stat-following').textContent = '—';
+  }
+
   async function loadStats() {
     try {
       const posts = await vdb.fetchTable('vibe_posts', 'Sheet1');
-      const mine  = (posts || []).filter(p =>
-        (p.author_email  || '').toLowerCase() === VIBE_USER.toLowerCase() ||
-        (p.author_handle || '') === VIBE_HANDLE
-      );
-      const totalLikes = mine.reduce((s, p) => s + (parseInt(p.likes) || 0), 0);
-      document.getElementById('stat-posts').textContent     = mine.length;
-      document.getElementById('stat-likes').textContent     = formatNum(totalLikes);
-      document.getElementById('stat-followers').textContent = '—';
-      document.getElementById('stat-following').textContent = '—';
+      updateStats(posts);
     } catch(e) { console.warn(e); }
   }
 
@@ -540,22 +553,21 @@
     let matched = [];
     posts.forEach(card => {
       const body = card.querySelector('.post-body');
-      if (body && body.textContent.toLowerCase().includes('#' + tag.toLowerCase())) {
-        matched.push({ name: card.querySelector('.post-name')?.textContent || '', text: body.textContent });
-      }
+      if (body && body.textContent.toLowerCase().includes('#'+tag.toLowerCase()))
+        matched.push({ name: card.querySelector('.post-name')?.textContent||'', text: body.textContent });
     });
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
-    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+    overlay.onclick = e => { if(e.target===overlay) overlay.remove(); };
     overlay.innerHTML = `
       <div class="modal-box">
         <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
         <div class="modal-tag">Hashtag</div>
         <div class="modal-title">#${escHtml(tag)}</div>
-        <div class="modal-sub">${matched.length} post${matched.length !== 1 ? 's' : ''} in your feed</div>
+        <div class="modal-sub">${matched.length} post${matched.length!==1?'s':''} in your feed</div>
         <div class="modal-posts">
           ${matched.length
-            ? matched.map(p => `<div class="modal-post-item"><strong>${escHtml(p.name)}</strong>: ${escHtml(p.text.slice(0,120))}${p.text.length>120?'…':''}</div>`).join('')
+            ? matched.map(p=>`<div class="modal-post-item"><strong>${escHtml(p.name)}</strong>: ${escHtml(p.text.slice(0,120))}${p.text.length>120?'…':''}</div>`).join('')
             : `<div class="modal-post-item" style="color:var(--muted);text-align:center;">No posts with #${escHtml(tag)} yet</div>`}
         </div>
       </div>`;
@@ -564,19 +576,19 @@
 
   // ── MENTION MODAL ──
   window.openMentionModal = function(handle) {
-    const user = (window._knownUsers || []).find(u => u.handle && u.handle.toLowerCase() === handle.toLowerCase());
-    if (!user) { showToast('@' + handle + ' — user not found'); return; }
-    const color = avatarColor(user.handle || '');
-    const init  = getInitials(user.name || user.handle || '?');
+    const user = (window._knownUsers||[]).find(u => u.handle && u.handle.toLowerCase()===handle.toLowerCase());
+    if (!user) { showToast('@'+handle+' — user not found'); return; }
+    const color = avatarColor(user.handle||'');
+    const init  = getInitials(user.name||user.handle||'?');
     const overlay = document.createElement('div');
     overlay.className = 'modal-overlay';
-    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+    overlay.onclick = e => { if(e.target===overlay) overlay.remove(); };
     overlay.innerHTML = `
       <div class="modal-box" style="text-align:left;">
         <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
         <div style="text-align:center;">
           <div class="modal-profile-av" style="background:${color.bg};color:${color.fg}">${escHtml(init)}</div>
-          <div class="modal-profile-name">${escHtml(user.name || user.handle)}</div>
+          <div class="modal-profile-name">${escHtml(user.name||user.handle)}</div>
           <div class="modal-profile-handle">@${escHtml(user.handle)}</div>
         </div>
         <div style="height:16px;"></div>
@@ -586,15 +598,12 @@
     document.body.appendChild(overlay);
   };
 
-  // ── INIT ──
   loadKnownUsers();
   loadPosts();
-  loadStats();
   window._vdb = vdb;
 </script>
 
 <script>
-  // ── COMPOSE: @ autocomplete ──
   let autocompleteActive = false;
   let autocompleteIdx    = -1;
 
@@ -606,19 +615,19 @@
     else       hideAutocomplete();
   }
 
-  function showAutocomplete(query, textarea) {
+  function showAutocomplete(query) {
     const dd      = document.getElementById('autocomplete-dropdown');
-    const matches = (window._knownUsers || [])
+    const matches = (window._knownUsers||[])
       .filter(u => u.handle && u.handle.toLowerCase().startsWith(query) &&
         u.handle.toLowerCase() !== (localStorage.getItem('vibe_handle')||'').toLowerCase())
-      .slice(0, 6);
+      .slice(0,6);
     if (!matches.length) { hideAutocomplete(); return; }
-    dd.innerHTML = matches.map((u, i) => {
-      const color = avatarColor(u.handle || '');
-      const init  = getInitials(u.name || u.handle || '?');
+    dd.innerHTML = matches.map(u => {
+      const color = avatarColor(u.handle||'');
+      const init  = getInitials(u.name||u.handle||'?');
       return `<div class="autocomplete-item" data-handle="${escHtml(u.handle)}" onmousedown="selectMention('${escHtml(u.handle)}')">
         <div class="autocomplete-av" style="background:${color.bg};color:${color.fg}">${escHtml(init)}</div>
-        <div><div class="autocomplete-name">${escHtml(u.name || u.handle)}</div><div class="autocomplete-handle">@${escHtml(u.handle)}</div></div>
+        <div><div class="autocomplete-name">${escHtml(u.name||u.handle)}</div><div class="autocomplete-handle">@${escHtml(u.handle)}</div></div>
       </div>`;
     }).join('');
     dd.classList.add('show');
@@ -634,7 +643,7 @@
 
   function selectMention(handle) {
     const ta     = document.getElementById('compose-input');
-    const before = ta.value.slice(0, ta.selectionStart).replace(/@(\w*)$/, '@' + handle + ' ');
+    const before = ta.value.slice(0, ta.selectionStart).replace(/@(\w*)$/, '@'+handle+' ');
     const after  = ta.value.slice(ta.selectionStart);
     ta.value     = before + after;
     ta.focus();
@@ -644,80 +653,78 @@
   }
 
   document.addEventListener('keydown', e => {
-    if (document.activeElement.id === 'compose-input' && autocompleteActive) {
+    if (document.activeElement.id==='compose-input' && autocompleteActive) {
       const items = document.querySelectorAll('.autocomplete-item');
-      if (e.key === 'ArrowDown')  { e.preventDefault(); autocompleteIdx = Math.min(autocompleteIdx+1, items.length-1); items.forEach((el,i) => el.classList.toggle('selected', i===autocompleteIdx)); }
-      else if (e.key === 'ArrowUp')   { e.preventDefault(); autocompleteIdx = Math.max(autocompleteIdx-1, 0); items.forEach((el,i) => el.classList.toggle('selected', i===autocompleteIdx)); }
-      else if (e.key === 'Enter' && autocompleteIdx >= 0) { e.preventDefault(); selectMention(items[autocompleteIdx].dataset.handle); }
-      else if (e.key === 'Escape') hideAutocomplete();
+      if      (e.key==='ArrowDown')  { e.preventDefault(); autocompleteIdx=Math.min(autocompleteIdx+1,items.length-1); items.forEach((el,i)=>el.classList.toggle('selected',i===autocompleteIdx)); }
+      else if (e.key==='ArrowUp')    { e.preventDefault(); autocompleteIdx=Math.max(autocompleteIdx-1,0); items.forEach((el,i)=>el.classList.toggle('selected',i===autocompleteIdx)); }
+      else if (e.key==='Enter' && autocompleteIdx>=0) { e.preventDefault(); selectMention(items[autocompleteIdx].dataset.handle); }
+      else if (e.key==='Escape')     { hideAutocomplete(); }
       return;
     }
-    if (e.key === 'n' && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'INPUT') {
+    if (e.key==='n' && document.activeElement.tagName!=='TEXTAREA' && document.activeElement.tagName!=='INPUT') {
       e.preventDefault(); focusCompose();
     }
   });
 
-  // ── NAV ──
   function logout() {
-    ['vibe_user','vibe_name','vibe_handle','vibe_initials'].forEach(k => localStorage.removeItem(k));
+    ['vibe_user','vibe_name','vibe_handle','vibe_initials'].forEach(k=>localStorage.removeItem(k));
     window.location.href = 'login.html';
   }
 
   function setTab(e, tab) {
     e.preventDefault();
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
     e.currentTarget.classList.add('active');
-    const titles = { home:'Home', explore:'Explore', notifications:'Notifications', messages:'Messages', bookmarks:'Bookmarks', profile:'My Profile', settings:'Settings' };
-    document.getElementById('page-title').textContent = titles[tab] || tab;
-    document.getElementById('feed-tabs').style.display = tab === 'home' ? 'flex' : 'none';
-    if (tab !== 'home') showToast(`${titles[tab]} — coming soon`);
+    const titles = {home:'Home',explore:'Explore',notifications:'Notifications',messages:'Messages',bookmarks:'Bookmarks',profile:'My Profile',settings:'Settings'};
+    document.getElementById('page-title').textContent = titles[tab]||tab;
+    document.getElementById('feed-tabs').style.display = tab==='home'?'flex':'none';
+    if (tab!=='home') showToast(`${titles[tab]} — coming soon`);
     else loadPosts();
   }
 
   function switchFeedTab(el, tab) {
-    document.querySelectorAll('.feed-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.feed-tab').forEach(t=>t.classList.remove('active'));
     el.classList.add('active');
-    showToast(tab === 'following' ? 'Showing posts from people you follow' : 'Showing all posts');
+    showToast(tab==='following'?'Showing posts from people you follow':'Showing all posts');
     loadPosts();
   }
 
   function focusCompose() {
     document.getElementById('compose-input').focus();
-    document.getElementById('feed-scroll').scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('feed-scroll').scrollTo({top:0,behavior:'smooth'});
   }
 
   function updateCharCount(el) {
     const len = el.value.length;
     const cc  = document.getElementById('char-count');
-    cc.textContent = len > 0 ? `${len}/280` : '';
-    cc.style.color = len > 260 ? 'var(--danger)' : 'var(--muted)';
+    cc.textContent = len>0?`${len}/280`:'';
+    cc.style.color = len>260?'var(--danger)':'var(--muted)';
   }
 
   function handleSearch(val) {
-    if (val.length > 2) showToast(`Searching "${val}" — connect search to your backend`);
+    if (val.length>2) showToast(`Searching "${val}" — connect search to your backend`);
   }
 
   function sharePost(id) {
     const url = `${location.origin}${location.pathname}?post=${id}`;
-    if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => showToast('Link copied!'));
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(()=>showToast('Link copied!'));
     else showToast('Link copied!');
   }
 
-  // ── UTILS ──
-  function formatNum(n) { return n >= 1000 ? (n/1000).toFixed(1).replace('.0','')+'k' : n; }
-  function escHtml(str) { return str ? String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
+  function formatNum(n) { return n>=1000?(n/1000).toFixed(1).replace('.0','')+'k':n; }
+  function escHtml(str) { return str?String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''; }
   function getInitials(str) { return (str||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
   function timeAgo(iso) {
     if (!iso) return '';
-    const m = Math.floor((Date.now() - new Date(iso)) / 60000);
-    if (m < 1)  return 'just now';
-    if (m < 60) return `${m}m ago`;
+    const m = Math.floor((Date.now()-new Date(iso))/60000);
+    if (m<1) return 'just now';
+    if (m<60) return `${m}m ago`;
     const h = Math.floor(m/60);
-    if (h < 24) return `${h}h ago`;
+    if (h<24) return `${h}h ago`;
     return `${Math.floor(h/24)}d ago`;
   }
   function avatarColor(str) {
-    const palettes = [
+    const palettes=[
       {bg:'linear-gradient(135deg,#c7d2fe,#a5b4fc)',fg:'#4338ca'},
       {bg:'linear-gradient(135deg,#fde68a,#fbbf24)',fg:'#92400e'},
       {bg:'linear-gradient(135deg,#bbf7d0,#4ade80)',fg:'#166534'},
@@ -726,16 +733,16 @@
       {bg:'linear-gradient(135deg,#fce7f3,#f9a8d4)',fg:'#9d174d'},
       {bg:'linear-gradient(135deg,#d1fae5,#6ee7b7)',fg:'#065f46'},
     ];
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash<<5) - hash);
-    return palettes[Math.abs(hash) % palettes.length];
+    let hash=0;
+    for(let i=0;i<str.length;i++) hash=str.charCodeAt(i)+((hash<<5)-hash);
+    return palettes[Math.abs(hash)%palettes.length];
   }
   let toastTimer;
   function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
+    t.textContent=msg; t.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
   }
 </script>
 </body>
