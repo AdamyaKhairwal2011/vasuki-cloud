@@ -375,8 +375,7 @@
 
   async function loadKnownUsers() {
     try {
-      const db    = await getDB();
-      const users = await db.fetchTable('users_rows', 'Sheet1');
+      const users = await vdb.fetchTable('users_rows', 'Sheet1');
       knownUsers  = (users || []).filter(u => u && u.handle);
       window._knownUsers = knownUsers;
     } catch(e) { console.warn('Could not load users for mentions:', e); }
@@ -387,8 +386,7 @@
     const container = document.getElementById('posts-container');
     showSkeleton(container);
     try {
-      const db    = await getDB();
-      const posts = await db.fetchTable('vibe_posts', 'Sheet1');
+      const posts = await vdb.fetchTable('vibe_posts', 'Sheet1');
       const sorted = (posts || []).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       container.innerHTML = '';
       if (!sorted.length) {
@@ -470,8 +468,7 @@
     const btn = document.querySelector('.btn-post');
     btn.textContent = 'Posting…'; btn.disabled = true;
     try {
-      const db = await getDB();
-      await db.insertRow('vibe_posts', 'Sheet1', {
+      await vdb.insertRow('vibe_posts', 'Sheet1', {
         author_name: VIBE_NAME, author_handle: VIBE_HANDLE,
         author_initials: VIBE_INITIALS, author_email: VIBE_USER,
         body, likes: 0, comments: 0, reposts: 0,
@@ -515,8 +512,7 @@
   // ── STATS ──
   async function loadStats() {
     try {
-      const db    = await getDB();
-      const posts = await db.fetchTable('vibe_posts', 'Sheet1');
+      const posts = await vdb.fetchTable('vibe_posts', 'Sheet1');
       const mine  = (posts || []).filter(p =>
         (p.author_email  || '').toLowerCase() === VIBE_USER.toLowerCase() ||
         (p.author_handle || '') === VIBE_HANDLE
