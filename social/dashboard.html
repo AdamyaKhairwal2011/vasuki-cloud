@@ -58,7 +58,7 @@
     .compose-input::placeholder{color:var(--muted);}
     .compose-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
     .compose-tools{display:flex;gap:2px;}
-    .compose-tool{width:30px;height:30px;border-radius:7px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+    .compose-tool{width:30px;height:30px;border-radius:7px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;position:relative;}
     .compose-tool:hover{background:var(--off);}
     .compose-tool svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
     .compose-tool.active-tool svg{stroke:var(--accent);}
@@ -72,6 +72,23 @@
     .autocomplete-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;}
     .autocomplete-name{font-size:13px;font-weight:500;color:var(--ink);}
     .autocomplete-handle{font-size:12px;color:var(--muted);}
+
+    /* Emoji Picker */
+    .emoji-picker{position:absolute;bottom:48px;left:0;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);z-index:300;width:320px;overflow:hidden;display:none;animation:fadeUp .18s ease;}
+    .emoji-picker.show{display:block;}
+    .emoji-picker-header{padding:10px 12px 6px;border-bottom:1px solid var(--border);}
+    .emoji-search{width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);outline:none;background:var(--off);}
+    .emoji-search:focus{border-color:var(--accent);}
+    .emoji-category-tabs{display:flex;gap:2px;padding:6px 8px;border-bottom:1px solid var(--border);overflow-x:auto;}
+    .emoji-category-tabs::-webkit-scrollbar{display:none;}
+    .emoji-cat-btn{flex-shrink:0;width:28px;height:28px;border:none;background:transparent;cursor:pointer;border-radius:6px;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background .12s;}
+    .emoji-cat-btn:hover,.emoji-cat-btn.active{background:var(--off);}
+    .emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);padding:8px;gap:2px;max-height:200px;overflow-y:auto;}
+    .emoji-grid::-webkit-scrollbar{width:3px;}
+    .emoji-grid::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+    .emoji-btn{width:34px;height:34px;border:none;background:transparent;cursor:pointer;border-radius:7px;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .1s;line-height:1;}
+    .emoji-btn:hover{background:var(--off);}
+    .emoji-cat-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:6px 10px 4px;font-weight:600;}
 
     /* Image preview in compose */
     .compose-image-preview{margin-top:10px;position:relative;display:inline-block;}
@@ -112,11 +129,7 @@
     .post-mention{color:var(--accent);font-weight:500;cursor:pointer;transition:opacity .15s;text-decoration:none;display:inline;}
     .post-mention:hover{opacity:.75;text-decoration:underline;}
     .post-mention.invalid-user{color:var(--muted);}
-
-    /* Post image */
     .post-image{width:100%;border-radius:9px;border:1px solid var(--border);margin-bottom:12px;display:block;max-height:360px;object-fit:cover;}
-
-    /* Poll display */
     .poll-display{background:var(--off);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
     .poll-option-vote{width:100%;margin-bottom:8px;text-align:left;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);transition:all .15s;display:flex;align-items:center;gap:8px;position:relative;overflow:hidden;}
     .poll-option-vote:hover{border-color:var(--accent);background:var(--accent-soft);}
@@ -126,7 +139,6 @@
     .poll-option-label{position:relative;z-index:1;flex:1;}
     .poll-option-pct{position:relative;z-index:1;font-size:11px;color:var(--muted);font-weight:500;}
     .poll-meta{font-size:11.5px;color:var(--muted);margin-top:4px;}
-
     .post-actions{display:flex;gap:0;margin:-4px;}
     .post-action{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-family:'Geist',sans-serif;font-size:12.5px;color:var(--muted);transition:all .15s;}
     .post-action:hover{background:var(--off);color:var(--ink2);}
@@ -135,8 +147,6 @@
     .post-action.liked .heart{stroke:var(--danger);fill:var(--danger);}
     .post-action.reposted{color:var(--green);}
     .post-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-
-    /* Comments section */
     .comments-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:none;}
     .comments-section.open{display:block;}
     .comment-item{display:flex;gap:8px;margin-bottom:10px;}
@@ -150,7 +160,6 @@
     .comment-input:focus{border-color:var(--accent);}
     .btn-comment{padding:7px 14px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'Geist',sans-serif;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;}
     .btn-comment:hover{background:#222;}
-
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;animation:fadeIn .18s ease;}
     @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
     .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:320px;max-width:400px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;position:relative;}
@@ -207,12 +216,6 @@
     .trending-count{font-size:11px;color:var(--muted);}
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:9px;opacity:0;pointer-events:none;transition:all .25s;z-index:999;white-space:nowrap;}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-    /* Imgur upload state */
-    .imgur-loading{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--off);border-radius:8px;margin-top:8px;font-size:12px;color:var(--muted);}
-    .imgur-spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
-    @keyframes spin{to{transform:rotate(360deg);}}
-
     @media(max-width:900px){.right-col{display:none;}}
     @media(max-width:640px){
       .sidebar{width:60px;}
@@ -294,7 +297,7 @@
       </button>
     </div>
     <div class="feed-scroll" id="feed-scroll">
-      <div class="compose-box">
+      <div class="compose-box" id="compose-box">
         <div class="compose-top">
           <div class="av" id="compose-av">?</div>
           <textarea class="compose-input" id="compose-input" placeholder="What's on your mind? Use #hashtags and @mentions" rows="2" oninput="handleComposeInput(this)"></textarea>
@@ -304,11 +307,19 @@
         <div id="poll-builder-area"></div>
         <div class="compose-footer">
           <div class="compose-tools">
-            <button class="compose-tool" id="img-tool-btn" title="Add image from Imgur URL" onclick="toggleImgurInput()">
+            <button class="compose-tool" id="img-tool-btn" title="Add image from URL" onclick="toggleImgurInput()">
               <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             </button>
-            <button class="compose-tool" title="Add emoji" onclick="showToast('Emoji picker — coming soon')">
+            <button class="compose-tool" id="emoji-tool-btn" title="Add emoji" onclick="toggleEmojiPicker(event)">
               <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+              <!-- Emoji Picker -->
+              <div class="emoji-picker" id="emoji-picker" onclick="event.stopPropagation()">
+                <div class="emoji-picker-header">
+                  <input class="emoji-search" type="text" placeholder="Search emoji…" oninput="filterEmojis(this.value)" id="emoji-search-input"/>
+                </div>
+                <div class="emoji-category-tabs" id="emoji-cat-tabs"></div>
+                <div class="emoji-grid" id="emoji-grid"></div>
+              </div>
             </button>
             <button class="compose-tool" id="poll-tool-btn" title="Create poll" onclick="togglePollBuilder()">
               <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
@@ -319,7 +330,7 @@
             <button class="btn-post" onclick="submitPost()">Post</button>
           </div>
         </div>
-        <!-- Hidden imgur URL input -->
+        <!-- Imgur URL input -->
         <div id="imgur-url-area" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
           <div style="display:flex;gap:8px;align-items:center;">
             <input type="url" id="imgur-url-input" placeholder="Paste image URL (Imgur, etc.)" style="flex:1;border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);outline:none;background:var(--white);" oninput="previewImgurUrl(this.value)"/>
@@ -379,7 +390,7 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileUpload(this)"/>
+<input type="file" id="file-input" accept="image/*" style="display:none"/>
 
 <script type="module">
   import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
@@ -414,7 +425,6 @@
     } catch(e) { console.warn('Could not load users for mentions:', e); }
   }
 
-  // ── LOAD POSTS ──
   window.loadPosts = async function() {
     const container = document.getElementById('posts-container');
     showSkeleton(container);
@@ -434,7 +444,6 @@
     }
   };
 
-  // ── BUILD POST CARD ──
   function buildPostCard(p) {
     const el = document.createElement('div');
     el.className = 'post-card';
@@ -446,7 +455,6 @@
     const liked    = sessionLikes.has(p.id);
     const reposted = sessionReposts.has(p.id);
 
-    // Build poll HTML if present
     let pollHtml = '';
     if (p.poll_options) {
       try {
@@ -467,7 +475,6 @@
       } catch(e) { pollHtml = ''; }
     }
 
-    // Image HTML
     const imageHtml = p.image_url
       ? `<img class="post-image" src="${escHtml(p.image_url)}" alt="Post image" loading="lazy" onerror="this.style.display='none'"/>`
       : '';
@@ -515,7 +522,6 @@
     return el;
   }
 
-  // ── TOGGLE COMMENTS ──
   window.toggleComments = async function(postId) {
     const section = document.getElementById('comments-'+postId);
     if (!section) return;
@@ -529,7 +535,6 @@
     }
   };
 
-  // ── LOAD COMMENTS ──
   async function loadComments(postId) {
     const listEl = document.getElementById('comments-list-'+postId);
     if (!listEl) return;
@@ -564,7 +569,6 @@
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitComment(postId); }
   };
 
-  // ── SUBMIT COMMENT ──
   window.submitComment = async function(postId) {
     const inp = document.getElementById('comment-input-'+postId);
     const body = inp?.value.trim();
@@ -578,7 +582,6 @@
         body, created_at: new Date().toISOString()
       });
       inp.value = '';
-      // Update comment count in DB
       const countEl = document.getElementById('comment-count-'+postId);
       const cur = parseInt(countEl?.textContent)||0;
       await vdb.updateRow('vibe_posts', 'Sheet1', postId, { comments: cur+1 });
@@ -592,11 +595,9 @@
     }
   };
 
-  // ── VOTE POLL ──
   window.votePoll = async function(postId, optionIdx, btn) {
-    const btns = btn.closest('.poll-display').querySelectorAll('.poll-option-vote');
-    btns.forEach(b => { if (b.classList.contains('voted')) return; });
     if (btn.classList.contains('voted')) { showToast('Already voted!'); return; }
+    const btns = btn.closest('.poll-display').querySelectorAll('.poll-option-vote');
     btns.forEach(b => b.disabled = true);
     try {
       const posts = await vdb.fetchTable('vibe_posts', 'Sheet1');
@@ -611,7 +612,6 @@
         poll_votes: JSON.stringify(votes),
         poll_voted: JSON.stringify(voted)
       });
-      // Re-render this card
       const container = document.getElementById('posts-container');
       const updatedPosts = await vdb.fetchTable('vibe_posts', 'Sheet1');
       const updated = (updatedPosts||[]).find(p=>p.id===postId);
@@ -628,7 +628,6 @@
     }
   };
 
-  // ── RENDER POST BODY ──
   function renderPostBody(text) {
     if (!text) return '';
     let safe = escHtml(text);
@@ -644,7 +643,6 @@
   }
   window.renderPostBody = renderPostBody;
 
-  // ── SUBMIT POST ──
   window.submitPost = async function() {
     const inp  = document.getElementById('compose-input');
     const body = inp.value.trim();
@@ -685,7 +683,6 @@
     }
   };
 
-  // ── DELETE POST ──
   window.deletePost = async function(id) {
     if (!confirm('Delete this post?')) return;
     const card = document.getElementById('post-'+id);
@@ -704,7 +701,6 @@
     }
   };
 
-  // ── TOGGLE LIKE ──
   window.toggleLike = async function(id, btn) {
     if (btn.disabled) return;
     btn.disabled = true;
@@ -719,7 +715,6 @@
     try {
       await vdb.updateRow('vibe_posts', 'Sheet1', id, { likes: newCount });
     } catch(err) {
-      console.error(err);
       btn.classList.toggle('liked', wasLiked);
       countEl.textContent = formatNum(current);
       if (!wasLiked) sessionLikes.delete(id); else sessionLikes.add(id);
@@ -727,7 +722,6 @@
     } finally { btn.disabled = false; }
   };
 
-  // ── TOGGLE REPOST ──
   window.toggleRepost = async function(id, btn) {
     if (btn.disabled) return;
     btn.disabled = true;
@@ -742,7 +736,6 @@
     try {
       await vdb.updateRow('vibe_posts', 'Sheet1', id, { reposts: newCount });
     } catch(err) {
-      console.error(err);
       btn.classList.toggle('reposted', wasReposted);
       countEl.textContent = formatNum(current);
       if (!wasReposted) sessionReposts.delete(id); else sessionReposts.add(id);
@@ -750,7 +743,6 @@
     } finally { btn.disabled = false; }
   };
 
-  // ── STATS ──
   function updateStats(posts) {
     const mine = (posts||[]).filter(p =>
       (p.author_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase() ||
@@ -770,7 +762,6 @@
     } catch(e) { console.warn(e); }
   }
 
-  // ── SKELETON ──
   function showSkeleton(container) {
     container.innerHTML = Array(3).fill('').map(() => `
       <div class="skel">
@@ -779,7 +770,6 @@
       </div>`).join('');
   }
 
-  // ── HASHTAG MODAL ──
   window.openHashtagModal = function(tag) {
     const posts = document.querySelectorAll('.post-card');
     let matched = [];
@@ -806,7 +796,6 @@
     document.body.appendChild(overlay);
   };
 
-  // ── MENTION MODAL ──
   window.openMentionModal = function(handle) {
     const user = (window._knownUsers||[]).find(u => u.handle && u.handle.toLowerCase()===handle.toLowerCase());
     if (!user) { showToast('@'+handle+' — user not found'); return; }
@@ -836,20 +825,91 @@
 </script>
 
 <script>
-  let autocompleteActive = false;
-  let autocompleteIdx    = -1;
-  window._attachedImageUrl = '';
-  window._pollData = null;
-  let pollBuilderOpen = false;
-  let imgurInputOpen  = false;
+  // ── EMOJI DATA ──
+  const EMOJI_CATEGORIES = [
+    { icon: '😀', label: 'Smileys', emojis: ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','🥸','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖'] },
+    { icon: '👋', label: 'People', emojis: ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦵','🦿','🦻','👃','🫀','🫁','🧠','🦷','🦴','👀','👁️','👅','💋','💌','💘','💝','💖','💗','💓','💞','💕','💟','❣️','💔','❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍'] },
+    { icon: '🐶', label: 'Animals', emojis: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐻‍❄️','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐔','🐧','🐦','🐤','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🦟','🦗','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🦭','🐊','🐅','🐆','🦓','🦍','🦧','🦣','🐘','🦛','🦏','🐪','🐫','🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩','🦮','🐕‍🦺','🐈','🐈‍⬛','🐓','🦃','🦤','🦚','🦜','🦢','🦩','🕊️','🐇','🦝','🦨','🦡','🦫','🦦','🦥','🐁','🐀','🐿️','🦔'] },
+    { icon: '🍎', label: 'Food', emojis: ['🍎','🍊','🍋','🍇','🍓','🍒','🍑','🥭','🍍','🥝','🍅','🫐','🍆','🥑','🥦','🥬','🥒','🌶️','🫑','🧄','🧅','🥔','🌽','🍠','🧆','🧇','🥞','🧈','🍳','🥚','🧀','🥗','🥙','🌮','🌯','🫔','🥫','🍱','🍘','🍙','🍚','🍛','🍜','🍝','🍠','🍢','🍣','🍤','🍥','🥮','🍡','🥟','🥠','🥡','🍦','🍧','🍨','🍩','🍪','🎂','🍰','🧁','🥧','🍫','🍬','🍭','🍮','🍯','🍷','🥂','🍸','🍹','🧃','☕','🍵','🧋','🍺','🧉','🍻'] },
+    { icon: '⚽', label: 'Sports', emojis: ['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🏓','🏸','🏒','🥅','⛳','🎣','🤿','🎽','🎿','🛷','🥌','🎯','🎲','🎮','🕹️','🎰','🏆','🥇','🥈','🥉','🏅','🎖️','🏋️','🤸','⛹️','🤺','🏇','🧘','🏄','🏊','🚴','🧗','🏌️','🏂'] },
+    { icon: '🚗', label: 'Travel', emojis: ['🚗','🚕','🚙','🚌','🚎','🏎️','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🏍️','🛵','🛺','🚲','🛴','🛹','🛼','🚁','🛸','✈️','🚀','🛩️','🪂','💺','🛶','⛵','🚤','🛥️','🛳️','⛴️','🚢','⚓','🏝️','🏔️','⛰️','🗻','🏕️','🌋','🗾','🏜️','🏖️','🏗️','🏘️','🏚️','🏠','🏡','🏢','🏣','🏤','🏥','🏦','🏨','🏩','🏪','🏫','🏬','🏭','🗼','🗽','⛪','🕌','🛕','🕍','⛩️','🗺️','🌍','🌎','🌏','🌐'] },
+    { icon: '💡', label: 'Objects', emojis: ['💡','🔦','🕯️','💰','💵','💴','💶','💷','💸','💳','🪙','💎','📱','💻','⌨️','🖥️','🖨️','🖱️','🖲️','💾','💿','📀','📷','📸','📹','🎥','📽️','🎞️','📞','☎️','📟','📠','📺','📻','🧭','⏱️','⏰','⌚','⏳','📡','🔋','🔌','💡','🔦','🕯️','🪔','🧯','🛢️','💸','🔑','🗝️','🔐','🔒','🔓','🔨','🪓','⛏️','⚒️','🛠️','🗡️','⚔️','🛡️','🔧','🪛','🔩','⚙️','🗜️','🔗','⛓️','🧲','🪜','📌','📍','✂️','🗃️','🗳️','🗄️','🗑️','🔏','🔐'] },
+    { icon: '🎵', label: 'Symbols', emojis: ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','✨','🌟','⭐','🌠','☀️','🌤️','⛅','🌥️','☁️','🌦️','🌧️','⛈️','🌩️','🌨️','❄️','☃️','⛄','🌬️','💨','💧','💦','☔','⚡','🌈','🎵','🎶','🎼','🔔','🔕','📣','📢','🔊','🔉','🔈','🔇','🎺','🎸','🪕','🎻','🥁','🪘','🎹','🎷','🪗','🎙️','🎚️','🎛️','📻','🎤','🎧','📯','🔔','🔕','🎵','🎶','✅','❌','❎','🔴','🟠','🟡','🟢','🔵','🟣','🟤','⚫','⚪','🔺','🔻','🔷','🔶','🔹','🔸','♾️','🆕','🆙','🆓','🆒','🆗','🆖','🅰️','🅱️','🆎','🅾️','🆑','💯'] },
+  ];
+
+  let currentEmojiCategory = 0;
+  let emojiPickerOpen = false;
+
+  function initEmojiPicker() {
+    const tabsEl = document.getElementById('emoji-cat-tabs');
+    tabsEl.innerHTML = EMOJI_CATEGORIES.map((c,i) =>
+      `<button class="emoji-cat-btn${i===0?' active':''}" onclick="switchEmojiCategory(${i})" title="${c.label}">${c.icon}</button>`
+    ).join('');
+    renderEmojiGrid(0);
+  }
+
+  window.switchEmojiCategory = function(i) {
+    currentEmojiCategory = i;
+    document.querySelectorAll('.emoji-cat-btn').forEach((b,j) => b.classList.toggle('active', j===i));
+    document.getElementById('emoji-search-input').value = '';
+    renderEmojiGrid(i);
+  };
+
+  function renderEmojiGrid(catIdx, filter) {
+    const grid = document.getElementById('emoji-grid');
+    let emojis = EMOJI_CATEGORIES[catIdx].emojis;
+    if (filter) emojis = EMOJI_CATEGORIES.flatMap(c => c.emojis).filter(e => e.includes(filter));
+    grid.innerHTML = emojis.map(e =>
+      `<button class="emoji-btn" onclick="insertEmoji('${e}')" title="${e}">${e}</button>`
+    ).join('');
+  }
+
+  window.filterEmojis = function(query) {
+    if (!query.trim()) { renderEmojiGrid(currentEmojiCategory); return; }
+    const grid = document.getElementById('emoji-grid');
+    const all = EMOJI_CATEGORIES.flatMap(c => c.emojis);
+    grid.innerHTML = all.map(e =>
+      `<button class="emoji-btn" onclick="insertEmoji('${e}')">${e}</button>`
+    ).join('');
+  };
+
+  window.insertEmoji = function(emoji) {
+    const ta = document.getElementById('compose-input');
+    const start = ta.selectionStart;
+    const end   = ta.selectionEnd;
+    ta.value = ta.value.slice(0, start) + emoji + ta.value.slice(end);
+    const newPos = start + emoji.length;
+    ta.focus();
+    ta.setSelectionRange(newPos, newPos);
+    updateCharCount(ta);
+  };
+
+  window.toggleEmojiPicker = function(e) {
+    e.stopPropagation();
+    emojiPickerOpen = !emojiPickerOpen;
+    const picker = document.getElementById('emoji-picker');
+    picker.classList.toggle('show', emojiPickerOpen);
+    document.getElementById('emoji-tool-btn').classList.toggle('active-tool', emojiPickerOpen);
+    if (emojiPickerOpen) {
+      initEmojiPicker();
+      setTimeout(() => document.getElementById('emoji-search-input')?.focus(), 50);
+    }
+  };
+
+  document.addEventListener('click', e => {
+    if (emojiPickerOpen && !e.target.closest('#emoji-tool-btn')) {
+      emojiPickerOpen = false;
+      document.getElementById('emoji-picker').classList.remove('show');
+      document.getElementById('emoji-tool-btn').classList.remove('active-tool');
+    }
+  });
 
   // ── IMAGE / IMGUR ──
   window.toggleImgurInput = function() {
-    imgurInputOpen = !imgurInputOpen;
-    const area = document.getElementById('imgur-url-area');
-    area.style.display = imgurInputOpen ? 'block' : 'none';
-    document.getElementById('img-tool-btn').classList.toggle('active-tool', imgurInputOpen);
-    if (imgurInputOpen) document.getElementById('imgur-url-input').focus();
+    const imgurInputOpen = document.getElementById('imgur-url-area').style.display === 'block';
+    document.getElementById('imgur-url-area').style.display = imgurInputOpen ? 'none' : 'block';
+    document.getElementById('img-tool-btn').classList.toggle('active-tool', !imgurInputOpen);
+    if (!imgurInputOpen) document.getElementById('imgur-url-input').focus();
   };
 
   window.previewImgurUrl = function(url) {
@@ -863,14 +923,15 @@
 
   window.clearImageAttach = function() {
     window._attachedImageUrl = '';
-    document.getElementById('imgur-url-input').value = '';
+    const inp = document.getElementById('imgur-url-input');
+    if (inp) inp.value = '';
     document.getElementById('url-preview-area').innerHTML = '';
     document.getElementById('imgur-url-area').style.display = 'none';
     document.getElementById('img-tool-btn').classList.remove('active-tool');
-    imgurInputOpen = false;
   };
 
   // ── POLL BUILDER ──
+  let pollBuilderOpen = false;
   window.togglePollBuilder = function() {
     pollBuilderOpen = !pollBuilderOpen;
     document.getElementById('poll-tool-btn').classList.toggle('active-tool', pollBuilderOpen);
@@ -881,6 +942,7 @@
   window.cancelPoll = function() {
     pollBuilderOpen = false;
     window._pollData = null;
+    window._pollOptions = null;
     document.getElementById('poll-builder-area').innerHTML = '';
     document.getElementById('poll-tool-btn').classList.remove('active-tool');
   };
@@ -910,28 +972,19 @@
     syncPollData();
   }
 
-  window.updatePollOption = function(i, val) {
-    if (!window._pollOptions) return;
-    window._pollOptions[i] = val;
-    syncPollData();
-  };
-  window.addPollOption = function() {
-    if (!window._pollOptions || window._pollOptions.length>=4) return;
-    window._pollOptions.push('');
-    renderPollBuilder();
-  };
-  window.removePollOption = function(i) {
-    if (!window._pollOptions || window._pollOptions.length<=2) return;
-    window._pollOptions.splice(i,1);
-    renderPollBuilder();
-  };
+  window.updatePollOption = function(i, val) { if(window._pollOptions) { window._pollOptions[i]=val; syncPollData(); } };
+  window.addPollOption = function() { if(window._pollOptions && window._pollOptions.length<4) { window._pollOptions.push(''); renderPollBuilder(); } };
+  window.removePollOption = function(i) { if(window._pollOptions && window._pollOptions.length>2) { window._pollOptions.splice(i,1); renderPollBuilder(); } };
   function syncPollData() {
     const dur = document.getElementById('poll-duration-sel')?.value || '1 day';
-    const opts = (window._pollOptions||[]).filter(o=>o.trim());
-    window._pollData = opts.length>=2 ? { options: window._pollOptions, duration: dur } : null;
+    window._pollData = (window._pollOptions||[]).filter(o=>o.trim()).length>=2
+      ? { options: window._pollOptions, duration: dur } : null;
   }
 
   // ── AUTOCOMPLETE ──
+  let autocompleteActive = false;
+  let autocompleteIdx    = -1;
+
   function handleComposeInput(el) {
     updateCharCount(el);
     const before = el.value.slice(0, el.selectionStart);
@@ -1069,6 +1122,9 @@
     clearTimeout(toastTimer);
     toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
   }
+
+  window._attachedImageUrl = '';
+  window._pollData = null;
 </script>
 </body>
 </html>
