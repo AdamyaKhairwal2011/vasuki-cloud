@@ -65,41 +65,6 @@
     .btn-post{padding:7px 18px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s;}
     .btn-post:hover{background:#222;}
     .char-count{font-size:11px;color:var(--muted);}
-    /* Image preview strip */
-    .image-preview-strip{display:none;gap:8px;margin-top:10px;flex-wrap:wrap;}
-    .image-preview-strip.show{display:flex;}
-    .img-thumb{position:relative;width:72px;height:72px;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
-    .img-thumb img{width:100%;height:100%;object-fit:cover;}
-    .img-thumb-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.6);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-    .img-thumb-remove svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;}
-    .img-uploading{position:absolute;inset:0;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);}
-    /* Poll builder in compose */
-    .poll-builder{display:none;margin-top:12px;padding:12px;background:var(--off);border-radius:9px;border:1px solid var(--border);}
-    .poll-builder.show{display:block;}
-    .poll-builder-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
-    .poll-option-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
-    .poll-option-input{flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:7px;font-family:'Geist',sans-serif;font-size:13px;background:var(--white);outline:none;color:var(--ink);}
-    .poll-option-input:focus{border-color:var(--accent);}
-    .poll-remove-btn{width:24px;height:24px;border-radius:6px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);}
-    .poll-remove-btn:hover{background:var(--border);color:var(--danger);}
-    .poll-remove-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;}
-    .poll-add-btn{font-size:12px;color:var(--accent);background:none;border:none;cursor:pointer;padding:0;font-family:'Geist',sans-serif;}
-    .poll-duration{font-size:12px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:6px;}
-    .poll-duration select{font-family:'Geist',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:6px;padding:3px 6px;background:var(--white);color:var(--ink);outline:none;}
-    /* Poll display in post */
-    .poll-block{margin-top:10px;padding:12px;background:var(--off);border-radius:9px;border:1px solid var(--border);}
-    .poll-option-vote{width:100%;margin-bottom:6px;padding:0;border:none;background:transparent;cursor:pointer;text-align:left;}
-    .poll-option-vote:disabled{cursor:default;}
-    .poll-bar-wrap{position:relative;background:var(--border);border-radius:6px;height:34px;overflow:hidden;}
-    .poll-bar-fill{position:absolute;left:0;top:0;height:100%;background:var(--accent-soft);border-radius:6px;transition:width .5s ease;}
-    .poll-bar-fill.voted{background:rgba(26,107,245,.18);}
-    .poll-bar-label{position:relative;z-index:1;padding:0 10px;height:34px;display:flex;align-items:center;justify-content:space-between;font-size:13px;}
-    .poll-bar-label span:first-child{color:var(--ink);font-weight:500;}
-    .poll-bar-label span:last-child{color:var(--muted);font-size:12px;}
-    .poll-meta{font-size:11.5px;color:var(--muted);margin-top:6px;}
-    /* Post image display */
-    .post-image{margin-top:10px;border-radius:9px;overflow:hidden;max-height:320px;}
-    .post-image img{width:100%;height:100%;object-fit:cover;display:block;}
     .autocomplete-dropdown{position:absolute;left:60px;right:16px;background:var(--white);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:100;max-height:200px;overflow-y:auto;display:none;}
     .autocomplete-dropdown.show{display:block;}
     .autocomplete-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .12s;}
@@ -107,6 +72,28 @@
     .autocomplete-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;}
     .autocomplete-name{font-size:13px;font-weight:500;color:var(--ink);}
     .autocomplete-handle{font-size:12px;color:var(--muted);}
+
+    /* Image preview in compose */
+    .compose-image-preview{margin-top:10px;position:relative;display:inline-block;}
+    .compose-image-preview img{max-width:100%;max-height:200px;border-radius:9px;border:1px solid var(--border);display:block;}
+    .compose-image-remove{position:absolute;top:6px;right:6px;width:22px;height:22px;background:rgba(0,0,0,.6);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .compose-image-remove svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;}
+
+    /* Poll builder */
+    .poll-builder{margin-top:12px;background:var(--off);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+    .poll-builder-title{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+    .poll-option-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+    .poll-option-input{flex:1;border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);background:var(--white);outline:none;}
+    .poll-option-input:focus{border-color:var(--accent);}
+    .poll-remove-opt{width:24px;height:24px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:5px;flex-shrink:0;}
+    .poll-remove-opt:hover{background:var(--border);}
+    .poll-remove-opt svg{width:12px;height:12px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;}
+    .poll-add-opt{font-size:12px;color:var(--accent);border:none;background:transparent;cursor:pointer;padding:4px 0;font-family:'Geist',sans-serif;}
+    .poll-add-opt:hover{text-decoration:underline;}
+    .poll-duration{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+    .poll-duration label{font-size:12px;color:var(--muted);}
+    .poll-duration select{border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-family:'Geist',sans-serif;font-size:12px;color:var(--ink);background:var(--white);outline:none;}
+
     .post-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;transition:border-color .15s;animation:fadeUp .3s ease both;}
     .post-card:hover{border-color:#d0cdc8;}
     @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
@@ -125,6 +112,21 @@
     .post-mention{color:var(--accent);font-weight:500;cursor:pointer;transition:opacity .15s;text-decoration:none;display:inline;}
     .post-mention:hover{opacity:.75;text-decoration:underline;}
     .post-mention.invalid-user{color:var(--muted);}
+
+    /* Post image */
+    .post-image{width:100%;border-radius:9px;border:1px solid var(--border);margin-bottom:12px;display:block;max-height:360px;object-fit:cover;}
+
+    /* Poll display */
+    .poll-display{background:var(--off);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+    .poll-option-vote{width:100%;margin-bottom:8px;text-align:left;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);transition:all .15s;display:flex;align-items:center;gap:8px;position:relative;overflow:hidden;}
+    .poll-option-vote:hover{border-color:var(--accent);background:var(--accent-soft);}
+    .poll-option-vote.voted{border-color:var(--accent);cursor:default;}
+    .poll-option-vote.voted:hover{background:var(--white);}
+    .poll-bar{position:absolute;left:0;top:0;bottom:0;background:var(--accent-soft);transition:width .5s ease;z-index:0;}
+    .poll-option-label{position:relative;z-index:1;flex:1;}
+    .poll-option-pct{position:relative;z-index:1;font-size:11px;color:var(--muted);font-weight:500;}
+    .poll-meta{font-size:11.5px;color:var(--muted);margin-top:4px;}
+
     .post-actions{display:flex;gap:0;margin:-4px;}
     .post-action{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-family:'Geist',sans-serif;font-size:12.5px;color:var(--muted);transition:all .15s;}
     .post-action:hover{background:var(--off);color:var(--ink2);}
@@ -133,22 +135,25 @@
     .post-action.liked .heart{stroke:var(--danger);fill:var(--danger);}
     .post-action.reposted{color:var(--green);}
     .post-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-    /* Comment thread in modal */
-    .comment-thread{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;margin-bottom:12px;}
-    .comment-item{display:flex;gap:9px;align-items:flex-start;}
-    .comment-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;}
-    .comment-body{flex:1;background:var(--off);border-radius:9px;padding:8px 11px;}
-    .comment-name{font-size:12px;font-weight:600;color:var(--ink);}
-    .comment-text{font-size:13px;color:var(--ink2);line-height:1.5;margin-top:2px;}
+
+    /* Comments section */
+    .comments-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:none;}
+    .comments-section.open{display:block;}
+    .comment-item{display:flex;gap:8px;margin-bottom:10px;}
+    .comment-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;}
+    .comment-body{flex:1;background:var(--off);border-radius:8px;padding:8px 10px;}
+    .comment-author{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+    .comment-text{font-size:13px;color:var(--ink2);line-height:1.5;}
     .comment-time{font-size:11px;color:var(--muted);margin-top:3px;}
-    .comment-input-row{display:flex;gap:8px;align-items:flex-end;}
-    .comment-input{flex:1;border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-family:'Geist',sans-serif;font-size:13px;outline:none;resize:none;min-height:38px;max-height:90px;color:var(--ink);background:var(--white);}
+    .comment-input-row{display:flex;gap:8px;align-items:flex-end;margin-top:8px;}
+    .comment-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);background:var(--white);outline:none;resize:none;min-height:36px;line-height:1.5;}
     .comment-input:focus{border-color:var(--accent);}
-    .comment-submit{padding:8px 14px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'Geist',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;}
-    .comment-submit:hover{background:#222;}
+    .btn-comment{padding:7px 14px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'Geist',sans-serif;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;}
+    .btn-comment:hover{background:#222;}
+
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;animation:fadeIn .18s ease;}
     @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-    .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:320px;max-width:480px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;position:relative;}
+    .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:320px;max-width:400px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;position:relative;}
     @keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
     .modal-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:7px;border:none;background:var(--off);cursor:pointer;display:flex;align-items:center;justify-content:center;}
     .modal-close svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;}
@@ -189,7 +194,8 @@
     .stat-card{background:var(--off);border:1px solid var(--border);border-radius:9px;padding:12px 14px;}
     .stat-val{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);line-height:1;}
     .stat-label{font-size:11px;color:var(--muted);margin-top:2px;}
-    .profile-card{background:var(--off);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+    .profile-card{background:var(--off);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;align-items:center;gap:10px;margin-bottom:16px;cursor:pointer;transition:border-color .15s;}
+    .profile-card:hover{border-color:#d0cdc8;}
     .profile-card-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#c7d2fe,#a5b4fc);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:#4338ca;flex-shrink:0;}
     .profile-card-info{flex:1;min-width:0;}
     .profile-card-name{font-size:13.5px;font-weight:500;color:var(--ink);}
@@ -201,9 +207,12 @@
     .trending-count{font-size:11px;color:var(--muted);}
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:9px;opacity:0;pointer-events:none;transition:all .25s;z-index:999;white-space:nowrap;}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-    /* Imgur upload progress */
-    .imgur-progress{font-size:11px;color:var(--accent);padding:4px 8px;background:var(--accent-soft);border-radius:6px;display:none;}
-    .imgur-progress.show{display:inline-block;}
+
+    /* Imgur upload state */
+    .imgur-loading{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--off);border-radius:8px;margin-top:8px;font-size:12px;color:var(--muted);}
+    .imgur-spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
     @media(max-width:900px){.right-col{display:none;}}
     @media(max-width:640px){
       .sidebar{width:60px;}
@@ -239,7 +248,7 @@
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
       <span>Notifications</span>
     </a>
-    <a class="nav-item" href="#" onclick="setTab(event,'messages')">
+    <a class="nav-item" href="chat.html">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
       <span>Messages</span>
     </a>
@@ -248,7 +257,6 @@
       <span>Bookmarks</span>
     </a>
     <div class="sb-section-label">You</div>
-    <!-- ACTIVATED: Profile button now links to profile.html -->
     <a class="nav-item" href="profile.html">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span>My Profile</span>
@@ -259,8 +267,7 @@
     </a>
   </nav>
   <div class="sb-footer">
-    <!-- ACTIVATED: Sidebar profile also links to profile.html -->
-    <div class="sb-profile" onclick="window.location.href='profile.html'" title="View profile">
+    <div class="sb-profile" onclick="window.location.href='profile.html'">
       <div class="sb-av" id="sb-av">?</div>
       <div class="sb-info">
         <div class="sb-name" id="sb-name">Loading...</div>
@@ -292,55 +299,33 @@
           <div class="av" id="compose-av">?</div>
           <textarea class="compose-input" id="compose-input" placeholder="What's on your mind? Use #hashtags and @mentions" rows="2" oninput="handleComposeInput(this)"></textarea>
         </div>
-        <!-- Image preview strip -->
-        <div class="image-preview-strip" id="image-preview-strip"></div>
-        <!-- Poll builder -->
-        <div class="poll-builder" id="poll-builder">
-          <div class="poll-builder-title">
-            <span>📊 Poll</span>
-            <button onclick="togglePoll()" style="background:none;border:none;cursor:pointer;font-size:12px;color:var(--muted);">Remove</button>
-          </div>
-          <div id="poll-options">
-            <div class="poll-option-row">
-              <input class="poll-option-input" placeholder="Option 1" maxlength="60"/>
-              <button class="poll-remove-btn" onclick="removePollOption(this)"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-            </div>
-            <div class="poll-option-row">
-              <input class="poll-option-input" placeholder="Option 2" maxlength="60"/>
-              <button class="poll-remove-btn" onclick="removePollOption(this)"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-            </div>
-          </div>
-          <button class="poll-add-btn" onclick="addPollOption()">+ Add option</button>
-          <div class="poll-duration">
-            Duration:
-            <select id="poll-duration">
-              <option value="1">1 day</option>
-              <option value="3" selected>3 days</option>
-              <option value="7">7 days</option>
-            </select>
-          </div>
-        </div>
         <div class="autocomplete-dropdown" id="autocomplete-dropdown"></div>
+        <div id="compose-image-area"></div>
+        <div id="poll-builder-area"></div>
         <div class="compose-footer">
           <div class="compose-tools">
-            <!-- ACTIVATED: Imgur image upload -->
-            <button class="compose-tool" id="img-tool-btn" title="Add image (Imgur)" onclick="triggerImageUpload()">
+            <button class="compose-tool" id="img-tool-btn" title="Add image from Imgur URL" onclick="toggleImgurInput()">
               <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             </button>
-            <input type="file" id="imgur-file-input" accept="image/*" multiple style="display:none" onchange="handleImgurUpload(this)"/>
             <button class="compose-tool" title="Add emoji" onclick="showToast('Emoji picker — coming soon')">
               <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
             </button>
-            <!-- ACTIVATED: Poll toggle -->
-            <button class="compose-tool" id="poll-tool-btn" title="Create poll" onclick="togglePoll()">
+            <button class="compose-tool" id="poll-tool-btn" title="Create poll" onclick="togglePollBuilder()">
               <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
             </button>
           </div>
           <div style="display:flex;align-items:center;gap:10px;">
-            <span class="imgur-progress" id="imgur-progress">Uploading…</span>
             <span class="char-count" id="char-count"></span>
             <button class="btn-post" onclick="submitPost()">Post</button>
           </div>
+        </div>
+        <!-- Hidden imgur URL input -->
+        <div id="imgur-url-area" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="url" id="imgur-url-input" placeholder="Paste image URL (Imgur, etc.)" style="flex:1;border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);outline:none;background:var(--white);" oninput="previewImgurUrl(this.value)"/>
+            <button onclick="clearImageAttach()" style="padding:7px 12px;border:1px solid var(--border);border-radius:7px;background:transparent;font-family:'Geist',sans-serif;font-size:12px;cursor:pointer;color:var(--muted);">Clear</button>
+          </div>
+          <div id="url-preview-area" style="margin-top:8px;"></div>
         </div>
       </div>
       <div id="posts-container"></div>
@@ -355,8 +340,7 @@
       </div>
       <div class="widget">
         <div class="widget-title">Your Profile</div>
-        <!-- ACTIVATED: Profile card links to profile.html -->
-        <div class="profile-card" onclick="window.location.href='profile.html'" style="cursor:pointer;" title="View profile">
+        <div class="profile-card" onclick="window.location.href='profile.html'">
           <div class="profile-card-av" id="right-av">?</div>
           <div class="profile-card-info">
             <div class="profile-card-name" id="right-name">—</div>
@@ -381,11 +365,21 @@
           <div class="trending-item" onclick="openHashtagModal('design')"><span class="trending-tag">#design</span><span class="trending-count">trending</span></div>
         </div>
       </div>
+      <div class="widget">
+        <a href="chat.html" style="display:flex;align-items:center;gap:10px;background:var(--off);border:1px solid var(--border);border-radius:10px;padding:12px 14px;text-decoration:none;color:var(--ink);transition:border-color .15s;" onmouseover="this.style.borderColor='#d0cdc8'" onmouseout="this.style.borderColor='var(--border)'">
+          <svg viewBox="0 0 24 24" width="18" height="18" style="stroke:var(--accent);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <div>
+            <div style="font-size:13px;font-weight:500;">Open Messages</div>
+            <div style="font-size:11.5px;color:var(--muted);">Chat with anyone on Vibe</div>
+          </div>
+        </a>
+      </div>
     </div>
   </aside>
 </div>
 
 <div class="toast" id="toast"></div>
+<input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileUpload(this)"/>
 
 <script type="module">
   import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
@@ -408,11 +402,8 @@
 
   await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
 
-  // Per-session like/repost tracking
   const sessionLikes   = new Set();
   const sessionReposts = new Set();
-  // Per-session voted polls (postId -> optionIndex)
-  const sessionPollVotes = {};
 
   let knownUsers = [];
   async function loadKnownUsers() {
@@ -455,20 +446,31 @@
     const liked    = sessionLikes.has(p.id);
     const reposted = sessionReposts.has(p.id);
 
-    // Build image HTML if present
-    let imageHtml = '';
-    if (p.image_url) {
-      imageHtml = `<div class="post-image"><img src="${escHtml(p.image_url)}" alt="Post image" loading="lazy" onerror="this.parentElement.style.display='none'"/></div>`;
-    }
-
     // Build poll HTML if present
     let pollHtml = '';
-    if (p.poll_data) {
+    if (p.poll_options) {
       try {
-        const poll = typeof p.poll_data === 'string' ? JSON.parse(p.poll_data) : p.poll_data;
-        pollHtml = buildPollHtml(p.id, poll);
-      } catch(e) { /* ignore malformed poll */ }
+        const opts = JSON.parse(p.poll_options);
+        const votes = p.poll_votes ? JSON.parse(p.poll_votes) : opts.map(()=>0);
+        const total = votes.reduce((a,b)=>a+b, 0);
+        const userVoted = p.poll_voted ? JSON.parse(p.poll_voted||'[]').includes(VIBE_USER) : false;
+        pollHtml = `<div class="poll-display">`;
+        opts.forEach((opt, i) => {
+          const pct = total>0 ? Math.round((votes[i]||0)/total*100) : 0;
+          pollHtml += `<button class="poll-option-vote${userVoted?' voted':''}" onclick="votePoll('${p.id}',${i},this)">
+            <div class="poll-bar" style="width:${userVoted?pct:0}%"></div>
+            <span class="poll-option-label">${escHtml(opt)}</span>
+            ${userVoted ? `<span class="poll-option-pct">${pct}%</span>` : ''}
+          </button>`;
+        });
+        pollHtml += `<div class="poll-meta">${total} vote${total!==1?'s':''} · ${escHtml(p.poll_duration||'1 day')}</div></div>`;
+      } catch(e) { pollHtml = ''; }
     }
+
+    // Image HTML
+    const imageHtml = p.image_url
+      ? `<img class="post-image" src="${escHtml(p.image_url)}" alt="Post image" loading="lazy" onerror="this.style.display='none'"/>`
+      : '';
 
     el.innerHTML = `
       <div class="post-top">
@@ -490,7 +492,7 @@
           <svg class="heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
           <span id="like-count-${p.id}">${formatNum(parseInt(p.likes)||0)}</span>
         </button>
-        <button class="post-action" onclick="openCommentModal('${p.id}','${escHtml(p.author_name||p.author_handle||'Unknown')}')">
+        <button class="post-action" onclick="toggleComments('${p.id}')">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
           <span id="comment-count-${p.id}">${formatNum(parseInt(p.comments)||0)}</span>
         </button>
@@ -501,54 +503,128 @@
         <button class="post-action" onclick="sharePost('${p.id}')">
           <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
         </button>
+      </div>
+      <div class="comments-section" id="comments-${p.id}">
+        <div id="comments-list-${p.id}"></div>
+        <div class="comment-input-row">
+          <div class="comment-av" style="background:${avatarColor(VIBE_HANDLE).bg};color:${avatarColor(VIBE_HANDLE).fg}">${escHtml(VIBE_INITIALS)}</div>
+          <textarea class="comment-input" id="comment-input-${p.id}" placeholder="Write a comment…" rows="1" onkeydown="commentKeydown(event,'${p.id}')"></textarea>
+          <button class="btn-comment" onclick="submitComment('${p.id}')">Reply</button>
+        </div>
       </div>`;
     return el;
   }
 
-  // ── BUILD POLL HTML ──
-  function buildPollHtml(postId, poll) {
-    if (!poll || !poll.options || !poll.options.length) return '';
-    const totalVotes = poll.options.reduce((s, o) => s + (parseInt(o.votes)||0), 0);
-    const voted = sessionPollVotes[postId] !== undefined;
-    const optionsHtml = poll.options.map((opt, i) => {
-      const votes = parseInt(opt.votes) || 0;
-      const pct   = totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0;
-      const isVoted = sessionPollVotes[postId] === i;
-      return `
-        <button class="poll-option-vote" ${voted?'disabled':''} onclick="votePoll('${postId}',${i},this)">
-          <div class="poll-bar-wrap">
-            <div class="poll-bar-fill${isVoted?' voted':''}" style="width:${voted?pct:0}%"></div>
-            <div class="poll-bar-label">
-              <span>${escHtml(opt.text)}</span>
-              <span>${voted ? pct+'%' : ''}</span>
-            </div>
+  // ── TOGGLE COMMENTS ──
+  window.toggleComments = async function(postId) {
+    const section = document.getElementById('comments-'+postId);
+    if (!section) return;
+    const isOpen = section.classList.contains('open');
+    if (!isOpen) {
+      section.classList.add('open');
+      await loadComments(postId);
+      document.getElementById('comment-input-'+postId)?.focus();
+    } else {
+      section.classList.remove('open');
+    }
+  };
+
+  // ── LOAD COMMENTS ──
+  async function loadComments(postId) {
+    const listEl = document.getElementById('comments-list-'+postId);
+    if (!listEl) return;
+    listEl.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:4px 0">Loading…</div>';
+    try {
+      const all = await vdb.fetchTable('vibe_comments', 'Sheet1');
+      const comments = (all||[]).filter(c => c.post_id === postId)
+        .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+      if (!comments.length) {
+        listEl.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:4px 0;margin-bottom:8px;">No comments yet — be first!</div>';
+        return;
+      }
+      listEl.innerHTML = comments.map(c => {
+        const color = avatarColor(c.author_handle||'');
+        const init  = (c.author_initials || getInitials(c.author_name||c.author_handle||'?')).toUpperCase();
+        return `<div class="comment-item">
+          <div class="comment-av" style="background:${color.bg};color:${color.fg}">${escHtml(init)}</div>
+          <div class="comment-body">
+            <div class="comment-author">${escHtml(c.author_name||c.author_handle||'User')}</div>
+            <div class="comment-text">${escHtml(c.body||'')}</div>
+            <div class="comment-time">${timeAgo(c.created_at)}</div>
           </div>
-        </button>`;
-    }).join('');
-    const expires = poll.expires_at ? ` · Ends ${timeAgo(poll.expires_at)}` : '';
-    return `<div class="poll-block" id="poll-${postId}">${optionsHtml}<div class="poll-meta">${totalVotes} vote${totalVotes!==1?'s':''}${expires}</div></div>`;
+        </div>`;
+      }).join('');
+    } catch(e) {
+      console.error(e);
+      listEl.innerHTML = '<div style="font-size:12px;color:var(--muted);">Could not load comments.</div>';
+    }
   }
 
-  // ── VOTE ON POLL ──
-  window.votePoll = async function(postId, optionIndex, btn) {
-    if (sessionPollVotes[postId] !== undefined) return;
-    sessionPollVotes[postId] = optionIndex;
+  window.commentKeydown = function(e, postId) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitComment(postId); }
+  };
+
+  // ── SUBMIT COMMENT ──
+  window.submitComment = async function(postId) {
+    const inp = document.getElementById('comment-input-'+postId);
+    const body = inp?.value.trim();
+    if (!body) return;
+    inp.disabled = true;
     try {
-      // Load current post to get poll data
+      await vdb.insertRow('vibe_comments', 'Sheet1', {
+        post_id: postId,
+        author_name: VIBE_NAME, author_handle: VIBE_HANDLE,
+        author_initials: VIBE_INITIALS, author_email: VIBE_USER,
+        body, created_at: new Date().toISOString()
+      });
+      inp.value = '';
+      // Update comment count in DB
+      const countEl = document.getElementById('comment-count-'+postId);
+      const cur = parseInt(countEl?.textContent)||0;
+      await vdb.updateRow('vibe_posts', 'Sheet1', postId, { comments: cur+1 });
+      if (countEl) countEl.textContent = formatNum(cur+1);
+      await loadComments(postId);
+    } catch(e) {
+      console.error(e);
+      showToast('Comment failed — check DB connection');
+    } finally {
+      if (inp) inp.disabled = false;
+    }
+  };
+
+  // ── VOTE POLL ──
+  window.votePoll = async function(postId, optionIdx, btn) {
+    const btns = btn.closest('.poll-display').querySelectorAll('.poll-option-vote');
+    btns.forEach(b => { if (b.classList.contains('voted')) return; });
+    if (btn.classList.contains('voted')) { showToast('Already voted!'); return; }
+    btns.forEach(b => b.disabled = true);
+    try {
       const posts = await vdb.fetchTable('vibe_posts', 'Sheet1');
-      const post  = posts.find(p => p.id == postId);
-      if (!post || !post.poll_data) return;
-      const poll = typeof post.poll_data === 'string' ? JSON.parse(post.poll_data) : post.poll_data;
-      poll.options[optionIndex].votes = (parseInt(poll.options[optionIndex].votes)||0) + 1;
-      await vdb.updateRow('vibe_posts', 'Sheet1', postId, { poll_data: JSON.stringify(poll) });
-      // Re-render poll block
-      const pollBlock = document.getElementById('poll-'+postId);
-      if (pollBlock) pollBlock.outerHTML = buildPollHtml(postId, poll);
+      const post = (posts||[]).find(p => p.id === postId);
+      if (!post) return;
+      const opts  = JSON.parse(post.poll_options||'[]');
+      const votes = post.poll_votes ? JSON.parse(post.poll_votes) : opts.map(()=>0);
+      const voted = post.poll_voted ? JSON.parse(post.poll_voted) : [];
+      votes[optionIdx] = (votes[optionIdx]||0) + 1;
+      voted.push(VIBE_USER);
+      await vdb.updateRow('vibe_posts', 'Sheet1', postId, {
+        poll_votes: JSON.stringify(votes),
+        poll_voted: JSON.stringify(voted)
+      });
+      // Re-render this card
+      const container = document.getElementById('posts-container');
+      const updatedPosts = await vdb.fetchTable('vibe_posts', 'Sheet1');
+      const updated = (updatedPosts||[]).find(p=>p.id===postId);
+      if (updated) {
+        const card = document.getElementById('post-'+postId);
+        const newCard = buildPostCard(updated);
+        if (card) card.replaceWith(newCard);
+      }
       showToast('Vote recorded ✓');
-    } catch(err) {
-      console.error(err);
-      delete sessionPollVotes[postId];
+    } catch(e) {
+      console.error(e);
       showToast('Vote failed — check DB connection');
+      btns.forEach(b => b.disabled = false);
     }
   };
 
@@ -570,48 +646,35 @@
 
   // ── SUBMIT POST ──
   window.submitPost = async function() {
-    const inp   = document.getElementById('compose-input');
-    const body  = inp.value.trim();
-    if (!body && !window._pendingImages?.length && !isPollActive())
-      { showToast('Write something first!'); return; }
+    const inp  = document.getElementById('compose-input');
+    const body = inp.value.trim();
+    const imageUrl = window._attachedImageUrl || '';
+    const pollData = window._pollData || null;
+
+    if (!body && !imageUrl && !pollData) { showToast('Write something first!'); return; }
     if (body.length > 280) { showToast('Too long — max 280 characters'); return; }
+
     const btn = document.querySelector('.btn-post');
     btn.textContent = 'Posting…'; btn.disabled = true;
     try {
-      const postData = {
+      const row = {
         author_name: VIBE_NAME, author_handle: VIBE_HANDLE,
         author_initials: VIBE_INITIALS, author_email: VIBE_USER,
         body, likes: 0, comments: 0, reposts: 0,
         created_at: new Date().toISOString()
       };
-      // Attach first image URL if present
-      if (window._pendingImages && window._pendingImages.length > 0) {
-        postData.image_url = window._pendingImages[0];
+      if (imageUrl) row.image_url = imageUrl;
+      if (pollData) {
+        row.poll_options  = JSON.stringify(pollData.options);
+        row.poll_votes    = JSON.stringify(pollData.options.map(()=>0));
+        row.poll_voted    = JSON.stringify([]);
+        row.poll_duration = pollData.duration;
       }
-      // Attach poll data if present
-      if (isPollActive()) {
-        const pollOptions = Array.from(document.querySelectorAll('.poll-option-input'))
-          .map(inp => inp.value.trim()).filter(Boolean);
-        if (pollOptions.length < 2) { showToast('Add at least 2 poll options'); btn.textContent='Post'; btn.disabled=false; return; }
-        const duration = parseInt(document.getElementById('poll-duration').value) || 3;
-        const expires  = new Date(Date.now() + duration * 24 * 3600 * 1000).toISOString();
-        postData.poll_data = JSON.stringify({
-          options: pollOptions.map(text => ({ text, votes: 0 })),
-          expires_at: expires
-        });
-      }
-      await vdb.insertRow('vibe_posts', 'Sheet1', postData);
+      await vdb.insertRow('vibe_posts', 'Sheet1', row);
       inp.value = '';
       updateCharCount(inp);
-      // Reset image and poll state
-      window._pendingImages = [];
-      document.getElementById('image-preview-strip').innerHTML = '';
-      document.getElementById('image-preview-strip').classList.remove('show');
-      document.getElementById('poll-builder').classList.remove('show');
-      document.getElementById('poll-tool-btn').classList.remove('active-tool');
-      document.getElementById('poll-options').innerHTML = `
-        <div class="poll-option-row"><input class="poll-option-input" placeholder="Option 1" maxlength="60"/><button class="poll-remove-btn" onclick="removePollOption(this)"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-        <div class="poll-option-row"><input class="poll-option-input" placeholder="Option 2" maxlength="60"/><button class="poll-remove-btn" onclick="removePollOption(this)"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>`;
+      clearImageAttach();
+      cancelPoll();
       showToast('Posted ✓');
       await loadPosts();
     } catch(err) {
@@ -622,92 +685,7 @@
     }
   };
 
-  // ── COMMENT MODAL ──
-  window.openCommentModal = async function(postId, postAuthor) {
-    const overlay = document.createElement('div');
-    overlay.className = 'modal-overlay';
-    overlay.onclick = e => { if(e.target===overlay) overlay.remove(); };
-    overlay.innerHTML = `
-      <div class="modal-box" style="max-width:520px;">
-        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-        <div class="modal-tag">Comments</div>
-        <div class="modal-title" style="font-size:18px;margin-bottom:12px;">Reply to ${escHtml(postAuthor)}</div>
-        <div class="comment-thread" id="comment-thread-${postId}">
-          <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">Loading comments…</div>
-        </div>
-        <div class="comment-input-row">
-          <textarea class="comment-input" id="comment-input-${postId}" placeholder="Write a comment…" rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-          <button class="comment-submit" onclick="submitComment('${postId}')">Reply</button>
-        </div>
-      </div>`;
-    document.body.appendChild(overlay);
-    await loadComments(postId);
-    document.getElementById('comment-input-'+postId)?.focus();
-  };
-
-  async function loadComments(postId) {
-    const thread = document.getElementById('comment-thread-'+postId);
-    if (!thread) return;
-    try {
-      const all = await vdb.fetchTable('vibe_comments', 'Sheet1');
-      const comments = (all||[])
-        .filter(c => String(c.post_id) === String(postId))
-        .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-      if (!comments.length) {
-        thread.innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">No comments yet — be the first!</div>`;
-        return;
-      }
-      thread.innerHTML = comments.map(c => {
-        const color = avatarColor(c.author_handle||'');
-        const init  = (c.author_initials || getInitials(c.author_name||c.author_handle||'?')).toUpperCase();
-        return `<div class="comment-item">
-          <div class="comment-av" style="background:${color.bg};color:${color.fg}">${escHtml(init)}</div>
-          <div class="comment-body">
-            <div class="comment-name">${escHtml(c.author_name||c.author_handle||'Unknown')}</div>
-            <div class="comment-text">${escHtml(c.body||'')}</div>
-            <div class="comment-time">${timeAgo(c.created_at)}</div>
-          </div>
-        </div>`;
-      }).join('');
-      thread.scrollTop = thread.scrollHeight;
-    } catch(err) {
-      console.error(err);
-      thread.innerHTML = `<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">Could not load comments.</div>`;
-    }
-  }
-
-  window.submitComment = async function(postId) {
-    const inp  = document.getElementById('comment-input-'+postId);
-    const body = inp?.value.trim();
-    if (!body) { showToast('Write something first!'); return; }
-    const btn = inp.nextElementSibling;
-    btn.textContent = '…'; btn.disabled = true;
-    try {
-      await vdb.insertRow('vibe_comments', 'Sheet1', {
-        post_id: postId,
-        author_name: VIBE_NAME, author_handle: VIBE_HANDLE,
-        author_initials: VIBE_INITIALS, author_email: VIBE_USER,
-        body, created_at: new Date().toISOString()
-      });
-      inp.value = ''; inp.style.height = 'auto';
-      // Increment comment count in DB optimistically
-      const countEl = document.getElementById('comment-count-'+postId);
-      if (countEl) {
-        const current = parseInt(countEl.textContent.replace(/k/,'000')) || 0;
-        countEl.textContent = formatNum(current + 1);
-        vdb.updateRow('vibe_posts', 'Sheet1', postId, { comments: current + 1 }).catch(()=>{});
-      }
-      await loadComments(postId);
-      showToast('Comment posted ✓');
-    } catch(err) {
-      console.error(err);
-      showToast('Comment failed — check DB connection');
-    } finally {
-      btn.textContent = 'Reply'; btn.disabled = false;
-    }
-  };
-
-  // ── DELETE POST (Vasuki DB) ──
+  // ── DELETE POST ──
   window.deletePost = async function(id) {
     if (!confirm('Delete this post?')) return;
     const card = document.getElementById('post-'+id);
@@ -770,63 +748,6 @@
       if (!wasReposted) sessionReposts.delete(id); else sessionReposts.add(id);
       showToast('Repost failed — check DB connection');
     } finally { btn.disabled = false; }
-  };
-
-  // ── IMGUR IMAGE UPLOAD ──
-  window.triggerImageUpload = function() {
-    document.getElementById('imgur-file-input').click();
-  };
-
-  window.handleImgurUpload = async function(input) {
-    const files = Array.from(input.files || []);
-    if (!files.length) return;
-    const progress = document.getElementById('imgur-progress');
-    const strip    = document.getElementById('image-preview-strip');
-    progress.classList.add('show');
-    if (!window._pendingImages) window._pendingImages = [];
-    for (const file of files) {
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-        const res  = await fetch('https://api.imgur.com/3/image', {
-          method: 'POST',
-          headers: { Authorization: 'Client-ID 546c25a59c58ad7' }, // Public Imgur anonymous client ID
-          body: formData
-        });
-        const data = await res.json();
-        if (data.success && data.data?.link) {
-          const url = data.data.link;
-          window._pendingImages.push(url);
-          // Add thumb
-          const thumb = document.createElement('div');
-          thumb.className = 'img-thumb';
-          thumb.innerHTML = `<img src="${url}" alt=""/><button class="img-thumb-remove" onclick="removeImage('${url}',this)"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`;
-          strip.appendChild(thumb);
-          strip.classList.add('show');
-          document.getElementById('img-tool-btn').classList.add('active-tool');
-          showToast('Image uploaded ✓');
-        } else {
-          showToast('Imgur upload failed');
-        }
-      } catch(err) {
-        console.error(err);
-        showToast('Image upload error');
-      }
-    }
-    progress.classList.remove('show');
-    input.value = '';
-  };
-
-  window.removeImage = function(url, btn) {
-    if (window._pendingImages) {
-      window._pendingImages = window._pendingImages.filter(u => u !== url);
-    }
-    btn.closest('.img-thumb').remove();
-    const strip = document.getElementById('image-preview-strip');
-    if (!strip.children.length) {
-      strip.classList.remove('show');
-      document.getElementById('img-tool-btn').classList.remove('active-tool');
-    }
   };
 
   // ── STATS ──
@@ -904,7 +825,7 @@
         </div>
         <div style="height:16px;"></div>
         <button class="modal-follow-btn" onclick="showToast('Follow — connect your backend');this.closest('.modal-overlay').remove()">Follow @${escHtml(user.handle)}</button>
-        <button style="width:100%;margin-top:8px;padding:9px;background:transparent;border:1px solid var(--border);border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;cursor:pointer;" onclick="showToast('Message — connect your backend');this.closest('.modal-overlay').remove()">Send message</button>
+        <button style="width:100%;margin-top:8px;padding:9px;background:transparent;border:1px solid var(--border);border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;cursor:pointer;" onclick="window.location.href='chat.html';this.closest('.modal-overlay').remove()">Send message</button>
       </div>`;
     document.body.appendChild(overlay);
   };
@@ -917,35 +838,100 @@
 <script>
   let autocompleteActive = false;
   let autocompleteIdx    = -1;
+  window._attachedImageUrl = '';
+  window._pollData = null;
+  let pollBuilderOpen = false;
+  let imgurInputOpen  = false;
 
-  // ── POLL HELPERS ──
-  window.togglePoll = function() {
-    const builder = document.getElementById('poll-builder');
-    const btn     = document.getElementById('poll-tool-btn');
-    const isOpen  = builder.classList.toggle('show');
-    btn.classList.toggle('active-tool', isOpen);
+  // ── IMAGE / IMGUR ──
+  window.toggleImgurInput = function() {
+    imgurInputOpen = !imgurInputOpen;
+    const area = document.getElementById('imgur-url-area');
+    area.style.display = imgurInputOpen ? 'block' : 'none';
+    document.getElementById('img-tool-btn').classList.toggle('active-tool', imgurInputOpen);
+    if (imgurInputOpen) document.getElementById('imgur-url-input').focus();
   };
 
-  window.isPollActive = function() {
-    return document.getElementById('poll-builder').classList.contains('show');
+  window.previewImgurUrl = function(url) {
+    const previewArea = document.getElementById('url-preview-area');
+    if (!url || !url.startsWith('http')) { previewArea.innerHTML=''; window._attachedImageUrl=''; return; }
+    window._attachedImageUrl = url;
+    previewArea.innerHTML = `<div class="compose-image-preview">
+      <img src="${escHtml(url)}" alt="Preview" onerror="this.parentElement.innerHTML='<span style=font-size:12px;color:var(--danger)>⚠ Could not load image</span>'"/>
+    </div>`;
   };
 
+  window.clearImageAttach = function() {
+    window._attachedImageUrl = '';
+    document.getElementById('imgur-url-input').value = '';
+    document.getElementById('url-preview-area').innerHTML = '';
+    document.getElementById('imgur-url-area').style.display = 'none';
+    document.getElementById('img-tool-btn').classList.remove('active-tool');
+    imgurInputOpen = false;
+  };
+
+  // ── POLL BUILDER ──
+  window.togglePollBuilder = function() {
+    pollBuilderOpen = !pollBuilderOpen;
+    document.getElementById('poll-tool-btn').classList.toggle('active-tool', pollBuilderOpen);
+    if (pollBuilderOpen) renderPollBuilder();
+    else cancelPoll();
+  };
+
+  window.cancelPoll = function() {
+    pollBuilderOpen = false;
+    window._pollData = null;
+    document.getElementById('poll-builder-area').innerHTML = '';
+    document.getElementById('poll-tool-btn').classList.remove('active-tool');
+  };
+
+  function renderPollBuilder() {
+    const options = window._pollOptions || ['', ''];
+    window._pollOptions = options;
+    const area = document.getElementById('poll-builder-area');
+    area.innerHTML = `<div class="poll-builder">
+      <div class="poll-builder-title">
+        <span>📊 Poll Options</span>
+        <button onclick="cancelPoll()" style="border:none;background:transparent;cursor:pointer;font-size:12px;color:var(--muted);">Remove poll</button>
+      </div>
+      ${options.map((opt,i) => `
+        <div class="poll-option-row">
+          <input class="poll-option-input" placeholder="Option ${i+1}" value="${escHtml(opt)}" oninput="updatePollOption(${i},this.value)" maxlength="40"/>
+          ${options.length>2 ? `<button class="poll-remove-opt" onclick="removePollOption(${i})"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>` : ''}
+        </div>`).join('')}
+      ${options.length<4 ? `<button class="poll-add-opt" onclick="addPollOption()">+ Add option</button>` : ''}
+      <div class="poll-duration">
+        <label>Duration:</label>
+        <select id="poll-duration-sel">
+          <option>1 day</option><option>2 days</option><option>3 days</option><option>7 days</option>
+        </select>
+      </div>
+    </div>`;
+    syncPollData();
+  }
+
+  window.updatePollOption = function(i, val) {
+    if (!window._pollOptions) return;
+    window._pollOptions[i] = val;
+    syncPollData();
+  };
   window.addPollOption = function() {
-    const container = document.getElementById('poll-options');
-    if (container.children.length >= 4) { showToast('Max 4 options'); return; }
-    const idx = container.children.length + 1;
-    const row = document.createElement('div');
-    row.className = 'poll-option-row';
-    row.innerHTML = `<input class="poll-option-input" placeholder="Option ${idx}" maxlength="60"/><button class="poll-remove-btn" onclick="removePollOption(this)"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>`;
-    container.appendChild(row);
+    if (!window._pollOptions || window._pollOptions.length>=4) return;
+    window._pollOptions.push('');
+    renderPollBuilder();
   };
-
-  window.removePollOption = function(btn) {
-    const container = document.getElementById('poll-options');
-    if (container.children.length <= 2) { showToast('Minimum 2 options'); return; }
-    btn.closest('.poll-option-row').remove();
+  window.removePollOption = function(i) {
+    if (!window._pollOptions || window._pollOptions.length<=2) return;
+    window._pollOptions.splice(i,1);
+    renderPollBuilder();
   };
+  function syncPollData() {
+    const dur = document.getElementById('poll-duration-sel')?.value || '1 day';
+    const opts = (window._pollOptions||[]).filter(o=>o.trim());
+    window._pollData = opts.length>=2 ? { options: window._pollOptions, duration: dur } : null;
+  }
 
+  // ── AUTOCOMPLETE ──
   function handleComposeInput(el) {
     updateCharCount(el);
     const before = el.value.slice(0, el.selectionStart);
@@ -1014,7 +1000,7 @@
     e.preventDefault();
     document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
     e.currentTarget.classList.add('active');
-    const titles = {home:'Home',explore:'Explore',notifications:'Notifications',messages:'Messages',bookmarks:'Bookmarks',settings:'Settings'};
+    const titles = {home:'Home',explore:'Explore',notifications:'Notifications',messages:'Messages',bookmarks:'Bookmarks',profile:'My Profile',settings:'Settings'};
     document.getElementById('page-title').textContent = titles[tab]||tab;
     document.getElementById('feed-tabs').style.display = tab==='home'?'flex':'none';
     if (tab!=='home') showToast(`${titles[tab]} — coming soon`);
