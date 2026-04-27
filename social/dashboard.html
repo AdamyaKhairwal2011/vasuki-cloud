@@ -367,12 +367,8 @@
   document.getElementById('right-handle').textContent = VIBE_HANDLE ? '@' + VIBE_HANDLE : VIBE_USER;
 
   // ── DB: single login promise, never repeated ──
-  const dbInitPromise = vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+  await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
 
-  async function getDB() {
-    await dbInitPromise;
-    return vdb;
-  }
 
   // Cache of all known users for mentions
   let knownUsers = [];
