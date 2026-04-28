@@ -60,26 +60,35 @@
     .icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
     .icon-btn:hover{background:var(--off);}
     .icon-btn svg{width:15px;height:15px;stroke:var(--ink2);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-
     .profile-scroll{flex:1;overflow-y:auto;padding:0;}
     .profile-scroll::-webkit-scrollbar{width:4px;}
     .profile-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
-    /* ── PROFILE BANNER ── */
-    .profile-banner{height:140px;background:linear-gradient(135deg,#c7d2fe 0%,#a5b4fc 40%,#818cf8 100%);position:relative;overflow:hidden;}
+    /* ── BANNER ── */
+    .profile-banner{height:140px;background:linear-gradient(135deg,#c7d2fe 0%,#a5b4fc 40%,#818cf8 100%);position:relative;overflow:hidden;transition:background .4s ease;}
     .profile-banner::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='20' fill='none' stroke='rgba(255,255,255,0.08)' stroke-width='1'/%3E%3C/svg%3E") repeat;opacity:.6;}
     .banner-edit-btn{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:8px;background:rgba(0,0,0,.25);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:background .15s;z-index:1;}
     .banner-edit-btn:hover{background:rgba(0,0,0,.4);}
     .banner-edit-btn svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round;}
 
+    /* ── DB STATUS BADGE ── */
+    .db-badge{position:absolute;top:12px;left:12px;z-index:1;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;font-family:'Geist',sans-serif;display:flex;align-items:center;gap:5px;backdrop-filter:blur(6px);}
+    .db-badge.loading{background:rgba(255,255,255,.25);color:#fff;}
+    .db-badge.synced{background:rgba(34,197,94,.2);color:#fff;}
+    .db-badge.error{background:rgba(229,57,53,.2);color:#fff;}
+    .db-badge-dot{width:6px;height:6px;border-radius:50%;}
+    .db-badge.loading .db-badge-dot{background:#fff;animation:pulse 1s infinite;}
+    .db-badge.synced .db-badge-dot{background:#4ade80;}
+    .db-badge.error .db-badge-dot{background:#f87171;}
+    @keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+
     /* ── PROFILE INFO ── */
     .profile-info-wrap{padding:0 24px 20px;position:relative;}
     .profile-av-wrap{position:relative;margin-top:-38px;margin-bottom:14px;display:inline-block;}
-    .profile-av-large{width:76px;height:76px;border-radius:50%;border:4px solid var(--white);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;box-shadow:0 2px 12px rgba(0,0,0,.12);}
+    .profile-av-large{width:76px;height:76px;border-radius:50%;border:4px solid var(--white);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;box-shadow:0 2px 12px rgba(0,0,0,.12);transition:background .4s;}
     .profile-av-badge{position:absolute;bottom:2px;right:2px;width:20px;height:20px;border-radius:50%;background:var(--green);border:3px solid var(--white);box-shadow:0 1px 4px rgba(0,0,0,.2);}
     .profile-edit-btn{position:absolute;top:16px;right:0;padding:7px 16px;border:1px solid var(--border);background:var(--white);border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;transition:all .15s;}
     .profile-edit-btn:hover{background:var(--off);}
-
     .profile-name{font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink);margin-bottom:3px;}
     .profile-handle-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
     .profile-handle{font-size:13.5px;color:var(--muted);}
@@ -87,13 +96,17 @@
     .profile-joined svg{width:12px;height:12px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;}
     .profile-bio{font-size:14px;color:var(--ink2);line-height:1.65;margin-bottom:14px;max-width:480px;}
     .profile-bio-placeholder{color:var(--muted);font-style:italic;}
-    .profile-stats-row{display:flex;gap:20px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:0;}
+    .profile-website{font-size:13px;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+    .profile-website svg{width:13px;height:13px;stroke:var(--accent);fill:none;stroke-width:1.7;stroke-linecap:round;}
+    .profile-website a{color:var(--accent);text-decoration:none;}
+    .profile-website a:hover{text-decoration:underline;}
+    .profile-stats-row{display:flex;gap:20px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
     .profile-stat{text-align:center;cursor:pointer;transition:opacity .15s;}
     .profile-stat:hover{opacity:.75;}
     .profile-stat-val{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);line-height:1;}
     .profile-stat-label{font-size:11px;color:var(--muted);margin-top:2px;}
 
-    /* ── PROFILE TABS ── */
+    /* ── TABS ── */
     .profile-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--white);}
     .profile-tab{flex:1;text-align:center;padding:13px 8px;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
     .profile-tab.active{color:var(--ink);border-bottom-color:var(--ink);font-weight:500;}
@@ -114,8 +127,8 @@
     .post-more:hover{background:var(--off);}
     .post-more svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;}
     .post-body{font-size:14px;color:var(--ink2);line-height:1.65;margin-bottom:12px;}
-    .post-hashtag{color:var(--accent);font-weight:500;cursor:pointer;transition:opacity .15s;text-decoration:none;display:inline;}
-    .post-hashtag:hover{opacity:.75;}
+    .post-image{width:100%;border-radius:9px;border:1px solid var(--border);margin-bottom:12px;display:block;max-height:320px;object-fit:cover;}
+    .post-hashtag{color:var(--accent);font-weight:500;cursor:pointer;}
     .post-mention{color:var(--accent);font-weight:500;}
     .post-actions{display:flex;gap:0;margin:-4px;}
     .post-action{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;border:none;background:transparent;cursor:pointer;font-family:'Geist',sans-serif;font-size:12.5px;color:var(--muted);transition:all .15s;}
@@ -125,25 +138,35 @@
     .post-action.reposted{color:var(--green);}
     .post-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
 
-    /* ── EDIT MODAL ── */
+    /* ── MODALS ── */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;animation:fadeIn .18s ease;}
     @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-    .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:340px;max-width:440px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;position:relative;}
+    .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:340px;max-width:460px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;position:relative;max-height:90vh;overflow-y:auto;}
     @keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
     .modal-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:7px;border:none;background:var(--off);cursor:pointer;display:flex;align-items:center;justify-content:center;}
     .modal-close svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;}
-    .modal-title{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);margin-bottom:20px;}
+    .modal-title{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);margin-bottom:6px;}
+    .modal-sub{font-size:12.5px;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:6px;}
+    .modal-sub svg{width:12px;height:12px;stroke:var(--accent);fill:none;stroke-width:1.7;stroke-linecap:round;flex-shrink:0;}
     .form-group{margin-bottom:16px;}
     .form-label{font-size:12px;font-weight:500;color:var(--ink2);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.6px;}
     .form-input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;font-family:'Geist',sans-serif;font-size:13.5px;color:var(--ink);background:var(--off);outline:none;transition:border-color .15s;}
     .form-input:focus{border-color:var(--accent);background:var(--white);}
     .form-input::placeholder{color:var(--muted);}
     textarea.form-input{resize:vertical;min-height:80px;line-height:1.6;}
+    .form-hint{font-size:11.5px;color:var(--muted);margin-top:4px;}
     .modal-actions{display:flex;gap:8px;margin-top:20px;}
-    .btn-cancel{flex:1;padding:9px;border:1px solid var(--border);background:transparent;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;cursor:pointer;transition:all .15s;}
+    .btn-cancel{flex:1;padding:9px;border:1px solid var(--border);background:transparent;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;cursor:pointer;transition:all .15s;color:var(--ink);}
     .btn-cancel:hover{background:var(--off);}
-    .btn-save{flex:2;padding:9px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s;}
+    .btn-save{flex:2;padding:9px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
     .btn-save:hover{background:#222;}
+    .btn-save:disabled{opacity:.5;cursor:not-allowed;}
+
+    /* Banner swatches */
+    .banner-swatches{display:flex;gap:8px;flex-wrap:wrap;}
+    .banner-swatch{width:32px;height:32px;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:border .15s,transform .12s;}
+    .banner-swatch:hover{transform:scale(1.1);}
+    .banner-swatch.selected{border-color:var(--accent);transform:scale(1.1);}
 
     /* ── EMPTY / SKELETON ── */
     .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;}
@@ -167,8 +190,6 @@
     .right-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
     .widget{margin-bottom:20px;}
     .widget-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:500;margin-bottom:12px;}
-
-    /* Activity heatmap */
     .heatmap-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;}
     .hm-cell{aspect-ratio:1;border-radius:3px;background:var(--off);border:1px solid var(--border);cursor:pointer;transition:transform .12s;}
     .hm-cell:hover{transform:scale(1.2);}
@@ -176,8 +197,6 @@
     .hm-cell.lvl2{background:#93c5fd;border-color:#60a5fa;}
     .hm-cell.lvl3{background:#3b82f6;border-color:#2563eb;}
     .hm-cell.lvl4{background:#1d4ed8;border-color:#1e40af;}
-
-    /* Followers list */
     .follower-item{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;border-radius:6px;}
     .follower-item:hover{background:var(--off);}
     .follower-item:last-child{border-bottom:none;}
@@ -187,7 +206,7 @@
     .follower-follow-btn{margin-left:auto;padding:4px 10px;border:1px solid var(--border);border-radius:7px;background:transparent;font-family:'Geist',sans-serif;font-size:11.5px;cursor:pointer;transition:all .15s;white-space:nowrap;}
     .follower-follow-btn:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
 
-    /* Toast */
+    /* ── TOAST ── */
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:9px;opacity:0;pointer-events:none;transition:all .25s;z-index:999;white-space:nowrap;}
     .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
@@ -202,70 +221,63 @@
     }
 
     /* ── AGE GATE ── */
-    #age-gate{
-      position:fixed;inset:0;z-index:9999;
-      background:var(--bg);
-      display:flex;align-items:center;justify-content:center;
-      animation:fadeIn .2s ease;
-    }
+    #age-gate{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;}
     #age-gate.hidden{display:none;}
-    .ag-card{
-      background:var(--white);border:1px solid var(--border);
-      border-radius:20px;padding:40px 36px;
-      max-width:400px;width:90%;
-      box-shadow:0 24px 64px rgba(0,0,0,.1);
-      text-align:center;
-    }
-    .ag-badge{
-      display:inline-flex;align-items:center;justify-content:center;
-      width:56px;height:56px;border-radius:16px;
-      background:linear-gradient(135deg,#fde68a,#fbbf24);
-      margin-bottom:20px;
-    }
-    .ag-badge svg{width:26px;height:26px;stroke:#92400e;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+    .ag-card{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:40px 36px;max-width:400px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.1);text-align:center;}
+    .ag-badge{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#fde68a,#fbbf24);margin-bottom:20px;}
+    .ag-badge svg{width:26px;height:26px;stroke:#92400e;fill:none;stroke-width:2;stroke-linecap:round;}
     .ag-title{font-family:'Instrument Serif',serif;font-size:26px;color:var(--ink);margin-bottom:6px;}
     .ag-sub{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:28px;}
     .ag-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--ink2);display:block;text-align:left;margin-bottom:6px;}
     .ag-selects{display:flex;gap:8px;margin-bottom:20px;}
-    .ag-select{
-      flex:1;padding:10px 10px;border:1px solid var(--border);
-      border-radius:9px;font-family:'Geist',sans-serif;font-size:13.5px;
-      color:var(--ink);background:var(--off);outline:none;
-      appearance:none;cursor:pointer;transition:border-color .15s;
-      text-align:center;
-    }
-    .ag-select:focus{border-color:var(--accent);background:var(--white);}
-    .ag-btn{
-      width:100%;padding:11px;background:var(--ink);color:#fff;
-      border:none;border-radius:10px;font-family:'Geist',sans-serif;
-      font-size:14px;font-weight:500;cursor:pointer;transition:background .15s;
-      margin-bottom:12px;
-    }
+    .ag-select{flex:1;padding:10px;border:1px solid var(--border);border-radius:9px;font-family:'Geist',sans-serif;font-size:13.5px;color:var(--ink);background:var(--off);outline:none;appearance:none;cursor:pointer;text-align:center;}
+    .ag-select:focus{border-color:var(--accent);}
+    .ag-btn{width:100%;padding:11px;background:var(--ink);color:#fff;border:none;border-radius:10px;font-family:'Geist',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s;margin-bottom:12px;}
     .ag-btn:hover{background:#222;}
     .ag-btn:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;}
-    .ag-error{
-      font-size:13px;color:var(--danger);background:#fef2f2;
-      border:1px solid #fecaca;border-radius:8px;padding:10px 14px;
-      margin-bottom:12px;display:none;
-    }
+    .ag-error{font-size:13px;color:var(--danger);background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;margin-bottom:12px;display:none;}
     .ag-error.show{display:block;}
     .ag-note{font-size:11.5px;color:var(--muted);line-height:1.5;}
   </style>
 </head>
 <body>
 
+<!-- AGE GATE -->
+<div id="age-gate">
+  <div class="ag-card">
+    <div class="ag-badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+    <div class="ag-title">Age Verification</div>
+    <div class="ag-sub">Vibe is for users aged 12 and older.<br/>Please enter your date of birth to continue.</div>
+    <span class="ag-label">Date of birth</span>
+    <div class="ag-selects">
+      <select class="ag-select" id="ag-day" onchange="agCheck()"><option value="">Day</option></select>
+      <select class="ag-select" id="ag-month" onchange="agCheck()">
+        <option value="">Month</option>
+        <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
+        <option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
+        <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option>
+        <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
+      </select>
+      <select class="ag-select" id="ag-year" onchange="agCheck()"><option value="">Year</option></select>
+    </div>
+    <div class="ag-error" id="ag-error">You must be at least 12 years old to use Vibe.</div>
+    <button class="ag-btn" id="ag-btn" onclick="agSubmit()" disabled>Continue</button>
+    <div class="ag-note">Your age is not stored. This check runs once per device.</div>
+  </div>
+</div>
+
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sb-header">
-    <a class="sb-logo" href="index.html">Vibe</a>
-    <button class="sb-compose" onclick="window.location.href='index.html'">
+    <a class="sb-logo" href="media.html">Vibe</a>
+    <button class="sb-compose" onclick="window.location.href='media.html'">
       <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
       <span>New Post</span>
     </button>
   </div>
   <nav class="sb-nav">
     <div class="sb-section-label">Menu</div>
-    <a class="nav-item" href="index.html">
+    <a class="nav-item" href="media.html">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>Home</span>
     </a>
@@ -277,7 +289,7 @@
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
       <span>Notifications</span>
     </a>
-    <a class="nav-item" href="#" onclick="showToast('Messages — coming soon')">
+    <a class="nav-item" href="chat.html">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
       <span>Messages</span>
     </a>
@@ -296,7 +308,7 @@
     </a>
   </nav>
   <div class="sb-footer">
-    <div class="sb-profile">
+    <div class="sb-profile" onclick="window.location.href='profile.html'">
       <div class="sb-av" id="sb-av">?</div>
       <div class="sb-info">
         <div class="sb-name" id="sb-name">Loading...</div>
@@ -313,7 +325,6 @@
 <!-- MAIN -->
 <div class="main">
   <div class="profile-col">
-    <!-- Top bar -->
     <div class="profile-header">
       <div class="profile-header-title" id="header-name">My Profile</div>
       <div style="display:flex;gap:8px;">
@@ -329,6 +340,11 @@
     <div class="profile-scroll">
       <!-- Banner -->
       <div class="profile-banner" id="profile-banner">
+        <!-- DB status badge -->
+        <div class="db-badge loading" id="db-badge">
+          <div class="db-badge-dot"></div>
+          <span id="db-badge-text">Syncing…</span>
+        </div>
         <button class="banner-edit-btn" onclick="openEditModal()" title="Edit profile">
           <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </button>
@@ -353,23 +369,27 @@
           </span>
         </div>
         <div class="profile-bio" id="profile-bio"><span class="profile-bio-placeholder">No bio yet — click Edit profile to add one</span></div>
+        <div class="profile-website" id="profile-website" style="display:none;">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+          <a id="profile-website-link" href="#" target="_blank"></a>
+        </div>
 
         <div class="profile-stats-row">
-          <div class="profile-stat" onclick="showToast('Posts')">
+          <div class="profile-stat">
             <div class="profile-stat-val" id="pstat-posts">—</div>
             <div class="profile-stat-label">Posts</div>
           </div>
-          <div class="profile-stat" onclick="showToast('Likes received on your posts')">
+          <div class="profile-stat">
             <div class="profile-stat-val" id="pstat-likes">—</div>
             <div class="profile-stat-label">Likes</div>
           </div>
-          <div class="profile-stat" onclick="showToast('Followers — connect your backend')">
-            <div class="profile-stat-val">—</div>
-            <div class="profile-stat-label">Followers</div>
+          <div class="profile-stat">
+            <div class="profile-stat-val" id="pstat-comments">—</div>
+            <div class="profile-stat-label">Comments</div>
           </div>
-          <div class="profile-stat" onclick="showToast('Following — connect your backend')">
-            <div class="profile-stat-val">—</div>
-            <div class="profile-stat-label">Following</div>
+          <div class="profile-stat">
+            <div class="profile-stat-val" id="pstat-reposts">—</div>
+            <div class="profile-stat-label">Reposts</div>
           </div>
         </div>
       </div>
@@ -378,11 +398,10 @@
       <div class="profile-tabs">
         <div class="profile-tab active" onclick="switchProfileTab(this,'posts')">Posts</div>
         <div class="profile-tab" onclick="switchProfileTab(this,'replies')">Replies</div>
-        <div class="profile-tab" onclick="switchProfileTab(this,'likes')">Likes</div>
+        <div class="profile-tab" onclick="switchProfileTab(this,'likes')">Liked</div>
       </div>
 
-      <!-- Posts area -->
-      <div class="posts-area" id="posts-area">
+      <div class="posts-area">
         <div id="posts-container"></div>
       </div>
     </div>
@@ -391,18 +410,14 @@
   <!-- RIGHT PANEL -->
   <aside class="right-col">
     <div class="right-scroll">
-
-      <!-- Activity heatmap -->
       <div class="widget">
         <div class="widget-title">Activity</div>
         <div class="heatmap-grid" id="heatmap"></div>
         <div style="font-size:11px;color:var(--muted);margin-top:8px;">Posts in the last 12 weeks</div>
       </div>
-
-      <!-- About widget -->
       <div class="widget">
         <div class="widget-title">About</div>
-        <div style="background:var(--off);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;" id="about-widget">
+        <div style="background:var(--off);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;">
           <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.7" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             <span id="about-name">—</span>
@@ -415,17 +430,16 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
             <span id="about-joined">—</span>
           </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);" id="about-location-row" style="display:none">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.7" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span id="about-location">—</span>
+          </div>
         </div>
       </div>
-
-      <!-- Suggested follows -->
       <div class="widget">
         <div class="widget-title">People you may know</div>
-        <div id="suggested-list">
-          <div style="font-size:13px;color:var(--muted);text-align:center;padding:12px 0;">Loading…</div>
-        </div>
+        <div id="suggested-list"><div style="font-size:13px;color:var(--muted);text-align:center;padding:12px 0;">Loading…</div></div>
       </div>
-
     </div>
   </aside>
 </div>
@@ -437,196 +451,303 @@
   <div class="modal-box">
     <button class="modal-close" onclick="closeEditModal()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     <div class="modal-title">Edit Profile</div>
+    <div class="modal-sub">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Changes are saved to the database and sync across devices
+    </div>
+
     <div class="form-group">
       <label class="form-label">Display Name</label>
-      <input type="text" class="form-input" id="edit-name" placeholder="Your name"/>
+      <input type="text" class="form-input" id="edit-name" placeholder="Your full name" maxlength="50"/>
     </div>
     <div class="form-group">
       <label class="form-label">Handle</label>
-      <input type="text" class="form-input" id="edit-handle" placeholder="yourhandle" oninput="this.value=this.value.replace(/[^a-zA-Z0-9_]/g,'')"/>
+      <input type="text" class="form-input" id="edit-handle" placeholder="yourhandle" maxlength="30" oninput="this.value=this.value.replace(/[^a-zA-Z0-9_]/g,'').toLowerCase()"/>
+      <div class="form-hint">Letters, numbers and underscores only</div>
     </div>
     <div class="form-group">
       <label class="form-label">Bio</label>
-      <textarea class="form-input" id="edit-bio" placeholder="Tell people a bit about yourself…" maxlength="160"></textarea>
+      <textarea class="form-input" id="edit-bio" placeholder="Tell people a bit about yourself…" maxlength="160" oninput="document.getElementById('bio-count').textContent=this.value.length+'/160'"></textarea>
+      <div class="form-hint" id="bio-count">0/160</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Website</label>
+      <input type="url" class="form-input" id="edit-website" placeholder="https://yoursite.com"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Location</label>
+      <input type="text" class="form-input" id="edit-location" placeholder="City, Country" maxlength="60"/>
     </div>
     <div class="form-group">
       <label class="form-label">Banner Color</label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;" id="banner-color-picker">
-        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#c7d2fe 0%,#a5b4fc 40%,#818cf8 100%)" onclick="pickBannerColor(this)" style="width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,#c7d2fe 0%,#a5b4fc 40%,#818cf8 100%);cursor:pointer;border:2px solid transparent;transition:border .15s;"></div>
-        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#fde68a 0%,#fbbf24 40%,#f59e0b 100%)" onclick="pickBannerColor(this)" style="width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,#fde68a 0%,#fbbf24 40%,#f59e0b 100%);cursor:pointer;border:2px solid transparent;transition:border .15s;"></div>
-        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#bbf7d0 0%,#4ade80 40%,#22c55e 100%)" onclick="pickBannerColor(this)" style="width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,#bbf7d0 0%,#4ade80 40%,#22c55e 100%);cursor:pointer;border:2px solid transparent;transition:border .15s;"></div>
-        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#fecaca 0%,#f87171 40%,#ef4444 100%)" onclick="pickBannerColor(this)" style="width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,#fecaca 0%,#f87171 40%,#ef4444 100%);cursor:pointer;border:2px solid transparent;transition:border .15s;"></div>
-        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#fce7f3 0%,#f9a8d4 40%,#ec4899 100%)" onclick="pickBannerColor(this)" style="width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,#fce7f3 0%,#f9a8d4 40%,#ec4899 100%);cursor:pointer;border:2px solid transparent;transition:border .15s;"></div>
-        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#d1fae5 0%,#6ee7b7 40%,#10b981 100%)" onclick="pickBannerColor(this)" style="width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,#d1fae5 0%,#6ee7b7 40%,#10b981 100%);cursor:pointer;border:2px solid transparent;transition:border .15s;"></div>
-        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#0f172a 0%,#1e293b 40%,#334155 100%)" onclick="pickBannerColor(this)" style="width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,#0f172a 0%,#1e293b 40%,#334155 100%);cursor:pointer;border:2px solid transparent;transition:border .15s;"></div>
+      <div class="banner-swatches" id="banner-color-picker">
+        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#c7d2fe 0%,#a5b4fc 40%,#818cf8 100%)" style="background:linear-gradient(135deg,#c7d2fe 0%,#a5b4fc 40%,#818cf8 100%)"></div>
+        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#fde68a 0%,#fbbf24 40%,#f59e0b 100%)" style="background:linear-gradient(135deg,#fde68a 0%,#fbbf24 40%,#f59e0b 100%)"></div>
+        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#bbf7d0 0%,#4ade80 40%,#22c55e 100%)" style="background:linear-gradient(135deg,#bbf7d0 0%,#4ade80 40%,#22c55e 100%)"></div>
+        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#fecaca 0%,#f87171 40%,#ef4444 100%)" style="background:linear-gradient(135deg,#fecaca 0%,#f87171 40%,#ef4444 100%)"></div>
+        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#fce7f3 0%,#f9a8d4 40%,#ec4899 100%)" style="background:linear-gradient(135deg,#fce7f3 0%,#f9a8d4 40%,#ec4899 100%)"></div>
+        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#d1fae5 0%,#6ee7b7 40%,#10b981 100%)" style="background:linear-gradient(135deg,#d1fae5 0%,#6ee7b7 40%,#10b981 100%)"></div>
+        <div class="banner-swatch" data-gradient="linear-gradient(135deg,#0f172a 0%,#1e293b 40%,#334155 100%)" style="background:linear-gradient(135deg,#0f172a 0%,#1e293b 40%,#334155 100%)"></div>
       </div>
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
-      <button class="btn-save" id="save-btn" onclick="saveProfile()">Save changes</button>
+      <button class="btn-save" id="save-btn" onclick="saveProfile()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save to database
+      </button>
     </div>
   </div>
 </div>
 
-<!-- AGE GATE -->
-<div id="age-gate">
-  <div class="ag-card">
-    <div class="ag-badge">
-      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    </div>
-    <div class="ag-title">Age Verification</div>
-    <div class="ag-sub">Vibe is for users aged 12 and older.<br/>Please enter your date of birth to continue.</div>
-    <span class="ag-label">Date of birth</span>
-    <div class="ag-selects">
-      <select class="ag-select" id="ag-day" onchange="agCheck()">
-        <option value="">Day</option>
-      </select>
-      <select class="ag-select" id="ag-month" onchange="agCheck()">
-        <option value="">Month</option>
-        <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
-        <option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
-        <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option>
-        <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
-      </select>
-      <select class="ag-select" id="ag-year" onchange="agCheck()">
-        <option value="">Year</option>
-      </select>
-    </div>
-    <div class="ag-error" id="ag-error">You must be at least 12 years old to use Vibe.</div>
-    <button class="ag-btn" id="ag-btn" onclick="agSubmit()" disabled>Continue</button>
-    <div class="ag-note">Your age is not stored. This check runs once per device.</div>
-  </div>
-</div>
-
+<!-- AGE GATE SCRIPT -->
 <script>
-  (function() {
-    var dayEl = document.getElementById("ag-day");
-    for (var d = 1; d <= 31; d++) {
-      var o = document.createElement("option");
-      o.value = d; o.textContent = d; dayEl.appendChild(o);
-    }
-    var yearEl = document.getElementById("ag-year");
-    var curYear = new Date().getFullYear();
-    for (var y = curYear; y >= 1900; y--) {
-      var o2 = document.createElement("option");
-      o2.value = y; o2.textContent = y; yearEl.appendChild(o2);
-    }
-    if (sessionStorage.getItem("vibe_age_ok") === "1") {
-      document.getElementById("age-gate").classList.add("hidden");
-    }
+  (function(){
+    var dayEl=document.getElementById("ag-day");
+    for(var d=1;d<=31;d++){var o=document.createElement("option");o.value=d;o.textContent=d;dayEl.appendChild(o);}
+    var yearEl=document.getElementById("ag-year");
+    var cy=new Date().getFullYear();
+    for(var y=cy;y>=1900;y--){var o2=document.createElement("option");o2.value=y;o2.textContent=y;yearEl.appendChild(o2);}
+    if(sessionStorage.getItem("vibe_age_ok")==="1") document.getElementById("age-gate").classList.add("hidden");
   })();
-
-  function agCheck() {
-    var d = document.getElementById("ag-day").value;
-    var m = document.getElementById("ag-month").value;
-    var y = document.getElementById("ag-year").value;
-    var ready = d !== "" && m !== "" && y !== "";
-    document.getElementById("ag-btn").disabled = !ready;
-    if (ready) document.getElementById("ag-error").classList.remove("show");
+  function agCheck(){
+    var d=document.getElementById("ag-day").value,m=document.getElementById("ag-month").value,y=document.getElementById("ag-year").value;
+    document.getElementById("ag-btn").disabled=!(d&&m&&y);
+    if(d&&m&&y) document.getElementById("ag-error").classList.remove("show");
   }
-
-  function agSubmit() {
-    var d = parseInt(document.getElementById("ag-day").value);
-    var m = parseInt(document.getElementById("ag-month").value);
-    var y = parseInt(document.getElementById("ag-year").value);
-    var dob = new Date(y, m, d);
-    var now = new Date();
-    var age = now.getFullYear() - dob.getFullYear();
-    var md = now.getMonth() - dob.getMonth();
-    if (md < 0 || (md === 0 && now.getDate() < dob.getDate())) age--;
-    if (age < 12) {
-      document.getElementById("ag-error").classList.add("show");
-      document.getElementById("ag-btn").textContent = "Try again";
-      return;
-    }
-    sessionStorage.setItem("vibe_age_ok", "1");
-    var gate = document.getElementById("age-gate");
-    gate.style.opacity = "0";
-    gate.style.transition = "opacity .3s ease";
-    setTimeout(function(){ gate.classList.add("hidden"); }, 300);
+  function agSubmit(){
+    var d=parseInt(document.getElementById("ag-day").value),m=parseInt(document.getElementById("ag-month").value),y=parseInt(document.getElementById("ag-year").value);
+    var dob=new Date(y,m,d),now=new Date();
+    var age=now.getFullYear()-dob.getFullYear(),md=now.getMonth()-dob.getMonth();
+    if(md<0||(md===0&&now.getDate()<dob.getDate())) age--;
+    if(age<12){document.getElementById("ag-error").classList.add("show");document.getElementById("ag-btn").textContent="Try again";return;}
+    sessionStorage.setItem("vibe_age_ok","1");
+    var gate=document.getElementById("age-gate");gate.style.opacity="0";gate.style.transition="opacity .3s ease";
+    setTimeout(function(){gate.classList.add("hidden");},300);
   }
 </script>
 
+<!-- MAIN MODULE SCRIPT -->
 <script type="module">
   import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
-  let vdb = new Vasuki();
+  const vdb = new Vasuki();
 
-  // ── AUTH GUARD ──
+  // ── CONSTANTS ──
   const VIBE_USER     = localStorage.getItem('vibe_user');
-  const VIBE_NAME     = localStorage.getItem('vibe_name')     || 'User';
-  const VIBE_HANDLE   = localStorage.getItem('vibe_handle')   || '';
   const VIBE_INITIALS = localStorage.getItem('vibe_initials') || '?';
+  // These may be updated from DB, so treat as mutable
+  let   VIBE_NAME     = localStorage.getItem('vibe_name')   || 'User';
+  let   VIBE_HANDLE   = localStorage.getItem('vibe_handle') || '';
 
-  if (!VIBE_USER) window.location.href = 'login.html';
+  if (!VIBE_USER) { window.location.href = 'login.html'; }
 
-  // Populate sidebar & header
-  document.getElementById('sb-av').textContent     = VIBE_INITIALS;
-  document.getElementById('sb-name').textContent   = VIBE_NAME;
-  document.getElementById('sb-handle').textContent = VIBE_HANDLE ? '@' + VIBE_HANDLE : VIBE_USER;
-  document.getElementById('header-name').textContent = VIBE_NAME;
-
-  // Profile header info
-  document.getElementById('profile-av-large').textContent = VIBE_INITIALS;
-  document.getElementById('profile-name').textContent     = VIBE_NAME;
-  document.getElementById('profile-handle').textContent   = VIBE_HANDLE ? '@' + VIBE_HANDLE : VIBE_USER;
-  document.getElementById('about-name').textContent       = VIBE_NAME;
-  document.getElementById('about-email').textContent      = VIBE_USER;
-
-  // Avatar color
-  const color = avatarColor(VIBE_HANDLE || VIBE_NAME || '');
-  document.getElementById('profile-av-large').style.background = color.bg;
-  document.getElementById('profile-av-large').style.color      = color.fg;
-
-  // Restore bio + banner from localStorage
-  const storedBio    = localStorage.getItem('vibe_bio')    || '';
-  const storedBanner = localStorage.getItem('vibe_banner') || '';
-  if (storedBio) {
-    document.getElementById('profile-bio').innerHTML = escHtml(storedBio);
-  }
-  if (storedBanner) {
-    document.getElementById('profile-banner').style.background = storedBanner;
+  // ── DB BADGE ──
+  function setDbBadge(state, text) {
+    const badge = document.getElementById('db-badge');
+    badge.className = 'db-badge ' + state;
+    document.getElementById('db-badge-text').textContent = text;
   }
 
-  // Joined date (rough from first post, else "recently")
-  function setJoined(dateStr) {
-    const el = document.getElementById('profile-joined');
-    if (!dateStr) { el.innerHTML = el.innerHTML.replace('—','Joined recently'); return; }
-    const d = new Date(dateStr);
-    const month = d.toLocaleString('default',{month:'long'});
-    el.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--muted)" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Joined ${month} ${d.getFullYear()}`;
-    document.getElementById('about-joined').textContent = `Joined ${month} ${d.getFullYear()}`;
+  // ── LOGIN ──
+  setDbBadge('loading', 'Connecting…');
+  try {
+    await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+    setDbBadge('synced', 'DB Connected');
+    setTimeout(() => setDbBadge('synced', 'Synced ✓'), 1200);
+  } catch(e) {
+    setDbBadge('error', 'DB Error');
+    showToast('Database connection failed');
   }
 
-  // ── DB ──
-  const dbInitPromise = vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
-  async function getDB() { await dbInitPromise; return vdb; }
+  // ── HELPER: apply profile data to DOM ──
+  function applyProfileToUI(p) {
+    const name     = p.name     || VIBE_NAME;
+    const handle   = p.handle   || VIBE_HANDLE;
+    const bio      = p.bio      || '';
+    const banner   = p.banner   || '';
+    const website  = p.website  || '';
+    const location = p.location || '';
+    const initials = getInitials(name);
+    const color    = avatarColor(handle || name);
+
+    // Sidebar
+    document.getElementById('sb-av').textContent     = initials;
+    document.getElementById('sb-name').textContent   = name;
+    document.getElementById('sb-handle').textContent = handle ? '@'+handle : VIBE_USER;
+
+    // Header
+    document.getElementById('header-name').textContent = name;
+
+    // Profile section
+    document.getElementById('profile-av-large').textContent   = initials;
+    document.getElementById('profile-av-large').style.background = color.bg;
+    document.getElementById('profile-av-large').style.color      = color.fg;
+    document.getElementById('profile-name').textContent    = name;
+    document.getElementById('profile-handle').textContent  = handle ? '@'+handle : VIBE_USER;
+    document.getElementById('about-name').textContent      = name;
+    document.getElementById('about-email').textContent     = VIBE_USER;
+
+    if (bio) {
+      document.getElementById('profile-bio').innerHTML = escHtml(bio);
+    } else {
+      document.getElementById('profile-bio').innerHTML = '<span class="profile-bio-placeholder">No bio yet — click Edit profile to add one</span>';
+    }
+
+    if (banner) {
+      document.getElementById('profile-banner').style.background = banner;
+    }
+
+    if (website) {
+      const websiteEl = document.getElementById('profile-website');
+      const linkEl    = document.getElementById('profile-website-link');
+      websiteEl.style.display = 'flex';
+      linkEl.href        = website.startsWith('http') ? website : 'https://'+website;
+      linkEl.textContent = website.replace(/^https?:\/\//, '');
+    }
+
+    if (location) {
+      document.getElementById('about-location-row').style.display = 'flex';
+      document.getElementById('about-location').textContent = location;
+    }
+
+    // Sync back to localStorage so other pages can read
+    localStorage.setItem('vibe_name',     name);
+    localStorage.setItem('vibe_handle',   handle);
+    localStorage.setItem('vibe_initials', initials);
+
+    VIBE_NAME   = name;
+    VIBE_HANDLE = handle;
+  }
+
+  // ── LOAD PROFILE FROM DB ──
+  // Table: vibe_profiles, Sheet1
+  // Row identified by email field matching VIBE_USER
+  async function loadProfileFromDB() {
+    try {
+      const profiles = await vdb.fetchTable('vibe_profiles', 'Sheet1');
+      const myProfile = (profiles || []).find(p =>
+        (p.email || '').toLowerCase() === (VIBE_USER || '').toLowerCase()
+      );
+      if (myProfile) {
+        applyProfileToUI(myProfile);
+        window._myProfileRow = myProfile; // cache row id for updates
+        setDbBadge('synced', 'Synced ✓');
+        return myProfile;
+      } else {
+        // No profile row yet — use localStorage values, will be created on first save
+        applyProfileToUI({
+          name:   VIBE_NAME,
+          handle: VIBE_HANDLE,
+        });
+        window._myProfileRow = null;
+        setDbBadge('synced', 'New profile');
+        return null;
+      }
+    } catch(e) {
+      console.error('loadProfileFromDB:', e);
+      setDbBadge('error', 'Sync failed');
+      // Fallback to localStorage
+      applyProfileToUI({ name: VIBE_NAME, handle: VIBE_HANDLE });
+      return null;
+    }
+  }
+
+  // ── SAVE PROFILE TO DB ──
+  window.saveProfile = async function() {
+    const name     = document.getElementById('edit-name').value.trim();
+    const handle   = document.getElementById('edit-handle').value.trim();
+    const bio      = document.getElementById('edit-bio').value.trim();
+    const website  = document.getElementById('edit-website').value.trim();
+    const location = document.getElementById('edit-location').value.trim();
+
+    if (!name) { showToast('Name cannot be empty'); return; }
+    if (!handle) { showToast('Handle cannot be empty'); return; }
+
+    const activeSwatch = document.querySelector('.banner-swatch.selected');
+    const banner       = activeSwatch ? activeSwatch.dataset.gradient : (window._myProfileRow?.banner || '');
+
+    const btn = document.getElementById('save-btn');
+    btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg> Saving…';
+    btn.disabled = true;
+    setDbBadge('loading', 'Saving…');
+
+    const profileData = {
+      email:    VIBE_USER,
+      name, handle, bio, website, location, banner,
+      initials: getInitials(name),
+      updated_at: new Date().toISOString()
+    };
+
+    try {
+      if (window._myProfileRow && window._myProfileRow.id) {
+        // UPDATE existing row
+        await vdb.updateRow('vibe_profiles', 'Sheet1', window._myProfileRow.id, profileData);
+        window._myProfileRow = { ...window._myProfileRow, ...profileData };
+      } else {
+        // INSERT new row (first-time save)
+        profileData.created_at = new Date().toISOString();
+        await vdb.insertRow('vibe_profiles', 'Sheet1', profileData);
+        // Re-fetch to get the assigned id
+        const profiles = await vdb.fetchTable('vibe_profiles', 'Sheet1');
+        window._myProfileRow = (profiles || []).find(p =>
+          (p.email || '').toLowerCase() === (VIBE_USER || '').toLowerCase()
+        ) || null;
+      }
+
+      // Also update users_rows table (used for @mentions lookup) if handle changed
+      try {
+        const users = await vdb.fetchTable('users_rows', 'Sheet1');
+        const myUser = (users || []).find(u =>
+          (u.email || '').toLowerCase() === (VIBE_USER || '').toLowerCase() ||
+          (u.handle || '').toLowerCase() === VIBE_HANDLE.toLowerCase()
+        );
+        if (myUser && myUser.id) {
+          await vdb.updateRow('users_rows', 'Sheet1', myUser.id, { name, handle, initials: getInitials(name), email: VIBE_USER });
+        }
+      } catch(ue) { console.warn('users_rows update skipped:', ue); }
+
+      applyProfileToUI(profileData);
+      setDbBadge('synced', 'Saved ✓');
+      closeEditModal();
+      showToast('Profile saved to database ✓');
+    } catch(err) {
+      console.error('saveProfile error:', err);
+      setDbBadge('error', 'Save failed');
+      showToast('Save failed — check DB connection');
+    } finally {
+      btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save to database';
+      btn.disabled = false;
+    }
+  };
 
   // ── LOAD MY POSTS ──
   window.loadMyPosts = async function() {
     const container = document.getElementById('posts-container');
     showSkeleton(container);
     try {
-      const db    = await getDB();
-      const posts = await db.fetchTable('vibe_posts', 'Sheet1');
+      const posts = await vdb.fetchTable('vibe_posts', 'Sheet1');
       const mine  = (posts || [])
         .filter(p =>
-          (p.author_email  || '').toLowerCase() === VIBE_USER.toLowerCase() ||
-          (p.author_handle || '') === VIBE_HANDLE
+          (p.author_email  || '').toLowerCase() === (VIBE_USER || '').toLowerCase() ||
+          (p.author_handle || '').toLowerCase() === VIBE_HANDLE.toLowerCase()
         )
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
 
       // Stats
-      const totalLikes = mine.reduce((s, p) => s + (parseInt(p.likes) || 0), 0);
-      document.getElementById('pstat-posts').textContent = mine.length;
-      document.getElementById('pstat-likes').textContent = formatNum(totalLikes);
+      const totalLikes    = mine.reduce((s,p) => s+(parseInt(p.likes)||0), 0);
+      const totalComments = mine.reduce((s,p) => s+(parseInt(p.comments)||0), 0);
+      const totalReposts  = mine.reduce((s,p) => s+(parseInt(p.reposts)||0), 0);
+      document.getElementById('pstat-posts').textContent    = mine.length;
+      document.getElementById('pstat-likes').textContent    = formatNum(totalLikes);
+      document.getElementById('pstat-comments').textContent = formatNum(totalComments);
+      document.getElementById('pstat-reposts').textContent  = formatNum(totalReposts);
 
-      // Joined date from earliest post
+      // Joined date
       if (mine.length) {
-        const oldest = mine.reduce((a, b) => new Date(a.created_at) < new Date(b.created_at) ? a : b);
+        const oldest = mine.reduce((a,b) => new Date(a.created_at) < new Date(b.created_at) ? a : b);
         setJoined(oldest.created_at);
       }
 
-      // Heatmap
       buildHeatmap(mine);
 
       container.innerHTML = '';
@@ -641,29 +762,42 @@
     }
   };
 
-  // ── LOAD SUGGESTED USERS ──
+  // ── LIKED TAB ──
+  async function loadLikedPosts() {
+    const container = document.getElementById('posts-container');
+    showSkeleton(container);
+    try {
+      const posts = await vdb.fetchTable('vibe_posts', 'Sheet1');
+      // Show posts the user interacted with (liked — we track via sessionLikes locally, so show top liked posts as proxy)
+      const liked = (posts || [])
+        .filter(p => parseInt(p.likes) > 0)
+        .sort((a,b) => (parseInt(b.likes)||0) - (parseInt(a.likes)||0))
+        .slice(0, 20);
+      container.innerHTML = '';
+      if (!liked.length) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><div class="empty-title">No liked posts</div><div class="empty-sub">Posts you like will appear here.</div></div>`;
+        return;
+      }
+      liked.forEach(p => container.appendChild(buildPostCard(p)));
+    } catch(e) { console.error(e); }
+  }
+
+  // ── SUGGESTED USERS ──
   async function loadSuggested() {
     try {
-      const db    = await getDB();
-      const users = await db.fetchTable('users_rows', 'Sheet1');
+      const users = await vdb.fetchTable('users_rows', 'Sheet1');
       const others = (users || [])
         .filter(u => u && u.handle && u.handle.toLowerCase() !== VIBE_HANDLE.toLowerCase())
         .slice(0, 4);
       const list = document.getElementById('suggested-list');
-      if (!others.length) {
-        list.innerHTML = `<div style="font-size:13px;color:var(--muted);text-align:center;padding:12px 0;">No suggestions yet</div>`;
-        return;
-      }
+      if (!others.length) { list.innerHTML = `<div style="font-size:13px;color:var(--muted);text-align:center;padding:12px 0;">No suggestions yet</div>`; return; }
       list.innerHTML = others.map(u => {
-        const c    = avatarColor(u.handle || '');
-        const init = getInitials(u.name || u.handle || '?');
-        return `<div class="follower-item">
-          <div class="follower-av" style="background:${c.bg};color:${c.fg}">${escHtml(init)}</div>
-          <div>
-            <div class="follower-name">${escHtml(u.name || u.handle)}</div>
-            <div class="follower-handle">@${escHtml(u.handle)}</div>
-          </div>
-          <button class="follower-follow-btn" onclick="showToast('Follow — connect your backend')">Follow</button>
+        const c = avatarColor(u.handle||'');
+        const i = getInitials(u.name||u.handle||'?');
+        return `<div class="follower-item" onclick="window.location.href='chat.html?with=${escHtml(u.handle)}'">
+          <div class="follower-av" style="background:${c.bg};color:${c.fg}">${escHtml(i)}</div>
+          <div><div class="follower-name">${escHtml(u.name||u.handle)}</div><div class="follower-handle">@${escHtml(u.handle)}</div></div>
+          <button class="follower-follow-btn" onclick="event.stopPropagation();showToast('Follow — coming soon')">Follow</button>
         </div>`;
       }).join('');
     } catch(e) { console.warn('Could not load users:', e); }
@@ -671,30 +805,36 @@
 
   // ── BUILD POST CARD ──
   function buildPostCard(p) {
-    const el = document.createElement('div');
-    el.className = 'post-card';
-    el.id = 'post-' + p.id;
+    const el       = document.createElement('div');
+    el.className   = 'post-card';
+    el.id          = 'post-' + p.id;
     const initials = (p.author_initials || getInitials(p.author_name || p.author_handle || '?')).toUpperCase();
     const c        = avatarColor(p.author_handle || p.author_name || '');
+    const isMe     = (p.author_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase()
+                  || (p.author_handle||'').toLowerCase() === VIBE_HANDLE.toLowerCase();
+    const imageHtml = p.image_url
+      ? `<img class="post-image" src="${escHtml(p.image_url)}" alt="Post image" loading="lazy" onerror="this.style.display='none'"/>`
+      : '';
+
     el.innerHTML = `
       <div class="post-top">
         <div class="post-av" style="background:${c.bg};color:${c.fg}">${escHtml(initials)}</div>
         <div class="post-meta">
           <div class="post-name">${escHtml(p.author_name || p.author_handle || 'Unknown')}</div>
-          <div class="post-handle">@${escHtml(p.author_handle || '')}</div>
+          <div class="post-handle">@${escHtml(p.author_handle||'')}</div>
         </div>
         <div class="post-time">${timeAgo(p.created_at)}</div>
-        <button class="post-more" onclick="confirmDelete('${p.id}')">
-          <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg>
-        </button>
+        ${isMe ? `<button class="post-more" onclick="confirmDelete('${p.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg></button>`
+               : `<button class="post-more" onclick="showToast('Options coming soon')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>`}
       </div>
-      <div class="post-body">${renderBody(p.body || '')}</div>
+      <div class="post-body">${renderBody(p.body||'')}</div>
+      ${imageHtml}
       <div class="post-actions">
         <button class="post-action" id="like-btn-${p.id}" onclick="toggleLike('${p.id}',this)">
           <svg class="heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
           <span id="like-count-${p.id}">${formatNum(parseInt(p.likes)||0)}</span>
         </button>
-        <button class="post-action" onclick="showToast('Comments — connect your backend')">
+        <button class="post-action" onclick="showToast('Comments')">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
           <span>${formatNum(parseInt(p.comments)||0)}</span>
         </button>
@@ -717,148 +857,145 @@
     return s;
   }
 
-  // ── DELETE ──
+  // ── DELETE POST (DB) ──
   window.confirmDelete = async function(id) {
     if (!confirm('Delete this post?')) return;
-    document.getElementById('post-' + id)?.remove();
-    showToast('Post deleted');
-    // Recount
-    const remaining = document.querySelectorAll('.post-card').length;
-    document.getElementById('pstat-posts').textContent = remaining;
+    const card = document.getElementById('post-'+id);
+    if (card) card.style.opacity = '.4';
+    try {
+      await vdb.deleteRow('vibe_posts', 'Sheet1', id);
+      card?.remove();
+      showToast('Post deleted');
+      await loadMyPosts();
+    } catch(e) {
+      console.error(e);
+      if (card) card.style.opacity = '1';
+      showToast('Delete failed — check DB connection');
+    }
   };
 
-  // ── LIKE / REPOST ──
-  window.toggleLike = function(id, btn) {
-    const countEl = document.getElementById('like-count-' + id);
-    const liked   = btn.classList.contains('liked');
-    const current = parseInt(countEl.textContent) || 0;
-    btn.classList.toggle('liked');
-    countEl.textContent = formatNum(liked ? current - 1 : current + 1);
-    if (!liked) showToast('Liked ❤️');
+  // ── LIKE / REPOST (DB) ──
+  const sessionLikes   = new Set();
+  const sessionReposts = new Set();
+
+  window.toggleLike = async function(id, btn) {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const countEl  = document.getElementById('like-count-'+id);
+    const wasLiked = sessionLikes.has(id);
+    const current  = parseInt(countEl.textContent.replace(/k/,'000'))||0;
+    const newCount = wasLiked ? Math.max(0,current-1) : current+1;
+    btn.classList.toggle('liked', !wasLiked);
+    countEl.textContent = formatNum(newCount);
+    if (!wasLiked) { sessionLikes.add(id); showToast('Liked ❤️'); } else sessionLikes.delete(id);
+    try {
+      await vdb.updateRow('vibe_posts','Sheet1',id,{likes:newCount});
+    } catch(e) {
+      btn.classList.toggle('liked',wasLiked);
+      countEl.textContent=formatNum(current);
+      if(!wasLiked) sessionLikes.delete(id); else sessionLikes.add(id);
+      showToast('Like failed');
+    } finally { btn.disabled=false; }
   };
 
-  window.toggleRepost = function(id, btn) {
-    const countEl  = document.getElementById('repost-count-' + id);
-    const reposted = btn.classList.contains('reposted');
-    const current  = parseInt(countEl.textContent) || 0;
-    btn.classList.toggle('reposted');
-    countEl.textContent = formatNum(reposted ? current - 1 : current + 1);
-    showToast(reposted ? 'Repost removed' : 'Reposted ✓');
+  window.toggleRepost = async function(id, btn) {
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const countEl     = document.getElementById('repost-count-'+id);
+    const wasReposted = sessionReposts.has(id);
+    const current     = parseInt(countEl.textContent.replace(/k/,'000'))||0;
+    const newCount    = wasReposted ? Math.max(0,current-1) : current+1;
+    btn.classList.toggle('reposted',!wasReposted);
+    countEl.textContent=formatNum(newCount);
+    if(!wasReposted){sessionReposts.add(id);showToast('Reposted ✓');}else{sessionReposts.delete(id);showToast('Repost removed');}
+    try {
+      await vdb.updateRow('vibe_posts','Sheet1',id,{reposts:newCount});
+    } catch(e) {
+      btn.classList.toggle('reposted',wasReposted);
+      countEl.textContent=formatNum(current);
+      if(!wasReposted)sessionReposts.delete(id);else sessionReposts.add(id);
+      showToast('Repost failed');
+    } finally { btn.disabled=false; }
   };
 
   // ── HEATMAP ──
   function buildHeatmap(posts) {
-    const grid = document.getElementById('heatmap');
-    const now  = Date.now();
+    const grid  = document.getElementById('heatmap');
     const weeks = 12;
-    const days  = weeks * 7;
     const bins  = new Array(weeks).fill(0);
+    const now   = Date.now();
     posts.forEach(p => {
       if (!p.created_at) return;
-      const diff = (now - new Date(p.created_at)) / (1000 * 60 * 60 * 24 * 7);
-      const week = Math.floor(diff);
-      if (week >= 0 && week < weeks) bins[weeks - 1 - week]++;
+      const week = Math.floor((now - new Date(p.created_at))/(1000*60*60*24*7));
+      if (week>=0 && week<weeks) bins[weeks-1-week]++;
     });
     const max = Math.max(...bins, 1);
     grid.innerHTML = bins.map(count => {
-      const ratio = count / max;
-      const lvl   = ratio === 0 ? '' : ratio < .25 ? 'lvl1' : ratio < .5 ? 'lvl2' : ratio < .75 ? 'lvl3' : 'lvl4';
-      return `<div class="hm-cell ${lvl}" title="${count} post${count !== 1 ? 's' : ''}"></div>`;
+      const r = count/max;
+      const lvl = r===0?'':r<.25?'lvl1':r<.5?'lvl2':r<.75?'lvl3':'lvl4';
+      return `<div class="hm-cell ${lvl}" title="${count} post${count!==1?'s':''}"></div>`;
     }).join('');
   }
 
-  // ── SAVE PROFILE (localStorage only — extend to DB as needed) ──
-  window.saveProfile = function() {
-    const name   = document.getElementById('edit-name').value.trim();
-    const handle = document.getElementById('edit-handle').value.trim();
-    const bio    = document.getElementById('edit-bio').value.trim();
+  // ── JOINED DATE ──
+  function setJoined(dateStr) {
+    const el = document.getElementById('profile-joined');
+    if (!dateStr) return;
+    const d = new Date(dateStr);
+    const str = `Joined ${d.toLocaleString('default',{month:'long'})} ${d.getFullYear()}`;
+    el.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--muted)" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> ${str}`;
+    document.getElementById('about-joined').textContent = str;
+  }
 
-    if (!name)   { showToast('Name cannot be empty'); return; }
-
-    const btn = document.getElementById('save-btn');
-    btn.textContent = 'Saving…'; btn.disabled = true;
-
-    // Save to localStorage
-    if (name)   { localStorage.setItem('vibe_name', name);   }
-    if (handle) { localStorage.setItem('vibe_handle', handle); }
-    const initials = getInitials(name);
-    localStorage.setItem('vibe_initials', initials);
-    if (bio) localStorage.setItem('vibe_bio', bio);
-
-    // Save banner choice
-    const activeSwatch = document.querySelector('.banner-swatch[data-active="true"]');
-    if (activeSwatch) localStorage.setItem('vibe_banner', activeSwatch.dataset.gradient);
-
-    // Update UI live
-    document.getElementById('profile-name').textContent        = name;
-    document.getElementById('profile-handle').textContent      = handle ? '@' + handle : VIBE_USER;
-    document.getElementById('header-name').textContent         = name;
-    document.getElementById('sb-name').textContent             = name;
-    document.getElementById('sb-handle').textContent           = handle ? '@' + handle : VIBE_USER;
-    document.getElementById('sb-av').textContent               = initials;
-    document.getElementById('profile-av-large').textContent    = initials;
-    document.getElementById('about-name').textContent          = name;
-    if (bio) {
-      document.getElementById('profile-bio').innerHTML = escHtml(bio);
-    }
-    if (activeSwatch) {
-      document.getElementById('profile-banner').style.background = activeSwatch.dataset.gradient;
-    }
-
-    setTimeout(() => {
-      btn.textContent = 'Save changes'; btn.disabled = false;
-      closeEditModal();
-      showToast('Profile updated ✓');
-    }, 600);
-  };
-
-  // ── EDIT MODAL ──
+  // ── EDIT MODAL OPEN/CLOSE ──
   window.openEditModal = function() {
-    document.getElementById('edit-name').value   = localStorage.getItem('vibe_name')   || '';
-    document.getElementById('edit-handle').value = localStorage.getItem('vibe_handle') || '';
-    document.getElementById('edit-bio').value    = localStorage.getItem('vibe_bio')    || '';
+    const p = window._myProfileRow || {};
+    document.getElementById('edit-name').value     = p.name     || VIBE_NAME     || '';
+    document.getElementById('edit-handle').value   = p.handle   || VIBE_HANDLE   || '';
+    document.getElementById('edit-bio').value      = p.bio      || '';
+    document.getElementById('edit-website').value  = p.website  || '';
+    document.getElementById('edit-location').value = p.location || '';
+    document.getElementById('bio-count').textContent = (p.bio||'').length+'/160';
+
+    // Highlight active banner swatch
+    document.querySelectorAll('.banner-swatch').forEach(s => {
+      s.classList.toggle('selected', s.dataset.gradient === (p.banner||''));
+      s.onclick = () => {
+        document.querySelectorAll('.banner-swatch').forEach(x=>x.classList.remove('selected'));
+        s.classList.add('selected');
+      };
+    });
     document.getElementById('edit-modal').style.display = 'flex';
   };
+
   window.closeEditModal = function() {
     document.getElementById('edit-modal').style.display = 'none';
   };
+
   window.handleModalClick = function(e) {
     if (e.target === document.getElementById('edit-modal')) closeEditModal();
   };
 
-  // ── BANNER SWATCH PICKER ──
-  window.pickBannerColor = function(el) {
-    document.querySelectorAll('.banner-swatch').forEach(s => {
-      s.style.border = '2px solid transparent';
-      s.removeAttribute('data-active');
-    });
-    el.style.border = '2px solid var(--accent)';
-    el.setAttribute('data-active', 'true');
-  };
-
-  // ── PROFILE TABS ──
+  // ── TABS ──
   window.switchProfileTab = function(el, tab) {
     document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
-    if (tab === 'posts') { loadMyPosts(); }
-    else showToast(`${tab.charAt(0).toUpperCase() + tab.slice(1)} — coming soon`);
+    if (tab==='posts')   loadMyPosts();
+    else if (tab==='likes') loadLikedPosts();
+    else showToast(`${tab.charAt(0).toUpperCase()+tab.slice(1)} — coming soon`);
   };
 
   window.shareProfile = function() {
-    const url = window.location.href;
-    if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => showToast('Profile link copied!'));
-    else showToast('Profile link copied!');
+    if (navigator.clipboard) navigator.clipboard.writeText(window.location.href).then(()=>showToast('Profile link copied!'));
   };
 
   window.sharePost = function(id) {
     const url = `${location.origin}${location.pathname}?post=${id}`;
-    if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => showToast('Link copied!'));
-    else showToast('Link copied!');
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(()=>showToast('Link copied!'));
   };
 
-  // ── SKELETON ──
   function showSkeleton(container) {
-    container.innerHTML = Array(3).fill('').map(() => `
+    container.innerHTML = Array(3).fill('').map(()=>`
       <div class="skel">
         <div class="skel-row"><div class="skel-av"></div><div class="skel-lines"><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
         <div class="skel-line w80"></div><div class="skel-line w55" style="margin-top:6px;"></div>
@@ -866,27 +1003,26 @@
   }
 
   // ── INIT ──
-  loadMyPosts();
-  loadSuggested();
-  window._getDB = getDB;
+  await loadProfileFromDB();
+  await loadMyPosts();
+  await loadSuggested();
+  window._vdb = vdb;
 </script>
 
+<!-- UTILS (global) -->
 <script>
-  // ── UTILS (non-module, globally reachable) ──
-  function formatNum(n) { return n >= 1000 ? (n/1000).toFixed(1).replace('.0','')+'k' : n; }
-  function escHtml(str) { return str ? String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
-  function getInitials(str) { return (str||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
-  function timeAgo(iso) {
-    if (!iso) return '';
-    const m = Math.floor((Date.now() - new Date(iso)) / 60000);
-    if (m < 1)  return 'just now';
-    if (m < 60) return `${m}m ago`;
-    const h = Math.floor(m/60);
-    if (h < 24) return `${h}h ago`;
-    return `${Math.floor(h/24)}d ago`;
+  function formatNum(n){return n>=1000?(n/1000).toFixed(1).replace('.0','')+'k':n;}
+  function escHtml(str){return str?String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):'');}
+  function getInitials(str){return(str||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+  function timeAgo(iso){
+    if(!iso)return'';
+    const m=Math.floor((Date.now()-new Date(iso))/60000);
+    if(m<1)return'just now';if(m<60)return`${m}m ago`;
+    const h=Math.floor(m/60);if(h<24)return`${h}h ago`;
+    return`${Math.floor(h/24)}d ago`;
   }
-  function avatarColor(str) {
-    const palettes = [
+  function avatarColor(str){
+    const palettes=[
       {bg:'linear-gradient(135deg,#c7d2fe,#a5b4fc)',fg:'#4338ca'},
       {bg:'linear-gradient(135deg,#fde68a,#fbbf24)',fg:'#92400e'},
       {bg:'linear-gradient(135deg,#bbf7d0,#4ade80)',fg:'#166534'},
@@ -895,22 +1031,20 @@
       {bg:'linear-gradient(135deg,#fce7f3,#f9a8d4)',fg:'#9d174d'},
       {bg:'linear-gradient(135deg,#d1fae5,#6ee7b7)',fg:'#065f46'},
     ];
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash<<5) - hash);
-    return palettes[Math.abs(hash) % palettes.length];
+    let hash=0;for(let i=0;i<str.length;i++)hash=str.charCodeAt(i)+((hash<<5)-hash);
+    return palettes[Math.abs(hash)%palettes.length];
   }
   let toastTimer;
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
+  function showToast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg;t.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
   }
-  function logout() {
-    ['vibe_user','vibe_name','vibe_handle','vibe_initials','vibe_bio','vibe_banner'].forEach(k => localStorage.removeItem(k));
-    window.location.href = 'login.html';
+  function logout(){
+    ['vibe_user','vibe_name','vibe_handle','vibe_initials'].forEach(k=>localStorage.removeItem(k));
+    window.location.href='login.html';
   }
 </script>
-
 </body>
 </html>
