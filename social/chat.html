@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vasuki - Messages</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --white:#ffffff;--off:#f7f6f4;--bg:#f0eeeb;--ink:#0c0c0c;--ink2:#3a3a3a;
+      --muted:#888;--border:#e2dfdb;--accent:#1a6bf5;--accent-soft:rgba(26,107,245,.08);
+      --radius:12px;--danger:#e53935;--green:#22c55e;--sidebar:230px;
+      --bubble-me:#0c0c0c;--bubble-them:#f0eeeb;
+    }
+    html,body{height:100%;overflow:hidden;}
+    body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;}
+
+    /* ── SIDEBAR ── */
+    .sidebar{width:var(--sidebar);flex-shrink:0;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;position:relative;z-index:10;}
+    .sb-header{padding:20px 18px 16px;border-bottom:1px solid var(--border);}
+    .sb-logo{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);display:block;margin-bottom:18px;text-decoration:none;}
+    .sb-compose{width:100%;padding:9px 14px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .18s;}
+    .sb-compose:hover{background:#222;}
+    .sb-compose svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;}
+    .sb-nav{padding:14px 10px;flex:1;overflow-y:auto;}
+    .sb-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);padding:0 8px;margin-bottom:6px;margin-top:14px;}
+    .sb-section-label:first-child{margin-top:0;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13.5px;color:var(--ink2);cursor:pointer;transition:all .15s;position:relative;text-decoration:none;margin-bottom:1px;}
+    .nav-item:hover{background:var(--off);color:var(--ink);}
+    .nav-item.active{background:var(--off);color:var(--ink);font-weight:500;}
+    .nav-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+    .sb-footer{border-top:1px solid var(--border);padding:14px 10px;}
+    .sb-profile{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;cursor:pointer;transition:background .15s;}
+    .sb-profile:hover{background:var(--off);}
+    .sb-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#c7d2fe,#a5b4fc);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#4338ca;flex-shrink:0;}
+    .sb-info{flex:1;min-width:0;}
+    .sb-name{font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .sb-handle{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .logout-btn{width:100%;margin-top:6px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:transparent;font-family:'Geist',sans-serif;font-size:12.5px;color:var(--muted);cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:8px;}
+    .logout-btn:hover{background:#fef2f2;color:var(--danger);border-color:#fecaca;}
+    .logout-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;}
+
+    /* ── MAIN LAYOUT ── */
+    .main{flex:1;display:flex;height:100vh;overflow:hidden;}
+
+    /* ── CONVERSATIONS LIST ── */
+    .conv-col{width:300px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--white);overflow:hidden;}
+    .conv-header{padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;}
+    .conv-title{font-family:'Instrument Serif',serif;font-size:19px;color:var(--ink);}
+    .icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+    .icon-btn:hover{background:var(--off);}
+    .icon-btn svg{width:15px;height:15px;stroke:var(--ink2);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+    .conv-search{padding:10px 12px;border-bottom:1px solid var(--border);}
+    .conv-search-wrap{display:flex;align-items:center;gap:8px;background:var(--off);border:1px solid var(--border);border-radius:9px;padding:7px 11px;}
+    .conv-search-wrap svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;flex-shrink:0;}
+    .conv-search-wrap input{border:none;outline:none;background:transparent;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);flex:1;}
+    .conv-search-wrap input::placeholder{color:var(--muted);}
+    .conv-list{flex:1;overflow-y:auto;}
+    .conv-list::-webkit-scrollbar{width:3px;}
+    .conv-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+    .conv-item{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--border);position:relative;}
+    .conv-item:hover{background:var(--off);}
+    .conv-item.active{background:var(--accent-soft);}
+    .conv-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:0 3px 3px 0;}
+    .conv-av{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
+    .conv-av-wrap{position:relative;flex-shrink:0;}
+    .conv-online{position:absolute;bottom:1px;right:1px;width:9px;height:9px;background:var(--green);border-radius:50%;border:2px solid var(--white);}
+    .conv-info{flex:1;min-width:0;}
+    .conv-name{font-size:13.5px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .conv-preview{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+    .conv-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+    .conv-time{font-size:11px;color:var(--muted);}
+    .conv-badge{width:18px;height:18px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;}
+    .conv-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;flex:1;}
+    .conv-empty svg{width:28px;height:28px;stroke:var(--muted);fill:none;stroke-width:1.4;stroke-linecap:round;margin-bottom:10px;}
+    .conv-empty p{font-size:13px;color:var(--muted);line-height:1.6;}
+
+    /* ── CHAT AREA ── */
+    .chat-col{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+    .chat-header{padding:0 20px;height:52px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.9);backdrop-filter:blur(12px);flex-shrink:0;}
+    .chat-header-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
+    .chat-header-info{flex:1;min-width:0;}
+    .chat-header-name{font-size:14px;font-weight:600;color:var(--ink);}
+    .chat-header-status{font-size:11.5px;color:var(--muted);}
+    .chat-header-actions{display:flex;gap:6px;}
+    .chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:6px;}
+    .chat-messages::-webkit-scrollbar{width:4px;}
+    .chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+
+    /* ── MESSAGES ── */
+    .msg-group{display:flex;flex-direction:column;gap:2px;margin-bottom:4px;}
+    .msg-row{display:flex;align-items:flex-end;gap:8px;}
+    .msg-row.mine{flex-direction:row-reverse;}
+    .msg-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;}
+    .msg-av.invisible{visibility:hidden;}
+    .msg-bubble{max-width:72%;padding:9px 13px;border-radius:16px;font-size:13.5px;line-height:1.55;word-break:break-word;position:relative;animation:bubbleIn .2s ease both;}
+    @keyframes bubbleIn{from{opacity:0;transform:translateY(6px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+    .msg-bubble.them{background:var(--white);border:1px solid var(--border);color:var(--ink2);border-bottom-left-radius:4px;}
+    .msg-bubble.mine{background:var(--bubble-me);color:#fff;border-bottom-right-radius:4px;}
+    .msg-time{font-size:10.5px;color:var(--muted);padding:0 2px;margin-top:2px;flex-shrink:0;}
+    .msg-row.mine .msg-time{text-align:right;}
+    .msg-date-divider{text-align:center;margin:12px 0;position:relative;}
+    .msg-date-divider span{font-size:11px;color:var(--muted);background:var(--bg);padding:0 12px;position:relative;z-index:1;}
+    .msg-date-divider::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:var(--border);}
+    /* Image in message */
+    .msg-image{max-width:260px;border-radius:12px;border:1px solid var(--border);display:block;margin-top:4px;cursor:pointer;}
+    .msg-image:hover{opacity:.93;}
+
+    /* Typing indicator */
+    .typing-indicator{display:none;align-items:center;gap:8px;padding:4px 0;}
+    .typing-indicator.show{display:flex;}
+    .typing-dots{display:flex;gap:3px;align-items:center;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:9px 14px;}
+    .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:typingBounce 1.2s ease infinite;}
+    .typing-dot:nth-child(2){animation-delay:.2s;}
+    .typing-dot:nth-child(3){animation-delay:.4s;}
+    @keyframes typingBounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+
+    /* ── CHAT INPUT ── */
+    .chat-input-area{border-top:1px solid var(--border);background:var(--white);padding:12px 16px;flex-shrink:0;}
+    .chat-input-row{display:flex;align-items:flex-end;gap:8px;}
+    .chat-input-wrap{flex:1;display:flex;align-items:flex-end;gap:0;background:var(--off);border:1px solid var(--border);border-radius:12px;padding:0 4px 0 12px;transition:border-color .15s;}
+    .chat-input-wrap:focus-within{border-color:var(--accent);}
+    .chat-textarea{flex:1;border:none;outline:none;background:transparent;font-family:'Geist',sans-serif;font-size:13.5px;color:var(--ink);resize:none;line-height:1.55;padding:10px 0;min-height:40px;max-height:120px;}
+    .chat-textarea::placeholder{color:var(--muted);}
+    .chat-input-actions{display:flex;align-items:center;gap:2px;padding:4px;}
+    .chat-tool{width:30px;height:30px;border-radius:7px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;flex-shrink:0;}
+    .chat-tool:hover{background:var(--border);}
+    .chat-tool svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+    .send-btn{width:38px;height:38px;border-radius:10px;background:var(--ink);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;}
+    .send-btn:hover{background:#222;}
+    .send-btn:disabled{opacity:.4;cursor:not-allowed;}
+    .send-btn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+    /* Image preview above input */
+    .input-img-preview{display:none;margin-bottom:8px;position:relative;display:inline-block;}
+    .input-img-preview.show{display:inline-block;}
+    .input-img-preview img{max-height:80px;border-radius:8px;border:1px solid var(--border);display:block;}
+    .input-img-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;background:rgba(0,0,0,.6);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .input-img-remove svg{width:9px;height:9px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;}
+
+    /* ── NO CHAT SELECTED ── */
+    .chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;}
+    .chat-empty-icon{width:64px;height:64px;border-radius:18px;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+    .chat-empty-icon svg{width:28px;height:28px;stroke:var(--muted);fill:none;stroke-width:1.4;stroke-linecap:round;}
+    .chat-empty h2{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);margin-bottom:6px;}
+    .chat-empty p{font-size:13px;color:var(--muted);line-height:1.7;max-width:280px;}
+    .chat-empty-btn{margin-top:16px;padding:9px 20px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;cursor:pointer;transition:background .15s;}
+    .chat-empty-btn:hover{background:#222;}
+
+    /* ── NEW CONVERSATION MODAL ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;animation:fadeIn .18s ease;}
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+    .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:320px;max-width:420px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;position:relative;}
+    @keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+    .modal-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:7px;border:none;background:var(--off);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .modal-close svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;}
+    .modal-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:14px;}
+    .user-search-wrap{display:flex;align-items:center;gap:8px;background:var(--off);border:1px solid var(--border);border-radius:9px;padding:9px 12px;margin-bottom:12px;}
+    .user-search-wrap svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;flex-shrink:0;}
+    .user-search-wrap input{border:none;outline:none;background:transparent;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);flex:1;}
+    .user-search-wrap input::placeholder{color:var(--muted);}
+    .user-results{max-height:240px;overflow-y:auto;}
+    .user-result-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;cursor:pointer;transition:background .12s;}
+    .user-result-item:hover{background:var(--off);}
+    .user-result-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
+    .user-result-name{font-size:13px;font-weight:500;color:var(--ink);}
+    .user-result-handle{font-size:12px;color:var(--muted);}
+
+    /* ── TOAST ── */
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:9px;opacity:0;pointer-events:none;transition:all .25s;z-index:999;white-space:nowrap;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    /* ── SKELETON ── */
+    .skel-conv{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+    .skel-av{width:38px;height:38px;border-radius:50%;background:var(--bg);flex-shrink:0;}
+    .skel-lines{flex:1;}
+    .skel-line{height:8px;background:var(--bg);border-radius:4px;margin-bottom:6px;}
+    .skel-line.w70{width:70%}.skel-line.w45{width:45%}
+    @keyframes shimmer{0%{opacity:.6;}50%{opacity:1;}100%{opacity:.6;}}
+    .skel-conv *{animation:shimmer 1.4s ease infinite;}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){.conv-col{width:260px;}}
+    @media(max-width:640px){
+      .sidebar{width:60px;}
+      .sb-logo,.sb-section-label,.nav-item span,.sb-info,.sb-compose span,.logout-btn span{display:none;}
+      .sb-compose{padding:9px;justify-content:center;}
+      .nav-item{justify-content:center;padding:10px;}
+      .sb-profile{justify-content:center;padding:8px;}
+      .logout-btn{justify-content:center;}
+      .conv-col{width:220px;}
+    }
+    @media(max-width:480px){.conv-col{display:none;}.conv-col.mobile-show{display:flex;position:fixed;left:60px;top:0;bottom:0;z-index:50;}}
+  </style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sb-header">
+    <a class="sb-logo" href="index.html">Vibe</a>
+    <button class="sb-compose" onclick="openNewConvModal()">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      <span>New Chat</span>
+    </button>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section-label">Menu</div>
+    <a class="nav-item" href="media.html">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <span>Explore</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span>Notifications</span>
+    </a>
+    <a class="nav-item active" href="chat.html">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span>Messages</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      <span>Bookmarks</span>
+    </a>
+    <div class="sb-section-label">You</div>
+    <a class="nav-item" href="profile.html">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>My Profile</span>
+    </a>
+    <a class="nav-item" href="#">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Settings</span>
+    </a>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-profile" onclick="window.location.href='profile.html'">
+      <div class="sb-av" id="sb-av">?</div>
+      <div class="sb-info">
+        <div class="sb-name" id="sb-name">Loading...</div>
+        <div class="sb-handle" id="sb-handle">@—</div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">
+      <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      <span>Sign out</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- Conversations list -->
+  <div class="conv-col" id="conv-col">
+    <div class="conv-header">
+      <div class="conv-title">Messages</div>
+      <button class="icon-btn" title="New conversation" onclick="openNewConvModal()">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
+    <div class="conv-search">
+      <div class="conv-search-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search conversations…" oninput="filterConvs(this.value)" id="conv-search-input"/>
+      </div>
+    </div>
+    <div class="conv-list" id="conv-list">
+      <!-- skeleton -->
+      ${[1,2,3].map(()=>`<div class="skel-conv"><div class="skel-av"></div><div class="skel-lines"><div class="skel-line w70"></div><div class="skel-line w45"></div></div></div>`).join('')}
+    </div>
+  </div>
+
+  <!-- Chat area -->
+  <div class="chat-col" id="chat-col">
+    <!-- Empty state -->
+    <div class="chat-empty" id="chat-empty">
+      <div class="chat-empty-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <h2>Your Messages</h2>
+      <p>Send private messages to anyone on Vibe. Select a conversation or start a new one.</p>
+      <button class="chat-empty-btn" onclick="openNewConvModal()">Start a conversation</button>
+    </div>
+
+    <!-- Chat pane (hidden until a conv is selected) -->
+    <div id="chat-pane" style="display:none;flex:1;display:none;flex-direction:column;overflow:hidden;height:100%;">
+      <div class="chat-header" id="chat-header">
+        <div class="chat-header-av" id="chat-header-av"></div>
+        <div class="chat-header-info">
+          <div class="chat-header-name" id="chat-header-name">—</div>
+          <div class="chat-header-status" id="chat-header-status">Tap to view profile</div>
+        </div>
+        <div class="chat-header-actions">
+          <button class="icon-btn" title="Refresh" onclick="loadMessages()">
+            <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-input-area">
+        <div id="input-img-preview-wrap" style="margin-bottom:0;"></div>
+        <div class="chat-input-row">
+          <div class="chat-input-wrap">
+            <textarea class="chat-textarea" id="chat-textarea" placeholder="Message…" rows="1"
+              oninput="autoResize(this)"
+              onkeydown="handleChatKey(event)"></textarea>
+            <div class="chat-input-actions">
+              <button class="chat-tool" title="Attach image URL" onclick="promptImageUrl()">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              </button>
+              <button class="chat-tool" title="Emoji" onclick="insertChatEmoji()">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+              </button>
+            </div>
+          </div>
+          <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Send (Enter)">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ── SCRIPTS ── -->
+<script type="module">
+  import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
+  const vdb = new Vasuki();
+
+  const VIBE_USER     = localStorage.getItem('vibe_user');
+  const VIBE_NAME     = localStorage.getItem('vibe_name')     || 'User';
+  const VIBE_HANDLE   = localStorage.getItem('vibe_handle')   || '';
+  const VIBE_INITIALS = localStorage.getItem('vibe_initials') || '?';
+
+  if (!VIBE_USER) { window.location.href = 'login.html'; }
+
+  // Populate sidebar
+  document.getElementById('sb-av').textContent     = VIBE_INITIALS;
+  document.getElementById('sb-name').textContent   = VIBE_NAME;
+  document.getElementById('sb-handle').textContent = VIBE_HANDLE ? '@'+VIBE_HANDLE : VIBE_USER;
+
+  await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+
+  // State
+  let allConvs     = [];
+  let knownUsers   = [];
+  let activeConvId = null;
+  let pollInterval = null;
+  let pendingImgUrl = '';
+
+  window._vdb         = vdb;
+  window._VIBE_USER   = VIBE_USER;
+  window._VIBE_NAME   = VIBE_NAME;
+  window._VIBE_HANDLE = VIBE_HANDLE;
+  window._VIBE_INITIALS = VIBE_INITIALS;
+
+  // ── LOAD KNOWN USERS ──
+  async function loadKnownUsers() {
+    try {
+      const users = await vdb.fetchTable('users_rows', 'Sheet1');
+      knownUsers = (users || []).filter(u => u && u.handle);
+      window._knownUsers = knownUsers;
+    } catch(e) { console.warn('Could not load users:', e); }
+  }
+
+  // ── LOAD CONVERSATIONS ──
+  // A conversation is uniquely identified by a sorted pair of user handles/emails.
+  // We derive them from the vibe_messages table by grouping on conv_id.
+  async function loadConversations() {
+    const listEl = document.getElementById('conv-list');
+    try {
+      const msgs = await vdb.fetchTable('vibe_messages', 'Sheet1');
+      if (!msgs || !msgs.length) {
+        listEl.innerHTML = `<div class="conv-empty"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>No conversations yet.<br>Start one!</p></div>`;
+        return;
+      }
+      // Build conv map keyed by conv_id
+      const convMap = {};
+      msgs.forEach(m => {
+        if (!m.conv_id) return;
+        const isMe = (m.sender_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase()
+                  || (m.sender_handle||'') === VIBE_HANDLE;
+        const isRecipient = (m.recipient_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase()
+                          || (m.recipient_handle||'') === VIBE_HANDLE;
+        if (!isMe && !isRecipient) return; // not our conv
+        if (!convMap[m.conv_id]) {
+          convMap[m.conv_id] = { conv_id: m.conv_id, messages: [], other: null };
+          // Determine "other" person
+          if (isMe) {
+            convMap[m.conv_id].other = {
+              name:     m.recipient_name || m.recipient_handle || 'Unknown',
+              handle:   m.recipient_handle || '',
+              initials: m.recipient_initials || getInitials(m.recipient_name || m.recipient_handle || '?'),
+              email:    m.recipient_email || ''
+            };
+          } else {
+            convMap[m.conv_id].other = {
+              name:     m.sender_name || m.sender_handle || 'Unknown',
+              handle:   m.sender_handle || '',
+              initials: m.sender_initials || getInitials(m.sender_name || m.sender_handle || '?'),
+              email:    m.sender_email || ''
+            };
+          }
+        }
+        convMap[m.conv_id].messages.push(m);
+      });
+
+      allConvs = Object.values(convMap).map(c => {
+        const sorted = c.messages.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+        const last   = sorted[sorted.length - 1];
+        return { ...c, last_message: last, last_at: last?.created_at || '' };
+      }).sort((a,b) => new Date(b.last_at) - new Date(a.last_at));
+
+      renderConvList(allConvs);
+    } catch(err) {
+      console.error(err);
+      listEl.innerHTML = `<div class="conv-empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><p>Couldn't load conversations.</p></div>`;
+    }
+  }
+
+  function renderConvList(convs) {
+    const listEl = document.getElementById('conv-list');
+    if (!convs.length) {
+      listEl.innerHTML = `<div class="conv-empty"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>No conversations yet.<br>Start one!</p></div>`;
+      return;
+    }
+    listEl.innerHTML = convs.map(c => {
+      const color    = avatarColor(c.other.handle || c.other.name || '');
+      const init     = (c.other.initials || getInitials(c.other.name || '?')).toUpperCase();
+      const lastMsg  = c.last_message;
+      const lastText = lastMsg
+        ? (lastMsg.image_url ? '📷 Image' : (lastMsg.body || '').slice(0, 48) + ((lastMsg.body||'').length > 48 ? '…' : ''))
+        : '';
+      const isActive = c.conv_id === activeConvId;
+      return `<div class="conv-item${isActive?' active':''}" id="conv-item-${c.conv_id}" onclick="selectConversation('${c.conv_id}')">
+        <div class="conv-av-wrap">
+          <div class="conv-av" style="background:${color.bg};color:${color.fg}">${escHtml(init)}</div>
+        </div>
+        <div class="conv-info">
+          <div class="conv-name">${escHtml(c.other.name)}</div>
+          <div class="conv-preview">${escHtml(lastText)}</div>
+        </div>
+        <div class="conv-meta">
+          <div class="conv-time">${lastMsg ? timeAgo(lastMsg.created_at) : ''}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  window.filterConvs = function(q) {
+    if (!q.trim()) { renderConvList(allConvs); return; }
+    const lower = q.toLowerCase();
+    renderConvList(allConvs.filter(c =>
+      c.other.name.toLowerCase().includes(lower) ||
+      c.other.handle.toLowerCase().includes(lower)
+    ));
+  };
+
+  // ── SELECT CONVERSATION ──
+  window.selectConversation = function(convId) {
+    activeConvId = convId;
+    const conv = allConvs.find(c => c.conv_id === convId);
+    if (!conv) return;
+
+    // Update active state in list
+    document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('conv-item-'+convId)?.classList.add('active');
+
+    // Update chat header
+    const color = avatarColor(conv.other.handle || conv.other.name || '');
+    const init  = (conv.other.initials || getInitials(conv.other.name || '?')).toUpperCase();
+    const headerAv = document.getElementById('chat-header-av');
+    headerAv.style.background = color.bg;
+    headerAv.style.color      = color.fg;
+    headerAv.textContent      = init;
+    document.getElementById('chat-header-name').textContent   = conv.other.name;
+    document.getElementById('chat-header-status').textContent = '@' + (conv.other.handle || conv.other.email);
+
+    // Show chat pane
+    document.getElementById('chat-empty').style.display = 'none';
+    const pane = document.getElementById('chat-pane');
+    pane.style.display = 'flex';
+    pane.style.flexDirection = 'column';
+
+    // Load messages and start polling
+    loadMessages();
+    clearInterval(pollInterval);
+    pollInterval = setInterval(loadMessages, 4000);
+
+    document.getElementById('chat-textarea')?.focus();
+  };
+
+  // ── LOAD MESSAGES FOR ACTIVE CONV ──
+  window.loadMessages = async function() {
+    if (!activeConvId) return;
+    const msgsEl = document.getElementById('chat-messages');
+    try {
+      const all = await vdb.fetchTable('vibe_messages', 'Sheet1');
+      const msgs = (all || [])
+        .filter(m => m.conv_id === activeConvId)
+        .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+
+      const wasAtBottom = msgsEl.scrollHeight - msgsEl.scrollTop - msgsEl.clientHeight < 80;
+      msgsEl.innerHTML = '';
+
+      if (!msgs.length) {
+        msgsEl.innerHTML = '<div style="flex:1;display:flex;align-items:center;justify-content:center;"><p style="font-size:13px;color:var(--muted);">Say hello! 👋</p></div>';
+        return;
+      }
+
+      // Group by date
+      let lastDate = null;
+      msgs.forEach((m, i) => {
+        const msgDate = new Date(m.created_at).toDateString();
+        if (msgDate !== lastDate) {
+          lastDate = msgDate;
+          const divider = document.createElement('div');
+          divider.className = 'msg-date-divider';
+          divider.innerHTML = `<span>${formatDate(m.created_at)}</span>`;
+          msgsEl.appendChild(divider);
+        }
+
+        const isMe = (m.sender_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase()
+                  || (m.sender_handle||'') === VIBE_HANDLE;
+
+        // Check if next message is from same sender (for avatar hiding)
+        const next = msgs[i + 1];
+        const isSameSenderNext = next && (
+          (next.sender_email||'').toLowerCase() === (m.sender_email||'').toLowerCase()
+        ) && new Date(next.created_at) - new Date(m.created_at) < 120000;
+
+        const row = document.createElement('div');
+        row.className = `msg-row${isMe ? ' mine' : ''}`;
+
+        const color = avatarColor(m.sender_handle || m.sender_name || '');
+        const init  = (m.sender_initials || getInitials(m.sender_name || m.sender_handle || '?')).toUpperCase();
+
+        const imageHtml = m.image_url
+          ? `<img class="msg-image" src="${escHtml(m.image_url)}" alt="Image" loading="lazy" onerror="this.style.display='none'" onclick="window.open('${escHtml(m.image_url)}','_blank')"/>`
+          : '';
+
+        row.innerHTML = `
+          <div class="msg-av${isSameSenderNext ? ' invisible' : ''}" style="background:${color.bg};color:${color.fg}">${isMe ? escHtml(VIBE_INITIALS) : escHtml(init)}</div>
+          <div>
+            <div class="msg-bubble ${isMe ? 'mine' : 'them'}">
+              ${m.body ? escHtml(m.body) : ''}
+              ${imageHtml}
+            </div>
+            ${!isSameSenderNext ? `<div class="msg-time">${shortTime(m.created_at)}</div>` : ''}
+          </div>`;
+        msgsEl.appendChild(row);
+      });
+
+      if (wasAtBottom || msgs.length <= 5) {
+        msgsEl.scrollTop = msgsEl.scrollHeight;
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  // ── SEND MESSAGE ──
+  window.sendMessage = async function() {
+    const ta   = document.getElementById('chat-textarea');
+    const body = ta.value.trim();
+    if (!body && !pendingImgUrl) return;
+    if (!activeConvId) { showToast('Select a conversation first'); return; }
+
+    const conv = allConvs.find(c => c.conv_id === activeConvId);
+    if (!conv) return;
+
+    const btn = document.getElementById('send-btn');
+    btn.disabled = true;
+
+    try {
+      const row = {
+        conv_id: activeConvId,
+        sender_name:     VIBE_NAME,
+        sender_handle:   VIBE_HANDLE,
+        sender_initials: VIBE_INITIALS,
+        sender_email:    VIBE_USER,
+        recipient_name:     conv.other.name,
+        recipient_handle:   conv.other.handle,
+        recipient_initials: conv.other.initials,
+        recipient_email:    conv.other.email,
+        body:       body,
+        created_at: new Date().toISOString()
+      };
+      if (pendingImgUrl) row.image_url = pendingImgUrl;
+
+      await vdb.insertRow('vibe_messages', 'Sheet1', row);
+      ta.value = ''; ta.style.height = 'auto';
+      clearPendingImg();
+      await loadMessages();
+      await loadConversations();
+    } catch(err) {
+      console.error(err);
+      showToast('Send failed — check DB connection');
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  // ── NEW CONVERSATION MODAL ──
+  window.openNewConvModal = function() {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.onclick = e => { if(e.target===overlay) overlay.remove(); };
+    overlay.innerHTML = `
+      <div class="modal-box">
+        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+        <div class="modal-title">New Conversation</div>
+        <div class="user-search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" placeholder="Search by name or @handle…" oninput="searchUsers(this.value)" autofocus/>
+        </div>
+        <div class="user-results" id="user-results">
+          ${renderUserResults((window._knownUsers||[]).filter(u => u.handle !== VIBE_HANDLE).slice(0,8))}
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+  };
+
+  window.searchUsers = function(q) {
+    const results = document.getElementById('user-results');
+    if (!results) return;
+    const lower = q.toLowerCase().trim();
+    const users = (window._knownUsers||[]).filter(u =>
+      u.handle !== VIBE_HANDLE &&
+      (!lower || u.handle?.toLowerCase().includes(lower) || u.name?.toLowerCase().includes(lower))
+    ).slice(0, 10);
+    results.innerHTML = renderUserResults(users);
+  };
+
+  function renderUserResults(users) {
+    if (!users.length) return '<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px;">No users found</p>';
+    return users.map(u => {
+      const color = avatarColor(u.handle||'');
+      const init  = getInitials(u.name||u.handle||'?');
+      return `<div class="user-result-item" onclick="startConversation('${escHtml(u.handle)}','${escHtml(u.name||u.handle)}','${escHtml(u.email||'')}')">
+        <div class="user-result-av" style="background:${color.bg};color:${color.fg}">${escHtml(init)}</div>
+        <div>
+          <div class="user-result-name">${escHtml(u.name||u.handle)}</div>
+          <div class="user-result-handle">@${escHtml(u.handle)}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  window.startConversation = async function(handle, name, email) {
+    // Close modal
+    document.querySelector('.modal-overlay')?.remove();
+
+    // Build deterministic conv_id from sorted handles
+    const myHandle   = VIBE_HANDLE || VIBE_USER;
+    const theirHandle = handle;
+    const convId = [myHandle, theirHandle].sort().join('__');
+
+    // Check if conv already exists
+    const existing = allConvs.find(c => c.conv_id === convId);
+    if (existing) {
+      selectConversation(convId);
+      return;
+    }
+
+    // Create a fake conv entry locally so it appears in list
+    const otherUser = (window._knownUsers||[]).find(u => u.handle === handle) || {};
+    const newConv = {
+      conv_id: convId,
+      messages: [],
+      last_message: null,
+      last_at: new Date().toISOString(),
+      other: {
+        name:     name,
+        handle:   handle,
+        initials: getInitials(name||handle||'?'),
+        email:    email || otherUser.email || ''
+      }
+    };
+    allConvs.unshift(newConv);
+    renderConvList(allConvs);
+    selectConversation(convId);
+    showToast(`Chat with @${handle} started`);
+  };
+  window.startConversation = window.startConversation;
+
+  // ── IMAGE ATTACHMENT ──
+  window.promptImageUrl = function() {
+    const url = prompt('Paste an image URL (Imgur, etc.):');
+    if (!url || !url.startsWith('http')) return;
+    pendingImgUrl = url;
+    const wrap = document.getElementById('input-img-preview-wrap');
+    wrap.innerHTML = `<div class="input-img-preview show" style="margin-bottom:8px;position:relative;display:inline-block;">
+      <img src="${escHtml(url)}" style="max-height:80px;border-radius:8px;border:1px solid var(--border);display:block;" onerror="this.parentElement.innerHTML='<span style=font-size:12px;color:var(--danger)>⚠ Could not load</span>'"/>
+      <button class="input-img-remove" onclick="clearPendingImg()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>`;
+  };
+
+  window.clearPendingImg = function() {
+    pendingImgUrl = '';
+    document.getElementById('input-img-preview-wrap').innerHTML = '';
+  };
+
+  // ── EMOJI (quick insert) ──
+  const QUICK_EMOJIS = ['😀','😂','🥰','😎','🤔','👍','❤️','🎉','🔥','✨','😭','🤣','💯','🙏','👀'];
+  window.insertChatEmoji = function() {
+    const existing = document.getElementById('quick-emoji-picker');
+    if (existing) { existing.remove(); return; }
+    const picker = document.createElement('div');
+    picker.id = 'quick-emoji-picker';
+    picker.style.cssText = 'position:fixed;bottom:80px;right:80px;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:4px;width:220px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:300;animation:fadeIn .15s ease;';
+    picker.innerHTML = QUICK_EMOJIS.map(e =>
+      `<button onclick="addEmoji('${e}')" style="width:32px;height:32px;border:none;background:transparent;cursor:pointer;border-radius:6px;font-size:18px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='var(--off)'" onmouseout="this.style.background='transparent'">${e}</button>`
+    ).join('');
+    document.body.appendChild(picker);
+    setTimeout(() => document.addEventListener('click', function rem(e) {
+      if (!picker.contains(e.target)) { picker.remove(); document.removeEventListener('click', rem); }
+    }), 50);
+  };
+
+  window.addEmoji = function(emoji) {
+    const ta = document.getElementById('chat-textarea');
+    const s = ta.selectionStart;
+    ta.value = ta.value.slice(0,s) + emoji + ta.value.slice(s);
+    ta.focus();
+    ta.setSelectionRange(s+emoji.length, s+emoji.length);
+    document.getElementById('quick-emoji-picker')?.remove();
+  };
+
+  // Init
+  await loadKnownUsers();
+  await loadConversations();
+
+  // Open conversation from URL param ?with=handle
+  const params = new URLSearchParams(location.search);
+  const withHandle = params.get('with');
+  if (withHandle) {
+    const u = (window._knownUsers||[]).find(u => u.handle?.toLowerCase() === withHandle.toLowerCase());
+    if (u) await window.startConversation(u.handle, u.name||u.handle, u.email||'');
+  }
+</script>
+
+<script>
+  function logout() {
+    ['vibe_user','vibe_name','vibe_handle','vibe_initials'].forEach(k=>localStorage.removeItem(k));
+    window.location.href = 'login.html';
+  }
+
+  function handleChatKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      window.sendMessage();
+    }
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    const d   = new Date(iso);
+    const now = new Date();
+    if (d.toDateString() === now.toDateString()) return 'Today';
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
+    return d.toLocaleDateString(undefined, { month:'short', day:'numeric', year: d.getFullYear()!==now.getFullYear()?'numeric':undefined });
+  }
+
+  function shortTime(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' });
+  }
+
+  function timeAgo(iso) {
+    if (!iso) return '';
+    const m = Math.floor((Date.now()-new Date(iso))/60000);
+    if (m<1) return 'now';
+    if (m<60) return `${m}m`;
+    const h = Math.floor(m/60);
+    if (h<24) return `${h}h`;
+    return `${Math.floor(h/24)}d`;
+  }
+
+  function getInitials(str) {
+    return (str||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  }
+
+  function escHtml(str) {
+    return str ? String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
+  }
+
+  function avatarColor(str) {
+    const palettes = [
+      {bg:'linear-gradient(135deg,#c7d2fe,#a5b4fc)',fg:'#4338ca'},
+      {bg:'linear-gradient(135deg,#fde68a,#fbbf24)',fg:'#92400e'},
+      {bg:'linear-gradient(135deg,#bbf7d0,#4ade80)',fg:'#166534'},
+      {bg:'linear-gradient(135deg,#fecaca,#f87171)',fg:'#991b1b'},
+      {bg:'linear-gradient(135deg,#e0e7ff,#818cf8)',fg:'#3730a3'},
+      {bg:'linear-gradient(135deg,#fce7f3,#f9a8d4)',fg:'#9d174d'},
+      {bg:'linear-gradient(135deg,#d1fae5,#6ee7b7)',fg:'#065f46'},
+    ];
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash<<5) - hash);
+    return palettes[Math.abs(hash) % palettes.length];
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+</script>
+</body>
+</html>
