@@ -90,11 +90,32 @@
     .emoji-btn:hover{background:var(--off);}
     .emoji-cat-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:6px 10px 4px;font-weight:600;}
 
-    /* Image preview in compose */
-    .compose-image-preview{margin-top:10px;position:relative;display:inline-block;}
-    .compose-image-preview img{max-width:100%;max-height:200px;border-radius:9px;border:1px solid var(--border);display:block;}
-    .compose-image-remove{position:absolute;top:6px;right:6px;width:22px;height:22px;background:rgba(0,0,0,.6);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    /* ── IMAGE ATTACHMENT (new) ── */
+    .compose-image-preview{margin-top:10px;position:relative;display:inline-block;max-width:100%;}
+    .compose-image-preview img{max-width:100%;max-height:220px;border-radius:9px;border:1px solid var(--border);display:block;object-fit:cover;}
+    .compose-image-remove{position:absolute;top:6px;right:6px;width:24px;height:24px;background:rgba(0,0,0,.65);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .compose-image-remove:hover{background:rgba(0,0,0,.85);}
     .compose-image-remove svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;}
+
+    /* Drop zone overlay */
+    .compose-box.drag-over{border-color:var(--accent);background:var(--accent-soft);}
+    .attach-upload-area{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+    .attach-upload-area.open{display:block;}
+    .attach-tabs{display:flex;gap:4px;margin-bottom:10px;}
+    .attach-tab{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:transparent;font-family:'Geist',sans-serif;font-size:12px;cursor:pointer;color:var(--muted);transition:all .14s;}
+    .attach-tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+    .attach-panel{display:none;}
+    .attach-panel.active{display:block;}
+    .url-input-row{display:flex;gap:8px;align-items:center;}
+    .url-input-row input{flex:1;border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);outline:none;background:var(--white);}
+    .url-input-row input:focus{border-color:var(--accent);}
+    .url-input-row button{padding:7px 12px;border:1px solid var(--border);border-radius:7px;background:transparent;font-family:'Geist',sans-serif;font-size:12px;cursor:pointer;color:var(--muted);white-space:nowrap;}
+    .url-input-row button:hover{background:var(--off);}
+    .file-drop-zone{border:2px dashed var(--border);border-radius:10px;padding:24px 16px;text-align:center;cursor:pointer;transition:all .15s;}
+    .file-drop-zone:hover,.file-drop-zone.drag-active{border-color:var(--accent);background:var(--accent-soft);}
+    .file-drop-zone svg{width:28px;height:28px;stroke:var(--muted);fill:none;stroke-width:1.5;margin-bottom:8px;}
+    .file-drop-zone p{font-size:13px;color:var(--muted);line-height:1.5;}
+    .file-drop-zone span{color:var(--accent);font-weight:500;}
 
     /* Poll builder */
     .poll-builder{margin-top:12px;background:var(--off);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
@@ -123,13 +144,17 @@
     .post-more{width:28px;height:28px;border-radius:7px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;}
     .post-more:hover{background:var(--off);}
     .post-more svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;}
+    /* Delete button styled distinctly */
+    .post-more.delete-btn:hover{background:#fef2f2;}
+    .post-more.delete-btn:hover svg{stroke:var(--danger);}
     .post-body{font-size:14px;color:var(--ink2);line-height:1.65;margin-bottom:12px;}
     .post-hashtag{color:var(--accent);font-weight:500;cursor:pointer;transition:opacity .15s;text-decoration:none;display:inline;}
     .post-hashtag:hover{opacity:.75;text-decoration:underline;}
     .post-mention{color:var(--accent);font-weight:500;cursor:pointer;transition:opacity .15s;text-decoration:none;display:inline;}
     .post-mention:hover{opacity:.75;text-decoration:underline;}
     .post-mention.invalid-user{color:var(--muted);}
-    .post-image{width:100%;border-radius:9px;border:1px solid var(--border);margin-bottom:12px;display:block;max-height:360px;object-fit:cover;}
+    .post-image{width:100%;border-radius:9px;border:1px solid var(--border);margin-bottom:12px;display:block;max-height:360px;object-fit:cover;cursor:pointer;transition:opacity .15s;}
+    .post-image:hover{opacity:.95;}
     .poll-display{background:var(--off);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
     .poll-option-vote{width:100%;margin-bottom:8px;text-align:left;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);transition:all .15s;display:flex;align-items:center;gap:8px;position:relative;overflow:hidden;}
     .poll-option-vote:hover{border-color:var(--accent);background:var(--accent-soft);}
@@ -146,6 +171,7 @@
     .post-action.liked{color:var(--danger);}
     .post-action.liked .heart{stroke:var(--danger);fill:var(--danger);}
     .post-action.reposted{color:var(--green);}
+    .post-action.reposted svg{stroke:var(--green);}
     .post-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
     .comments-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:none;}
     .comments-section.open{display:block;}
@@ -160,6 +186,13 @@
     .comment-input:focus{border-color:var(--accent);}
     .btn-comment{padding:7px 14px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'Geist',sans-serif;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;}
     .btn-comment:hover{background:#222;}
+
+    /* Image lightbox */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:500;display:flex;align-items:center;justify-content:center;cursor:zoom-out;animation:fadeIn .18s ease;}
+    .lightbox img{max-width:90vw;max-height:90vh;border-radius:10px;object-fit:contain;box-shadow:0 24px 80px rgba(0,0,0,.5);}
+    .lightbox-close{position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+    .lightbox-close svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;}
+
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;animation:fadeIn .18s ease;}
     @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
     .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:320px;max-width:400px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;position:relative;}
@@ -307,7 +340,8 @@
         <div id="poll-builder-area"></div>
         <div class="compose-footer">
           <div class="compose-tools">
-            <button class="compose-tool" id="img-tool-btn" title="Add image from URL" onclick="toggleImgurInput()">
+            <!-- IMAGE ATTACH BUTTON -->
+            <button class="compose-tool" id="img-tool-btn" title="Attach image" onclick="toggleAttachPanel()">
               <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             </button>
             <button class="compose-tool" id="emoji-tool-btn" title="Add emoji" onclick="toggleEmojiPicker(event)">
@@ -330,13 +364,30 @@
             <button class="btn-post" onclick="submitPost()">Post</button>
           </div>
         </div>
-        <!-- Imgur URL input -->
-        <div id="imgur-url-area" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
-          <div style="display:flex;gap:8px;align-items:center;">
-            <input type="url" id="imgur-url-input" placeholder="Paste image URL (Imgur, etc.)" style="flex:1;border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);outline:none;background:var(--white);" oninput="previewImgurUrl(this.value)"/>
-            <button onclick="clearImageAttach()" style="padding:7px 12px;border:1px solid var(--border);border-radius:7px;background:transparent;font-family:'Geist',sans-serif;font-size:12px;cursor:pointer;color:var(--muted);">Clear</button>
+
+        <!-- ── IMAGE ATTACH PANEL ── -->
+        <div class="attach-upload-area" id="attach-upload-area">
+          <div class="attach-tabs">
+            <button class="attach-tab active" id="attach-tab-url" onclick="switchAttachTab('url')">Link</button>
+            <button class="attach-tab" id="attach-tab-file" onclick="switchAttachTab('file')">Upload</button>
           </div>
-          <div id="url-preview-area" style="margin-top:8px;"></div>
+          <!-- URL panel -->
+          <div class="attach-panel active" id="attach-panel-url">
+            <div class="url-input-row">
+              <input type="url" id="img-url-input" placeholder="Paste image URL (https://…)" oninput="previewImgUrl(this.value)"/>
+              <button onclick="clearImageAttach()">Clear</button>
+            </div>
+          </div>
+          <!-- File upload panel -->
+          <div class="attach-panel" id="attach-panel-file">
+            <div class="file-drop-zone" id="file-drop-zone" onclick="document.getElementById('file-input').click()" ondragover="handleDragOver(event)" ondrop="handleDrop(event)" ondragleave="handleDragLeave(event)">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <p>Drop image here or <span>click to browse</span></p>
+              <p style="font-size:11px;margin-top:4px;">PNG, JPG, GIF up to 5MB</p>
+            </div>
+          </div>
+          <!-- Preview area shared -->
+          <div id="attach-preview-area" style="margin-top:8px;"></div>
         </div>
       </div>
       <div id="posts-container"></div>
@@ -390,7 +441,8 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<input type="file" id="file-input" accept="image/*" style="display:none"/>
+<!-- Hidden file input -->
+<input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileSelect(event)"/>
 
 <script type="module">
   import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
@@ -450,8 +502,11 @@
     el.id = 'post-' + p.id;
     const initials = (p.author_initials || getInitials(p.author_name || p.author_handle || '?')).toUpperCase();
     const color    = avatarColor(p.author_handle || p.author_name || '');
-    const isMe     = (p.author_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase()
-                  || (p.author_handle||'') === VIBE_HANDLE;
+
+    // ── OWNER CHECK: only the original poster can delete ──
+    const isMe = (p.author_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase()
+              || (p.author_handle||'') === VIBE_HANDLE;
+
     const liked    = sessionLikes.has(p.id);
     const reposted = sessionReposts.has(p.id);
 
@@ -475,9 +530,21 @@
       } catch(e) { pollHtml = ''; }
     }
 
+    // ── Image with lightbox ──
     const imageHtml = p.image_url
-      ? `<img class="post-image" src="${escHtml(p.image_url)}" alt="Post image" loading="lazy" onerror="this.style.display='none'"/>`
+      ? `<img class="post-image" src="${escHtml(p.image_url)}" alt="Post image" loading="lazy"
+           onclick="openLightbox('${escHtml(p.image_url)}')"
+           onerror="this.style.display='none'"/>`
       : '';
+
+    // ── More button: delete (owner only) or options (others) ──
+    const moreBtn = isMe
+      ? `<button class="post-more delete-btn" title="Delete post" onclick="deletePost('${p.id}')">
+           <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+         </button>`
+      : `<button class="post-more" onclick="showToast('Options coming soon')">
+           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+         </button>`;
 
     el.innerHTML = `
       <div class="post-top">
@@ -487,9 +554,7 @@
           <div class="post-handle">@${escHtml(p.author_handle||'')}</div>
         </div>
         <div class="post-time">${timeAgo(p.created_at)}</div>
-        ${isMe
-          ? `<button class="post-more" onclick="deletePost('${p.id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg></button>`
-          : `<button class="post-more" onclick="showToast('Options coming soon')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>`}
+        ${moreBtn}
       </div>
       <div class="post-body">${renderPostBody(p.body||'')}</div>
       ${imageHtml}
@@ -612,7 +677,6 @@
         poll_votes: JSON.stringify(votes),
         poll_voted: JSON.stringify(voted)
       });
-      const container = document.getElementById('posts-container');
       const updatedPosts = await vdb.fetchTable('vibe_posts', 'Sheet1');
       const updated = (updatedPosts||[]).find(p=>p.id===postId);
       if (updated) {
@@ -722,6 +786,7 @@
     } finally { btn.disabled = false; }
   };
 
+  // ── REPOST — fully activated, updates DB same as likes ──
   window.toggleRepost = async function(id, btn) {
     if (btn.disabled) return;
     btn.disabled = true;
@@ -829,12 +894,12 @@
   const EMOJI_CATEGORIES = [
     { icon: '😀', label: 'Smileys', emojis: ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','🥸','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖'] },
     { icon: '👋', label: 'People', emojis: ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪','🦾','🦵','🦿','🦻','👃','🫀','🫁','🧠','🦷','🦴','👀','👁️','👅','💋','💌','💘','💝','💖','💗','💓','💞','💕','💟','❣️','💔','❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍'] },
-    { icon: '🐶', label: 'Animals', emojis: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐻‍❄️','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐔','🐧','🐦','🐤','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🦟','🦗','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🦭','🐊','🐅','🐆','🦓','🦍','🦧','🦣','🐘','🦛','🦏','🐪','🐫','🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩','🦮','🐕‍🦺','🐈','🐈‍⬛','🐓','🦃','🦤','🦚','🦜','🦢','🦩','🕊️','🐇','🦝','🦨','🦡','🦫','🦦','🦥','🐁','🐀','🐿️','🦔'] },
-    { icon: '🍎', label: 'Food', emojis: ['🍎','🍊','🍋','🍇','🍓','🍒','🍑','🥭','🍍','🥝','🍅','🫐','🍆','🥑','🥦','🥬','🥒','🌶️','🫑','🧄','🧅','🥔','🌽','🍠','🧆','🧇','🥞','🧈','🍳','🥚','🧀','🥗','🥙','🌮','🌯','🫔','🥫','🍱','🍘','🍙','🍚','🍛','🍜','🍝','🍠','🍢','🍣','🍤','🍥','🥮','🍡','🥟','🥠','🥡','🍦','🍧','🍨','🍩','🍪','🎂','🍰','🧁','🥧','🍫','🍬','🍭','🍮','🍯','🍷','🥂','🍸','🍹','🧃','☕','🍵','🧋','🍺','🧉','🍻'] },
-    { icon: '⚽', label: 'Sports', emojis: ['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🏓','🏸','🏒','🥅','⛳','🎣','🤿','🎽','🎿','🛷','🥌','🎯','🎲','🎮','🕹️','🎰','🏆','🥇','🥈','🥉','🏅','🎖️','🏋️','🤸','⛹️','🤺','🏇','🧘','🏄','🏊','🚴','🧗','🏌️','🏂'] },
-    { icon: '🚗', label: 'Travel', emojis: ['🚗','🚕','🚙','🚌','🚎','🏎️','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🏍️','🛵','🛺','🚲','🛴','🛹','🛼','🚁','🛸','✈️','🚀','🛩️','🪂','💺','🛶','⛵','🚤','🛥️','🛳️','⛴️','🚢','⚓','🏝️','🏔️','⛰️','🗻','🏕️','🌋','🗾','🏜️','🏖️','🏗️','🏘️','🏚️','🏠','🏡','🏢','🏣','🏤','🏥','🏦','🏨','🏩','🏪','🏫','🏬','🏭','🗼','🗽','⛪','🕌','🛕','🕍','⛩️','🗺️','🌍','🌎','🌏','🌐'] },
-    { icon: '💡', label: 'Objects', emojis: ['💡','🔦','🕯️','💰','💵','💴','💶','💷','💸','💳','🪙','💎','📱','💻','⌨️','🖥️','🖨️','🖱️','🖲️','💾','💿','📀','📷','📸','📹','🎥','📽️','🎞️','📞','☎️','📟','📠','📺','📻','🧭','⏱️','⏰','⌚','⏳','📡','🔋','🔌','💡','🔦','🕯️','🪔','🧯','🛢️','💸','🔑','🗝️','🔐','🔒','🔓','🔨','🪓','⛏️','⚒️','🛠️','🗡️','⚔️','🛡️','🔧','🪛','🔩','⚙️','🗜️','🔗','⛓️','🧲','🪜','📌','📍','✂️','🗃️','🗳️','🗄️','🗑️','🔏','🔐'] },
-    { icon: '🎵', label: 'Symbols', emojis: ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','✨','🌟','⭐','🌠','☀️','🌤️','⛅','🌥️','☁️','🌦️','🌧️','⛈️','🌩️','🌨️','❄️','☃️','⛄','🌬️','💨','💧','💦','☔','⚡','🌈','🎵','🎶','🎼','🔔','🔕','📣','📢','🔊','🔉','🔈','🔇','🎺','🎸','🪕','🎻','🥁','🪘','🎹','🎷','🪗','🎙️','🎚️','🎛️','📻','🎤','🎧','📯','🔔','🔕','🎵','🎶','✅','❌','❎','🔴','🟠','🟡','🟢','🔵','🟣','🟤','⚫','⚪','🔺','🔻','🔷','🔶','🔹','🔸','♾️','🆕','🆙','🆓','🆒','🆗','🆖','🅰️','🅱️','🆎','🅾️','🆑','💯'] },
+    { icon: '🐶', label: 'Animals', emojis: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐔','🐧','🐦','🐤','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐝','🐛','🦋','🐌','🐞','🐜','🦟','🦗','🦂','🐢','🐍','🦎','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🦭','🐊','🐅','🐆','🦓','🦍','🦧','🦣','🐘','🦛','🦏','🐪','🐫','🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩','🦮','🐈'] },
+    { icon: '🍎', label: 'Food', emojis: ['🍎','🍊','🍋','🍇','🍓','🍒','🍑','🥭','🍍','🥝','🍅','🫐','🍆','🥑','🥦','🥬','🥒','🌶️','🫑','🧄','🧅','🥔','🌽','🍠','🧆','🧇','🥞','🧈','🍳','🥚','🧀','🥗','🥙','🌮','🌯','🫔','🥫','🍱','🍘','🍙','🍚','🍛','🍜','🍝','🍢','🍣','🍤','🍥','🥮','🍡','🥟','🥠','🥡','🍦','🍧','🍨','🍩','🍪','🎂','🍰','🧁','🥧','🍫','🍬','🍭','🍮','🍯','🍷','🥂','🍸','🍹','🧃','☕','🍵','🧋','🍺','🧉','🍻'] },
+    { icon: '⚽', label: 'Sports', emojis: ['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🏓','🏸','🏒','🥅','⛳','🎣','🤿','🎽','🎿','🛷','🥌','🎯','🎲','🎮','🕹️','🎰','🏆','🥇','🥈','🥉','🏅','🎖️'] },
+    { icon: '🚗', label: 'Travel', emojis: ['🚗','🚕','🚙','🚌','🚎','🏎️','🚓','🚑','🚒','🚐','🛻','🚚','🚛','🚜','🏍️','🛵','🛺','🚲','🛴','🛹','🛼','🚁','🛸','✈️','🚀','🛩️','🪂','💺','🛶','⛵','🚤','🛥️','🛳️','⛴️','🚢','⚓','🏝️','🏔️','⛰️','🗻','🏕️','🌋','🗾','🏜️','🏖️','🗼','🗽','⛪','🕌','🛕','🕍','⛩️','🗺️','🌍','🌎','🌏','🌐'] },
+    { icon: '💡', label: 'Objects', emojis: ['💡','🔦','🕯️','💰','💵','💴','💶','💷','💸','💳','🪙','💎','📱','💻','⌨️','🖥️','🖨️','🖱️','🖲️','💾','💿','📀','📷','📸','📹','🎥','📽️','🎞️','📞','☎️','📟','📠','📺','📻','🧭','⏱️','⏰','⌚','⏳','📡','🔋','🔌','🔑','🗝️','🔐','🔒','🔓','🔨','🪓','⛏️','⚒️','🛠️','🗡️','⚔️','🛡️','🔧','🪛','🔩','⚙️','🗜️','🔗','⛓️','🧲','🪜','📌','📍','✂️'] },
+    { icon: '🎵', label: 'Symbols', emojis: ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','✨','🌟','⭐','🌠','☀️','🌤️','⛅','🌥️','☁️','🌦️','🌧️','⛈️','🌩️','🌨️','❄️','☃️','⛄','🌬️','💨','💧','💦','☔','⚡','🌈','🎵','🎶','🎼','🔔','🔕','📣','📢','🔊','🔉','🔈','🔇','🎺','🎸','🪕','🎻','🥁','🪘','🎹','🎷','🪗','🎙️','🎚️','🎛️','📻','🎤','🎧','📯','✅','❌','❎','🔴','🟠','🟡','🟢','🔵','🟣','🟤','⚫','⚪','♾️','🆕','🆙','🆓','🆒','🆗','💯'] },
   ];
 
   let currentEmojiCategory = 0;
@@ -904,30 +969,150 @@
     }
   });
 
-  // ── IMAGE / IMGUR ──
-  window.toggleImgurInput = function() {
-    const imgurInputOpen = document.getElementById('imgur-url-area').style.display === 'block';
-    document.getElementById('imgur-url-area').style.display = imgurInputOpen ? 'none' : 'block';
-    document.getElementById('img-tool-btn').classList.toggle('active-tool', !imgurInputOpen);
-    if (!imgurInputOpen) document.getElementById('imgur-url-input').focus();
+  // ── IMAGE ATTACHMENT (new unified panel) ──
+  let attachPanelOpen = false;
+  let currentAttachTab = 'url';
+
+  window.toggleAttachPanel = function() {
+    attachPanelOpen = !attachPanelOpen;
+    const area = document.getElementById('attach-upload-area');
+    area.classList.toggle('open', attachPanelOpen);
+    document.getElementById('img-tool-btn').classList.toggle('active-tool', attachPanelOpen);
+    if (attachPanelOpen) {
+      switchAttachTab('url');
+      setTimeout(() => document.getElementById('img-url-input')?.focus(), 50);
+    }
   };
 
-  window.previewImgurUrl = function(url) {
-    const previewArea = document.getElementById('url-preview-area');
-    if (!url || !url.startsWith('http')) { previewArea.innerHTML=''; window._attachedImageUrl=''; return; }
-    window._attachedImageUrl = url;
-    previewArea.innerHTML = `<div class="compose-image-preview">
-      <img src="${escHtml(url)}" alt="Preview" onerror="this.parentElement.innerHTML='<span style=font-size:12px;color:var(--danger)>⚠ Could not load image</span>'"/>
-    </div>`;
+  window.switchAttachTab = function(tab) {
+    currentAttachTab = tab;
+    document.querySelectorAll('.attach-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.attach-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('attach-tab-'+tab).classList.add('active');
+    document.getElementById('attach-panel-'+tab).classList.add('active');
   };
+
+  window.previewImgUrl = function(url) {
+    const previewArea = document.getElementById('attach-preview-area');
+    if (!url || !url.startsWith('http')) {
+      previewArea.innerHTML = '';
+      window._attachedImageUrl = '';
+      return;
+    }
+    window._attachedImageUrl = url;
+    renderImagePreview(url);
+  };
+
+  function renderImagePreview(url) {
+    const previewArea = document.getElementById('attach-preview-area');
+    previewArea.innerHTML = `
+      <div class="compose-image-preview">
+        <img src="${escHtml(url)}" alt="Preview"
+          onerror="this.parentElement.innerHTML='<span style=font-size:12px;color:var(--danger)>⚠ Could not load image</span>'"/>
+        <button class="compose-image-remove" onclick="clearImageAttach()" title="Remove image">
+          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>`;
+  }
+
+  // File upload handler
+  window.handleFileSelect = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showToast('File too large — max 5MB'); return; }
+    if (!file.type.startsWith('image/')) { showToast('Please select an image file'); return; }
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const dataUrl = ev.target.result;
+      window._attachedImageUrl = dataUrl;
+      renderImagePreview(dataUrl);
+      // collapse the panel after selecting
+      attachPanelOpen = false;
+      document.getElementById('attach-upload-area').classList.remove('open');
+      document.getElementById('img-tool-btn').classList.add('active-tool'); // keep icon highlighted
+    };
+    reader.readAsDataURL(file);
+    e.target.value = ''; // reset so same file can be re-selected
+  };
+
+  // Drag-and-drop support
+  window.handleDragOver = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    document.getElementById('file-drop-zone').classList.add('drag-active');
+  };
+  window.handleDragLeave = function(e) {
+    document.getElementById('file-drop-zone').classList.remove('drag-active');
+  };
+  window.handleDrop = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    document.getElementById('file-drop-zone').classList.remove('drag-active');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showToast('File too large — max 5MB'); return; }
+    if (!file.type.startsWith('image/')) { showToast('Please drop an image file'); return; }
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const dataUrl = ev.target.result;
+      window._attachedImageUrl = dataUrl;
+      renderImagePreview(dataUrl);
+      attachPanelOpen = false;
+      document.getElementById('attach-upload-area').classList.remove('open');
+      document.getElementById('img-tool-btn').classList.add('active-tool');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Also support pasting images
+  document.getElementById('compose-input').addEventListener('paste', function(e) {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (!file) continue;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          window._attachedImageUrl = ev.target.result;
+          renderImagePreview(ev.target.result);
+          document.getElementById('attach-upload-area').classList.remove('open');
+          document.getElementById('img-tool-btn').classList.add('active-tool');
+          showToast('Image pasted ✓');
+        };
+        reader.readAsDataURL(file);
+        break;
+      }
+    }
+  });
 
   window.clearImageAttach = function() {
     window._attachedImageUrl = '';
-    const inp = document.getElementById('imgur-url-input');
+    const inp = document.getElementById('img-url-input');
     if (inp) inp.value = '';
-    document.getElementById('url-preview-area').innerHTML = '';
-    document.getElementById('imgur-url-area').style.display = 'none';
+    document.getElementById('attach-preview-area').innerHTML = '';
+    attachPanelOpen = false;
+    document.getElementById('attach-upload-area').classList.remove('open');
     document.getElementById('img-tool-btn').classList.remove('active-tool');
+    // reset file input
+    document.getElementById('file-input').value = '';
+  };
+
+  // ── LIGHTBOX ──
+  window.openLightbox = function(url) {
+    const lb = document.createElement('div');
+    lb.className = 'lightbox';
+    lb.onclick = () => lb.remove();
+    lb.innerHTML = `
+      <button class="lightbox-close" onclick="this.parentElement.remove()">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <img src="${escHtml(url)}" alt="Full image" onclick="event.stopPropagation()"/>`;
+    document.body.appendChild(lb);
+    document.addEventListener('keydown', function esc(e) {
+      if (e.key === 'Escape') { lb.remove(); document.removeEventListener('keydown', esc); }
+    });
   };
 
   // ── POLL BUILDER ──
@@ -1085,8 +1270,8 @@
 
   function sharePost(id) {
     const url = `${location.origin}${location.pathname}?post=${id}`;
-    if (navigator.clipboard) navigator.clipboard.writeText(url).then(()=>showToast('Link copied!'));
-    else showToast('Link copied!');
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(()=>showToast('Link copied! 🔗'));
+    else showToast('Link copied! 🔗');
   }
 
   function formatNum(n) { return n>=1000?(n/1000).toFixed(1).replace('.0','')+'k':n; }
