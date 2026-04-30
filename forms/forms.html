@@ -141,26 +141,6 @@ window.showPage = (id) => {
     if(id === 'dashboard') fetchForms();
 };
 
-// Error fix: Ensure user session is handled cleanly
-// 1. Capture the query string (?id=123&user=jsmith)
-const queryString = window.location.search;
-
-// 2. Create the search object
-const urlParams = new URLSearchParams(queryString);
-
-// 3. Search for specific parameters
-const userId = urlParams.get('email');    // Returns "123"
-
-const userBlob = userId
-if(!userBlob) { 
-    location.href = "../login.html"; 
-} else {
-    try {
-        const u = userBlob;
-        currentUser = u.email || u;
-    } catch(e) { currentUser = userBlob; }
-    window.showPage('dashboard');
-}
 
 async function fetchForms() {
     const { data } = await supabase.from("forms").select("*").eq("user", currentUser).order("updated_at", { ascending: false });
