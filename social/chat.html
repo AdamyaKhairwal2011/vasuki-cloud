@@ -1,323 +1,634 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vasuki - Messages</title>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    :root{
-      --white:#ffffff;--off:#f7f6f4;--bg:#f0eeeb;--ink:#0c0c0c;--ink2:#3a3a3a;
-      --muted:#888;--border:#e2dfdb;--accent:#1a6bf5;--accent-soft:rgba(26,107,245,.08);
-      --radius:12px;--danger:#e53935;--green:#22c55e;--sidebar:230px;
-      --bubble-me:#0c0c0c;--bubble-them:#f0eeeb;
-    }
-    html,body{height:100%;overflow:hidden;}
-    body{font-family:'Geist',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Vibe — Messages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
-    /* ── SIDEBAR ── */
-    .sidebar{width:var(--sidebar);flex-shrink:0;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;position:relative;z-index:10;}
-    .sb-header{padding:20px 18px 16px;border-bottom:1px solid var(--border);}
-    .sb-logo{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);display:block;margin-bottom:18px;text-decoration:none;}
-    .sb-compose{width:100%;padding:9px 14px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .18s;}
-    .sb-compose:hover{background:#222;}
-    .sb-compose svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;}
-    .sb-nav{padding:14px 10px;flex:1;overflow-y:auto;}
-    .sb-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);padding:0 8px;margin-bottom:6px;margin-top:14px;}
-    .sb-section-label:first-child{margin-top:0;}
-    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13.5px;color:var(--ink2);cursor:pointer;transition:all .15s;position:relative;text-decoration:none;margin-bottom:1px;}
-    .nav-item:hover{background:var(--off);color:var(--ink);}
-    .nav-item.active{background:var(--off);color:var(--ink);font-weight:500;}
-    .nav-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
-    .sb-footer{border-top:1px solid var(--border);padding:14px 10px;}
-    .sb-profile{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;cursor:pointer;transition:background .15s;}
-    .sb-profile:hover{background:var(--off);}
-    .sb-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#c7d2fe,#a5b4fc);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#4338ca;flex-shrink:0;}
-    .sb-info{flex:1;min-width:0;}
-    .sb-name{font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .sb-handle{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .logout-btn{width:100%;margin-top:6px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:transparent;font-family:'Geist',sans-serif;font-size:12.5px;color:var(--muted);cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:8px;}
-    .logout-btn:hover{background:#fef2f2;color:var(--danger);border-color:#fecaca;}
-    .logout-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;}
+:root{
+  --white:#ffffff;
+  --off:#f8f7f5;
+  --bg:#f1efec;
+  --ink:#0a0a0a;
+  --ink2:#2d2d2d;
+  --muted:#8a8a8a;
+  --border:#e6e3de;
+  --border-strong:#d0ccc6;
+  --accent:#0a0a0a;
+  --accent-soft:rgba(10,10,10,.06);
+  --sidebar:248px;
+  --conv-col:296px;
+  --danger:#c62828;
+  --green:#16a34a;
+  --bubble-me:#0a0a0a;
+  --bubble-them:#ffffff;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+}
 
-    /* ── MAIN LAYOUT ── */
-    .main{flex:1;display:flex;height:100vh;overflow:hidden;}
+html,body{height:100%;overflow:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);display:flex}
 
-    /* ── CONVERSATIONS LIST ── */
-    .conv-col{width:300px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--white);overflow:hidden;}
-    .conv-header{padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;}
-    .conv-title{font-family:'Instrument Serif',serif;font-size:19px;color:var(--ink);}
-    .icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
-    .icon-btn:hover{background:var(--off);}
-    .icon-btn svg{width:15px;height:15px;stroke:var(--ink2);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-    .conv-search{padding:10px 12px;border-bottom:1px solid var(--border);}
-    .conv-search-wrap{display:flex;align-items:center;gap:8px;background:var(--off);border:1px solid var(--border);border-radius:9px;padding:7px 11px;}
-    .conv-search-wrap svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;flex-shrink:0;}
-    .conv-search-wrap input{border:none;outline:none;background:transparent;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);flex:1;}
-    .conv-search-wrap input::placeholder{color:var(--muted);}
-    .conv-list{flex:1;overflow-y:auto;}
-    .conv-list::-webkit-scrollbar{width:3px;}
-    .conv-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
-    .conv-item{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--border);position:relative;}
-    .conv-item:hover{background:var(--off);}
-    .conv-item.active{background:var(--accent-soft);}
-    .conv-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:0 3px 3px 0;}
-    .conv-av{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
-    .conv-av-wrap{position:relative;flex-shrink:0;}
-    .conv-online{position:absolute;bottom:1px;right:1px;width:9px;height:9px;background:var(--green);border-radius:50%;border:2px solid var(--white);}
-    .conv-info{flex:1;min-width:0;}
-    .conv-name{font-size:13.5px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .conv-preview{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
-    .conv-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
-    .conv-time{font-size:11px;color:var(--muted);}
-    .conv-badge{width:18px;height:18px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;}
-    .conv-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;flex:1;}
-    .conv-empty svg{width:28px;height:28px;stroke:var(--muted);fill:none;stroke-width:1.4;stroke-linecap:round;margin-bottom:10px;}
-    .conv-empty p{font-size:13px;color:var(--muted);line-height:1.6;}
+/* ── TOPBAR LOADER ── */
+#loader{position:fixed;top:0;left:0;right:0;height:2px;z-index:9999;pointer-events:none}
+#loader-bar{height:100%;width:0;background:var(--ink);transition:width .5s var(--ease),opacity .3s ease;border-radius:0 1px 1px 0}
+#loader.on #loader-bar{width:75%}
+#loader.done #loader-bar{width:100%;opacity:0;transition:width .25s var(--ease),opacity .4s ease .1s}
 
-    /* ── CHAT AREA ── */
-    .chat-col{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
-    .chat-header{padding:0 20px;height:52px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.9);backdrop-filter:blur(12px);flex-shrink:0;}
-    .chat-header-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
-    .chat-header-info{flex:1;min-width:0;}
-    .chat-header-name{font-size:14px;font-weight:600;color:var(--ink);}
-    .chat-header-status{font-size:11.5px;color:var(--muted);}
-    .chat-header-actions{display:flex;gap:6px;}
-    .chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:6px;}
-    .chat-messages::-webkit-scrollbar{width:4px;}
-    .chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:var(--white);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;height:100vh;
+  position:relative;z-index:10
+}
+.sb-head{padding:22px 18px 16px;border-bottom:1px solid var(--border)}
+.sb-logo{
+  font-family:'Instrument Serif',serif;font-size:24px;
+  color:var(--ink);display:block;margin-bottom:18px;
+  text-decoration:none;letter-spacing:-.3px
+}
+.sb-compose{
+  width:100%;padding:10px 14px;
+  background:var(--ink);color:#fff;
+  border:none;border-radius:10px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:background .2s var(--ease),transform .15s var(--ease-spring)
+}
+.sb-compose:hover{background:#222}
+.sb-compose:active{transform:scale(.97)}
+.sb-compose svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round}
 
-    /* ── MESSAGES ── */
-    .msg-group{display:flex;flex-direction:column;gap:2px;margin-bottom:4px;}
-    .msg-row{display:flex;align-items:flex-end;gap:8px;}
-    .msg-row.mine{flex-direction:row-reverse;}
-    .msg-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;}
-    .msg-av.invisible{visibility:hidden;}
-    .msg-bubble{max-width:72%;padding:9px 13px;border-radius:16px;font-size:13.5px;line-height:1.55;word-break:break-word;position:relative;animation:bubbleIn .2s ease both;}
-    @keyframes bubbleIn{from{opacity:0;transform:translateY(6px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
-    .msg-bubble.them{background:var(--white);border:1px solid var(--border);color:var(--ink2);border-bottom-left-radius:4px;}
-    .msg-bubble.mine{background:var(--bubble-me);color:#fff;border-bottom-right-radius:4px;}
-    .msg-time{font-size:10.5px;color:var(--muted);padding:0 2px;margin-top:2px;flex-shrink:0;}
-    .msg-row.mine .msg-time{text-align:right;}
-    .msg-date-divider{text-align:center;margin:12px 0;position:relative;}
-    .msg-date-divider span{font-size:11px;color:var(--muted);background:var(--bg);padding:0 12px;position:relative;z-index:1;}
-    .msg-date-divider::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:var(--border);}
-    /* Image in message */
-    .msg-image{max-width:260px;border-radius:12px;border:1px solid var(--border);display:block;margin-top:4px;cursor:pointer;}
-    .msg-image:hover{opacity:.93;}
+.sb-nav{padding:12px 10px;flex:1;overflow-y:auto}
+.sb-nav::-webkit-scrollbar{width:0}
+.sb-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);padding:0 8px;margin:14px 0 5px}
+.sb-label:first-child{margin-top:0}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:9px;
+  font-size:13.5px;color:var(--ink2);
+  cursor:pointer;transition:background .15s,color .15s;
+  text-decoration:none;margin-bottom:1px;
+  font-weight:400
+}
+.nav-item:hover{background:var(--off);color:var(--ink)}
+.nav-item.active{background:var(--ink);color:#fff}
+.nav-item.active svg{stroke:#fff}
+.nav-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.nav-label{font-size:13.5px}
 
-    /* Typing indicator */
-    .typing-indicator{display:none;align-items:center;gap:8px;padding:4px 0;}
-    .typing-indicator.show{display:flex;}
-    .typing-dots{display:flex;gap:3px;align-items:center;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:9px 14px;}
-    .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:typingBounce 1.2s ease infinite;}
-    .typing-dot:nth-child(2){animation-delay:.2s;}
-    .typing-dot:nth-child(3){animation-delay:.4s;}
-    @keyframes typingBounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+.sb-foot{border-top:1px solid var(--border);padding:12px 10px}
+.sb-profile{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:10px;
+  cursor:pointer;transition:background .15s;margin-bottom:6px
+}
+.sb-profile:hover{background:var(--off)}
+.sb-av{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--ink);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;flex-shrink:0;letter-spacing:.5px
+}
+.sb-info{flex:1;min-width:0}
+.sb-name{font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-handle{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.logout-btn{
+  width:100%;padding:8px 10px;
+  border:1px solid var(--border);border-radius:9px;
+  background:transparent;font-family:'DM Sans',sans-serif;
+  font-size:12.5px;color:var(--muted);cursor:pointer;
+  transition:all .18s;text-align:left;
+  display:flex;align-items:center;gap:8px
+}
+.logout-btn:hover{background:#fef2f2;color:var(--danger);border-color:#fecaca}
+.logout-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round}
 
-    /* ── CHAT INPUT ── */
-    .chat-input-area{border-top:1px solid var(--border);background:var(--white);padding:12px 16px;flex-shrink:0;}
-    .chat-input-row{display:flex;align-items:flex-end;gap:8px;}
-    .chat-input-wrap{flex:1;display:flex;align-items:flex-end;gap:0;background:var(--off);border:1px solid var(--border);border-radius:12px;padding:0 4px 0 12px;transition:border-color .15s;}
-    .chat-input-wrap:focus-within{border-color:var(--accent);}
-    .chat-textarea{flex:1;border:none;outline:none;background:transparent;font-family:'Geist',sans-serif;font-size:13.5px;color:var(--ink);resize:none;line-height:1.55;padding:10px 0;min-height:40px;max-height:120px;}
-    .chat-textarea::placeholder{color:var(--muted);}
-    .chat-input-actions{display:flex;align-items:center;gap:2px;padding:4px;}
-    .chat-tool{width:30px;height:30px;border-radius:7px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;flex-shrink:0;}
-    .chat-tool:hover{background:var(--border);}
-    .chat-tool svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
-    .send-btn{width:38px;height:38px;border-radius:10px;background:var(--ink);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;}
-    .send-btn:hover{background:#222;}
-    .send-btn:disabled{opacity:.4;cursor:not-allowed;}
-    .send-btn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-    /* Image preview above input */
-    .input-img-preview{display:none;margin-bottom:8px;position:relative;display:inline-block;}
-    .input-img-preview.show{display:inline-block;}
-    .input-img-preview img{max-height:80px;border-radius:8px;border:1px solid var(--border);display:block;}
-    .input-img-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;background:rgba(0,0,0,.6);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-    .input-img-remove svg{width:9px;height:9px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;}
+/* ── MAIN ── */
+.main{flex:1;display:flex;height:100vh;overflow:hidden;min-width:0}
 
-    /* ── NO CHAT SELECTED ── */
-    .chat-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;}
-    .chat-empty-icon{width:64px;height:64px;border-radius:18px;background:var(--white);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
-    .chat-empty-icon svg{width:28px;height:28px;stroke:var(--muted);fill:none;stroke-width:1.4;stroke-linecap:round;}
-    .chat-empty h2{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);margin-bottom:6px;}
-    .chat-empty p{font-size:13px;color:var(--muted);line-height:1.7;max-width:280px;}
-    .chat-empty-btn{margin-top:16px;padding:9px 20px;background:var(--ink);color:#fff;border:none;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;cursor:pointer;transition:background .15s;}
-    .chat-empty-btn:hover{background:#222;}
+/* ── CONVERSATIONS COLUMN ── */
+.conv-col{
+  width:var(--conv-col);flex-shrink:0;
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--border);
+  background:var(--white);overflow:hidden
+}
+.conv-head{
+  padding:0 16px;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);flex-shrink:0
+}
+.conv-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);letter-spacing:-.2px}
+.icon-btn{
+  width:32px;height:32px;border-radius:8px;
+  border:1px solid var(--border);background:transparent;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s,transform .15s var(--ease-spring)
+}
+.icon-btn:hover{background:var(--off)}
+.icon-btn:active{transform:scale(.9)}
+.icon-btn svg{width:14px;height:14px;stroke:var(--ink2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-    /* ── NEW CONVERSATION MODAL ── */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;animation:fadeIn .18s ease;}
-    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-    .modal-box{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:24px;min-width:320px;max-width:420px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.14);animation:slideUp .22s ease;position:relative;}
-    @keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-    .modal-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:7px;border:none;background:var(--off);cursor:pointer;display:flex;align-items:center;justify-content:center;}
-    .modal-close svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;}
-    .modal-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:14px;}
-    .user-search-wrap{display:flex;align-items:center;gap:8px;background:var(--off);border:1px solid var(--border);border-radius:9px;padding:9px 12px;margin-bottom:12px;}
-    .user-search-wrap svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;flex-shrink:0;}
-    .user-search-wrap input{border:none;outline:none;background:transparent;font-family:'Geist',sans-serif;font-size:13px;color:var(--ink);flex:1;}
-    .user-search-wrap input::placeholder{color:var(--muted);}
-    .user-results{max-height:240px;overflow-y:auto;}
-    .user-result-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;cursor:pointer;transition:background .12s;}
-    .user-result-item:hover{background:var(--off);}
-    .user-result-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;}
-    .user-result-name{font-size:13px;font-weight:500;color:var(--ink);}
-    .user-result-handle{font-size:12px;color:var(--muted);}
+.conv-search{padding:10px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.search-wrap{
+  display:flex;align-items:center;gap:8px;
+  background:var(--off);border:1px solid var(--border);
+  border-radius:9px;padding:7px 12px;
+  transition:border-color .18s
+}
+.search-wrap:focus-within{border-color:var(--border-strong)}
+.search-wrap svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;flex-shrink:0}
+.search-wrap input{border:none;outline:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);flex:1}
+.search-wrap input::placeholder{color:var(--muted)}
 
-    /* ── TOAST ── */
-    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-size:13px;padding:10px 20px;border-radius:9px;opacity:0;pointer-events:none;transition:all .25s;z-index:999;white-space:nowrap;}
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.conv-list{flex:1;overflow-y:auto}
+.conv-list::-webkit-scrollbar{width:3px}
+.conv-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
-    /* ── SKELETON ── */
-    .skel-conv{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-    .skel-av{width:38px;height:38px;border-radius:50%;background:var(--bg);flex-shrink:0;}
-    .skel-lines{flex:1;}
-    .skel-line{height:8px;background:var(--bg);border-radius:4px;margin-bottom:6px;}
-    .skel-line.w70{width:70%}.skel-line.w45{width:45%}
-    @keyframes shimmer{0%{opacity:.6;}50%{opacity:1;}100%{opacity:.6;}}
-    .skel-conv *{animation:shimmer 1.4s ease infinite;}
+.conv-item{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;cursor:pointer;
+  transition:background .12s;
+  border-bottom:1px solid var(--border);
+  position:relative;user-select:none
+}
+.conv-item:hover{background:var(--off)}
+.conv-item.active{background:var(--accent-soft)}
+.conv-item.active::before{
+  content:'';position:absolute;
+  left:0;top:0;bottom:0;width:2.5px;
+  background:var(--ink);border-radius:0 2px 2px 0
+}
+.conv-av{
+  width:40px;height:40px;border-radius:50%;
+  flex-shrink:0;display:flex;align-items:center;
+  justify-content:center;font-size:13px;font-weight:600;
+  letter-spacing:.3px
+}
+.conv-info{flex:1;min-width:0}
+.conv-name{font-size:13.5px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-preview{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.conv-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.conv-time{font-size:11px;color:var(--muted)}
+.conv-unread{
+  width:18px;height:18px;background:var(--ink);
+  border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:600;color:#fff
+}
 
-    /* ── RESPONSIVE ── */
-    @media(max-width:900px){.conv-col{width:260px;}}
-    @media(max-width:640px){
-      .sidebar{width:60px;}
-      .sb-logo,.sb-section-label,.nav-item span,.sb-info,.sb-compose span,.logout-btn span{display:none;}
-      .sb-compose{padding:9px;justify-content:center;}
-      .nav-item{justify-content:center;padding:10px;}
-      .sb-profile{justify-content:center;padding:8px;}
-      .logout-btn{justify-content:center;}
-      .conv-col{width:220px;}
-    }
-    @media(max-width:480px){.conv-col{display:none;}.conv-col.mobile-show{display:flex;position:fixed;left:60px;top:0;bottom:0;z-index:50;}}
-  </style>
+.conv-empty{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:48px 20px;text-align:center;flex:1
+}
+.conv-empty svg{width:28px;height:28px;stroke:var(--muted);fill:none;stroke-width:1.4;stroke-linecap:round;margin-bottom:10px;opacity:.6}
+.conv-empty p{font-size:13px;color:var(--muted);line-height:1.7}
+
+/* ── CHAT COLUMN ── */
+.chat-col{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);min-width:0}
+
+.chat-head{
+  padding:0 20px;height:54px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  flex-shrink:0
+}
+.chat-head-av{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;flex-shrink:0;letter-spacing:.3px
+}
+.chat-head-info{flex:1;min-width:0}
+.chat-head-name{font-size:14px;font-weight:600;color:var(--ink);letter-spacing:-.2px}
+.chat-head-status{font-size:11.5px;color:var(--muted)}
+.chat-head-actions{display:flex;gap:6px}
+
+/* ── MESSAGES ── */
+.chat-msgs{
+  flex:1;overflow-y:auto;
+  padding:20px 20px 12px;
+  display:flex;flex-direction:column;gap:2px;
+  scroll-behavior:smooth
+}
+.chat-msgs::-webkit-scrollbar{width:4px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+.msg-date{text-align:center;margin:14px 0 6px;position:relative}
+.msg-date span{
+  font-size:11px;color:var(--muted);
+  background:var(--bg);padding:0 14px;
+  position:relative;z-index:1
+}
+.msg-date::before{
+  content:'';position:absolute;
+  left:0;right:0;top:50%;height:1px;
+  background:var(--border)
+}
+
+.msg-row{
+  display:flex;align-items:flex-end;gap:8px;
+  animation:msgIn .22s cubic-bezier(0.22,1,0.36,1) both
+}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.msg-row.me{flex-direction:row-reverse}
+
+.msg-av-wrap{width:28px;height:28px;flex-shrink:0}
+.msg-av{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;letter-spacing:.3px
+}
+.msg-av.hidden{visibility:hidden}
+
+.msg-bubble{
+  max-width:68%;padding:9px 13px;
+  border-radius:18px;font-size:13.5px;
+  line-height:1.55;word-break:break-word;
+  position:relative
+}
+.msg-bubble.them{
+  background:var(--bubble-them);
+  border:1px solid var(--border);
+  color:var(--ink2);border-bottom-left-radius:5px
+}
+.msg-bubble.me{
+  background:var(--bubble-me);color:#fff;
+  border-bottom-right-radius:5px
+}
+.msg-ts{
+  font-size:10.5px;color:var(--muted);
+  padding:0 4px;margin-top:3px;flex-shrink:0;
+  align-self:flex-end
+}
+.msg-row.me .msg-ts{text-align:right}
+
+.msg-img{
+  max-width:240px;border-radius:10px;
+  border:1px solid rgba(0,0,0,.08);
+  display:block;margin-top:6px;
+  cursor:pointer;transition:opacity .15s
+}
+.msg-img:hover{opacity:.9}
+
+/* typing */
+.typing-row{display:flex;align-items:center;gap:8px;padding:4px 0}
+.typing-dots{
+  background:var(--bubble-them);border:1px solid var(--border);
+  border-radius:14px;padding:10px 14px;
+  display:flex;gap:3px;align-items:center
+}
+.typing-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--muted);
+  animation:tdot 1.2s ease infinite
+}
+.typing-dot:nth-child(2){animation-delay:.18s}
+.typing-dot:nth-child(3){animation-delay:.36s}
+@keyframes tdot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+/* ── INPUT AREA ── */
+.chat-input{
+  border-top:1px solid var(--border);
+  background:var(--white);padding:12px 16px;flex-shrink:0
+}
+.img-preview-wrap{margin-bottom:8px;display:none}
+.img-preview-wrap.show{display:block}
+.img-preview-inner{position:relative;display:inline-block}
+.img-preview-inner img{
+  max-height:72px;border-radius:8px;
+  border:1px solid var(--border);display:block
+}
+.img-remove{
+  position:absolute;top:3px;right:3px;
+  width:18px;height:18px;
+  background:rgba(0,0,0,.6);border:none;
+  border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center
+}
+.img-remove svg{width:9px;height:9px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round}
+
+.input-row{display:flex;align-items:flex-end;gap:8px}
+.input-wrap{
+  flex:1;display:flex;align-items:flex-end;
+  background:var(--off);border:1.5px solid var(--border);
+  border-radius:14px;padding:0 6px 0 14px;
+  transition:border-color .2s cubic-bezier(0.22,1,0.36,1)
+}
+.input-wrap:focus-within{border-color:var(--border-strong)}
+.chat-ta{
+  flex:1;border:none;outline:none;background:transparent;
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);
+  resize:none;line-height:1.55;padding:11px 0;
+  min-height:42px;max-height:120px
+}
+.chat-ta::placeholder{color:var(--muted)}
+.input-tools{display:flex;align-items:center;gap:2px;padding:5px}
+.tool-btn{
+  width:30px;height:30px;border-radius:7px;border:none;
+  background:transparent;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .12s,transform .15s var(--ease-spring)
+}
+.tool-btn:hover{background:var(--border)}
+.tool-btn:active{transform:scale(.88)}
+.tool-btn svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+.send-btn{
+  width:40px;height:40px;border-radius:11px;
+  background:var(--ink);border:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .18s,transform .18s var(--ease-spring),opacity .18s;
+  flex-shrink:0
+}
+.send-btn:hover{background:#222;transform:scale(1.05)}
+.send-btn:active{transform:scale(.94)}
+.send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.send-btn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── EMPTY STATE ── */
+.chat-empty{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:40px
+}
+.chat-empty-icon{
+  width:64px;height:64px;border-radius:18px;
+  background:var(--white);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;margin-bottom:20px
+}
+.chat-empty-icon svg{width:26px;height:26px;stroke:var(--muted);fill:none;stroke-width:1.4;stroke-linecap:round}
+.chat-empty h2{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);margin-bottom:8px;letter-spacing:-.3px}
+.chat-empty p{font-size:13px;color:var(--muted);line-height:1.75;max-width:260px}
+.chat-empty-cta{
+  margin-top:18px;padding:10px 22px;
+  background:var(--ink);color:#fff;border:none;
+  border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;transition:background .18s,transform .18s var(--ease-spring)
+}
+.chat-empty-cta:hover{background:#222;transform:translateY(-1px)}
+.chat-empty-cta:active{transform:translateY(0) scale(.97)}
+
+/* ── MODAL ── */
+.modal-bg{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.3);
+  backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+  z-index:200;display:flex;align-items:center;justify-content:center;
+  animation:fadein .18s ease
+}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.modal{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:18px;padding:24px;
+  min-width:320px;max-width:420px;width:90%;
+  box-shadow:0 24px 80px rgba(0,0,0,.16);
+  animation:slideup .22s cubic-bezier(0.22,1,0.36,1);
+  position:relative
+}
+@keyframes slideup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.modal-close-btn{
+  position:absolute;top:14px;right:14px;
+  width:28px;height:28px;border-radius:7px;
+  border:none;background:var(--off);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s,transform .15s var(--ease-spring)
+}
+.modal-close-btn:hover{background:var(--border)}
+.modal-close-btn:active{transform:scale(.88)}
+.modal-close-btn svg{width:13px;height:13px;stroke:var(--muted);fill:none;stroke-width:2.2;stroke-linecap:round}
+.modal-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:14px;letter-spacing:-.2px}
+.modal-search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--off);border:1.5px solid var(--border);
+  border-radius:10px;padding:9px 12px;margin-bottom:12px;
+  transition:border-color .18s
+}
+.modal-search:focus-within{border-color:var(--border-strong)}
+.modal-search svg{width:14px;height:14px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;flex-shrink:0}
+.modal-search input{border:none;outline:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);flex:1}
+.modal-search input::placeholder{color:var(--muted)}
+
+.user-list{max-height:260px;overflow-y:auto}
+.user-list::-webkit-scrollbar{width:3px}
+.user-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.user-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 10px;border-radius:10px;
+  cursor:pointer;transition:background .12s
+}
+.user-item:hover{background:var(--off)}
+.user-av{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;flex-shrink:0;letter-spacing:.3px
+}
+.user-name{font-size:13px;font-weight:500;color:var(--ink)}
+.user-handle{font-size:11.5px;color:var(--muted)}
+.user-list-empty{padding:20px;text-align:center;font-size:13px;color:var(--muted)}
+
+/* ── EMOJI PICKER ── */
+.emoji-picker{
+  position:fixed;background:var(--white);
+  border:1px solid var(--border);border-radius:14px;
+  padding:10px;display:flex;flex-wrap:wrap;gap:2px;
+  width:212px;box-shadow:0 8px 32px rgba(0,0,0,.12);
+  z-index:300;animation:fadein .14s ease
+}
+.emoji-btn{
+  width:30px;height:30px;border:none;background:transparent;
+  cursor:pointer;border-radius:7px;font-size:17px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .1s
+}
+.emoji-btn:hover{background:var(--off)}
+
+/* ── SKELETON ── */
+@keyframes shimmer{0%,100%{opacity:.5}50%{opacity:1}}
+.sk-item{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center}
+.sk-av{width:40px;height:40px;border-radius:50%;background:var(--bg);flex-shrink:0;animation:shimmer 1.4s ease infinite}
+.sk-lines{flex:1}
+.sk-line{height:8px;background:var(--bg);border-radius:4px;margin-bottom:6px;animation:shimmer 1.4s ease infinite}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:500;
+  padding:10px 22px;border-radius:10px;
+  opacity:0;pointer-events:none;
+  transition:all .25s cubic-bezier(0.22,1,0.36,1);
+  z-index:999;white-space:nowrap;
+  box-shadow:0 4px 20px rgba(0,0,0,.2)
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:860px){.conv-col{width:240px}}
+@media(max-width:640px){
+  .sidebar{width:58px}
+  .sb-logo,.sb-label,.nav-label,.sb-info,.sb-compose span,.logout-btn span{display:none}
+  .sb-compose{padding:10px;justify-content:center}
+  .nav-item{justify-content:center;padding:10px}
+  .sb-profile{justify-content:center;padding:8px}
+  .logout-btn{justify-content:center}
+}
+@media(max-width:480px){.conv-col{display:none}}
+</style>
 </head>
 <body>
 
-<!-- ── SIDEBAR ── -->
+<!-- LOADER -->
+<div id="loader"><div id="loader-bar"></div></div>
+
+<!-- SIDEBAR -->
 <aside class="sidebar">
-  <div class="sb-header">
+  <div class="sb-head">
     <a class="sb-logo" href="index.html">Vibe</a>
-    <button class="sb-compose" onclick="openNewConvModal()">
+    <button class="sb-compose" onclick="openModal()">
       <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
       <span>New Chat</span>
     </button>
   </div>
   <nav class="sb-nav">
-    <div class="sb-section-label">Menu</div>
-    <a class="nav-item" href="media.html">
+    <div class="sb-label">Menu</div>
+    <a class="nav-item" href="index.html">
       <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span>Home</span>
+      <span class="nav-label">Home</span>
     </a>
     <a class="nav-item" href="#">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <span>Explore</span>
+      <span class="nav-label">Explore</span>
     </a>
     <a class="nav-item" href="#">
       <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-      <span>Notifications</span>
+      <span class="nav-label">Notifications</span>
     </a>
     <a class="nav-item active" href="chat.html">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-      <span>Messages</span>
+      <span class="nav-label">Messages</span>
     </a>
     <a class="nav-item" href="#">
       <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-      <span>Bookmarks</span>
+      <span class="nav-label">Bookmarks</span>
     </a>
-    <div class="sb-section-label">You</div>
+    <div class="sb-label">You</div>
     <a class="nav-item" href="profile.html">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span>My Profile</span>
+      <span class="nav-label">Profile</span>
     </a>
     <a class="nav-item" href="#">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-      <span>Settings</span>
+      <span class="nav-label">Settings</span>
     </a>
   </nav>
-  <div class="sb-footer">
+  <div class="sb-foot">
     <div class="sb-profile" onclick="window.location.href='profile.html'">
       <div class="sb-av" id="sb-av">?</div>
       <div class="sb-info">
-        <div class="sb-name" id="sb-name">Loading...</div>
+        <div class="sb-name" id="sb-name">Loading…</div>
         <div class="sb-handle" id="sb-handle">@—</div>
       </div>
     </div>
-    <button class="logout-btn" onclick="logout()">
+    <button class="logout-btn" onclick="doLogout()">
       <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
       <span>Sign out</span>
     </button>
   </div>
 </aside>
 
-<!-- ── MAIN ── -->
+<!-- MAIN -->
 <div class="main">
 
   <!-- Conversations list -->
   <div class="conv-col" id="conv-col">
-    <div class="conv-header">
+    <div class="conv-head">
       <div class="conv-title">Messages</div>
-      <button class="icon-btn" title="New conversation" onclick="openNewConvModal()">
+      <button class="icon-btn" onclick="openModal()" title="New conversation">
         <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
       </button>
     </div>
     <div class="conv-search">
-      <div class="conv-search-wrap">
+      <div class="search-wrap">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input type="text" placeholder="Search conversations…" oninput="filterConvs(this.value)" id="conv-search-input"/>
+        <input type="text" id="conv-search" placeholder="Search conversations…" oninput="filterConvs(this.value)" autocomplete="off"/>
       </div>
     </div>
     <div class="conv-list" id="conv-list">
       <!-- skeleton -->
-      ${[1,2,3].map(()=>`<div class="skel-conv"><div class="skel-av"></div><div class="skel-lines"><div class="skel-line w70"></div><div class="skel-line w45"></div></div></div>`).join('')}
+      <div class="sk-item"><div class="sk-av"></div><div class="sk-lines"><div class="sk-line" style="width:65%"></div><div class="sk-line" style="width:40%"></div></div></div>
+      <div class="sk-item"><div class="sk-av"></div><div class="sk-lines"><div class="sk-line" style="width:55%"></div><div class="sk-line" style="width:35%"></div></div></div>
+      <div class="sk-item"><div class="sk-av"></div><div class="sk-lines"><div class="sk-line" style="width:70%"></div><div class="sk-line" style="width:50%"></div></div></div>
     </div>
   </div>
 
-  <!-- Chat area -->
+  <!-- Chat column -->
   <div class="chat-col" id="chat-col">
+
     <!-- Empty state -->
     <div class="chat-empty" id="chat-empty">
       <div class="chat-empty-icon">
         <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
       </div>
       <h2>Your Messages</h2>
-      <p>Send private messages to anyone on Vibe. Select a conversation or start a new one.</p>
-      <button class="chat-empty-btn" onclick="openNewConvModal()">Start a conversation</button>
+      <p>Send private messages to anyone on Vibe. Pick a conversation or start a new one.</p>
+      <button class="chat-empty-cta" onclick="openModal()">Start a conversation</button>
     </div>
 
-    <!-- Chat pane (hidden until a conv is selected) -->
-    <div id="chat-pane" style="display:none;flex:1;display:none;flex-direction:column;overflow:hidden;height:100%;">
-      <div class="chat-header" id="chat-header">
-        <div class="chat-header-av" id="chat-header-av"></div>
-        <div class="chat-header-info">
-          <div class="chat-header-name" id="chat-header-name">—</div>
-          <div class="chat-header-status" id="chat-header-status">Tap to view profile</div>
+    <!-- Active chat pane (hidden until conversation selected) -->
+    <div id="chat-pane" style="display:none;flex-direction:column;height:100%;overflow:hidden">
+
+      <!-- Header -->
+      <div class="chat-head" id="chat-head">
+        <div class="chat-head-av" id="ch-av"></div>
+        <div class="chat-head-info">
+          <div class="chat-head-name" id="ch-name">—</div>
+          <div class="chat-head-status" id="ch-status"></div>
         </div>
-        <div class="chat-header-actions">
-          <button class="icon-btn" title="Refresh" onclick="loadMessages()">
+        <div class="chat-head-actions">
+          <button class="icon-btn" onclick="refreshMessages()" title="Refresh">
             <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
           </button>
         </div>
       </div>
-      <div class="chat-messages" id="chat-messages"></div>
-      <div class="chat-input-area">
-        <div id="input-img-preview-wrap" style="margin-bottom:0;"></div>
-        <div class="chat-input-row">
-          <div class="chat-input-wrap">
-            <textarea class="chat-textarea" id="chat-textarea" placeholder="Message…" rows="1"
-              oninput="autoResize(this)"
-              onkeydown="handleChatKey(event)"></textarea>
-            <div class="chat-input-actions">
-              <button class="chat-tool" title="Attach image URL" onclick="promptImageUrl()">
+
+      <!-- Messages -->
+      <div class="chat-msgs" id="chat-msgs"></div>
+
+      <!-- Input -->
+      <div class="chat-input">
+        <div class="img-preview-wrap" id="img-preview-wrap">
+          <div class="img-preview-inner">
+            <img id="img-preview-img" src="" alt=""/>
+            <button class="img-remove" onclick="clearImg()">
+              <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="input-wrap">
+            <textarea class="chat-ta" id="chat-ta" placeholder="Message…" rows="1"
+              oninput="autoGrow(this)" onkeydown="onKey(event)"></textarea>
+            <div class="input-tools">
+              <button class="tool-btn" title="Image URL" onclick="promptImg()">
                 <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
               </button>
-              <button class="chat-tool" title="Emoji" onclick="insertChatEmoji()">
+              <button class="tool-btn" title="Emoji" onclick="toggleEmoji(event)">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
               </button>
             </div>
           </div>
-          <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Send (Enter)">
+          <button class="send-btn" id="send-btn" onclick="sendMsg()" title="Send (Enter)">
             <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
         </div>
@@ -326,501 +637,652 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
-<!-- ── SCRIPTS ── -->
-<script type="module">
-  import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
-  const vdb = new Vasuki();
-
-  const VIBE_USER     = localStorage.getItem('vibe_user');
-  const VIBE_NAME     = localStorage.getItem('vibe_name')     || 'User';
-  const VIBE_HANDLE   = localStorage.getItem('vibe_handle')   || '';
-  const VIBE_INITIALS = localStorage.getItem('vibe_initials') || '?';
-
-  if (!VIBE_USER) { window.location.href = 'login.html'; }
-
-  // Populate sidebar
-  document.getElementById('sb-av').textContent     = VIBE_INITIALS;
-  document.getElementById('sb-name').textContent   = VIBE_NAME;
-  document.getElementById('sb-handle').textContent = VIBE_HANDLE ? '@'+VIBE_HANDLE : VIBE_USER;
-
-  await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
-
-  // State
-  let allConvs     = [];
-  let knownUsers   = [];
-  let activeConvId = null;
-  let pollInterval = null;
-  let pendingImgUrl = '';
-
-  window._vdb         = vdb;
-  window._VIBE_USER   = VIBE_USER;
-  window._VIBE_NAME   = VIBE_NAME;
-  window._VIBE_HANDLE = VIBE_HANDLE;
-  window._VIBE_INITIALS = VIBE_INITIALS;
-
-  // ── LOAD KNOWN USERS ──
-  async function loadKnownUsers() {
-    try {
-      const users = await vdb.fetchTable('users_rows', 'Sheet1');
-      knownUsers = users
-      window._knownUsers = knownUsers;
-    } catch(e) { console.warn('Could not load users:', e); }
-  }
-
-  // ── LOAD CONVERSATIONS ──
-  // A conversation is uniquely identified by a sorted pair of user handles/emails.
-  // We derive them from the vibe_messages table by grouping on conv_id.
-  async function loadConversations() {
-    const listEl = document.getElementById('conv-list');
-    try {
-      const msgs = await vdb.fetchTable('vibe_messages', 'Sheet1');
-      if (!msgs || !msgs.length) {
-        listEl.innerHTML = `<div class="conv-empty"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>No conversations yet.<br>Start one!</p></div>`;
-        return;
-      }
-      // Build conv map keyed by conv_id
-      const convMap = {};
-      msgs.forEach(m => {
-        if (!m.conv_id) return;
-        const isMe = (m.sender_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase()
-                  || (m.sender_handle||'') === VIBE_HANDLE;
-        const isRecipient = (m.recipient_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase()
-                          || (m.recipient_handle||'') === VIBE_HANDLE;
-        if (!isMe && !isRecipient) return; // not our conv
-        if (!convMap[m.conv_id]) {
-          convMap[m.conv_id] = { conv_id: m.conv_id, messages: [], other: null };
-          // Determine "other" person
-          if (isMe) {
-            convMap[m.conv_id].other = {
-              name:     m.recipient_name || m.recipient_handle || 'Unknown',
-              handle:   m.recipient_handle || '',
-              initials: m.recipient_initials || getInitials(m.recipient_name || m.recipient_handle || '?'),
-              email:    m.recipient_email || ''
-            };
-          } else {
-            convMap[m.conv_id].other = {
-              name:     m.sender_name || m.sender_handle || 'Unknown',
-              handle:   m.sender_handle || '',
-              initials: m.sender_initials || getInitials(m.sender_name || m.sender_handle || '?'),
-              email:    m.sender_email || ''
-            };
-          }
-        }
-        convMap[m.conv_id].messages.push(m);
-      });
-
-      allConvs = Object.values(convMap).map(c => {
-        const sorted = c.messages.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-        const last   = sorted[sorted.length - 1];
-        return { ...c, last_message: last, last_at: last?.created_at || '' };
-      }).sort((a,b) => new Date(b.last_at) - new Date(a.last_at));
-
-      renderConvList(allConvs);
-    } catch(err) {
-      console.error(err);
-      listEl.innerHTML = `<div class="conv-empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><p>Couldn't load conversations.</p></div>`;
-    }
-  }
-
-  function renderConvList(convs) {
-    const listEl = document.getElementById('conv-list');
-    if (!convs.length) {
-      listEl.innerHTML = `<div class="conv-empty"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>No conversations yet.<br>Start one!</p></div>`;
-      return;
-    }
-    listEl.innerHTML = convs.map(c => {
-      const color    = avatarColor(c.other.handle || c.other.name || '');
-      const init     = (c.other.initials || getInitials(c.other.name || '?')).toUpperCase();
-      const lastMsg  = c.last_message;
-      const lastText = lastMsg
-        ? (lastMsg.image_url ? '📷 Image' : (lastMsg.body || '').slice(0, 48) + ((lastMsg.body||'').length > 48 ? '…' : ''))
-        : '';
-      const isActive = c.conv_id === activeConvId;
-      return `<div class="conv-item${isActive?' active':''}" id="conv-item-${c.conv_id}" onclick="selectConversation('${c.conv_id}')">
-        <div class="conv-av-wrap">
-          <div class="conv-av" style="background:${color.bg};color:${color.fg}">${escHtml(init)}</div>
-        </div>
-        <div class="conv-info">
-          <div class="conv-name">${escHtml(c.other.name)}</div>
-          <div class="conv-preview">${escHtml(lastText)}</div>
-        </div>
-        <div class="conv-meta">
-          <div class="conv-time">${lastMsg ? timeAgo(lastMsg.created_at) : ''}</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  window.filterConvs = function(q) {
-    if (!q.trim()) { renderConvList(allConvs); return; }
-    const lower = q.toLowerCase();
-    renderConvList(allConvs.filter(c =>
-      c.other.name.toLowerCase().includes(lower) ||
-      c.other.handle.toLowerCase().includes(lower)
-    ));
-  };
-
-  // ── SELECT CONVERSATION ──
-  window.selectConversation = function(convId) {
-    activeConvId = convId;
-    const conv = allConvs.find(c => c.conv_id === convId);
-    if (!conv) return;
-
-    // Update active state in list
-    document.querySelectorAll('.conv-item').forEach(el => el.classList.remove('active'));
-    document.getElementById('conv-item-'+convId)?.classList.add('active');
-
-    // Update chat header
-    const color = avatarColor(conv.other.handle || conv.other.name || '');
-    const init  = (conv.other.initials || getInitials(conv.other.name || '?')).toUpperCase();
-    const headerAv = document.getElementById('chat-header-av');
-    headerAv.style.background = color.bg;
-    headerAv.style.color      = color.fg;
-    headerAv.textContent      = init;
-    document.getElementById('chat-header-name').textContent   = conv.other.name;
-    document.getElementById('chat-header-status').textContent = '@' + (conv.other.handle || conv.other.email);
-
-    // Show chat pane
-    document.getElementById('chat-empty').style.display = 'none';
-    const pane = document.getElementById('chat-pane');
-    pane.style.display = 'flex';
-    pane.style.flexDirection = 'column';
-
-    // Load messages and start polling
-    loadMessages();
-    clearInterval(pollInterval);
-    pollInterval = setInterval(loadMessages, 4000);
-
-    document.getElementById('chat-textarea')?.focus();
-  };
-
-  // ── LOAD MESSAGES FOR ACTIVE CONV ──
-  window.loadMessages = async function() {
-    if (!activeConvId) return;
-    const msgsEl = document.getElementById('chat-messages');
-    try {
-      const all = await vdb.fetchTable('vibe_messages', 'Sheet1');
-      const msgs = (all || [])
-        .filter(m => m.conv_id === activeConvId)
-        .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
-
-      const wasAtBottom = msgsEl.scrollHeight - msgsEl.scrollTop - msgsEl.clientHeight < 80;
-      msgsEl.innerHTML = '';
-
-      if (!msgs.length) {
-        msgsEl.innerHTML = '<div style="flex:1;display:flex;align-items:center;justify-content:center;"><p style="font-size:13px;color:var(--muted);">Say hello! 👋</p></div>';
-        return;
-      }
-
-      // Group by date
-      let lastDate = null;
-      msgs.forEach((m, i) => {
-        const msgDate = new Date(m.created_at).toDateString();
-        if (msgDate !== lastDate) {
-          lastDate = msgDate;
-          const divider = document.createElement('div');
-          divider.className = 'msg-date-divider';
-          divider.innerHTML = `<span>${formatDate(m.created_at)}</span>`;
-          msgsEl.appendChild(divider);
-        }
-
-        const isMe = (m.sender_email||'').toLowerCase() === (VIBE_USER||'').toLowerCase()
-                  || (m.sender_handle||'') === VIBE_HANDLE;
-
-        // Check if next message is from same sender (for avatar hiding)
-        const next = msgs[i + 1];
-        const isSameSenderNext = next && (
-          (next.sender_email||'').toLowerCase() === (m.sender_email||'').toLowerCase()
-        ) && new Date(next.created_at) - new Date(m.created_at) < 120000;
-
-        const row = document.createElement('div');
-        row.className = `msg-row${isMe ? ' mine' : ''}`;
-
-        const color = avatarColor(m.sender_handle || m.sender_name || '');
-        const init  = (m.sender_initials || getInitials(m.sender_name || m.sender_handle || '?')).toUpperCase();
-
-        const imageHtml = m.image_url
-          ? `<img class="msg-image" src="${escHtml(m.image_url)}" alt="Image" loading="lazy" onerror="this.style.display='none'" onclick="window.open('${escHtml(m.image_url)}','_blank')"/>`
-          : '';
-
-        row.innerHTML = `
-          <div class="msg-av${isSameSenderNext ? ' invisible' : ''}" style="background:${color.bg};color:${color.fg}">${isMe ? escHtml(VIBE_INITIALS) : escHtml(init)}</div>
-          <div>
-            <div class="msg-bubble ${isMe ? 'mine' : 'them'}">
-              ${m.body ? escHtml(m.body) : ''}
-              ${imageHtml}
-            </div>
-            ${!isSameSenderNext ? `<div class="msg-time">${shortTime(m.created_at)}</div>` : ''}
-          </div>`;
-        msgsEl.appendChild(row);
-      });
-
-      if (wasAtBottom || msgs.length <= 5) {
-        msgsEl.scrollTop = msgsEl.scrollHeight;
-      }
-    } catch(err) {
-      console.error(err);
-    }
-  };
-
-  // ── SEND MESSAGE ──
-  window.sendMessage = async function() {
-    const ta   = document.getElementById('chat-textarea');
-    const body = ta.value.trim();
-    if (!body && !pendingImgUrl) return;
-    if (!activeConvId) { showToast('Select a conversation first'); return; }
-
-    const conv = allConvs.find(c => c.conv_id === activeConvId);
-    if (!conv) return;
-
-    const btn = document.getElementById('send-btn');
-    btn.disabled = true;
-
-    try {
-      const row = {
-        conv_id: activeConvId,
-        sender_name:     VIBE_NAME,
-        sender_handle:   VIBE_HANDLE,
-        sender_initials: VIBE_INITIALS,
-        sender_email:    VIBE_USER,
-        recipient_name:     conv.other.name,
-        recipient_handle:   conv.other.handle,
-        recipient_initials: conv.other.initials,
-        recipient_email:    conv.other.email,
-        body:       body,
-        created_at: new Date().toISOString()
-      };
-      if (pendingImgUrl) row.image_url = pendingImgUrl;
-
-      await vdb.insertRow('vibe_messages', 'Sheet1', row);
-      ta.value = ''; ta.style.height = 'auto';
-      clearPendingImg();
-      await loadMessages();
-      await loadConversations();
-    } catch(err) {
-      console.error(err);
-      showToast('Send failed — check DB connection');
-    } finally {
-      btn.disabled = false;
-    }
-  };
-
-  // ── NEW CONVERSATION MODAL ──
-  window.openNewConvModal = function() {
-    const overlay = document.createElement('div');
-    overlay.className = 'modal-overlay';
-    overlay.onclick = e => { if(e.target===overlay) overlay.remove(); };
-    overlay.innerHTML = `
-      <div class="modal-box">
-        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-        <div class="modal-title">New Conversation</div>
-        <div class="user-search-wrap">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" placeholder="Search by name or @handle…" oninput="searchUsers(this.value)" autofocus/>
-        </div>
-        <div class="user-results" id="user-results">
-          ${renderUserResults((window._knownUsers||[]).filter(u => u.handle !== VIBE_HANDLE).slice(0,8))}
-        </div>
-      </div>`;
-    document.body.appendChild(overlay);
-  };
-
-  window.searchUsers = function(q) {
-    const results = document.getElementById('user-results');
-    if (!results) return;
-    const lower = q.toLowerCase().trim();
-    const users = (window._knownUsers||[]).filter(u =>
-      u.handle !== VIBE_HANDLE &&
-      (!lower || u.handle?.toLowerCase().includes(lower) || u.name?.toLowerCase().includes(lower))
-    ).slice(0, 10);
-    results.innerHTML = renderUserResults(users);
-  };
-
-  function renderUserResults(users) {
-    if (!users.length) return '<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px;">No users found</p>';
-    return users.map(u => {
-      const color = avatarColor(u.handle||'');
-      const init  = getInitials(u.name||u.handle||'?');
-      return `<div class="user-result-item" onclick="startConversation('${escHtml(u.handle)}','${escHtml(u.name||u.handle)}','${escHtml(u.email||'')}')">
-        <div class="user-result-av" style="background:${color.bg};color:${color.fg}">${escHtml(init)}</div>
-        <div>
-          <div class="user-result-name">${escHtml(u.name||u.handle)}</div>
-          <div class="user-result-handle">@${escHtml(u.handle)}</div>
-        </div>
-      </div>`;
-    }).join('');
-  }
-
-  window.startConversation = async function(handle, name, email) {
-    // Close modal
-    document.querySelector('.modal-overlay')?.remove();
-
-    // Build deterministic conv_id from sorted handles
-    const myHandle   = VIBE_HANDLE || VIBE_USER;
-    const theirHandle = handle;
-    const convId = [myHandle, theirHandle].sort().join('__');
-
-    // Check if conv already exists
-    const existing = allConvs.find(c => c.conv_id === convId);
-    if (existing) {
-      selectConversation(convId);
-      return;
-    }
-
-    // Create a fake conv entry locally so it appears in list
-    const otherUser = (window._knownUsers||[]).find(u => u.handle === handle) || {};
-    const newConv = {
-      conv_id: convId,
-      messages: [],
-      last_message: null,
-      last_at: new Date().toISOString(),
-      other: {
-        name:     name,
-        handle:   handle,
-        initials: getInitials(name||handle||'?'),
-        email:    email || otherUser.email || ''
-      }
-    };
-    allConvs.unshift(newConv);
-    renderConvList(allConvs);
-    selectConversation(convId);
-    showToast(`Chat with @${handle} started`);
-  };
-  window.startConversation = window.startConversation;
-
-  // ── IMAGE ATTACHMENT ──
-  window.promptImageUrl = function() {
-    const url = prompt('Paste an image URL (Imgur, etc.):');
-    if (!url || !url.startsWith('http')) return;
-    pendingImgUrl = url;
-    const wrap = document.getElementById('input-img-preview-wrap');
-    wrap.innerHTML = `<div class="input-img-preview show" style="margin-bottom:8px;position:relative;display:inline-block;">
-      <img src="${escHtml(url)}" style="max-height:80px;border-radius:8px;border:1px solid var(--border);display:block;" onerror="this.parentElement.innerHTML='<span style=font-size:12px;color:var(--danger)>⚠ Could not load</span>'"/>
-      <button class="input-img-remove" onclick="clearPendingImg()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-    </div>`;
-  };
-
-  window.clearPendingImg = function() {
-    pendingImgUrl = '';
-    document.getElementById('input-img-preview-wrap').innerHTML = '';
-  };
-
-  // ── EMOJI (quick insert) ──
-  const QUICK_EMOJIS = ['😀','😂','🥰','😎','🤔','👍','❤️','🎉','🔥','✨','😭','🤣','💯','🙏','👀'];
-  window.insertChatEmoji = function() {
-    const existing = document.getElementById('quick-emoji-picker');
-    if (existing) { existing.remove(); return; }
-    const picker = document.createElement('div');
-    picker.id = 'quick-emoji-picker';
-    picker.style.cssText = 'position:fixed;bottom:80px;right:80px;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:4px;width:220px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:300;animation:fadeIn .15s ease;';
-    picker.innerHTML = QUICK_EMOJIS.map(e =>
-      `<button onclick="addEmoji('${e}')" style="width:32px;height:32px;border:none;background:transparent;cursor:pointer;border-radius:6px;font-size:18px;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='var(--off)'" onmouseout="this.style.background='transparent'">${e}</button>`
-    ).join('');
-    document.body.appendChild(picker);
-    setTimeout(() => document.addEventListener('click', function rem(e) {
-      if (!picker.contains(e.target)) { picker.remove(); document.removeEventListener('click', rem); }
-    }), 50);
-  };
-
-  window.addEmoji = function(emoji) {
-    const ta = document.getElementById('chat-textarea');
-    const s = ta.selectionStart;
-    ta.value = ta.value.slice(0,s) + emoji + ta.value.slice(s);
-    ta.focus();
-    ta.setSelectionRange(s+emoji.length, s+emoji.length);
-    document.getElementById('quick-emoji-picker')?.remove();
-  };
-
-  // Init
-  await loadKnownUsers();
-  await loadConversations();
-
-  // Open conversation from URL param ?with=handle
-  const params = new URLSearchParams(location.search);
-  const withHandle = params.get('with');
-  if (withHandle) {
-    const u = (window._knownUsers||[]).find(u => u.handle?.toLowerCase() === withHandle.toLowerCase());
-    if (u) await window.startConversation(u.handle, u.name||u.handle, u.email||'');
-  }
-</script>
+<div id="toast"></div>
 
 <script>
-  function logout() {
-    ['vibe_user','vibe_name','vibe_handle','vibe_initials'].forEach(k=>localStorage.removeItem(k));
-    window.location.href = 'login.html';
+// ═══════════════════════════════════════════════════════════
+//  CONFIG — match your Vasuki credentials exactly
+// ═══════════════════════════════════════════════════════════
+const API   = "https://adamyakhairwal2011-vasuki-cloud.hf.space";
+const ADMIN = "codeclutch.adamyarao@gmail.com";
+const PASS  = "wkmeupb4ugo";
+
+// ═══════════════════════════════════════════════════════════
+//  MINIMAL VASUKI CLIENT (no external dep, uses your pattern)
+// ═══════════════════════════════════════════════════════════
+const sdk = {
+  userEmail: null,
+  async _post(endpoint, body) {
+    const r = await fetch(API + endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  },
+  async login(email, pw) {
+    const data = await this._post("/get-file-content", { email: ADMIN, path: "users_rows.json" });
+    const db   = JSON.parse(data.content);
+    const users = db.Sheet1 || [];
+    const u = users.find(x => x.username === email && x.password === pw);
+    if (!u) throw new Error("Invalid credentials");
+    this.userEmail = email;
+    return u;
+  },
+  async getDB(name) {
+    const path = name.endsWith(".json") ? name : name + ".json";
+    const r = await this._post("/get-file-content", { email: this.userEmail, path });
+    return JSON.parse(r.content);
+  },
+  async saveDB(name, data) {
+    const path = name.endsWith(".json") ? name : name + ".json";
+    return this._post("/save-file-content", { email: this.userEmail, path, content: JSON.stringify(data, null, 2) });
+  },
+  // Get a table from a DB file
+  async fetchTable(db, table) {
+    const d = await this.getDB(db);
+    return d[table] || [];
+  },
+  // Insert a row into a table — FIX: this was the core missing method
+  async insertRow(db, table, row) {
+    const d = await this.getDB(db);
+    if (!d[table]) d[table] = [];
+    d[table].push(row);
+    await this.saveDB(db, d);
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
+//  SESSION
+// ═══════════════════════════════════════════════════════════
+const ME_EMAIL    = localStorage.getItem("vibe_user")     || "";
+const ME_NAME     = localStorage.getItem("vibe_name")     || "User";
+const ME_HANDLE   = localStorage.getItem("vibe_handle")   || "";
+const ME_INITIALS = localStorage.getItem("vibe_initials") || "?";
+
+if (!ME_EMAIL) window.location.href = "login.html";
+
+document.getElementById("sb-av").textContent     = ME_INITIALS;
+document.getElementById("sb-name").textContent   = ME_NAME;
+document.getElementById("sb-handle").textContent = ME_HANDLE ? "@" + ME_HANDLE : ME_EMAIL;
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+let allUsers     = [];   // all users from users_rows.Sheet1
+let allConvs     = [];   // derived conversation objects
+let activeConvId = null;
+let pendingImg   = "";
+let pollTimer    = null;
+let lastMsgCount = 0;    // for flicker-free polling
+
+// ═══════════════════════════════════════════════════════════
+//  LOADER
+// ═══════════════════════════════════════════════════════════
+function loaderOn()  { document.getElementById("loader").className = "on"; }
+function loaderDone(){ const l = document.getElementById("loader"); l.className = "done"; setTimeout(()=>l.className="",700); }
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+(async function init() {
+  loaderOn();
+  try {
+    await sdk.login(ADMIN, "wkmeupb4ugo");  // re-auth with stored email
+  } catch(e) {
+    // If stored email differs from admin, still set userEmail so _post works
+    sdk.userEmail = ME_EMAIL;
   }
 
-  function handleChatKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      window.sendMessage();
+  await loadUsers();
+  await loadConversations();
+  loaderDone();
+
+  // URL param: ?with=handle
+  const p = new URLSearchParams(location.search);
+  const withHandle = p.get("with");
+  if (withHandle) {
+    const u = allUsers.find(x => (x.handle||"").toLowerCase() === withHandle.toLowerCase());
+    if (u) startConversation(u.handle, u.name || u.handle, u.email || "");
+  }
+})();
+
+// ═══════════════════════════════════════════════════════════
+//  LOAD USERS
+// ═══════════════════════════════════════════════════════════
+async function loadUsers() {
+  try {
+    allUsers = await sdk.fetchTable("users_rows", "Sheet1");
+  } catch(e) { console.warn("loadUsers:", e); }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  LOAD CONVERSATIONS (derived from vibe_messages)
+// ═══════════════════════════════════════════════════════════
+async function loadConversations(silent = false) {
+  const listEl = document.getElementById("conv-list");
+  try {
+    let msgs = [];
+    try { msgs = await sdk.fetchTable("vibe_messages", "Sheet1"); } catch(_) {}
+    if (!Array.isArray(msgs)) msgs = [];
+
+    // Build conv map — filter to only messages where I'm sender or recipient
+    const convMap = {};
+    msgs.forEach(m => {
+      if (!m || !m.conv_id) return;
+      const isSender    = norm(m.sender_email)    === norm(ME_EMAIL) || norm(m.sender_handle)    === norm(ME_HANDLE);
+      const isRecipient = norm(m.recipient_email) === norm(ME_EMAIL) || norm(m.recipient_handle) === norm(ME_HANDLE);
+      if (!isSender && !isRecipient) return;
+
+      if (!convMap[m.conv_id]) {
+        convMap[m.conv_id] = { conv_id: m.conv_id, msgs: [], other: null };
+        // Determine the "other" party
+        if (isSender) {
+          convMap[m.conv_id].other = {
+            name:     m.recipient_name || m.recipient_handle || "Unknown",
+            handle:   m.recipient_handle || "",
+            email:    m.recipient_email  || "",
+            initials: m.recipient_initials || getInitials(m.recipient_name || m.recipient_handle || "?")
+          };
+        } else {
+          convMap[m.conv_id].other = {
+            name:     m.sender_name || m.sender_handle || "Unknown",
+            handle:   m.sender_handle || "",
+            email:    m.sender_email  || "",
+            initials: m.sender_initials || getInitials(m.sender_name || m.sender_handle || "?")
+          };
+        }
+      }
+      convMap[m.conv_id].msgs.push(m);
+    });
+
+    allConvs = Object.values(convMap).map(c => {
+      const sorted = c.msgs.sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+      return { conv_id: c.conv_id, other: c.other, msgs: sorted, last: sorted[sorted.length-1] };
+    }).sort((a,b) => new Date(b.last?.created_at||0) - new Date(a.last?.created_at||0));
+
+    renderConvList(allConvs);
+  } catch(e) {
+    if (!silent) {
+      listEl.innerHTML = `<div class="conv-empty"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><p>Could not load conversations.</p></div>`;
     }
   }
+}
 
-  function autoResize(el) {
-    el.style.height = 'auto';
-    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+function renderConvList(convs) {
+  const listEl = document.getElementById("conv-list");
+  const q = document.getElementById("conv-search").value.toLowerCase();
+
+  const filtered = q
+    ? convs.filter(c => c.other.name.toLowerCase().includes(q) || c.other.handle.toLowerCase().includes(q))
+    : convs;
+
+  if (!filtered.length) {
+    listEl.innerHTML = `<div class="conv-empty"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><p>No conversations yet.<br>Start one!</p></div>`;
+    return;
   }
 
-  function formatDate(iso) {
-    if (!iso) return '';
-    const d   = new Date(iso);
-    const now = new Date();
-    if (d.toDateString() === now.toDateString()) return 'Today';
-    const yesterday = new Date(now);
-    yesterday.setDate(yesterday.getDate() - 1);
-    if (d.toDateString() === yesterday.toDateString()) return 'Yesterday';
-    return d.toLocaleDateString(undefined, { month:'short', day:'numeric', year: d.getFullYear()!==now.getFullYear()?'numeric':undefined });
+  listEl.innerHTML = filtered.map(c => {
+    const pal  = palette(c.other.handle || c.other.name || "");
+    const init = esc(c.other.initials || getInitials(c.other.name || "?"));
+    const last = c.last;
+    const preview = last
+      ? (last.image_url ? "Image" : (last.body || "").slice(0,52) + ((last.body||"").length>52?"…":""))
+      : "Start a conversation";
+    const isActive = c.conv_id === activeConvId;
+    // IMPORTANT: encode conv_id as data attribute to avoid quoting bugs
+    return `<div class="conv-item${isActive?" active":""}" data-cid="${esc(c.conv_id)}" onclick="selectConv(this.dataset.cid)">
+      <div class="conv-av" style="background:${pal.bg};color:${pal.fg}">${init}</div>
+      <div class="conv-info">
+        <div class="conv-name">${esc(c.other.name)}</div>
+        <div class="conv-preview">${esc(preview)}</div>
+      </div>
+      <div class="conv-meta">
+        <div class="conv-time">${last ? timeAgo(last.created_at) : ""}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function filterConvs(q) {
+  renderConvList(allConvs);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SELECT CONVERSATION
+// ═══════════════════════════════════════════════════════════
+function selectConv(convId) {
+  if (activeConvId === convId) return;
+  activeConvId = convId;
+
+  // Stop existing poll
+  clearInterval(pollTimer);
+  lastMsgCount = 0;
+
+  const conv = allConvs.find(c => c.conv_id === convId);
+  if (!conv) return;
+
+  // Update sidebar active state
+  document.querySelectorAll(".conv-item").forEach(el =>
+    el.classList.toggle("active", el.dataset.cid === convId)
+  );
+
+  // Populate header
+  const pal  = palette(conv.other.handle || conv.other.name || "");
+  const init = getInitials(conv.other.name || "?");
+  const chAv = document.getElementById("ch-av");
+  chAv.style.background = pal.bg;
+  chAv.style.color       = pal.fg;
+  chAv.textContent       = init;
+  document.getElementById("ch-name").textContent   = conv.other.name;
+  document.getElementById("ch-status").textContent = conv.other.handle ? "@" + conv.other.handle : conv.other.email;
+
+  // Show chat pane
+  document.getElementById("chat-empty").style.display = "none";
+  const pane = document.getElementById("chat-pane");
+  pane.style.display = "flex";
+
+  // Render existing messages immediately (no flicker)
+  renderMessages(conv.msgs);
+
+  // Then poll for new ones
+  pollTimer = setInterval(() => refreshMessages(true), 4000);
+
+  document.getElementById("chat-ta").focus();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RENDER MESSAGES (smart — only appends new ones)
+// ═══════════════════════════════════════════════════════════
+function renderMessages(msgs) {
+  const el = document.getElementById("chat-msgs");
+  const wasAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+
+  el.innerHTML = "";
+  lastMsgCount = msgs.length;
+
+  if (!msgs.length) {
+    el.innerHTML = `<div style="flex:1;display:flex;align-items:center;justify-content:center"><p style="font-size:13px;color:var(--muted)">Say hello!</p></div>`;
+    return;
   }
 
-  function shortTime(iso) {
-    if (!iso) return '';
-    const d = new Date(iso);
-    return d.toLocaleTimeString(undefined, { hour:'2-digit', minute:'2-digit' });
+  let lastDateStr = null;
+  const meEmail  = norm(ME_EMAIL);
+  const meHandle = norm(ME_HANDLE);
+
+  msgs.forEach((m, i) => {
+    const dateStr = new Date(m.created_at).toDateString();
+    if (dateStr !== lastDateStr) {
+      lastDateStr = dateStr;
+      const div = document.createElement("div");
+      div.className = "msg-date";
+      div.innerHTML = `<span>${formatDate(m.created_at)}</span>`;
+      el.appendChild(div);
+    }
+
+    const isMe = norm(m.sender_email) === meEmail || norm(m.sender_handle) === meHandle;
+    const next = msgs[i+1];
+    // Hide avatar if same sender sent the next message within 2 min
+    const hideAv = next
+      && norm(next.sender_email) === norm(m.sender_email)
+      && new Date(next.created_at) - new Date(m.created_at) < 120000;
+
+    const row = document.createElement("div");
+    row.className = `msg-row${isMe?" me":""}`;
+
+    const pal  = isMe ? { bg:"var(--bubble-me)", fg:"#fff" } : palette(m.sender_handle || m.sender_name || "");
+    const init = isMe ? ME_INITIALS : getInitials(m.sender_name || m.sender_handle || "?");
+
+    const imgHtml = m.image_url
+      ? `<img class="msg-img" src="${esc(m.image_url)}" loading="lazy"
+           onerror="this.style.display='none'"
+           onclick="window.open('${esc(m.image_url)}','_blank')" alt=""/>`
+      : "";
+
+    const showTs = !next
+      || norm(next.sender_email) !== norm(m.sender_email)
+      || new Date(next.created_at) - new Date(m.created_at) > 120000;
+
+    row.innerHTML = `
+      <div class="msg-av-wrap">
+        <div class="msg-av${hideAv?" hidden":""}" style="background:${pal.bg};color:${pal.fg}">${esc(init)}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;${isMe?"align-items:flex-end":""}">
+        <div class="msg-bubble ${isMe?"me":"them"}">${m.body ? esc(m.body) : ""}${imgHtml}</div>
+        ${showTs ? `<div class="msg-ts">${shortTime(m.created_at)}</div>` : ""}
+      </div>`;
+    el.appendChild(row);
+  });
+
+  if (wasAtBottom) {
+    el.scrollTop = el.scrollHeight;
+  }
+}
+
+async function refreshMessages(silent = false) {
+  if (!activeConvId) return;
+  try {
+    const all  = await sdk.fetchTable("vibe_messages", "Sheet1");
+    const msgs = (all || [])
+      .filter(m => m && m.conv_id === activeConvId)
+      .sort((a,b) => new Date(a.created_at) - new Date(b.created_at));
+
+    // Only re-render if count changed (avoids flicker)
+    if (msgs.length !== lastMsgCount) {
+      renderMessages(msgs);
+      // Also refresh conv list to update preview/time
+      await loadConversations(true);
+    }
+  } catch(e) {
+    if (!silent) console.error("refreshMessages:", e);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  SEND MESSAGE — FIX: proper insertRow using getDB → push → saveDB
+// ═══════════════════════════════════════════════════════════
+async function sendMsg() {
+  const ta   = document.getElementById("chat-ta");
+  const body = ta.value.trim();
+  if (!body && !pendingImg) return;
+  if (!activeConvId) { toast("Select a conversation first"); return; }
+
+  const conv = allConvs.find(c => c.conv_id === activeConvId);
+  if (!conv) return;
+
+  const btn = document.getElementById("send-btn");
+  btn.disabled = true;
+
+  const row = {
+    conv_id:            activeConvId,
+    sender_name:        ME_NAME,
+    sender_handle:      ME_HANDLE,
+    sender_initials:    ME_INITIALS,
+    sender_email:       ME_EMAIL,
+    recipient_name:     conv.other.name,
+    recipient_handle:   conv.other.handle,
+    recipient_initials: conv.other.initials,
+    recipient_email:    conv.other.email,
+    body:               body,
+    image_url:          pendingImg || null,
+    created_at:         new Date().toISOString()
+  };
+
+  // Optimistic: append immediately
+  conv.msgs.push(row);
+  renderMessages(conv.msgs);
+  ta.value = ""; ta.style.height = "auto";
+  clearImg();
+
+  try {
+    await sdk.insertRow("vibe_messages", "Sheet1", row);
+    // Reload full list in background
+    loadConversations(true);
+  } catch(e) {
+    toast("Send failed: " + e.message);
+    // Roll back optimistic insert
+    conv.msgs.pop();
+    renderMessages(conv.msgs);
+    ta.value = body;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  NEW CONVERSATION MODAL — FIX: multiple convs supported
+//  conv_id = sorted handles joined by "__"
+// ═══════════════════════════════════════════════════════════
+function openModal() {
+  const bg = document.createElement("div");
+  bg.className = "modal-bg";
+  bg.onclick = e => { if (e.target === bg) bg.remove(); };
+
+  const myHandle = ME_HANDLE || ME_EMAIL;
+  const otherUsers = allUsers.filter(u =>
+    norm(u.email) !== norm(ME_EMAIL) && norm(u.handle) !== norm(myHandle)
+  );
+
+  bg.innerHTML = `
+    <div class="modal">
+      <button class="modal-close-btn" onclick="this.closest('.modal-bg').remove()">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="modal-title">New Conversation</div>
+      <div class="modal-search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search by name or handle…" id="modal-search-inp" oninput="modalSearch(this.value)" autocomplete="off"/>
+      </div>
+      <div class="user-list" id="modal-user-list">${renderUserItems(otherUsers)}</div>
+    </div>`;
+
+  document.body.appendChild(bg);
+  setTimeout(() => bg.querySelector("#modal-search-inp")?.focus(), 80);
+}
+
+function modalSearch(q) {
+  const lower = q.toLowerCase().trim();
+  const myHandle = ME_HANDLE || ME_EMAIL;
+  const results = allUsers.filter(u =>
+    norm(u.email) !== norm(ME_EMAIL) && norm(u.handle) !== norm(myHandle) &&
+    (!lower ||
+      (u.name   || "").toLowerCase().includes(lower) ||
+      (u.handle || "").toLowerCase().includes(lower) ||
+      (u.email  || "").toLowerCase().includes(lower))
+  );
+  const el = document.getElementById("modal-user-list");
+  if (el) el.innerHTML = renderUserItems(results);
+}
+
+function renderUserItems(users) {
+  if (!users.length) return `<div class="user-list-empty">No users found</div>`;
+  return users.slice(0,12).map(u => {
+    const pal  = palette(u.handle || u.name || "");
+    const init = getInitials(u.name || u.handle || "?");
+    // Use data attributes — avoids ALL quoting/injection bugs
+    return `<div class="user-item"
+      data-handle="${esc(u.handle||"")}"
+      data-name="${esc(u.name||u.handle||"")}"
+      data-email="${esc(u.email||"")}"
+      onclick="pickUser(this)">
+      <div class="user-av" style="background:${pal.bg};color:${pal.fg}">${esc(init)}</div>
+      <div>
+        <div class="user-name">${esc(u.name||u.handle)}</div>
+        <div class="user-handle">@${esc(u.handle)}</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function pickUser(el) {
+  const handle = el.dataset.handle;
+  const name   = el.dataset.name;
+  const email  = el.dataset.email;
+  document.querySelector(".modal-bg")?.remove();
+  startConversation(handle, name, email);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  START CONVERSATION — FIX: deterministic conv_id, handles
+//  any number of conversations correctly
+// ═══════════════════════════════════════════════════════════
+function startConversation(handle, name, email) {
+  const myId    = ME_HANDLE || ME_EMAIL;
+  const theirId = handle || email;
+
+  // Deterministic ID: always sort so A→B and B→A get same conv
+  const convId = [norm(myId), norm(theirId)].sort().join("__");
+
+  // If conversation already exists, just open it
+  const existing = allConvs.find(c => c.conv_id === convId);
+  if (existing) {
+    selectConv(convId);
+    return;
   }
 
-  function timeAgo(iso) {
-    if (!iso) return '';
-    const m = Math.floor((Date.now()-new Date(iso))/60000);
-    if (m<1) return 'now';
-    if (m<60) return `${m}m`;
-    const h = Math.floor(m/60);
-    if (h<24) return `${h}h`;
-    return `${Math.floor(h/24)}d`;
-  }
+  // Create locally so user can start typing immediately
+  const otherUser = allUsers.find(u => norm(u.handle) === norm(handle) || norm(u.email) === norm(email)) || {};
+  const newConv = {
+    conv_id: convId,
+    msgs: [],
+    last: null,
+    other: {
+      name:     name || otherUser.name || handle || email,
+      handle:   handle || otherUser.handle || "",
+      email:    email  || otherUser.email  || "",
+      initials: getInitials(name || handle || "?")
+    }
+  };
+  allConvs.unshift(newConv);
+  renderConvList(allConvs);
 
-  function getInitials(str) {
-    return (str||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  }
+  // Now select it — it's in allConvs so selectConv works
+  selectConv(convId);
+  toast("Conversation started — say hello!");
+}
 
-  function escHtml(str) {
-    return str ? String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
-  }
+// ═══════════════════════════════════════════════════════════
+//  IMAGE URL ATTACHMENT
+// ═══════════════════════════════════════════════════════════
+function promptImg() {
+  const url = prompt("Paste an image URL (e.g. from Imgur):");
+  if (!url || !url.startsWith("http")) return;
+  pendingImg = url;
+  const wrap = document.getElementById("img-preview-wrap");
+  const img  = document.getElementById("img-preview-img");
+  img.src = url;
+  img.onerror = () => { clearImg(); toast("Could not load that image URL"); };
+  wrap.classList.add("show");
+}
 
-  function avatarColor(str) {
-    const palettes = [
-      {bg:'linear-gradient(135deg,#c7d2fe,#a5b4fc)',fg:'#4338ca'},
-      {bg:'linear-gradient(135deg,#fde68a,#fbbf24)',fg:'#92400e'},
-      {bg:'linear-gradient(135deg,#bbf7d0,#4ade80)',fg:'#166534'},
-      {bg:'linear-gradient(135deg,#fecaca,#f87171)',fg:'#991b1b'},
-      {bg:'linear-gradient(135deg,#e0e7ff,#818cf8)',fg:'#3730a3'},
-      {bg:'linear-gradient(135deg,#fce7f3,#f9a8d4)',fg:'#9d174d'},
-      {bg:'linear-gradient(135deg,#d1fae5,#6ee7b7)',fg:'#065f46'},
-    ];
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash<<5) - hash);
-    return palettes[Math.abs(hash) % palettes.length];
-  }
+function clearImg() {
+  pendingImg = "";
+  document.getElementById("img-preview-wrap").classList.remove("show");
+  document.getElementById("img-preview-img").src = "";
+}
 
-  let toastTimer;
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
-  }
+// ═══════════════════════════════════════════════════════════
+//  EMOJI PICKER
+// ═══════════════════════════════════════════════════════════
+const EMOJIS = ["😀","😂","🥰","😎","🤔","👍","❤️","🎉","🔥","✨","😭","🤣","💯","🙏","👀","🫶","😊","🙌","🥳","👋"];
+
+function toggleEmoji(e) {
+  e.stopPropagation();
+  const existing = document.getElementById("emoji-picker");
+  if (existing) { existing.remove(); return; }
+
+  const picker = document.createElement("div");
+  picker.id = "emoji-picker";
+  picker.className = "emoji-picker";
+
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  picker.style.cssText = `bottom:${window.innerHeight - rect.top + 8}px;right:${window.innerWidth - rect.right}px`;
+
+  picker.innerHTML = EMOJIS.map(em =>
+    `<button class="emoji-btn" onclick="insertEmoji('${em}')">${em}</button>`
+  ).join("");
+
+  document.body.appendChild(picker);
+
+  setTimeout(() => {
+    document.addEventListener("click", function close(ev) {
+      if (!picker.contains(ev.target)) {
+        picker.remove();
+        document.removeEventListener("click", close);
+      }
+    });
+  }, 20);
+}
+
+function insertEmoji(em) {
+  const ta = document.getElementById("chat-ta");
+  const s  = ta.selectionStart;
+  ta.value = ta.value.slice(0,s) + em + ta.value.slice(ta.selectionEnd);
+  ta.focus();
+  ta.setSelectionRange(s + em.length, s + em.length);
+  document.getElementById("emoji-picker")?.remove();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  UTILITIES
+// ═══════════════════════════════════════════════════════════
+function doLogout() {
+  clearInterval(pollTimer);
+  ["vibe_user","vibe_name","vibe_handle","vibe_initials"].forEach(k => localStorage.removeItem(k));
+  window.location.href = "login.html";
+}
+
+function onKey(e) {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+}
+
+function autoGrow(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 120) + "px";
+}
+
+function norm(s) { return (s || "").trim().toLowerCase(); }
+
+function getInitials(str) {
+  return (str || "?").trim().split(/\s+/).map(w => w[0] || "").join("").toUpperCase().slice(0,2) || "?";
+}
+
+function esc(str) {
+  return String(str || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+// Avatar palette — deterministic from string
+function palette(str) {
+  const palettes = [
+    {bg:"#e8eaf6",fg:"#3949ab"},
+    {bg:"#fce4ec",fg:"#c2185b"},
+    {bg:"#e8f5e9",fg:"#2e7d32"},
+    {bg:"#fff3e0",fg:"#e65100"},
+    {bg:"#e3f2fd",fg:"#1565c0"},
+    {bg:"#f3e5f5",fg:"#7b1fa2"},
+    {bg:"#e0f2f1",fg:"#00695c"},
+    {bg:"#fff8e1",fg:"#f57f17"}
+  ];
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = str.charCodeAt(i) + ((h<<5) - h);
+  return palettes[Math.abs(h) % palettes.length];
+}
+
+function formatDate(iso) {
+  if (!iso) return "";
+  const d   = new Date(iso);
+  const now = new Date();
+  if (d.toDateString() === now.toDateString()) return "Today";
+  const yest = new Date(now); yest.setDate(yest.getDate()-1);
+  if (d.toDateString() === yest.toDateString()) return "Yesterday";
+  return d.toLocaleDateString(undefined, {month:"short",day:"numeric",year:d.getFullYear()!==now.getFullYear()?"numeric":undefined});
+}
+
+function shortTime(iso) {
+  if (!iso) return "";
+  return new Date(iso).toLocaleTimeString(undefined, {hour:"2-digit",minute:"2-digit"});
+}
+
+function timeAgo(iso) {
+  if (!iso) return "";
+  const m = Math.floor((Date.now() - new Date(iso)) / 60000);
+  if (m < 1)  return "now";
+  if (m < 60) return m + "m";
+  const h = Math.floor(m/60);
+  if (h < 24) return h + "h";
+  return Math.floor(h/24) + "d";
+}
+
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
+}
 </script>
 </body>
 </html>
