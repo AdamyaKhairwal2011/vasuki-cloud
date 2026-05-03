@@ -364,7 +364,7 @@
   async function loadKnownUsers() {
     try {
       const users = await vdb.fetchTable('users_rows', 'Sheet1');
-      knownUsers = (users || []).filter(u => u && u.handle);
+      knownUsers = users
       window._knownUsers = knownUsers;
     } catch(e) { console.warn('Could not load users:', e); }
   }
