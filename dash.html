@@ -21,29 +21,29 @@
     <style>
         :root {
           --slate: #3e494e;
-          --slate-deep: #2b3438;
+          --slate-deep: #808080;
           --slate-mid: #4f5c62;
           --slate-light: #6b7a80;
           --slate-faint: #8e9ea4;
-          --lemon: #fffcce;
-          --lemon-mid: #fff9a8;
-          --lemon-dark: #e8e49a;
-          --lemon-faint: #fffef5;
-          --bg: #f4f2ec;
-          --bg-dark: #ece9e0;
-          --bg-mid: #f0ede4;
+          --lemon: #e6e6e6;
+          --lemon-mid: #363636;
+          --lemon-dark: #575757;
+          --lemon-faint: #d1d1d1;
+          --bg: #ffffff;
+          --bg-dark: #e9e9e8;
+          --bg-mid: #e0e0e0;
           --card: #ffffff;
           --ink: #1e2628;
           --ink-mid: #3e494e;
           --ink-light: #6b7a80;
           --ink-faint: #a0adb2;
-          --border: #dddad0;
-          --border-dark: #c8c4b4;
-          --rule: #d4d0c4;
+          --border: #d6d6d6;
+          --border-dark: #c4c4c4;
+          --rule: #e0e0e0;
           --red: #c5221f;
           --red-bg: #fce8e6;
           --sidebar-bg: #2b3438;
-          --sidebar-border: #1e2a2e;
+          --sidebar-border: #e2e2e2;
           --google-blue: #1a73e8;
           --google-green: #34a853;
           --ripple: rgba(255,252,206,0.15);
@@ -55,10 +55,7 @@ body {
   min-height: 100dvh;
   font-family: 'Google Sans Text', 'Google Sans', sans-serif;
   background: var(--bg);
-  background-image:
-    radial-gradient(ellipse at 10% 30%, rgba(62,73,78,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 90% 10%, rgba(255,252,206,0.35) 0%, transparent 45%),
-    radial-gradient(ellipse at 55% 90%, rgba(62,73,78,0.03) 0%, transparent 40%);
+  background: var(--bg);
   color: var(--ink);
   display: flex;
   font-size: 14px;
@@ -392,7 +389,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 }
 .page-title-accent {
   background: var(--lemon);
-  border: 1.5px solid var(--lemon-dark);
+  border: 1.5px solid var(--lemon-mid);
   border-radius: 8px; padding: 2px 12px;
   font-size: 0.85rem; font-weight: 500;
   color: var(--slate-deep); font-family: 'Google Sans Text', sans-serif;
@@ -426,7 +423,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   border: 2px dashed var(--border-dark);
   border-radius: 12px; padding: 24px 40px;
   text-align: center; cursor: pointer;
-  background: #eeeae0;
+  background: #ebebeb;
   transition: all 0.15s; position: relative; overflow: hidden;
 }
 .upload-zone::before { content: ''; position: absolute; inset: 0; pointer-events: none; }
@@ -673,7 +670,6 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 .empty-state {
   padding: 60px 40px; text-align: center;
   border: 2px dashed var(--border-dark); border-radius: 12px;
-  background: linear-gradient(135deg, var(--lemon-faint) 0%, var(--bg) 100%);
 }
 .empty-state-icon { width: 48px; height: 48px; margin: 0 auto 12px; opacity: 0.15; }
 .empty-title { font-family: 'Google Sans Display', sans-serif; font-size: 1.1rem; font-weight: 400; color: var(--ink-light); margin-bottom: 4px; }
@@ -860,7 +856,6 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 
 <aside id="sidebar">
   <div class="sidebar-logo">
-    <img src="./logo.png" alt="">
     <div>
       <div class="sidebar-logo-text">Vasuki Neem</div>
       <div class="sidebar-logo-sub">Cloud Storage</div>
@@ -950,7 +945,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 <div class="qr-card">
       <span class="storage-used">Referral Code:</span>
       <div class="storage-header">Allow Your Friends To Join Vasuki Cloud By Scanning The QR</div>
-      <div id="code_review" style="color: #fff9a8"></div>
+      <div id="code_review" style="color: #f3f3f3"></div>
     <div id="qrcode"></div>
 </div>
 
@@ -1089,9 +1084,9 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 
 .swiper-slide {
   width: 300px;
-  height: 400px;
+  height: 300px;
   filter: blur(1px);
-  border-radius: 10px;
+  border-radius: 30px;
   display: flex;
   flex-direction: column;
   justify-content: end;
@@ -1163,31 +1158,31 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 
 .swiper-slide--one {
   background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
-    url(https://images.unsplash.com/photo-1556206079-747a7a424d3d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80)
+    url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw3k1c6JaNUexk2h38jFUHu4j3O73P8mgVkw&s)
       no-repeat 50% 50% / cover;
 }
 
 .swiper-slide--two {
   background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
-    url("https://images.unsplash.com/photo-1571900670723-a317a66e3fb7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=423&q=80")
+    url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw3k1c6JaNUexk2h38jFUHu4j3O73P8mgVkw&s")
       no-repeat 50% 50% / cover;
 }
 
 .swiper-slide--three {
   background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
-    url("https://images.unsplash.com/photo-1549144511-f099e773c147?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80")
+    url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw3k1c6JaNUexk2h38jFUHu4j3O73P8mgVkw&s")
       no-repeat 50% 50% / cover;
 }
 
 .swiper-slide--four {
   background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
-    url("https://images.unsplash.com/photo-1650367310179-e1b5b8e453c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80")
+    url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw3k1c6JaNUexk2h38jFUHu4j3O73P8mgVkw&s")
       no-repeat 50% 50% / cover;
 }
 
 .swiper-slide--five {
   background: linear-gradient(to top, #0f2027, #203a4300, #2c536400),
-    url("https://images.unsplash.com/photo-1596521864207-13d46b1a0c78?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80")
+    url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw3k1c6JaNUexk2h38jFUHu4j3O73P8mgVkw&s")
       no-repeat 50% 50% / cover;
 }
 
@@ -1201,66 +1196,25 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
     <div class="swiper-wrapper">
       <div class="swiper-slide swiper-slide--one">
         <div>
-          <h2>Enjoy the exotic of sunny Hawaii</h2>
-          <p>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-            Maui, Hawaii
-          </p>
         </div>
       </div>
       <div class="swiper-slide swiper-slide--two">
         <div>
-          <h2>The Island of Eternal Spring</h2>
-          <p>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-            Lanzarote, Spanien
-          </p>
         </div>
       </div>
 
       <div class="swiper-slide swiper-slide--three">
         <div>
-          <h2>Awesome Eiffel Tower</h2>
-          <p>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-            Paris, France
-          </p>
         </div>
       </div>
 
       <div class="swiper-slide swiper-slide--four">
         <div>
-          <h2>One of the safest states in Mexico</h2>
-          <p>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-            The Yucatan, Mexico
-          </p>
         </div>
       </div>
 
       <div class="swiper-slide swiper-slide--five">
         <div>
-          <h2>The most popular yachting destination</h2>
-          <p>
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-            Whitsunday Islands, Australia
-          </p>
         </div>
       </div>
     </div>
@@ -1469,7 +1423,6 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 
       let access_codes = await vdb.fetchTable('users_rows','access_asked')
     let randomCode = access_codes[Math.floor(Math.random() * access_codes.length)].value
-    console.log(access_codes)
     // Initialize the QR instance
     const qrcode = new QRCode(document.getElementById("qrcode"), {
         text: randomCode,
@@ -1640,8 +1593,9 @@ updateSliderWithCloudImages(files);
 // Add this new function anywhere in your <script>
 function updateSliderWithCloudImages(files) {
   const imageFiles = files.filter(f => 
-    !f.isFolder && /\.(png|jpg|jpeg|webp|gif)$/i.test(f.name)
+    !f.isFolder && /\.(png|jpg|jpeg|webp|gif|jfif)$/i.test(f.name)
   );
+
   
   if (!imageFiles.length) return; // keep placeholder images if no cloud images
 
@@ -1651,7 +1605,7 @@ function updateSliderWithCloudImages(files) {
   slides.forEach((slide, i) => {
     const file = imageFiles[i % imageFiles.length];
     const url = `${BASE_URL}/download/${userEmail}/${currentFolder}/${file.name}`;
-    const label = labels[i] || getTypeKey(file.name).toLowerCase();
+    const label = "";
 
     slide.style.background = `
       linear-gradient(to top, #0f2027, #203a4300, #2c536400),
@@ -1662,15 +1616,14 @@ function updateSliderWithCloudImages(files) {
     const h2 = slide.querySelector('h2');
     const p = slide.querySelector('p');
 
-    if (h2) h2.textContent = file.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ');
+    if (h2) h2.textContent = "";
     if (p) p.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-      </svg>
-      ${currentFolder || 'My Cloud'}
     `;
   });
+
+  if (imageFiles.length <= 0) {
+    document.querySelector('.swiper').style.display = 'none'
+  };
 
   // Re-init swiper to pick up background changes
   swiper.update();
@@ -1817,4 +1770,3 @@ listFiles();
 
 </body>
 </html>
-
