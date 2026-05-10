@@ -1,29 +1,3 @@
-Since you've requested a high-quality GitHub repository for **Vasuki iTech** that reflects a professional, Google Workspace-inspired aesthetic, the structure below is designed to be clean, functional, and enterprise-ready.
-
-Based on the company's focus on independent cloud infrastructure, "invisible" DevOps, and tools like **Guppt Storage** and **Argon OS**, this repository serves as a flagship "Core SDK" or "Developer Portal" template.
-
----
-
-## Repository Structure
-
-```text
-vasuki-itech-core/
-├── .github/                # GitHub Actions & issue templates
-├── docs/                   # Google-style technical documentation
-├── src/                    # Source code (SDK/Core modules)
-├── samples/                # Implementation examples
-├── tests/                  # Unit and integration tests
-├── .gitignore              # Clean file exclusion
-├── LICENSE                 # Apache 2.0 (standard for cloud tools)
-└── README.md               # The "Storefront" (Workspace style)
-
-```
-
----
-
-## README.md (Google Workspace Style)
-
-The README uses high-contrast sections, clear typography, and a "function-first" layout.
 
 ```markdown
 # Vasuki iTech Core SDK
