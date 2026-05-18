@@ -17,12 +17,12 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         :root {
-            --cream: #c9c9c9;
-            --cream-dark: #ede7d9;
-            --cream-border: #d9d0bc;
-            --yellow-accent: #f3efbb;
-            --yellow-hover: #f5f7ab;
-            --yellow-light: #fdf6d8;
+            --cream: #efe5d8;
+            --cream-dark: #efe5d8;
+            --cream-border: #efe5d8;
+            --yellow-accent: #efe5d8;
+            --yellow-hover: #e4d8c7;
+            --yellow-light: #efe5d8;
             --gray-900: #1c1c1e;
             --gray-700: #3a3a3c;
             --gray-500: #636366;
@@ -237,7 +237,7 @@
         .btn-primary:disabled { background: var(--gray-200); color: var(--gray-400); cursor: not-allowed; }
 
         .btn-primary.loading .btn-label { opacity: 0; }
-        .spinner {
+        .spinner-n {
             position: absolute;
             width: 20px; height: 20px;
             border: 2px solid rgba(255,255,255,0.3);
@@ -246,7 +246,7 @@
             animation: spin 0.7s linear infinite;
             display: none;
         }
-        .btn-primary.loading .spinner { display: block; }
+        .btn-primary.loading .spinner-n { display: block; }
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -341,7 +341,109 @@
 </head>
 <body>
 
+    <div id="loader-container">
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-spinner-wrap">
+      <div class="spinner"></div>
+    </div>
+  </div>
 
+  <style>
+    #loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      display: flex;
+      pointer-events: none;
+    }
+    .loader-bar {
+      height: 100%;
+      flex: 1;
+      background-color: #3b2a13;
+      transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+      will-change: transform;
+      pointer-events: auto;
+    }
+    #loader-container.loaded .loader-bar {
+      transform: translateY(-100%);
+    }
+    .loader-bar:nth-child(1)  { transition-delay: 0.00s; }
+    .loader-bar:nth-child(2)  { transition-delay: 0.05s; }
+    .loader-bar:nth-child(3)  { transition-delay: 0.10s; }
+    .loader-bar:nth-child(4)  { transition-delay: 0.15s; }
+    .loader-bar:nth-child(5)  { transition-delay: 0.20s; }
+    .loader-bar:nth-child(6)  { transition-delay: 0.25s; }
+    .loader-bar:nth-child(7)  { transition-delay: 0.30s; }
+    .loader-bar:nth-child(8)  { transition-delay: 0.35s; }
+    .loader-bar:nth-child(9)  { transition-delay: 0.40s; }
+    .loader-bar:nth-child(10) { transition-delay: 0.45s; }
+
+    .loader-spinner-wrap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      transition: opacity 0.4s ease;
+      pointer-events: auto;
+    }
+    #loader-container.loaded .loader-spinner-wrap {
+      opacity: 0;
+    }
+    .spinner {
+      width: 60px;
+      display: flex;
+      align-items: flex-start;
+      aspect-ratio: 1;
+    }
+    .spinner:before,
+    .spinner:after {
+      content: "";
+      flex: 1;
+      aspect-ratio: 1;
+      --g: conic-gradient(from -90deg at 10px 10px,#ffffff 90deg,#fffefe00 0);
+      background: var(--g), var(--g), var(--g);
+      filter: drop-shadow(30px 30px 0 #ffffff);
+      animation: l20 1s infinite;
+    }
+    .spinner:after { transform: scaleX(-1); }
+    @keyframes l20 {
+       0%   {background-position:0     0, 10px 10px, 20px 20px}
+       33%  {background-position:10px  10px}
+       66%  {background-position:0    20px,10px 10px,20px 0   }
+       100% {background-position:0     0, 10px 10px, 20px 20px}
+    }
+  </style>
+
+  <script>
+    window.addEventListener('load', () => {
+      const loaderContainer = document.getElementById('loader-container');
+      setTimeout(() => {
+        loaderContainer.classList.add('loaded');
+      }, 300);
+      setTimeout(() => {
+        loaderContainer.style.display = 'none';
+      }, 1500); 
+    });
+  </script>
+
+ 
 
     <div class="card">
         <div class="brand-chip">
@@ -364,7 +466,7 @@
         <div class="actions">
             <button class="btn-primary" id="loginBtn" onclick="handleLogin()">
                 <span class="btn-label">Next</span>
-                <div class="spinner"></div>
+                <div class="spinner-n"></div>
             </button>
 
             <div class="divider">or</div>
@@ -387,19 +489,13 @@
         </div>
     </div>
 
-    <footer class="page-footer">
-        <a href="#" onclick="showSettings()">Settings</a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Help</a>
-    </footer>
 
 <script type="module">
     import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
     let vdb = new Vasuki();
 
     if (localStorage.getItem("vcloud_user")) {
-        window.location.href = './dash.html?email=' + encodeURIComponent(localStorage.getItem("vcloud_user"));
+        window.location.href = './dash.html';
     }
 
     window.goToSignup = function () {
