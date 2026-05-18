@@ -2,102 +2,296 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vasuki Form Studio | Workspace Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand: #1a73e8;
-            --brand-hover: #1557b0;
-            --bg: #f1f3f4;
-            --white: #ffffff;
-            --border: #dadce0;
-            --text-main: #202124;
-            --text-sub: #5f6368;
-            --danger: #d93025;
-            --shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+            --google-blue: #614a1a;
+            --google-blue-hover: #61440e;
+            --google-blue-alpha: rgba(26, 115, 232, 0.04);
+            --text-dark: #202124;
+            --text-light: #5f6368;
+            --border-color: #e0deda;
+            --border-focus: #936b1a;
+            --error-red: #d93025;
+            --error-bg: #fce8e6;
+            --bg-surface: #ffffff;
+            --bg-body: #f9f6f0;
+            --font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+            --radius-container: 16px;
+            --radius-card: 8px;
+            --radius-input: 4px;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-subtle: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
         }
 
-        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
-        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text-main); }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
 
-        /* --- GOOGLE STYLE NAV --- */
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* --- GOOGLE WORKSPACE NAVIGATION BAR --- */
         nav {
-            background: var(--white); padding: 0 24px; height: 64px;
-            border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 100;
+            background: var(--bg-surface);
+            padding: 0 clamp(1rem, 4vw, 2rem);
+            height: 64px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .nav-logo { font-weight: 600; font-size: 22px; color: var(--text-sub); display: flex; align-items: center; gap: 10px; cursor: pointer;}
-        .nav-logo span { color: var(--brand); }
 
-        .container { max-width: 900px; margin: 20px auto; padding: 0 20px 100px 20px; }
-        
-        /* --- CARDS --- */
-        .card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 24px; margin-bottom: 16px; }
-        .form-item { 
-            background: white; border-radius: 8px; border: 1px solid var(--border); 
-            padding: 16px; transition: box-shadow 0.2s; cursor: pointer;
+        .nav-logo {
+            font-size: clamp(18px, 4vw, 22px);
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            user-select: none;
         }
-        .form-item:hover { box-shadow: var(--shadow); }
+        .nav-logo span:nth-child(1) { color: #4285F4; }
+        .nav-logo span:nth-child(2) { color: #EA4335; }
+        .nav-logo span:nth-child(3) { color: #FBBC05; }
+        .nav-logo span:nth-child(4) { color: #34A853; }
+        .nav-logo .logo-app { color: var(--text-light); margin-left: 4px; font-weight: 400; }
 
-        /* --- BUTTONS --- */
+        /* --- INDETERMINATE PROGRESS BAR --- */
+        .top-progress-bar {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #e8eaed;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            z-index: 99;
+        }
+        .top-progress-bar.active { opacity: 1; }
+        .top-progress-bar .progress-line {
+            width: 100%;
+            height: 100%;
+            background-color: var(--google-blue);
+            transform-origin: left;
+            animation: indeterminate-loader 1.5s linear infinite;
+        }
+        @keyframes indeterminate-loader {
+            0% { transform: translateX(-100%) scaleX(1); }
+            50% { transform: translateX(0%) scaleX(0.4); }
+            100% { transform: translateX(100%) scaleX(1); }
+        }
+
+        /* --- FLUID CONTAINERS --- */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: clamp(1rem, 4vw, 2rem) clamp(1rem, 3vw, 1.5rem) 120px clamp(1rem, 3vw, 1.5rem);
+            animation: viewFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes viewFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- WORKSPACE CARDS --- */
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-card);
+            padding: clamp(1.25rem, 3vw, 2rem);
+            margin-bottom: 16px;
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        .form-item {
+            background: var(--bg-surface);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        .form-item:hover { box-shadow: var(--shadow-subtle); border-color: #chddf2; }
+
+        /* --- DYNAMIC FORM EDITOR CARDS --- */
+        .field-box {
+            border-left: 1px solid var(--border-color);
+            transition: border-left-width 0.15s ease, border-left-color 0.15s ease, box-shadow 0.2s ease;
+        }
+        .field-box:focus-within {
+            border-left: 5px solid var(--google-blue);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        /* --- STRUCTURAL BUTTONS --- */
         .btn {
-            padding: 8px 24px; border-radius: 4px; font-weight: 500; cursor: pointer;
-            font-size: 14px; border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 8px; transition: 0.1s;
+            padding: 0 24px;
+            height: 36px;
+            border-radius: var(--radius-input);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition-smooth);
+            font-family: var(--font-family);
+            user-select: none;
+            background: var(--bg-surface);
+            color: var(--text-dark);
         }
-        .btn-primary { background: var(--brand); color: white; border: none; }
-        .btn-primary:hover { background: var(--brand-hover); }
-        .btn-text { background: transparent; border: none; color: var(--brand); padding: 6px 12px; }
-        .btn-text:hover { background: rgba(26,115,232,0.04); }
+        .btn:hover { background: #f8f9fa; border-color: #c0c1c4; }
 
-        /* --- EDITOR UI --- */
-        .field-box { border-top: 1px solid var(--border); transition: 0.2s; position: relative; }
-        .field-box:focus-within { border-left: 6px solid var(--brand); box-shadow: var(--shadow); }
+        .btn-primary { background: var(--google-blue); color: white; border: none; }
+        .btn-primary:hover { background: var(--google-blue-hover); box-shadow: 0 1px 2px 0 rgba(66,133,244,0.3), 0 1px 3px 1px rgba(66,133,244,0.15); }
         
-        input, select { padding: 12px; border: 1px solid transparent; border-bottom: 1px solid var(--border); font-size: 14px; width: 100%; transition: 0.2s; background: #f8f9fa; }
-        input:focus { outline: none; border-bottom: 2px solid var(--brand); background: white; }
+        .btn-text { background: transparent; border: none; color: var(--google-blue); padding: 0 12px; }
+        .btn-text:hover { background: var(--google-blue-alpha); }
+        
+        .btn-danger-text { background: transparent; border: none; color: var(--error-red); padding: 0 12px; }
+        .btn-danger-text:hover { background: rgba(217, 48, 37, 0.04); }
 
-        .options-list { margin: 10px 0; display: flex; flex-direction: column; gap: 5px; }
-        .opt-item { display: flex; align-items: center; gap: 10px; }
-        .opt-input { border-bottom: 1px solid #eee; padding: 6px !important; background: transparent; }
+        /* --- INPUT & SELECT FLOW FIELDS --- */
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid transparent;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-dark);
+            background: #f8f9fa;
+            border-radius: var(--radius-input) var(--radius-input) 0 0;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+        input:focus, select:focus {
+            background: var(--bg-surface);
+            border-bottom: 2px solid var(--google-blue);
+        }
 
-        /* --- TOAST NOTIFICATION --- */
+        .options-list {
+            margin: 16px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .opt-item { display: flex; align-items: center; gap: 12px; width: 100%; }
+        .opt-input { border-bottom: 1px solid var(--border-color); padding: 8px 4px !important; background: transparent; border-radius: 0; }
+        .opt-input:focus { border-bottom: 2px solid var(--google-blue); }
+
+        /* --- RESPONSIVE RESPONSES TABLE --- */
+        .table-responsive-container {
+            overflow-x: auto;
+            width: 100%;
+            border-radius: 0 0 var(--radius-card) var(--radius-card);
+        }
+        table { width: 100%; border-collapse: collapse; text-align: left; background: var(--bg-surface); }
+        th { 
+            padding: 14px 16px; 
+            background: #f8f9fa; 
+            border-bottom: 2px solid var(--border-color); 
+            color: var(--text-light); 
+            font-size: 11px; 
+            font-weight: 700;
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); font-size: 14px; color: var(--text-dark); white-space: nowrap; }
+        tr:hover td { background-color: #f8f9fa; }
+
+        /* --- ADAPTIVE BOTTOM ACTIONS STICKY FOOTER --- */
+        .sticky-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+            z-index: 90;
+        }
+
+        /* --- TOAST NOTIFICATION LAYER --- */
         #toast {
-            position: fixed; bottom: 20px; left: 20px; background: #323232; color: white;
-            padding: 12px 24px; border-radius: 4px; font-size: 14px; transform: translateY(100px);
-            transition: 0.3s; z-index: 9999;
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: #323232;
+            color: #f5f5f5;
+            padding: 14px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 400;
+            box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14);
+            transform: translateY(120px);
+            transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+            z-index: 9999;
         }
         #toast.show { transform: translateY(0); }
 
         .hidden { display: none !important; }
-        .sticky-footer { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); padding: 12px; display: flex; justify-content: center; gap: 12px; }
-        
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 12px; background: #f8f9fa; border-bottom: 2px solid var(--border); color: var(--text-sub); font-size: 12px; text-transform: uppercase; }
-        td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
     </style>
 </head>
 <body>
 
 <nav>
     <div class="nav-logo" onclick="window.showPage('dashboard')">
-        Vasuki <span>Forms</span>
+        <img src="../logo.jpg" alt="" width="50px">
+        <div class="logo-app">Vasuki Forms</div>
     </div>
 </nav>
 
+<div class="top-progress-bar" id="globalActionLoader">
+    <div class="progress-line"></div>
+</div>
+
 <div id="page-dashboard" class="container hidden">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-        <h2 style="font-weight: 400;">Recent Forms</h2>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:16px;">
+        <h2 style="font-weight: 400; font-size: 22px;">Recent Forms</h2>
         <button class="btn btn-primary" onclick="window.openEditor()">+ Blank Form</button>
     </div>
-    <div id="formsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;"></div>
+    <div id="formsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;"></div>
 </div>
 
 <div id="page-editor" class="container hidden">
-    <div class="card" style="border-top: 10px solid var(--brand);">
-        <input id="edit-title" style="font-size: 32px; font-weight: 400; border: none; border-bottom: 1px solid transparent;" placeholder="Form Title">
-        <input id="edit-id" style="font-size: 13px; color: var(--brand); border: none; background: transparent; margin-top: 8px;" placeholder="form-id-slug">
+    <div class="card" style="border-top: 8px solid var(--google-blue); border-radius: 8px 8px var(--radius-card) var(--radius-card);">
+        <input id="edit-title" style="font-size: 28px; font-weight: 400; border: none; border-bottom: 1px solid transparent; background: transparent; padding: 4px 0;" placeholder="Untitled Form">
+        <input id="edit-id" style="font-size: 13px; color: var(--google-blue); border: none; background: transparent; margin-top: 12px; padding: 2px 0;" placeholder="form-id-slug">
     </div>
 
     <div id="fieldsList"></div>
@@ -110,10 +304,10 @@
 </div>
 
 <div id="page-responses" class="container hidden">
-    <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 id="resp-title" style="margin:0; font-weight:400;">Responses</h2>
-            <button class="btn btn-text" onclick="window.showPage('dashboard')">Close</button>
+    <div class="card" style="margin-bottom: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <h2 id="resp-title" style="margin:0; font-weight:400; font-size: 22px;">Responses</h2>
+            <button class="btn" onclick="window.showPage('dashboard')">Close Dashboard</button>
         </div>
     </div>
     <div class="card" id="resp-content" style="padding:0; overflow:hidden;"></div>
@@ -130,51 +324,72 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentUser = null;
 
+function showLoader() { document.getElementById('globalActionLoader').classList.add('active'); }
+function hideLoader() { document.getElementById('globalActionLoader').classList.remove('active'); }
+
 window.showPage = (id) => {
     document.querySelectorAll('.container').forEach(p => p.classList.add('hidden'));
     document.getElementById(`page-${id}`).classList.remove('hidden');
+    window.scrollTo({top: 0, behavior: 'instant'});
     if(id === 'dashboard') fetchForms();
 };
 
-// Error fix: Ensure user session is handled cleanly
+// Check platform core authentication block execution
 const userBlob = localStorage.getItem("vcloud_user");
 if(!userBlob) { 
     location.href = "../login.html"; 
 } else {
     try {
-        const u = userBlob;
-        currentUser = u.email || u;
+        currentUser = userBlob.email || userBlob;
     } catch(e) { currentUser = userBlob; }
     window.showPage('dashboard');
 }
 
 async function fetchForms() {
+    showLoader();
     const { data } = await supabase.from("forms").select("*").eq("user", currentUser).order("updated_at", { ascending: false });
+    hideLoader();
+    
     const grid = document.getElementById("formsGrid");
-    grid.innerHTML = data?.map(f => `
+    if(!data || data.length === 0) {
+        grid.style.display = "block";
+        grid.innerHTML = `
+            <div style="text-align:center; padding: 48px 16px; color: var(--text-light); border: 1px dashed var(--border-color); border-radius:8px; background:var(--bg-surface);">
+                <p style="font-size: 15px;">No forms found inside your workspace channel yet.</p>
+            </div>`;
+        return;
+    }
+    
+    grid.style.display = "grid";
+    grid.innerHTML = data.map(f => `
         <div class="form-item" onclick="window.openEditor('${f.id}')">
-            <div style="height:120px; background:#f1f3f4; margin:-16px -16px 12px -16px; border-radius:8px 8px 0 0; display:flex; align-items:center; justify-content:center; position:relative;">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="#70757a"><path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M9,17H7v-2h2V17z M9,13H7v-2h2V13z M9,9H7V7h2V9z M17,17h-6v-2h6V17z M17,13h-6v-2h6V13z M17,9h-6V7h6V9z"/></svg>
-                <button onclick="event.stopPropagation(); window.deleteForm('${f.id}')" style="position:absolute; top:8px; right:8px; background:white; border-radius:50%; border:1px solid #ddd; width:28px; height:28px; cursor:pointer; color:var(--danger); display:flex; align-items:center; justify-content:center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <div style="height:110px; background:#d4cab6; margin:-16px -16px 16px -16px; border-radius:7px 7px 0 0; display:flex; align-items:center; justify-content:center; position:relative; border-bottom: 1px solid var(--border-color);">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="var(--google-blue)"><path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M9,17H7v-2h2V17z M9,13H7v-2h2V13z M9,9H7V7h2V9z M17,17h-6v-2h6V17z M17,13h-6v-2h6V13z M17,9h-6V7h6V9z"/></svg>
+                <button onclick="event.stopPropagation(); window.deleteForm('${f.id}')" style="position:absolute; top:8px; right:8px; background:var(--bg-surface); border-radius:50%; border:1px solid var(--border-color); width:32px; height:32px; cursor:pointer; color:var(--error-red); display:flex; align-items:center; justify-content:center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: 0.2s;" onmouseover="this.style.background='#fce8e6'" onmouseout="this.style.background='#fff'">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
                 </button>
             </div>
-            <h3 style="margin:0; font-size:14px; font-weight:500;">${f.title}</h3>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px;">
-                <button class="btn btn-text" style="font-size:11px;" onclick="event.stopPropagation(); window.viewResponses('${f.id}', '${f.title}')">Responses</button>
-                <button class="btn btn-text" style="font-size:11px;" onclick="event.stopPropagation(); window.copyLink('${f.id}')">Copy Link</button>
+            <h3 style="margin:0; font-size:15px; font-weight:500; color:var(--text-dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${f.title || 'Untitled Form'}</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; gap: 8px;">
+                <button class="btn btn-text" style="font-size:12px; height: 32px;" onclick="event.stopPropagation(); window.viewResponses('${f.id}', '${f.title}')">Responses</button>
+                <button class="btn btn-text" style="font-size:12px; height: 32px;" onclick="event.stopPropagation(); window.copyLink('${f.id}')">Copy Link</button>
             </div>
         </div>
-    `).join('') || "No forms yet.";
+    `).join('');
 }
+
 window.copyLink = (id) => {
-    // Generates link based on current origin
     const url = `https://vasuki.cloud/view-form.html?id=${id}`;
     navigator.clipboard.writeText(url);
+    showToast("Link copied to clipboard");
+};
+
+function showToast(msg) {
     const toast = document.getElementById("toast");
+    toast.innerText = msg;
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 3000);
-};
+}
 
 window.openEditor = async (id = null) => {
     window.showPage('editor');
@@ -182,11 +397,15 @@ window.openEditor = async (id = null) => {
     list.innerHTML = "";
     
     if(id && typeof id === 'string') {
+        showLoader();
         const { data } = await supabase.from("forms").select("*").eq("id", id).single();
-        document.getElementById("edit-title").value = data.title;
-        document.getElementById("edit-id").value = data.id;
-        document.getElementById("edit-id").disabled = true;
-        data.fields.forEach(f => window.addField(f));
+        hideLoader();
+        if(data) {
+            document.getElementById("edit-title").value = data.title;
+            document.getElementById("edit-id").value = data.id;
+            document.getElementById("edit-id").disabled = true;
+            data.fields.forEach(f => window.addField(f));
+        }
     } else {
         document.getElementById("edit-title").value = "Untitled Form";
         document.getElementById("edit-id").value = "f-" + Math.random().toString(36).substr(2,6);
@@ -199,30 +418,31 @@ window.addField = (f = { label: "", type: "text", options: [] }) => {
     const div = document.createElement("div");
     div.className = "card field-box";
     div.innerHTML = `
-        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-            <div style="flex:2">
-                <input class="f-label" value="${f.label}" placeholder="Question">
+        <div style="display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+            <div style="flex: 2; min-width: 200px;">
+                <input class="f-label" value="${f.label}" placeholder="Question Statement">
             </div>
-            <div style="flex:1">
-                <select class="f-type">
+            <div style="flex: 1; min-width: 150px;">
+                <select class="f-type" style="-webkit-appearance: none; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22%235f6368%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/></svg>'); background-repeat: no-repeat; background-position: right 12px center;">
                     <option value="text" ${f.type==='text'?'selected':''}>Short Answer</option>
                     <option value="textarea" ${f.type==='textarea'?'selected':''}>Paragraph</option>
                     <option value="radio" ${f.type==='radio'?'selected':''}>Multiple Choice</option>
                     <option value="checkbox" ${f.type==='checkbox'?'selected':''}>Checkboxes</option>
                 </select>
             </div>
-            <button class="btn-text" style="color:var(--text-sub)" onclick="this.closest('.field-box').remove()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            <button class="btn-text" style="color:var(--text-light); padding: 0 8px;" onclick="this.closest('.field-box').remove()" title="Delete Question">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
             </button>
         </div>
         <div class="opt-section ${['text','textarea'].includes(f.type) ? 'hidden' : ''}">
             <div class="options-list"></div>
-            <button class="btn btn-text" style="font-size:13px;" onclick="window.addOption(this.previousElementSibling)">+ Add Option</button>
+            <button class="btn btn-text" style="font-size:13px; height: 32px;" onclick="window.addOption(this.previousElementSibling)">+ Add Option</button>
         </div>
     `;
 
     const optList = div.querySelector(".options-list");
-    (f.options || ["Option 1"]).forEach(o => window.addOption(optList, o));
+    const structuralOptions = f.options && f.options.length ? f.options : ["Option 1"];
+    structuralOptions.forEach(o => window.addOption(optList, o));
 
     div.querySelector(".f-type").onchange = (e) => {
         div.querySelector(".opt-section").classList.toggle("hidden", ['text','textarea'].includes(e.target.value));
@@ -234,79 +454,91 @@ window.addOption = (container, val = "") => {
     const div = document.createElement("div");
     div.className = "opt-item";
     div.innerHTML = `
-        <div style="width:18px; height:18px; border:2px solid var(--border); border-radius:50%;"></div>
-        <input class="opt-input" value="${val}" placeholder="Option text">
-        <button class="btn-text" style="color:var(--text-sub)" onclick="this.parentElement.remove()">✕</button>
+        <div style="width:16px; height:16px; border:2px solid var(--border-color); border-radius:50%; flex-shrink: 0;"></div>
+        <input class="opt-input" value="${val}" placeholder="Option description" style="padding: 6px 0!important;">
+        <button class="btn-text" style="color:var(--text-light); padding:4px 8px; font-size:16px;" onclick="this.parentElement.remove()">✕</button>
     `;
     container.appendChild(div);
 };
 
 window.saveFormToCloud = async () => {
     const btn = document.getElementById("saveBtn");
+    const originalText = btn.innerText;
     btn.innerText = "Saving...";
+    showLoader();
     
     const fields = [...document.querySelectorAll(".field-box")].map((box, i) => ({
         id: `q_${i}`,
-        label: box.querySelector(".f-label").value,
+        label: box.querySelector(".f-label").value || `Question ${i + 1}`,
         type: box.querySelector(".f-type").value,
-        options: [...box.querySelectorAll(".opt-input")].map(i => i.value).filter(v => v)
+        options: [...box.querySelectorAll(".opt-input")].map(input => input.value).filter(v => v)
     }));
 
     const { error } = await supabase.from("forms").upsert({
         id: document.getElementById("edit-id").value,
-        title: document.getElementById("edit-title").value,
-        fields, user: currentUser, updated_at: new Date().toISOString()
+        title: document.getElementById("edit-title").value || "Untitled Form",
+        fields, 
+        user: currentUser, 
+        updated_at: new Date().toISOString()
     });
 
-    if(!error) window.showPage('dashboard');
-    else alert(error.message);
-    btn.innerText = "Save Form";
+    hideLoader();
+    btn.innerText = originalText;
+
+    if(!error) {
+        showToast("Form saved securely to cloud");
+        window.showPage('dashboard');
+    } else {
+        alert("Transaction failure details: " + error.message);
+    }
 };
 
 window.viewResponses = async (id, title) => {
-    document.getElementById("resp-content").innerHTML = "<div style='padding:20px'>Loading responses...</div>";
+    document.getElementById("resp-content").innerHTML = "<div style='padding:32px; text-align:center; color:var(--text-light);'>Loading responses dataset...</div>";
     window.showPage('responses');
-    document.getElementById("resp-title").innerText = `${title}`;
+    document.getElementById("resp-title").innerText = `${title || 'Form Responses'}`;
     
+    showLoader();
     const { data: resps, error: rErr } = await supabase.from("form_responses").select("*").eq("form_id", id).order("created_at", { ascending: false });
     const { data: form, error: fErr } = await supabase.from("forms").select("fields").eq("id", id).single();
+    hideLoader();
 
     if (rErr || fErr || !resps?.length) {
         document.getElementById("resp-content").innerHTML = `
-            <div style='padding:60px; text-align:center;'>
-                <p style="color:var(--text-sub)">No responses found.</p>
-                <button class="btn btn-text" onclick="window.showPage('dashboard')">Back</button>
+            <div style='padding:64px 16px; text-align:center;'>
+                <p style="color:var(--text-light); font-size:15px; margin-bottom:16px;">No responses synchronized to this schema yet.</p>
+                <button class="btn" onclick="window.showPage('dashboard')">Return to Workspace</button>
             </div>`;
         return;
     }
 
     let html = `
-        <div style="padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #fff;">
-            <span style="font-size: 14px; color: var(--text-sub); font-weight: 600;">${resps.length} Submissions</span>
+        <div style="padding: 16px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; flex-wrap: wrap; gap: 12px;">
+            <span style="font-size: 14px; color: var(--text-light); font-weight: 500;">${resps.length} Submissions Total</span>
             <div style="display:flex; gap: 8px;">
-                <button class="btn btn-text" style="color: var(--danger); font-size: 12px;" onclick="window.clearAllResponses('${id}', '${title}')">Clear All Responses</button>
-                <button class="btn btn-text" style="font-size: 12px;" onclick="window.deleteForm('${id}')">Delete Form</button>
+                <button class="btn btn-danger-text" style="font-size: 13px;" onclick="window.clearAllResponses('${id}', '${title}')">Clear Table</button>
+                <button class="btn btn-text" style="font-size: 13px;" onclick="window.deleteForm('${id}')">Wipe Form</button>
             </div>
         </div>
-        <div style="overflow-x: auto; width: 100%;">
-            <table style="width: 100%; border-collapse: collapse; background: white;">
+        <div class="table-responsive-container">
+            <table>
                 <thead>
-                    <tr style="background: #f8f9fa;">
-                        <th style="width: 50px; padding: 12px; border: 1px solid var(--border);"></th>
-                        <th style="min-width: 180px; padding: 12px; border: 1px solid var(--border);">Date</th>`;
+                    <tr>
+                        <th style="width: 50px; text-align: center;">Actions</th>
+                        <th style="min-width: 180px;">Submission Timestamp</th>`;
     
     form.fields.forEach(f => {
-        html += `<th style="min-width: 150px; padding: 12px; border: 1px solid var(--border);">${f.label}</th>`;
+        html += `<th style="min-width: 160px;">${f.label}</th>`;
     });
     html += `</tr></thead><tbody>`;
 
     resps.forEach(r => {
-        const sub = r.submission;
+        const sub = r.submission || {};
         html += `<tr>
-            <td style="text-align:center; border: 1px solid var(--border);">
-                <button class="btn-text" style="color:var(--text-sub); padding:4px;" onclick="window.deleteSingleResponse('${r.id}', '${id}', '${title}')" title="Delete Row">✕</button>
+            <td style="text-align:center;">
+                <button class="btn-text" style="color:var(--text-light); padding:4px 8px; font-size:13px;" onclick="window.deleteSingleResponse('${r.id}', '${id}', '${title}')" title="Delete Row">✕</button>
             </td>
-            <td style="color: #888; font-size: 13px; padding: 12px; border: 1px solid var(--border);">${new Date(r.created_at).toLocaleString('en-IN')}</td>`;
+            <td style="color: var(--text-light); font-size: 13px;">${new Date(r.created_at).toLocaleString('en-IN')}</td>`;
         
         form.fields.forEach((f, index) => {
             let val = sub[f.id] || sub[f.label] || sub[`q_${index}`];
@@ -315,7 +547,7 @@ window.viewResponses = async (id, title) => {
                 val = fuzzyKey ? sub[fuzzyKey] : "-";
             }
             if (Array.isArray(val)) val = val.join(", ");
-            html += `<td style="padding: 12px; border: 1px solid var(--border);">${val}</td>`;
+            html += `<td>${val}</td>`;
         });
         html += `</tr>`;
     });
@@ -324,44 +556,46 @@ window.viewResponses = async (id, title) => {
     document.getElementById("resp-content").innerHTML = html;
 };
 
-// 1. Delete just one entry
 window.deleteSingleResponse = async (responseId, formId, title) => {
-    if(!confirm("Delete this specific entry?")) return;
+    if(!confirm("Wipe this record out natively?")) return;
+    showLoader();
     const { error } = await supabase.from("form_responses").delete().eq("id", responseId);
-    if(!error) window.viewResponses(formId, title);
-    else alert("Error: " + error.message);
+    hideLoader();
+    if(!error) {
+        showToast("Row deleted successfully");
+        window.viewResponses(formId, title);
+    } else {
+        alert("Transaction fault: " + error.message);
+    }
 };
 
-// 2. Clear all entries for this form
 window.clearAllResponses = async (formId, title) => {
-    if(!confirm("Are you sure you want to WIPE ALL responses for this form? This cannot be undone.")) return;
+    if(!confirm("Are you sure you want to completely clear out all responses for this production structure? This step is permanent.")) return;
+    showLoader();
     const { error } = await supabase.from("form_responses").delete().eq("form_id", formId);
-    if(!error) window.viewResponses(formId, title);
-    else alert("Error: " + error.message);
+    hideLoader();
+    if(!error) {
+        showToast("Responses table cleared");
+        window.viewResponses(formId, title);
+    } else {
+        alert("Transaction fault: " + error.message);
+    }
 };
 
-
-// Added Delete Form for cleaner management
 window.deleteForm = async (id) => {
-    const confirmDelete = confirm("⚠️ CRITICAL: This will permanently delete this form and all its responses. Are you sure?");
+    const confirmDelete = confirm("⚠️ CRITICAL EVENT: Permanent structure deletion. This wipes the form asset and all structural logs. Action irreversible. Proceed?");
     
     if (confirmDelete) {
-        // 1. Delete all responses linked to this form
-        const { error: respError } = await supabase.from("form_responses").delete().eq("form_id", id);
-        
-        // 2. Delete the form itself
+        showLoader();
+        await supabase.from("form_responses").delete().eq("form_id", id);
         const { error: formError } = await supabase.from("forms").delete().eq("id", id);
+        hideLoader();
 
         if (!formError) {
-            // Show a quick toast or just refresh dashboard
-            const toast = document.getElementById("toast");
-            toast.innerText = "Form deleted successfully";
-            toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 2000);
-            
+            showToast("Form asset dropped cleanly");
             window.showPage('dashboard');
         } else {
-            alert("Error deleting form: " + formError.message);
+            alert("Structural modification fault: " + formError.message);
         }
     }
 };
