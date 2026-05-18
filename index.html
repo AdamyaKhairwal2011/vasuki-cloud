@@ -21,15 +21,16 @@
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
     <style>
         :root {
-          --gold: #fffd8b;
-          --teal-dark: #3e494e;
-          --teal-mid: #536168;
-          --teal-light: #6b7c84;
+          --gold: #d8c3a5;
+          --teal-dark: #3b2a13;
+          --teal-darker: #241a0c;
+          --teal-mid: #8f6934;
+          --teal-light: #a97e43;
           --white: #ffffff;
-          --off-white: #f8f9fa;
-          --border: #dadce0;
-          --text: #202124;
-          --text-muted: #686868;
+          --off-white: #48331e;
+          --border: #d9b988;
+          --text: #d4cab6;
+          --text-muted: #e7e7e789;
           --sans: 'CustomFont', system-ui, sans-serif;
         }
 
@@ -148,15 +149,15 @@ main { position: absolute; z-index: 2; width: 100dvw;}
 .overlay {
     height: 100dvh;
     width: 100dvw;
-    background-color: #00000077;
+    background-color: #000000ab;
     z-index: 1000;
     margin-top: 64px;
 }
 .hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,253,139,0.12); border: 1px solid rgba(255,253,139,0.28); color: var(--gold); padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 100; margin-bottom: 32px; animation: fu 0.5s ease both; }
 .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: blink 2.2s ease-in-out infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-.hero-h1 { z-index: 1001; font-size: clamp(38px, 6dvw, 66px); font-weight: 100; line-height: 1.08; letter-spacing: -1.5px; color: #fff9ae; margin-bottom: 20px; animation: fu 0.5s 0.08s ease both; }
-.hero-sub { font-size: 18px; color: rgb(255, 255, 255); line-height: 1.65; margin-bottom: 40px; animation: fu 0.5s 0.16s ease both;}
+.hero-h1 { z-index: 1001; font-size: clamp(38px, 6dvw, 66px); font-weight: 100; line-height: 1.08; letter-spacing: -1.5px; color: #d8c3a5; margin-bottom: 20px; animation: fu 0.5s 0.08s ease both; }
+.hero-sub { font-size: 18px; color: rgba(255, 255, 255, 0.553); line-height: 1.65; margin-bottom: 40px; animation: fu 0.5s 0.16s ease both;}
 .hero-cta { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; animation: fu 0.5s 0.24s ease both; }
 .hero-scroll { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(255,255,255,0.3); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; z-index: 2; animation: fu 0.5s 0.5s ease both; }
 .scroll-line { width: 1px; height: 30px; background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent); animation: spulse 2s ease-in-out infinite; }
@@ -168,7 +169,7 @@ main { position: absolute; z-index: 2; width: 100dvw;}
 .reveal.in { opacity: 1; transform: none; }
 
 /* ZONES */
-.white    { background: var(--white);     color: var(--text); }
+.white    { background: var(--teal-dark);     color: rgb(228, 202, 169); }
 .offwhite { background: var(--off-white); color: var(--text); }
 
 /* INTRO */
@@ -186,18 +187,18 @@ main { position: absolute; z-index: 2; width: 100dvw;}
 .feat-desc { font-size: 15px; color: var(--text-muted); line-height: 1.7; max-width: 540px; }
 
 /* QUOTE BAND */
-.quote-band { background: var(--teal-dark); color: var(--white); padding: 100px 40px; text-align: center; }
+.quote-band { background: var(--teal-darker); color: var(--white); padding: 100px 40px; text-align: center; border-radius: 100px 100px 0px 0px;}
 .qb-eyebrow { font-size: 11px; font-weight: 100; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
-.qb-h { font-size: clamp(26px, 4dvw, 46px); font-weight: 100; letter-spacing: -1px; line-height: 1.18; color: #fff9ae; max-width: 680px; margin: 0 auto 20px; }
+.qb-h { font-size: clamp(26px, 4dvw, 46px); font-weight: 100; letter-spacing: -1px; line-height: 1.18; color: var(--text); max-width: 680px; margin: 0 auto 20px; }
 .qb-p { font-size: 17px; color: rgba(255,255,255,0.55); max-width: 540px; margin: 0 auto; line-height: 1.7; }
 
 /* PRODUCTS */
-.product-section { padding: 100px 40px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.product-section { padding: 100px 40px;}
 .product-inner { max-width: 820px; margin: 0 auto; }
 .section-eyebrow { font-size: 11px; font-weight: 100; letter-spacing: 2px; text-transform: uppercase; color: var(--teal-mid); margin-bottom: 16px; }
 .section-title { font-size: clamp(24px, 3.5dvw, 38px); font-weight: 100; letter-spacing: -0.7px; margin-bottom: 56px; }
-.prod-row { display: flex; align-items: center; gap: 32px; padding: 32px 0; border-top: 1px solid var(--border); text-decoration: none; color: inherit; transition: padding-left 0.2s; }
-.prod-row:last-child { border-bottom: 1px solid var(--border); }
+.prod-row { display: flex; align-items: center; gap: 32px; padding: 32px 0; text-decoration: none; color: inherit; transition: padding-left 0.2s; }
+
 .prod-row:hover { padding-left: 8px; }
 .prod-row:hover .prod-arrow { opacity: 1; transform: translate(4px,-4px); }
 .prod-body { flex: 1; }
@@ -209,18 +210,17 @@ main { position: absolute; z-index: 2; width: 100dvw;}
 /* STEPS */
 .steps-section { padding: 100px 40px; }
 .steps-inner { max-width: 680px; margin: 0 auto; }
-.step-item { display: flex; gap: 32px; padding: 40px 0; border-top: 1px solid var(--border); }
-.step-item:last-child { border-bottom: 1px solid var(--border); }
+.step-item { display: flex; gap: 32px; padding: 40px 0; }
 .step-circle { width: 36px; height: 36px; border-radius: 50%; background: var(--teal-dark); color: var(--white); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 100; flex-shrink: 0; }
 .step-title { font-size: 19px; font-weight: 100; margin-bottom: 8px; }
 .step-desc { font-size: 15px; color: var(--text-muted); line-height: 1.65; }
 
 /* PARTNER */
-.partner-section { padding: 100px 40px; border-top: 1px solid var(--border); }
+.partner-section { padding: 100px 40px;}
 .partner-inner { max-width: 680px; margin: 0 auto; }
 .partner-h { font-size: clamp(24px, 3.5dvw, 36px); font-weight: 100; letter-spacing: -0.6px; margin-bottom: 18px; }
 .partner-p { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 28px; }
-.partner-link { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 100; color: var(--teal-dark); text-decoration: none; border-bottom: 1.5px solid var(--teal-dark); padding-bottom: 2px; transition: opacity 0.15s; }
+.partner-link { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 100; color: var(--text-muted); text-decoration: none; border-bottom: 1.5px solid var(--teal-dark); padding-bottom: 2px; transition: opacity 0.15s; }
 .partner-link:hover { opacity: 0.65; }
 .partner-link:hover svg { transform: translateX(3px); }
 .partner-link svg { transition: transform 0.15s; }
@@ -228,22 +228,30 @@ main { position: absolute; z-index: 2; width: 100dvw;}
 /* CTA BAND */
 .cta-band { background: var(--teal-dark); color: var(--white); padding: 120px 40px; text-align: center; }
 .cta-eyebrow { font-size: 11px; font-weight: 100; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
-.cta-h { font-size: clamp(28px, 4.5dvw, 52px); font-weight: 100; letter-spacing: -1.2px; color: #fff9ae; margin-bottom: 16px; }
+.cta-h { font-size: clamp(28px, 4.5dvw, 52px); font-weight: 100; letter-spacing: -1.2px; color: var(--text); margin-bottom: 16px; }
 .cta-p { font-size: 17px; color: rgba(255,255,255,0.5); max-width: 460px; margin: 0 auto 40px; line-height: 1.65; }
 .cta-acts { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
 /* FOOTER */
-footer { background: var(--white); border-top: 1px solid var(--border); padding: 72px 40px 40px; }
+footer { background: var(--teal-darker); padding: 72px 40px 40px; }
 .footer-wrap { max-width: 820px; margin: 0 auto; }
 .footer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 48px; padding-bottom: 48px; flex-wrap: wrap; }
-.footer-brand-name { font-size: 20px; font-weight: 100; color: var(--teal-dark); margin-bottom: 8px; }
+.footer-brand-name { font-size: 20px; font-weight: 100; color: var(--text); margin-bottom: 8px; }
 .footer-brand-desc { font-size: 13px; color: var(--text-muted); max-width: 210px; line-height: 1.6; }
 .footer-cols { display: flex; gap: 56px; flex-wrap: wrap; }
 .footer-col-head { font-size: 11px; font-weight: 100; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-mid); margin-bottom: 18px; }
 .footer-col a { display: block; font-size: 14px; color: var(--text-muted); text-decoration: none; margin-bottom: 11px; transition: color 0.15s; }
 .footer-col a:hover { color: var(--teal-dark); }
-.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; flex-wrap: wrap; gap: 12px; background-color: #fff; padding: 20px}
+.footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; flex-wrap: wrap; gap: 12px; background-color: var(--teal-darker); padding: 20px}
 .footer-copy { font-size: 13px; color: var(--text-muted); }
+
+.btn-new {
+  background-color: var(--text);
+  color: var(--teal-dark);
+  padding: 10px 30px;
+  width: fit-content;
+  border-radius: 100px;
+}
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
@@ -270,12 +278,189 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
 #scroll-wrapper h1{
   font-size: 4rem;
 }
+
+@media (max-width: 768px) {
+  .logo-pre {
+    margin-left: 0;
+    display: none;
+  }
+}
+
+
+.logo-pre {
+    /* 
+       Aesthetic Metallic & Liquid Gold Tones 
+       Designed specifically to pop against a dark brown/black background
+    */
+    background: linear-gradient(
+        -45deg,
+        #e5c158, /* Bright Liquid Gold */
+        #8a6f27, /* Deep Antique Bronze */
+        #fcd975, /* Shimmering Champagne */
+        #503a10, /* Dark Muted Gold for contrast depth */
+        #e5c158  /* Smooth loop wrap-around */
+    );
+    
+    /* 
+       Increased background size to 600% for an ultra-smooth, 
+       slow-flowing liquid blending effect rather than a fast jumpy wave
+    */
+    background-size: 600% 600%;
+
+    /* The Missing Magic Ingredients (Text Masking) */
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+
+    /* 
+       Liquid Flow Animation 
+       Changed from 'ease' to 'linear' or a very smooth 'ease-in-out' 
+       to give it that continuous, fluid, liquid mercury flow.
+    */
+    animation: liquidFlow 12s ease-in-out infinite;
+    
+    /* Optional: Slight text-shadow fallback trick for rendering smooth edges in WebKit */
+    -webkit-print-color-adjust: exact;
+}
+
+/* Smooth Liquid Animation Loop */
+@keyframes liquidFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
 </style>
 </head>
 <body>
 
+
+  <style>
+    /* ==========================================
+       10-BAR REVEAL LOADER (Google Workspace Style)
+       ========================================== */
+    #loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      display: flex;
+      pointer-events: none; /* Allows clicks to pass through once fading out */
+    }
+
+    /* The Curtain Bars */
+    .loader-bar {
+      height: 100%;
+      flex: 1; /* Automatically splits into 10 equal widths */
+      background-color: #f8f9fa; /* Material light grey background */
+      transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+      will-change: transform;
+      pointer-events: auto; /* Keeps bars clickable until they slide away */
+    }
+
+    /* Slide up/off animation trigger */
+    #loader-container.loaded .loader-bar {
+      transform: translateY(-100%);
+    }
+
+    /* Sequential Delays for the 10 Bars */
+    .loader-bar:nth-child(1)  { transition-delay: 0.00s; }
+    .loader-bar:nth-child(2)  { transition-delay: 0.05s; }
+    .loader-bar:nth-child(3)  { transition-delay: 0.10s; }
+    .loader-bar:nth-child(4)  { transition-delay: 0.15s; }
+    .loader-bar:nth-child(5)  { transition-delay: 0.20s; }
+    .loader-bar:nth-child(6)  { transition-delay: 0.25s; }
+    .loader-bar:nth-child(7)  { transition-delay: 0.30s; }
+    .loader-bar:nth-child(8)  { transition-delay: 0.35s; }
+    .loader-bar:nth-child(9)  { transition-delay: 0.40s; }
+    .loader-bar:nth-child(10) { transition-delay: 0.45s; }
+
+    /* Center Spinner / Indicator */
+    .loader-spinner-wrap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      transition: opacity 0.4s ease;
+      pointer-events: auto;
+    }
+
+    #loader-container.loaded .loader-spinner-wrap {
+      opacity: 0;
+    }
+
+.spinner {
+  width: 60px;
+  display: flex;
+  align-items: flex-start;
+  aspect-ratio: 1;
+}
+.spinner:before,
+.spinner:after {
+  content: "";
+  flex: 1;
+  aspect-ratio: 1;
+  --g: conic-gradient(from -90deg at 10px 10px,#000 90deg,#0000 0);
+  background: var(--g), var(--g), var(--g);
+  filter: drop-shadow(30px 30px 0 #000);
+  animation: l20 1s infinite;
+}
+.spinner:after {
+  transform: scaleX(-1);
+}
+@keyframes l20 {
+   0%   {background-position:0     0, 10px 10px, 20px 20px}
+   33%  {background-position:10px  10px}
+   66%  {background-position:0    20px,10px 10px,20px 0   }
+   100% {background-position:0     0, 10px 10px, 20px 20px}
+}
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* ==========================================
+       MAIN WEBSITE CONTENT
+       ========================================== */
+    </style>
+
 <div id="prog"></div>
 
+<div id="loader-container">
+    <!-- The 10 vertical curtain bars -->
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+
+    <!-- Center Spinner Elements -->
+    <div class="loader-spinner-wrap">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+
+  <main id="main-content">
 <!-- NAV -->
 <nav id="nav">
   <a href="#" class="nav-brand"><b>Vasuki</b> Cloud</a>
@@ -340,11 +525,13 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
 </section>
 <main>
 
-<div id="scroll-wrapper" style="padding: 30vh 0 0 0; text-align: center; background: #fff;">
+<div id="scroll-wrapper" style="padding: 30vh 0 0 0; text-align: center; 
+    border-radius: 100px 100px 0px 0px;
+    background-color: var(--teal-dark);">
   <h1 id="reveal-text" class="head" style="
     font-weight: 100;
     color: transparent;
-    -webkit-text-stroke: 1.5px #000;
+    -webkit-text-stroke: 1.5px #ffffff44;
     line-height: 1.2;
     max-width: 900px;
     margin: 0 auto;
@@ -374,7 +561,7 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
       end: "top 20%",
       scrub: 0.5,
     },
-    color: "#000",
+    color: "#ffffff44",
     stagger: 0.1,
     ease: "none"
   });
@@ -386,7 +573,7 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
     <div class="rule"></div>
     <p>At <b>Vasuki iTech</b>, we believe digital infrastructure should be invisible. We've built an ecosystem that removes the friction of DevOps, allowing CEO-led teams to deploy and scale without the overhead of traditional providers.</p>
   </div><br><br><br>
-  <div class="feature-stack">
+  <!-- <div class="feature-stack">
     <div class="feat-item reveal">
       <div class="feat-num">01</div>
       <div>
@@ -416,13 +603,106 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
       </div>
     </div>
   </div>
-</div>
+</div> -->
+
+<pre class="logo-pre" style="margin-left: 25%; letter-spacing: 0.3cap; font-size: 0.5rem;">                                                                        
+                                                                        WMoW                                                                    
+                                                                      WooMMoM                                                                   
+                                                                     MoMMMMMohW                                                                 
+                                                                   hoMMMMMMMMooa                                                                
+                                                                  ooMMMMMMMMMMMooo                                                              
+                                    boMMMMMMoMMMMMMMMMMMMMMoaW   WaoMMMMMMMMMMMMoo    MoMMoMMMMMMMMMoMoMMoMMMMW                                 
+                                       WWMoMMMMMMMMMMMMMMMMMMha    MMMMMMMMMMMMoW    oooMMMMMMMMMMMMoMMMMMMW                                    
+                                           WMMoMMMMMMMMMMMMMMMMa    WoMMMMMMMoad   hoMMoMMMMMMMMMMMMoooo                                        
+                                              WooMMMMMMMMMMMMMMMa     ooMMMMaa    koMMMMMMMMMMMMoMMok                                           
+                                                 oMoMMMMMMMMMMMMMao    oMMMoa   coMMMMMWWWWWWMMooo                                              
+                                                   ooMMMWMMMMMMMMMah    oMM     ooMMMMWWWWWWWMMo                                                
+                                                    aoMMMMMMMMMMMMMoa         oaMWWWWWMMMMMMMoo                                                 
+                                                      oooMMMMMMMMMMoMhw      oMMMWWWWWMWMMMMao                                                  
+                                                       aoMMMMMMMMMMMMMah   WoMMMMWWWWWMWMMMaW                                                   
+                                                         oMMMMMMWWWWWoMoaWWoMMMMMMWWWWMMMoo                                                     
+                                                         baMMMMMWWWWWMMMMooMMMMMMMWWWWMMoo                                                      
+                                                           ooMMMWWWWWMMMMMMMMMMMMWWWWMMoa                                                       
+                                                            ooMMoMMMMMMMMMMMMMMMMMMMWooW                                                                                                                                                                                                                   
+
+</pre>
+<br><br><br>
 
 <!-- QUOTE BAND -->
 <div class="quote-band">
   <div class="qb-eyebrow reveal">Our belief</div>
   <div class="qb-h reveal">Infrastructure should accelerate you, not constrain you.</div>
-  <div class="qb-p reveal">We built Vasuki so that a solo founder has the same toolkit as an enterprise engineering team — without the enterprise price tag or the enterprise wait times.</div>
+  <div class="qb-p reveal">We built Vasuki so that a solo founder has the same toolkit as an enterprise engineering team — without the enterprise price tag or the enterprise wait times.</div><br>
+  <button class="btn-new">consult the team ⇲</button><br><br><br>
+  <pre style="color: var(--text); font-size: 0.2rem;">
+                                                                                                             WhkkkkkbW                          
+                                                                                                          WkkkkkkkkbbbbbW                       
+                                                                                     WWW               WkkkkkkkkkkbbbbbbbbdW                    
+                                                                                   WMWWW            Whhhkkkkkkkkkbbbbbbbdddddd                  
+                                                                                   WWWMM         khhkkkkkkkkkkkkbbbbbbbdddddpppppw              
+                                                                                   MMWW       hhhkhhkkkkkkkkkkkbbbbbbbdddddpppppqqqqq           
+                                                                                   W       hhhhkhhkkkkkkkkkkkkbbbbbbbdddddpppppqqqqwwwww        
+                                                                                        LYkhhhhhhkkkkkkkkkkkkbbbbbbbbddddpppppqqqqwwwmQuU       
+                                                                                        XzzzXphhkkkkkkkkkkkkbbbbbbbdddddpppppqqqqwwLxfffF       
+                                                                                        Xzr!trcXmhkkkkkkkkbbbbbbbddddddpppppqqqwJxffffffF       
+                                                                                        Xzr!!!!tjcXLhkkkkbbbbbbbddddddpppppqqJrFFFFFffffF       
+                                                                                        Xzr!jnx!!!!FzzCakbbbbbbddddddppppqJjFFFFFFFfTTffj       
+                                                                                        Xzr!jnnncxt!!!FczChbbbddddddppqJjFFFFFFFfTFFFTffj       
+                                                                                        Xzr!jnj!TtrcxT!!!fvzUdbdddpwYjjjjjFFFfTFFFFFFTFFj       
+                                                                         kkkbb          Xzr!tjcjl!TfTjvuf!!!fnzJdzrjjjjjjFffFFFFFFFFFTFFj       
+                                                                      hkkkkkbbddh       Xzr!!!!!Fznl!TvtTccf!!tzwujjjjjTFjjFFjjFFFFFFTFFj       
+                                                                   QhhkkkkkbbbddppqU    Xzr!jjT!!!!Fvn!!ttTTucjzmujjfFjjjjjjjFFFFFFFFTFFj       
+                                               JXXJ                cvXqkkkkkbbdpYTtT    zzr!jnvcuT!!!!FvntltttczmurjjjjjjjjjjFFFFjFFFTFFj       
+                                            YXzzLbhhhha            vuuunvwkkbXfttttf    zzr!jnj!!fcvT!!!!fvvtlvzmurjjjjjjjjjjFT!!uFFFTFFj       
+                                         bpqCChhhhhhhkmnu          vuuvnxxxFTTTTtttf    Xzr!fnvIltcTTzcT!!!!tvzzmvrjjjjjjjjT!!!f!uFFFTFFj       
+                                      hkkdpdkkhoahkQnxnnnnv        vnnn xxxFTTTttttT    Xzr!!!!jvntltftTuvF!!!tzmvrjjjjjf!tjXjnX!uFFFTFFj       
+                                    WhhUfffffFzdkhUnnnnnnnuuQ      vxxxxxxxFtttttttf    zzr!FT!!!!fuuTltTtTxvrtzmvrjjjjj!TrvXrjjurFFFTFFj       
+                                    qhYfffffffffjwbbcuuuuuuuvX      cnxxxxxfttttTF;     Xzr!jnzvf!!!!TuvfltTtTzzmvrjjjjj!UjtjvrjFFFFFTFFj       
+                                 JzzmkufffffffffffrbbkvuvvvvvvX   WMW   vxxftTz    W    zzr!jnj!tvzf!!!!tuzTI!uzmvrjjjjj!rcrjjFFFFFFFTFFj       
+                              hhhhhhhhufffffTffTTTTfmbbcvvcccccX    WWWQQQQLQQQwWa      Xzr!jnxltfTTuzjt!!!txzzzmurjjjjjjjjjjFFFFFFFFTFFj       
+                             hkXfffnLbvffffffTTTTTTTTJbbzccccccX   pQQQQmQQQQqmQQQQq    zzr!!!fuuTlfUcfxcrt!!!tzmurFjjjjjjjjjFFFFFFFFTFFj       
+                            hhCfffffffffffffTTTTTTTTTTCbbzzzzzzzY    QQQQQQQQQQQmL      zzr!T!!!!TnvflTzctrcnttzmujFjjjjjjjjFFFFFFFFFTFFj       
+                            hhYfffffffffffTTTTTTTTTTTTTmbdzzzzzXX       qQQQQmL         Xzr!jncF!!!!tncFl!TF!rzzmujFjjjjjjjFFFFFFFFFFTFFj       
+                            hhJfffffffffTTTTTTTTTTTTTTTndkLXXXXXXXXXX                   Xzr!jnrTuzjt!!!txcjl!!vzmujFjjjjjjFFFFFFFFFFFTFFj       
+                            WhpffffffffTTTTTTTTTTTTTTTTTqdbXXXXXzzzzzzX                 zzr!jnrlrjTnzxt!!!!jcnzzmujFjjjjFFFFFFFFFFFFFTffF       
+                             hhQffffffTTTTTTTTTTTTTFfTTTYddbhaJzzzzzzzzzJ               Xzr!!tnv!ltrjtnzn!!!!tFzmujFFjjFFFFFFFFFFFFFFTffF       
+                              hhnfffTTTTTTTTTTTTjphkYjTTTTTrmppdUzzzzzzzzXY             zzr!!!!!tnctl!xjtxznt!!zmujFFjFFFFFFFFFFFFFFfTffj       
+                              ;hhUffTTTTTTTTTfQhhhhhkYjTTTttttrQppJzzzzUwkha            Xzr!jnjt!!!txvf!!tfFrcuzmujFFFFFFFFFFFFFFFFFfTffF       
+                                hhprfTTTTTTTTTfvdhhhhkYrttTtttttrqqpCqkhhhhhW           zzr!jnnrcxt!!!tjurl!fTvzmnFFFFFFFFFFFFFFFffffTffF       
+             hW                  khhdFTTTTTTTTTTYhhhhhkUjTttttttttUqphhhhkJzcJ          zzr!jnj!ftjcut!!!!TcnlvzmnFfFFFFFFFFFFFFFfffTTffF       
+         Whkkkbbbk                 ahhhwjTTTTTTTYhhhhkbbXFtttttttttYqqbUzzcccX          Xzn!!rcFl!TF!jcvT!!!!TvzmnFfFFFFFFFFFfFffTtffffff       
+      Wkhhkkkkbbbdddb                 ahkkqxTTTTFqkhhkcTftttttttttttJwqzzccccccU        dzzvjt!!xcj!!TjtFvvT!!tzmnFfFFFFFFFfffTTffffffff        
+     YJbhkkkkkbbbddpJFW                  hLbkqnTTTTxmkcttttttttttttttQwUzcccvvvuuvc       XXzzvrt!tjcx!!ttTFvvFzmnFfFFFFFFfTTfffffffjj          
+     XvuuXpkkbbbdUftt!Q                  QunnYbkpvTtTttttttttttttttttuwpUXvvvvuuunnv         UXzzcxT!!Fvn!ltttczmnffffffTffffffffjj             
+     zuuunnncwUfTTttt!Q                  LcvunxxYpbdcTtttttttttttttttfXCmmwCvuuunnnxu           QYzzcnf!!fvntlvzmnfffTfffffffjYQQQQ;            
+     cnnnYnxxjTTTTtttt;                   UzcvnxxnWkbbpYftttttttttttttt!!TYmmznnnnxxxn       pQQQQQLUzzcnFt!TuzzmxffffffffrUQQQQQQQQpQh         
+     cnnnnuxxjTTTtttttW                    vxxxxu     bbddJftttttttttttt!!!FQQCnxxxxxxX   mQQQQQQQQQQQLJzzzuF!tzmxfffffxJQQQQQQQmdQQQQQQ        
+     zvxxxxxxjtttttttx              WMMMMa Xunxxu        nQdpmTttttttt!!!!!!tCQXxxxxxxx  QQQQQQQQLwQQQQQQLJzzzzzmxffnLQQQQQQQw QQQQQQQQL        
+      hW;uxxxjttttr WW           WMMMW   WWCdCuxu        unnnLqpLFtttt!!!!!!!fLQuxxxxxxb    mQQQQQQQQ QQQQQQQJXzCcLQQQQQQQwmQQQQQQQm;           
+     MMM  QLXxrJQm WMMW       oMWMo        JXzvnv        cvvunxnJqqLrt!!!!!!!!YLcxxxxxn        mQQQQQQQmpQQQQQQQQQQQQQQmQQQQQQQQQ               
+      bmQmQQQQQQQmwQQ      aWMWW      wQ    XvxzMWM      LXcvuxxn bqqwLut!!!!!cLXrxxxn            mQQQQQQQQqmQQQQQQmqQQQQQQQQL                  
+     QwQQQQLXwmmQQLQQm     WMWW    mQQQQQQQ  xx   WMWMW   mxxxxx     LpwwQv!!tCLurvj                 qmQQQQQQmbwwQmQQQQQQQm                     
+         mQQQQQQQQw            MMpQQQQQQQQQQQXx      WWMMWpcunxx         qmmQQLU                        hQQQQQQQQQQQQQQw                        
+            QQQq             QQQQQQaQQQQQQQQQCYQQQ       Wpwmvnx                              kkbbb        qQQQQQQQQw                           
+                           WmQQQQQQQQQdmQQQQQQQQQQQQq     dXzvnu                          hhhkkkbbbddW        LQQL                              
+                              LmQQQQQQQQmbmQQQQQQQQQQQQb    vxzWWWW                     khhkkkkkbbbddppqc                                       
+                                  mQQQQQQQQQmwQQQQQQQQQQQQQ vxX   WMMWW                 vvJdkkkkbbbdqYTtI                                       
+                                 oa awQQQQQQQQQQdmQQQQQQQQQQJxL      WWWMW              vuuunzmkkpvfttttl                                       
+                                    W  ;mmQQQQQQQQmqmQQQQQQQLCQQQ       oWMW            uununxxxfTTTttttl                                       
+                                           ;QQQQQQQQQm wQQQQQQQQQQQm       aMWMW        nnn  xxxTTTTtttt!                                       
+                                              LQQQQQQQQQQwwQQQQQQQQQQQQw  WWMMM         nxxxxxxxTTttttttt                                       
+                                                 qQQQQQQQQQQdwQQQQQQQQQQmooW             vnxxxxxtttttTF                                         
+                                                    LmQQQQQQQQQLmQQQQQdQQQQQQQ         WMM  unxxttfF  WWW                                       
+                                                        dQQQQQQQQQk mQQQLQQQQmQ          WMqQQQQQQQQqoMW                                        
+                                                  WWWW     wQQQQQQQQQQQQQQm; oMW        QQQQQQqQQmqmQQQQW                                       
+                                               WMW W          qQQQQQQQQmW WMWWWW         WQQQQQQQQQQQQm                                         
+                                            WWWWW                wQQmW   MW   WW             QQQQQmp                                            
+                                        WMWkMW                           MW   WW                                                                
+                                        kWW                              MoWWWWW                                                                
+                                                                         MMWW                                                                   
+                                                                         W                                                                      
+                                                                         
+  </pre>
 </div>
 
 <!-- PRODUCTS -->
@@ -510,10 +790,10 @@ footer { background: var(--white); border-top: 1px solid var(--border); padding:
 </div>
 </footer>
 
-<div id="footer-physics-container" class="head" style="position: relative; width: 100%; height: 200px; background: #ffffff; overflow: hidden; border-top: 1px solid #e0e0e0;">
+<div id="footer-physics-container" class="head" style="position: relative; width: 100%; height: 200px; background: var(--teal-darker); overflow: hidden;">
     <div class="head" id="physics-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>
     
-    <h2 id="footer-logo-text" class="head" style="position: absolute; width: 100%; text-align: center; top: 40%; font-size: 20rem; font-weight: 700; color: #202124; pointer-events: none; opacity: 0;">
+    <h2 id="footer-logo-text" class="head" style="position: absolute; width: 100%; text-align: center; top: 40%; font-size: 20rem; font-weight: 700; color: var(--text); pointer-events: none; opacity: 0;">
     </h2>
 </div>
 
@@ -867,7 +1147,7 @@ function createTextTexture(char) {
 
     const ctx = canvas.getContext("2d");
 
-    ctx.fillStyle = "#202124";
+    ctx.fillStyle = "#d4cab6";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = "700 320px 'google sans'"; // fallback added
@@ -927,6 +1207,23 @@ function spawnLetters() {
         Matter.Body.setPosition(rightWall, { x: container.offsetWidth + 10, y: viewportHeight / 2 });
     });
 </script>
+<script>
+    window.addEventListener('load', () => {
+      const loaderContainer = document.getElementById('loader-container');
+      
+      // 1. Fade out the spinner quickly first
+      setTimeout(() => {
+        loaderContainer.classList.add('loaded');
+        document.body.classList.add('content-ready');
+      }, 300); // Small initial buffer for smoother visuals
+      
+      // 2. Completely remove container from DOM layout after transition finishes
+      setTimeout(() => {
+        loaderContainer.style.display = 'none';
+      }, 1500); 
+    });
+  </script>
+</main>
 </main>
 </body>
 </html>
