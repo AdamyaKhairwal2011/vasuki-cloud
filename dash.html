@@ -1191,6 +1191,145 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   background-image: none;
 }
   </style>
+
+
+
+  <style>
+    /* ==========================================
+       10-BAR REVEAL LOADER (Google Workspace Style)
+       ========================================== */
+    #loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      display: flex;
+      pointer-events: none; /* Allows clicks to pass through once fading out */
+    }
+
+    /* The Curtain Bars */
+    .loader-bar {
+      height: 100%;
+      flex: 1; /* Automatically splits into 10 equal widths */
+      background-color: var(--ink); /* Material light grey background */
+      transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+      will-change: transform;
+      pointer-events: auto; /* Keeps bars clickable until they slide away */
+    }
+
+    /* Slide up/off animation trigger */
+    #loader-container.loaded .loader-bar {
+      transform: translateY(-100%);
+    }
+
+    /* Sequential Delays for the 10 Bars */
+    .loader-bar:nth-child(1)  { transition-delay: 0.00s; }
+    .loader-bar:nth-child(2)  { transition-delay: 0.05s; }
+    .loader-bar:nth-child(3)  { transition-delay: 0.10s; }
+    .loader-bar:nth-child(4)  { transition-delay: 0.15s; }
+    .loader-bar:nth-child(5)  { transition-delay: 0.20s; }
+    .loader-bar:nth-child(6)  { transition-delay: 0.25s; }
+    .loader-bar:nth-child(7)  { transition-delay: 0.30s; }
+    .loader-bar:nth-child(8)  { transition-delay: 0.35s; }
+    .loader-bar:nth-child(9)  { transition-delay: 0.40s; }
+    .loader-bar:nth-child(10) { transition-delay: 0.45s; }
+
+    /* Center Spinner / Indicator */
+    .loader-spinner-wrap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      transition: opacity 0.4s ease;
+      pointer-events: auto;
+    }
+
+    #loader-container.loaded .loader-spinner-wrap {
+      opacity: 0;
+    }
+
+.spinner {
+  width: 60px;
+  display: flex;
+  align-items: flex-start;
+  aspect-ratio: 1;
+}
+.spinner:before,
+.spinner:after {
+  content: "";
+  flex: 1;
+  aspect-ratio: 1;
+  --g: conic-gradient(from -90deg at 10px 10px,#ffffff 90deg,#fffefe00 0);
+  background: var(--g), var(--g), var(--g);
+  filter: drop-shadow(30px 30px 0 #ffffff);
+  animation: l20 1s infinite;
+}
+.spinner:after {
+  transform: scaleX(-1);
+}
+@keyframes l20 {
+   0%   {background-position:0     0, 10px 10px, 20px 20px}
+   33%  {background-position:10px  10px}
+   66%  {background-position:0    20px,10px 10px,20px 0   }
+   100% {background-position:0     0, 10px 10px, 20px 20px}
+}
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* ==========================================
+       MAIN WEBSITE CONTENT
+       ========================================== */
+    </style>
+
+<div id="prog"></div>
+
+<div id="loader-container">
+    <!-- The 10 vertical curtain bars -->
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+
+    <!-- Center Spinner Elements -->
+    <div class="loader-spinner-wrap">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+<script>
+    window.addEventListener('load', () => {
+      const loaderContainer = document.getElementById('loader-container');
+      
+      // 1. Fade out the spinner quickly first
+      setTimeout(() => {
+        loaderContainer.classList.add('loaded');
+        document.body.classList.add('content-ready');
+      }, 300); // Small initial buffer for smoother visuals
+      
+      // 2. Completely remove container from DOM layout after transition finishes
+      setTimeout(() => {
+        loaderContainer.style.display = 'none';
+      }, 1500); 
+    });
+  </script>
+
+
   <section id="this">
   <div class="swiper">
     <div class="swiper-wrapper">
@@ -1418,6 +1557,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 <script type="module">
   import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
   let vdb = new Vasuki();
+  window.vdb = vdb
   await vdb.login('codeclutch.adamyarao@gmail.com','wkmeupb4ugo')
   let data = await vdb.fetchTable('users_rows','Sheet1')
 
@@ -1440,6 +1580,28 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
             qrcode.makeCode(val); // Generate new one
         }
     }
+
+    
+
+async function welcome() {
+  await vdb.login('codeclutch.adamyarao@gmail.com','wkmeupb4ugo')
+
+  let users = await vdb.fetchTable('users_rows','Sheet1')
+  let currentUser = users.find(c => c.username == userEmail)
+
+  if (localStorage.getItem('vcloud_user')) {
+    if (currentUser.gender == 'male') {
+      document.getElementById('pageTitle').textContent = `Welcome, Mr. ${currentUser.name.split(" ").reverse()[0]}`;
+    } else {
+      document.getElementById('pageTitle').textContent = `Welcome, Mrs. ${currentUser.name.split(" ").reverse()[0]}`;
+    }
+  } else {
+    location.href = "login.html";
+  }
+}
+
+
+welcome()
 </script>
 
 <script>
@@ -1691,23 +1853,10 @@ function renderFiles(){
       });
     }
   }
-    if(localStorage.getItem('vcloud_username')) {
-    const first = localStorage.getItem('vcloud_username').split(" ")[0].toLowerCase();
-    let time = new Date().getHours();
-    if (time >= 5 && time < 12) {
-      document.getElementById('pageTitle').textContent = `Morning, ${first.charAt(0).toUpperCase() + first.slice(1)}`;
-    } else if (time >= 12 && time < 17) {
-      document.getElementById('pageTitle').textContent = `Afternoon, ${first.charAt(0).toUpperCase() + first.slice(1)}`;
-    } else if (time >= 17 && time < 22) {
-      document.getElementById('pageTitle').textContent = `Evening, ${first.charAt(0).toUpperCase() + first.slice(1)}`;
-    } else {
-      document.getElementById('pageTitle').textContent = `welcome, ${first.charAt(0).toUpperCase() + first.slice(1)}`;
-    }
-  } else {
-    location.href = "login.html";
-  }
+
   updateSelectionUI();
 }
+
 
 function toggleStar(name,btn){
   if(starredFiles.has(name)){starredFiles.delete(name);btn.classList.remove('starred');btn.textContent='☆';}
