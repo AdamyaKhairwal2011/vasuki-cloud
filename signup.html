@@ -4,332 +4,607 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sign up - Vasuki vCloud</title>
-    <style>
-        @font-face {
-            font-family: 'CustomFont';
-            src: url('custom.ttf') format('truetype');
-        }
-        
-        body {
-            font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <style>
         :root {
-            --google-blue: #5f666e;
-            --google-blue-hover: #3d4450;
+            --google-blue: #815521;
+            --google-blue-hover: #65441b;
+            --google-blue-alpha: rgba(26, 115, 232, 0.04);
             --text-dark: #202124;
             --text-light: #5f6368;
             --border-color: #dadce0;
+            --border-focus: #65441b;
             --error-red: #d93025;
+            --error-bg: #fce8e6;
+            --success-green: #137333;
+            --success-bg: #e6f4ea;
+            --bg-surface: #ffffff;
+            --bg-body: #efe5d8;
+            --font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
+            --radius-container: 28px; /* Modern dynamic container rounding matching standard Google Material 3 */
+            --radius-input: 4px;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        html { text-size-adjust: 80%; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-dark);
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            padding: clamp(1rem, 5vw, 3rem);
+            line-height: 1.5;
         }
 
-        /* Access Gate Overlay */
-        #accessGate {
-            position: fixed;
+        /* Fluid Adaptable Canvas Wrapper */
+        .workspace-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-container);
+            width: 100%;
+            max-width: 480px;
+            min-width: 280px;
+            padding: clamp(1.5rem, 6vw, 3rem);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            will-change: height, transform;
+        }
+
+        /* Edge-to-Edge Fluidity for Compact Mobile Viewports */
+        @media (max-width: 480px) {
+            body { padding: 0; background-color: var(--bg-surface); }
+            .workspace-card {
+                max-width: 100%;
+                min-height: 100vh;
+                min-height: 100dvh;
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+                padding: 24px 16px;
+            }
+        }
+
+        /* Indeterminate Header Line Progress Bar */
+        .top-progress-bar {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.98);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 4px;
+            background-color: #e8eaed;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            z-index: 10;
         }
 
-        .gate-content {
+        .top-progress-bar.active { opacity: 1; }
+
+        .top-progress-bar .progress-line {
             width: 100%;
-            max-width: 400px;
-            text-align: center;
+            height: 100%;
+            background-color: var(--google-blue);
+            transform-origin: left;
+            animation: indeterminate-loader 1.5s linear infinite;
         }
 
-        /* Camera Scanner Styles */
+        @keyframes indeterminate-loader {
+            0% { transform: translateX(-100%) scaleX(1); }
+            50% { transform: translateX(0%) scaleX(0.4); }
+            100% { transform: translateX(100%) scaleX(1); }
+        }
+
+        /* Responsive Branding Elements */
+        .brand-header {
+            text-align: center;
+            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+        }
+
+        .brand-logo {
+            font-size: clamp(20px, 5vw, 26px);
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            user-select: none;
+        }
+        .brand-logo span:nth-child(1) { color: #4285F4; }
+        .brand-logo span:nth-child(2) { color: #EA4335; }
+        .brand-logo span:nth-child(3) { color: #FBBC05; }
+        .brand-logo span:nth-child(4) { color: #34A853; }
+
+        h1 { 
+            font-size: clamp(20px, 4.5vw, 24px); 
+            font-weight: 400; 
+            color: var(--text-dark); 
+            line-height: 1.3; 
+        }
+        
+        .subtitle { 
+            color: var(--text-light); 
+            margin-top: 8px; 
+            font-size: clamp(13px, 3vw, 15px); 
+            line-height: 1.4; 
+        }
+
+        /* Window Viewport Pagination Switcher */
+        .step-window {
+            position: relative;
+            width: 100%;
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: height;
+        }
+
+        .step-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+            transform: translateX(40px);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.35s ease, 
+                        visibility 0.4s;
+        }
+
+        .step-view.active {
+            position: relative;
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .step-view.next-out {
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-40px);
+        }
+
+        /* Elastic Responsive QR Reader Box */
         #reader {
             width: 100%;
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border-color) !important;
             margin-bottom: 20px;
-            background: #000;
+            background: #fafafa;
+            aspect-ratio: 4/3;
         }
+        #reader video { object-fit: cover !important; width: 100% !important; height: 100% !important; }
 
-        #reader __dashboard { padding: 10px !important; }
-        #reader button {
-            background-color: var(--google-blue) !important;
-            color: white !important;
-            border: none !important;
-            padding: 8px 16px !important;
-            border-radius: 4px !important;
-            cursor: pointer !important;
-            font-family: 'Roboto', sans-serif !important;
-            margin: 10px 0 !important;
+        /* Elastic Form Fields */
+        .input-row { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 12px; 
+            margin-bottom: 16px; 
         }
-
-        .signup-container {
+        
+        .input-group { 
+            margin-bottom: 16px; 
+            position: relative; 
             width: 100%;
-            max-width: 450px;
-            padding: 48px 40px;
-            border-radius: 50px 50px 0 0;
-            text-align: center;
-            background-color: #fff;
-            min-height: 85vh;
-            box-sizing: border-box;
-            border: 1px solid var(--border-color);
-            transform: translateY(100%);
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        .signup-container.visible { transform: translateY(0); }
-
-        h1 { font-size: 24px; font-weight: 400; margin-bottom: 8px; color: var(--text-dark); }
-        .subtitle { color: var(--text-light); margin-bottom: 24px; font-size: 14px; }
-
-        .input-row { display: flex; gap: 12px; margin-bottom: 16px; }
-        .input-group { margin-bottom: 16px; text-align: left; }
         
         input {
             width: 100%;
-            padding: 13px 15px;
-            font-size: 16px;
+            padding: 14px 16px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-dark);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: var(--radius-input);
             outline: none;
             box-sizing: border-box;
-            transition: border 0.2s;
+            background-color: transparent;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
 
-        input:focus { border: 2px solid var(--google-blue); padding: 12px 14px; }
+        input:focus { 
+            border-color: var(--border-focus); 
+            box-shadow: 0 0 0 1px var(--border-focus);
+        }
 
+        /* Standardized Action Controls */
         .btn-primary {
             background-color: var(--google-blue);
             color: #fff;
-            padding: 12px 24px;
-            min-width: 110px;
+            padding: 0 24px;
+            height: 40px;
             font-size: 14px;
             font-weight: 500;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--radius-input);
             cursor: pointer;
-        }
-
-        .divider {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 12px;
-            color: var(--text-light);
-            font-size: 12px;
-            margin: 15px 0;
+            justify-content: center;
+            transition: var(--transition-smooth);
+            font-family: var(--font-family);
+            user-select: none;
         }
-        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
 
-        .btn-google {
-            width: 100%;
-            padding: 10px;
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+        .btn-primary:hover { background-color: var(--google-blue-hover); }
+        .btn-primary:disabled { background-color: #f1f3f4; color: #9aa0a6; border: 1px solid var(--border-color); cursor: not-allowed; }
+
+        .btn-text {
+            background: transparent;
+            color: var(--google-blue);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 0 12px;
+            height: 40px;
+            border-radius: var(--radius-input);
+            display: inline-flex;
+            align-items: center;
+            transition: var(--transition-smooth);
+            font-family: var(--font-family);
+        }
+        .btn-text:hover { background-color: var(--google-blue-alpha); }
+
+        .btn-referral {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            color: var(--text-dark);
-            margin-bottom: 15px;
-        }
-
-        .loader {
-            width: 18px; height: 18px;
-            border: 2px solid #ffffff;
-            border-bottom-color: transparent;
-            border-radius: 50%;
-            display: none;
-            animation: rotation 1s linear infinite;
-        }
-
-        @keyframes rotation { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .loading .btn-text-content { display: none; }
-        .loading .loader { display: inline-block; }
-
-        #scanFeedback {
-            color: #34a853;
-            font-size: 13px;
-            margin-bottom: 10px;
-            display: none;
-            font-weight: 500;
-        }
-
-        .btn-referral {
-            display: block;
             width: 100%;
-            margin-top: 12px;
-            padding: 12px 24px;
+            margin-top: 16px;
+            height: 40px;
             font-size: 14px;
             font-weight: 500;
             color: var(--google-blue);
             background: transparent;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: var(--radius-input);
             cursor: pointer;
             text-decoration: none;
-            box-sizing: border-box;
-            transition: background 0.2s, border-color 0.2s;
+            transition: var(--transition-smooth);
+            font-family: var(--font-family);
         }
 
         .btn-referral:hover {
-            background: #f1f3f4;
+            background: #f8f9fa;
             border-color: var(--google-blue);
+        }
+
+        /* Status Messages Layout */
+        #scanFeedback {
+            color: var(--success-green);
+            background-color: var(--success-bg);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+            font-weight: 500;
+            text-align: center;
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+
+        .status-error {
+            color: var(--error-red);
+            background-color: var(--error-bg);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 14px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+            animation: fadeIn 0.2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Flexible Form Action Alignment Bar */
+        .form-footer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: clamp(1.5rem, 5vw, 2.5rem);
+            gap: 12px;
         }
     </style>
 </head>
 <body>
 
-    <div id="accessGate">
-        <div class="gate-content">
-            <h1>Exclusive Access</h1>
-            <p class="subtitle">Scan a referrer QR code or enter code manually</p>
-            
-            <div id="reader"></div>
-            <div id="scanFeedback">✔ QR Code Detected!</div>
-
-            <div class="input-group">
-                <input type="text" id="accessCode" placeholder="Enter manual code" style="text-align: center;">
-            </div>
-
-            <button class="btn-primary" style="width: 100%;" onclick="validateAccess()">Verify & Continue</button>
-
-            <a href="https://vasuki.cloud/view-form.html?id=f-evmd3e" class="btn-referral">Request Referral Code</a>
-
-            <p id="gateError" style="color: var(--error-red); font-size: 12px; margin-top: 10px; display: none;">Invalid access code. Please try again.</p>
-        </div>
+     <div id="loader-container">
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-bar"></div>
+    <div class="loader-spinner-wrap">
+      <div class="spinner"></div>
     </div>
+  </div>
 
-    <div class="signup-container" id="signupForm">
-        <h1>Create Account</h1>
-        <p class="subtitle">Complete your Vasuki Cloud profile</p>
+  <style>
+    #loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      display: flex;
+      pointer-events: none;
+    }
+    .loader-bar {
+      height: 100%;
+      flex: 1;
+      background-color: #3b2a13;
+      transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+      will-change: transform;
+      pointer-events: auto;
+    }
+    #loader-container.loaded .loader-bar {
+      transform: translateY(-100%);
+    }
+    .loader-bar:nth-child(1)  { transition-delay: 0.00s; }
+    .loader-bar:nth-child(2)  { transition-delay: 0.05s; }
+    .loader-bar:nth-child(3)  { transition-delay: 0.10s; }
+    .loader-bar:nth-child(4)  { transition-delay: 0.15s; }
+    .loader-bar:nth-child(5)  { transition-delay: 0.20s; }
+    .loader-bar:nth-child(6)  { transition-delay: 0.25s; }
+    .loader-bar:nth-child(7)  { transition-delay: 0.30s; }
+    .loader-bar:nth-child(8)  { transition-delay: 0.35s; }
+    .loader-bar:nth-child(9)  { transition-delay: 0.40s; }
+    .loader-bar:nth-child(10) { transition-delay: 0.45s; }
 
-        <div class="input-row">
-            <input type="text" id="firstName" placeholder="First Name">
-            <input type="text" id="lastName" placeholder="Last Name">
+    .loader-spinner-wrap {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      transition: opacity 0.4s ease;
+      pointer-events: auto;
+    }
+    #loader-container.loaded .loader-spinner-wrap {
+      opacity: 0;
+    }
+    .spinner {
+      width: 60px;
+      display: flex;
+      align-items: flex-start;
+      aspect-ratio: 1;
+    }
+    .spinner:before,
+    .spinner:after {
+      content: "";
+      flex: 1;
+      aspect-ratio: 1;
+      --g: conic-gradient(from -90deg at 10px 10px,#ffffff 90deg,#fffefe00 0);
+      background: var(--g), var(--g), var(--g);
+      filter: drop-shadow(30px 30px 0 #ffffff);
+      animation: l20 1s infinite;
+    }
+    .spinner:after { transform: scaleX(-1); }
+    @keyframes l20 {
+       0%   {background-position:0     0, 10px 10px, 20px 20px}
+       33%  {background-position:10px  10px}
+       66%  {background-position:0    20px,10px 10px,20px 0   }
+       100% {background-position:0     0, 10px 10px, 20px 20px}
+    }
+  </style>
+
+  <script>
+    window.addEventListener('load', () => {
+      const loaderContainer = document.getElementById('loader-container');
+      setTimeout(() => {
+        loaderContainer.classList.add('loaded');
+      }, 300);
+      setTimeout(() => {
+        loaderContainer.style.display = 'none';
+      }, 1500); 
+    });
+  </script>
+
+ 
+
+    <div class="workspace-card" id="formWrapperCard">
+        <div class="top-progress-bar" id="globalActionLoader">
+            <div class="progress-line"></div>
         </div>
 
-        <div class="input-group">
-            <input type="email" id="email" placeholder="Email address">
-        </div>
+        <header class="brand-header">
+            <div class="brand-logo">
+                <img src="./logo.jpg" alt="" width="50px">
+            </div>
+            <h1 id="viewTitle">Exclusive Access</h1>
+            <p id="viewSubtitle" class="subtitle">Please verify by using Exclusive Access Code.</p>
+        </header>
 
-        <div class="input-group">
-            <input type="password" id="password" placeholder="Create password">
-        </div>
-        <div class="input-group">
-            <input type="phone" id="phone" placeholder="Phone number">
-        </div>
-        <div class="input-group">
-            <input type="password" id="re-password" placeholder="Re-enter password">
-        </div>
+        <form id="masterFormEngine" onsubmit="return false;">
+            <div class="step-window" id="stepWindowContainer">
+                
+                <div class="step-view active" id="step0">
+                    <div id="scanFeedback">✔ Referrer Link Authenticated!</div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px;">
-            <button style="color: var(--google-blue); background:none; border:none; cursor:pointer; font-weight:500;" onclick="location.reload()">Reset</button>
-            <button class="btn-primary" id="signupBtn" onclick="submitSignup()">
-                <span class="btn-text-content">Create</span>
-                <div class="loader"></div>
-            </button>
-        </div>
+                    <div class="input-group">
+                        <input type="text" id="accessCode" placeholder="Enter manual code" style="text-align: center; font-weight: 500; letter-spacing: 1px;">
+                    </div>
+
+                    <button type="button" class="btn-primary" style="width: 100%;" onclick="validateAccess()">Verify & Continue</button>
+                    <a href="https://vasuki.cloud/view-form.html?id=f-evmd3e" target="_blank" class="btn-referral">Request Referral Code</a>
+                    <p id="gateError" class="status-error">Invalid access code. Please try again.</p>
+                </div>
+
+                <div class="step-view" id="step1">
+                    <div class="input-row">
+                        <input type="text" id="firstName" placeholder="First Name" autocomplete="given-name">
+                        <input type="text" id="lastName" placeholder="Last Name" autocomplete="family-name">
+                    </div>
+
+                    <div class="input-group">
+                        <input type="email" id="email" placeholder="Email address" autocomplete="email">
+                    </div>
+
+                    <div class="input-group">
+                        <input type="tel" id="phone" placeholder="Phone number" autocomplete="tel">
+                    </div>
+
+                    <div class="input-group">
+                        <input type="password" id="password" placeholder="Create password" autocomplete="new-password">
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="password" id="re-password" placeholder="Confirm password" autocomplete="new-password">
+                    </div>
+
+                    <div class="form-footer-actions">
+                        <button type="button" class="btn-text" onclick="location.reload()">Reset</button>
+                        <button type="button" class="btn-primary" id="signupBtn" onclick="submitSignup()">Create</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
     </div>
 
     <script type="module">
         import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
         
         const vdb = new Vasuki();
-        await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
-        
-        let codes = await vdb.fetchTable('users_rows','access_asked')
-        // --- QR SCANNER LOGIC ---
+        let codes = [];
         let html5QrCode;
 
-        function onScanSuccess(decodedText, decodedResult) {
-            // Fill the input with the decoded text from the QR
-            document.getElementById('accessCode').value = decodedText;
-            document.getElementById('scanFeedback').style.display = 'block';
-            
-            // Auto-verify if successful
-            validateAccess();
-            
-            // Stop scanning once found
-            html5QrCode.stop().then((ignore) => {
-                console.log("Scanner stopped.");
-            }).catch((err) => {
-                console.error("Unable to stop scanning.", err);
-            });
+        // Graceful System Core Bootstrap
+        async function runSystemInit() {
+            showLoader();
+            try {
+                await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+                codes = await vdb.fetchTable('users_rows', 'access_asked');
+                hideLoader();
+                initCameraScanner();
+            } catch(e) {
+                console.error("Initialization anomaly identified:", e);
+                hideLoader();
+            }
+            syncCardHeight();
         }
 
-        // Initialize Scanner
-        html5QrCode = new Html5Qrcode("reader");
-        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-
-        // Start scanning automatically on load
-        html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess);
-
-
-        // --- ACCESS VALIDATION ---
-        window.validateAccess = () => {
-            const code = document.getElementById('accessCode').value.trim();
-            codes.forEach(c => {
-                if (c.value === code) {
-                    // Transition UI
-                    document.getElementById('accessGate').style.transform = 'translateY(-100%)';
-                    document.getElementById('signupForm').classList.add('visible');
-                    
-                    // Ensure scanner stops if it was still running
-                    try { html5QrCode.stop(); } catch(e) {}
-                } else {
-                const err = document.getElementById('gateError');
-                err.style.display = 'block';
-                setTimeout(() => err.style.display = 'none', 3000);
+        // Adaptive Card Canvas Layout Engine
+        function syncCardHeight() {
+            const container = document.getElementById('stepWindowContainer');
+            if (!container) return;
+            const activeStep = container.querySelector('.step-view.active');
+            if (activeStep) {
+                // Read exact offset bounding context natively 
+                container.style.height = `${activeStep.offsetHeight}px`;
             }
-            })
+        }
 
+        // Thread-Optimized QR Core Hardware Link
+        function initCameraScanner() {
+        }
+
+        // Verification Match Pipeline
+        window.validateAccess = () => {
+            const inputVal = document.getElementById('accessCode').value.trim();
+            if(!inputVal) return;
+
+            showLoader();
+            
+            const matchFound = codes.find(c => c.value === inputVal);
+
+            if (matchFound) {
+                try {
+                    html5QrCode.stop().then(() => html5QrCode.clear());
+                } catch(e){}
+
+                setTimeout(() => {
+                    hideLoader();
+                    transitionToSignupPhase();
+                }, 350);
+            } else {
+                hideLoader();
+                const err = document.getElementById('gateError');
+                if (err) {
+                    err.style.display = 'block';
+                    syncCardHeight();
+                    setTimeout(() => {
+                        err.style.display = 'none';
+                        syncCardHeight();
+                    }, 3500);
+                }
+            }
         };
 
-        // --- SIGNUP SUBMISSION ---
+        // Window Pagination Controller 
+        function transitionToSignupPhase() {
+            const step0 = document.getElementById('step0');
+            const step1 = document.getElementById('step1');
+
+            document.getElementById('viewTitle').innerText = "Create Account";
+            document.getElementById('viewSubtitle').innerText = "Complete your Vasuki Cloud profile";
+
+            step0.className = "step-view next-out";
+            step1.className = "step-view active";
+            
+            // Re-render bounding values instantly
+            setTimeout(syncCardHeight, 50);
+        }
+
+        // Commit Signup Pipeline Payload
         window.submitSignup = async () => {
             const first = document.getElementById("firstName").value.trim();
             const last = document.getElementById("lastName").value.trim();
             const email = document.getElementById("email").value.trim().toLowerCase();
             const password = document.getElementById("password").value;
+            const phone = document.getElementById("phone").value.trim();
+            const rePassword = document.getElementById("re-password").value;
             const signupBtn = document.getElementById("signupBtn");
 
-            if (!first || !last || !email || !password) return alert("Please fill all fields");
-
-            signupBtn.classList.add('loading');
-            signupBtn.disabled = true;
-
-            if (password !== document.getElementById("re-password").value) {
-                alert("Passwords do not match");
-                signupBtn.classList.remove('loading');
-                signupBtn.disabled = false;
-                return;
+            if (!first || !last || !email || !password || !phone) {
+                return alert("Please fill all fields");
             }
+
+            if (password !== rePassword) {
+                return alert("Passwords do not match");
+            }
+
+            showLoader();
+            if(signupBtn) signupBtn.disabled = true;
+
             try {
                 const name = `${first} ${last}`;
                 await vdb.insertRow('users_rows', 'Sheet1', {
@@ -337,18 +612,39 @@
                     email: email,
                     name: name,
                     password: password,
-                    phone_number: document.getElementById("phone").value.trim()
+                    phone_number: phone
                 });
 
+                localStorage.setItem('vcloud_user', email);
+                localStorage.setItem('vcloud_username', name);
+
+                hideLoader();
                 alert("Account created successfully!");
-                window.location.href = "login.html";
+                window.location.href = "./onboarding.html";
             } catch (err) {
-                console.error("Signup Error:", err);
-                alert("Signup failed. Check console.");
-                signupBtn.classList.remove('loading');
-                signupBtn.disabled = false;
+                console.error("Critical database commitment fault:", err);
+                alert("Signup encountered an issue. See diagnostic logs inside code console.");
+                hideLoader();
+                if(signupBtn) signupBtn.disabled = false;
             }
         };
+
+        function showLoader() {
+            const loader = document.getElementById('globalActionLoader');
+            if(loader) loader.classList.add('active');
+        }
+
+        function hideLoader() {
+            const loader = document.getElementById('globalActionLoader');
+            if(loader) loader.classList.remove('active');
+        }
+
+        // Bind Window Cycles Natively
+        window.addEventListener('DOMContentLoaded', runSystemInit);
+        window.addEventListener('resize', () => {
+            // Throttled recalculation tracking
+            requestAnimationFrame(syncCardHeight);
+        });
     </script>
 </body>
 </html>
