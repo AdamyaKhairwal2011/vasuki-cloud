@@ -65,7 +65,7 @@ body {
 aside {
   width: 256px;
   min-height: 100dvh;
-  background: var(--sidebar-bg);
+  background: #3b2a13;
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -388,11 +388,11 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   display: flex; align-items: center; gap: 10px;
 }
 .page-title-accent {
-  background: var(--lemon);
-  border: 1.5px solid var(--lemon-mid);
-  border-radius: 8px; padding: 2px 12px;
+  background: #634925;
+  border: 1.5px solid #634925;
+  border-radius: 8px; padding: 4px 15px;
   font-size: 0.85rem; font-weight: 500;
-  color: var(--slate-deep); font-family: 'Google Sans Text', sans-serif;
+  color: #fff; font-family: 'Google Sans Text', sans-serif;
 }
 .header-actions-group { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
@@ -410,7 +410,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 .btn:hover { background: var(--bg-dark); border-color: var(--slate-light); color: var(--ink); }
 .btn-primary { background: var(--slate); color: var(--lemon); border-color: var(--slate); }
 .btn-primary:hover { background: var(--slate-deep); border-color: var(--slate-deep); }
-.btn-lemon { background: var(--lemon); color: var(--slate-deep); border-color: var(--lemon-dark); }
+.btn-lemon { background: #634925; color: #fff; border-color: #634925; }
 .btn-lemon:hover { background: var(--lemon-mid); border-color: var(--lemon-dark); color: var(--slate-deep); box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
 .btn-danger { border-color: #fca5a5; color: var(--red); background: var(--red-bg); }
 .btn-danger:hover { background: var(--red); color: white; border-color: var(--red); }
@@ -912,7 +912,8 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
         display: inline-flex;
         flex-direction: column;
         gap: 16px;
-        box-shadow: 0 1px 3px rgba(60,64,67,0.3);
+        background-color: #624a28;
+        margin: 20px;
         font-family: 'Roboto', sans-serif;
     }
 
@@ -946,7 +947,6 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
       <span class="storage-used">Referral Code:</span>
       <div class="storage-header">Allow Your Friends To Join Vasuki Cloud By Scanning The QR</div>
       <div id="code_review" style="color: #f3f3f3"></div>
-    <div id="qrcode"></div>
 </div>
 
 <script type="module">
@@ -1053,6 +1053,34 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
         <span id="pageTitle">Your Files</span>
         <span class="page-title-accent" id="fileCount">—</span>
       </h1>
+
+            <div class="advertisment">
+        DBMS integration getting even complex than actual systems, try Vasuki Guppt.
+        <button class="btn-new-ad" onclick="href('https://www.vasuki.cloud/dbms')">→</button>
+      </div>
+      <style>
+        .advertisment {
+          background-color: #3b2a13;
+          color: #fef7e9;
+          padding: 10px 10px 10px 20px;
+          border-radius: 100px;
+        }
+
+        .btn-new-ad {
+          padding: 10px;
+          border-radius: 100px;
+          background-color: #79603d;
+          color: #fff;
+          border: none;
+          margin-left: 5px;
+        }
+      </style>
+      <script>
+        function href(param) {
+          window.location.href = param
+        }
+      </script>
+
       <div class="header-actions-group">
         <button class="btn btn-lemon" onclick="openCreateMenu()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -1076,25 +1104,43 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   margin-left: 2%;
 }
 
-.swiper {
-  width: 100%;
-  padding-top: 50px;
-  padding-bottom: 50px;
+
+  section#this {
+  min-height: 260px;
+  max-height: 260px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 88%;
+  margin-left: 2%;
 }
 
+.swiper {
+  width: 100%;
+  height: 260px;
+  padding: 0 !important;
+}
+
+
 .swiper-slide {
-  width: 300px;
-  height: 300px;
-  filter: blur(1px);
-  border-radius: 30px;
+  width: 100%;
+  height: 260px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
-  justify-content: end;
-  align-items: self-start;
+  justify-content: flex-end;
+  align-items: flex-start;
+  opacity: 0.5;
+  transform: scale(0.93);
+  transition: opacity 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .swiper-slide-active {
-  filter: blur(0px);
+  opacity: 1;
+  transform: scale(1);
+  filter: none;
 }
 
 .swiper-pagination-bullet,
@@ -1112,22 +1158,6 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   letter-spacing: 2px;
   font-size: 0.8rem;
   font-family: "Open Sans", sans-serif;
-}
-
-.swiper-slide--one span {
-  background: #62667f;
-}
-
-.swiper-slide--two span {
-  background: #087ac4;
-}
-
-.swiper-slide--three span {
-  background: #b45205;
-}
-
-.swiper-slide--four span {
-  background: #087ac4;
 }
 
 .swiper-slide h2 {
@@ -1331,7 +1361,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 
 
   <section id="this">
-  <div class="swiper">
+  <div class="swiper"><br><br>
     <div class="swiper-wrapper">
       <div class="swiper-slide swiper-slide--one">
         <div>
@@ -1356,9 +1386,11 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
         <div>
         </div>
       </div>
+      <br><br>
     </div>
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>
+    
   </div>
 </section>
 
@@ -1366,22 +1398,25 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.5/swiper-bundle.min.js'></script>
 <script>
   var swiper = new Swiper(".swiper", {
-  effect: "coverflow",
+  effect: "slide",
   grabCursor: true,
   centeredSlides: true,
-  slidesPerView: "auto",
-  coverflowEffect: {
-    rotate: 0,
-    stretch: 0,
-    depth: 100,
-    modifier: 2,
-    slideShadows: true
-  },
-  spaceBetween: 60,
+  slidesPerView: 3,
+  spaceBetween: 20,
   loop: true,
+  speed: 700,
+  autoplay: {
+    delay: 3000,
+    disableOnInteraction: false,
+  },
   pagination: {
     el: ".swiper-pagination",
     clickable: true
+  },
+  breakpoints: {
+    0: { slidesPerView: 1, spaceBetween: 10 },
+    600: { slidesPerView: 2, spaceBetween: 15 },
+    900: { slidesPerView: 3, spaceBetween: 20 }
   }
 });
 </script>
@@ -1444,15 +1479,11 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   <div class="content-area">
     <div id="foldersSection" style="display:none;">
       <div class="section-rule">
-        <span class="section-rule-label">Folders</span>
-        <div class="section-rule-line"></div>
       </div>
       <div class="folders-grid" id="foldersGrid"></div>
     </div>
     <div id="filesSection">
       <div class="section-rule">
-        <span class="section-rule-label">Files</span>
-        <div class="section-rule-line"></div>
       </div>
       <div class="files-grid" id="filesGrid"></div>
       <div class="files-list" id="filesList" style="display:none;"></div>
@@ -1563,15 +1594,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 
       let access_codes = await vdb.fetchTable('users_rows','access_asked')
     let randomCode = access_codes[Math.floor(Math.random() * access_codes.length)].value
-    // Initialize the QR instance
-    const qrcode = new QRCode(document.getElementById("qrcode"), {
-        text: randomCode,
-        width: 120,
-        height: 120,
-        colorDark : "#2b3438",
-        colorLight : "#8e9ea4",
-        correctLevel : QRCode.CorrectLevel.H
-    });
+  
     document.getElementById('code_review').innerHTML = `Your referral code is:<b> ${randomCode}</b>`;
 
     function generateQR() {
@@ -1740,7 +1763,11 @@ async function listFiles(){
     folders.forEach(f=>{
       const tile=document.createElement('div');tile.className='folder-tile';
       const isStarred=starredFiles.has('folder:'+f.name);
-      tile.innerHTML=`<button class="menu-btn" onclick="event.stopPropagation();openCtx(event,'${f.name}',true)">⋯</button><button class="star-btn ${isStarred?'starred':''}" onclick="event.stopPropagation();toggleStar('folder:${f.name}',this)" title="Star">${isStarred?'★':'☆'}</button><svg class="folder-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg><div class="folder-name">${f.name}</div><div class="folder-meta">${(f.size/(1024*1024)).toFixed(1)} MB</div>`;
+      tile.innerHTML=`
+      <button class="menu-btn" onclick="event.stopPropagation();openCtx(event,'${f.name}',true)">⋯</button>
+      <button class="star-btn ${isStarred?'starred':''}" onclick="event.stopPropagation();toggleStar('folder:${f.name}',this)" title="Star">
+        ${isStarred?'★':'☆'}</button>
+        <svg class="folder-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="float:left;"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg><div class="folder-name" style="float:left;">${f.name}</div><div class="folder-meta">${(f.size/(1024*1024)).toFixed(1)} MB</div>`;
       tile.ondblclick=()=>openFolder(f.name);
       foldersGrid.appendChild(tile);
       attachLongPress(tile, f.name);
