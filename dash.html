@@ -947,7 +947,16 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
       <span class="storage-used">Referral Code:</span>
       <div class="storage-header">Allow Your Friends To Join Vasuki Cloud By Scanning The QR</div>
       <div id="code_review" style="color: #f3f3f3"></div>
+      <button class="btn btn-n-f-d" onclick="copy()">Copy To Clipboard</button>
 </div>
+
+<script>
+  function copy() {
+    let code = document.querySelector("#code_review").innerHTML.split("<b>")[1].split("</b>")[0]
+    document.querySelector(".btn-n-f-d").innerHTML = 'Copied ✓'
+    navigator.clipboard.writeText(code)
+  }
+</script>
 
 <script type="module">
 
@@ -1073,6 +1082,12 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
           color: #fff;
           border: none;
           margin-left: 5px;
+        }
+
+        @media (max-width: 768px) {
+          .advertisment {
+            display: none;
+          }
         }
       </style>
       <script>
