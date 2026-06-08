@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,12 +10,13 @@
             font-family: 'CustomFont';
             src: url('custom.ttf') format('truetype');
         }
-        
+
         body {
             font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
         }
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <style>
         :root {
             --cream: #efe5d8;
@@ -337,6 +339,27 @@
             .card { padding: 32px 24px 28px; border-radius: 20px; }
             h1 { font-size: 24px; }
         }
+
+        /* QR Scanner specific styles */
+        #qrModal .card {
+            padding: 24px;
+            max-width: 360px;
+        }
+        #reader {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--cream-border);
+        }
+        #reader video {
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        .settings-backdrop {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 9999;
+            display: none; align-items: center; justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -443,8 +466,6 @@
     });
   </script>
 
- 
-
     <div class="card">
         <div class="brand-chip">
             <img src="./logo.jpg" alt="">
@@ -481,11 +502,29 @@
                 </svg>
                 Continue with Google
             </button>
+
+            <button class="btn-google" id="qrBtn" onclick="startQRScanner()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray-700)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Sign in with QR Code
+            </button>
         </div>
 
         <div class="card-footer">
             <span class="footer-text">New to vCloud?</span>
             <button class="btn-create" onclick="goToSignup()">Create account</button>
+        </div>
+    </div>
+
+    <div id="qrModal" class="settings-backdrop">
+        <div class="card">
+            <h2 style="margin-bottom: 16px; font-size: 20px; font-family: 'DM Serif Display', serif; color: var(--gray-900); text-align: center;">Scan your QR ID</h2>
+            <div id="reader"></div>
+            <button onclick="closeQRScanner()" style="margin-top: 16px; width: 100%; padding: 12px; background: var(--gray-200); color: var(--gray-900); border: none; border-radius: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500;">Cancel</button>
         </div>
     </div>
 
@@ -585,6 +624,87 @@
 
         client.requestCode();
     }
+
+    /* -----------------------------------------------------------------
+       QR Code Integrated Logic using Database Fetch
+       ----------------------------------------------------------------- */
+    let html5QrCode;
+
+    window.startQRScanner = function() {
+        if(typeof soundEffects !== 'undefined') soundEffects.play('click');
+        document.getElementById('qrModal').style.display = 'flex';
+        
+        // Initialize HTML5 QR Code scanner instance with high efficiency settings
+        html5QrCode = new Html5Qrcode("reader");
+        const config = { fps: 15, qrbox: { width: 250, height: 250 } };
+        
+        html5QrCode.start(
+            { facingMode: "environment" },
+            config,
+            async (decodedText) => {
+                // Success callback triggers when an ID is read
+                if(typeof soundEffects !== 'undefined') soundEffects.play('success');
+                closeQRScanner(true);
+                handleQRLogin(decodedText);
+            },
+            (errorMessage) => {
+                // Background parse warnings, ignore to continue scanning
+            }
+        ).catch(err => {
+            console.error("Error starting QR scanner:", err);
+            alert("Camera access denied or unavailable.");
+            closeQRScanner(false);
+        });
+    };
+
+    window.closeQRScanner = function(stopCamera = true) {
+        if (stopCamera && html5QrCode) {
+            html5QrCode.stop().then(() => {
+                html5QrCode.clear();
+            }).catch(err => console.error("Failed to stop scanner", err));
+        }
+        document.getElementById('qrModal').style.display = 'none';
+    };
+
+    window.handleQRLogin = async function(scannedId) {
+        const qrBtn = document.getElementById('qrBtn');
+        const originalContent = qrBtn.innerHTML;
+        
+        // Show loading state on button
+        qrBtn.innerHTML = `Verifying ID...`;
+        qrBtn.disabled = true;
+        qrBtn.style.opacity = '0.7';
+
+        try {
+            await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+            const data = await vdb.fetchTable('users_rows', 'Sheet1');
+            
+            // Search database for the given ID text
+            const user = data.find(u => u && u.id && u.id.toString() === scannedId.trim());
+
+            if (user && user.username) {
+                // Set explicitly requested local storage keys
+                localStorage.setItem('vcloud_user', user.username);
+                localStorage.setItem('vcloud_username', user.name || '');
+                
+                // Redirect user to dash
+                window.location.href = './dash.html?email=' + encodeURIComponent(user.username);
+            } else {
+                alert("No matching user found for this QR ID.");
+                resetQRButton(qrBtn, originalContent);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Database error fetching user ID.");
+            resetQRButton(qrBtn, originalContent);
+        }
+    };
+
+    function resetQRButton(btn, content) {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.innerHTML = content;
+    }
 </script>
 
 <script>
@@ -595,7 +715,7 @@
             this.sounds = {};
             this.initAudioContext();
         }
-        
+
         initAudioContext() {
             try {
                 this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -604,7 +724,7 @@
                 console.log('Audio not supported');
             }
         }
-        
+
         createSounds() {
             // Create different sound effects using Web Audio API
             this.sounds = {
@@ -618,34 +738,34 @@
                 unmute: () => this.playTone(800, 0.15, 'square')
             };
         }
-        
+
         playTone(frequency, duration, type = 'sine') {
             if (!this.audioContext) return;
-            
+
             const oscillator = this.audioContext.createOscillator();
             const gainNode = this.audioContext.createGain();
-            
+
             oscillator.connect(gainNode);
             gainNode.connect(this.audioContext.destination);
-            
+
             oscillator.frequency.value = frequency;
             oscillator.type = type;
-            
+
             gainNode.gain.setValueAtTime(0.3, this.audioContext.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + duration);
-            
+
             oscillator.start(this.audioContext.currentTime);
             oscillator.stop(this.audioContext.currentTime + duration);
         }
-        
+
         playChord(frequencies, duration) {
             if (!this.audioContext) return;
-            
+
             frequencies.forEach(freq => {
                 this.playTone(freq, duration);
             });
         }
-        
+
         play(soundName) {
             if (this.sounds[soundName]) {
                 // Resume audio context if suspended
@@ -656,16 +776,16 @@
             }
         }
     }
-    
+
     // Initialize sound effects
     const soundEffects = new SoundEffects();
-    
+
     // Settings functionality - Global scope
     function showSettings() {
         soundEffects.play('click');
         showSettingsDialog();
     }
-    
+
     // Show settings dialog
     function showSettingsDialog() {
         // Create settings dialog
@@ -685,10 +805,10 @@
             max-width: 500px;
             animation: cardIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
         `;
-        
+
         // Load existing settings
         const existingSettings = JSON.parse(localStorage.getItem('vasuki_meet_settings') || '{}');
-        
+
         dialog.innerHTML = `
             <h2 style="margin: 0 0 24px 0; font-family: 'CustomFont', sans-serif; color: var(--gray-900);">Vasuki Cloud Settings</h2>
             
@@ -744,7 +864,7 @@
                 </button>
             </div>
         `;
-        
+
         // Add backdrop
         const backdrop = document.createElement('div');
         backdrop.className = 'settings-backdrop';
@@ -756,20 +876,21 @@
             bottom: 0;
             background: rgba(0,0,0,0.5);
             z-index: 9999;
+            display: block;
         `;
         backdrop.onclick = () => {
             dialog.remove();
             backdrop.remove();
         };
-        
+
         document.body.appendChild(backdrop);
         document.body.appendChild(dialog);
     }
-    
+
     // Save settings
     function saveLoginSettings(button) {
         soundEffects.play('success');
-        
+
         const settings = {
             cameraQuality: document.getElementById('cameraQuality').value,
             audioQuality: document.getElementById('audioQuality').value,
@@ -777,14 +898,14 @@
             autoJoinVideo: document.getElementById('autoJoinVideo').checked,
             rememberMe: document.getElementById('rememberMe').checked
         };
-        
+
         // Save to localStorage
         localStorage.setItem('vasuki_meet_settings', JSON.stringify(settings));
-        
+
         // Close dialog
         button.closest('.dialog').remove();
         document.querySelector('.settings-backdrop').remove();
-        
+
         // Show success message with sound
         const notification = document.createElement('div');
         notification.style.cssText = `
@@ -802,23 +923,23 @@
         `;
         notification.textContent = 'Settings saved successfully';
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
             notification.remove();
         }, 3000);
     }
-    
+
     // Add sound effects to all buttons after page load
     document.addEventListener('DOMContentLoaded', function() {
         // Add click sounds to all buttons
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
             button.addEventListener('click', () => {
-                if (!button.disabled) {
+                if (!button.disabled && button.id !== 'qrBtn') { 
                     soundEffects.play('click');
                 }
             });
-            
+
             // Add hover sounds
             button.addEventListener('mouseenter', () => {
                 if (!button.disabled) {
@@ -826,19 +947,19 @@
                 }
             });
         });
-        
+
         // Add click sounds to links
         const links = document.querySelectorAll('a');
         links.forEach(link => {
             link.addEventListener('click', () => {
                 soundEffects.play('click');
             });
-            
+
             link.addEventListener('mouseenter', () => {
                 soundEffects.play('hover');
             });
         });
-        
+
         // Add sound to input focus
         const inputs = document.querySelectorAll('input');
         inputs.forEach(input => {
@@ -850,3 +971,4 @@
 </script>
 </body>
 </html>
+
