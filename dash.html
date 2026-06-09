@@ -843,6 +843,61 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 </head>
 <body>
 
+  <div class="modal-backdrop" id="qrModal">
+  <div class="modal-box" style="width:320px;text-align:center;">
+    <div class="modal-title" style="margin-bottom:4px;">Scan to Download</div>
+    <div class="modal-sub" id="qrFileName" style="margin-bottom:20px;word-break:break-all;"></div>
+
+    <!-- Loading state -->
+    <div id="qrLoader" style="padding:32px 0;display:flex;flex-direction:column;align-items:center;gap:14px;">
+      <div class="spinner" style="width:36px;"></div>
+      <span style="font-family:'Roboto Mono',monospace;font-size:0.65rem;color:var(--ink-faint);letter-spacing:0.08em;">Generating QR…</span>
+    </div>
+
+    <!-- QR Code container -->
+    <div id="qrCodeWrap" style="display:none;padding:12px;background:#fff;border-radius:12px;border:1.5px solid var(--border);display:inline-block;">
+      <div id="qrCodeCanvas"></div>
+    </div>
+
+    <div id="qrUrl" style="margin-top:12px;font-family:'Roboto Mono',monospace;font-size:0.58rem;color:var(--ink-faint);word-break:break-all;line-height:1.5;display:none;"></div>
+
+    <div class="modal-row" style="margin-top:20px;">
+      <button class="btn" onclick="copyQrUrl()" id="qrCopyBtn">Copy Link</button>
+      <button class="btn btn-primary" onclick="closeQr()">Done</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ═══════════ Add to your <style> block ═══════════ */
+
+/* Spinner reuse in QR modal */
+.spinner {
+  display: flex;
+  align-items: flex-start;
+  aspect-ratio: 1;
+}
+.spinner:before,
+.spinner:after {
+  content: "";
+  flex: 1;
+  aspect-ratio: 1;
+  --g: conic-gradient(from -90deg at 10px 10px, var(--slate) 90deg, transparent 0);
+  background: var(--g), var(--g), var(--g);
+  filter: drop-shadow(30px 30px 0 var(--slate));
+  animation: aiDot 1s infinite;  /* reuses existing keyframe */
+}
+.spinner:after { transform: scaleX(-1); }
+
+/* QR canvas output alignment */
+#qrCodeCanvas canvas,
+#qrCodeCanvas img {
+  display: block;
+  margin: 0 auto;
+  border-radius: 4px;
+}
+</style>
+
 <div id="uploadToast">
   <div class="toast-header">
     <span class="toast-title" id="toastTitle">Uploading…</span>
@@ -1537,6 +1592,14 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Download
   </button>
+<button class="ctx-item" onclick="ctxAction('qr')">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <rect x="3" y="3" width="5" height="5"/><rect x="16" y="3" width="5" height="5"/>
+    <rect x="3" y="16" width="5" height="5"/>
+    <path d="M21 16h-3v3M21 21h-3M16 16v5M16 21h.01M13 3v5M13 8h-3M13 13h5M18 13v.01"/>
+  </svg>
+  QR Code
+</button>
   <button class="ctx-item" onclick="ctxAction('rename')">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
     Rename
@@ -1550,6 +1613,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
     Delete
   </button>
+
 </div>
 
 <!-- FOCUS -->
@@ -1615,6 +1679,8 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
     </div>
   </div>
 </div>
+
+
 
 <script type="module">
   import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
@@ -1730,6 +1796,72 @@ function showStarred(){
   document.getElementById('navMyCloud').classList.remove('active');
   document.getElementById('pageTitle').textContent='Starred Files';
   renderFiles();
+}
+
+/* ═══════════ QR FUNCTIONS — paste inside your main <script> ═══════════ */
+
+let _qrInstance = null;
+let _qrCurrentUrl = '';
+
+/**
+ * Opens the QR modal for a given filename.
+ * Builds the direct download URL and renders a QR code.
+ */
+function openQrCode(fileName) {
+  const filePath = currentFolder ? `${currentFolder}/${fileName}` : fileName;
+  const downloadUrl = `${BASE_URL}/download/${userEmail}/${filePath}`;
+
+  _qrCurrentUrl = downloadUrl;
+
+  // Populate file name label
+  document.getElementById('qrFileName').textContent = fileName;
+
+  // Reset to loading state
+  document.getElementById('qrLoader').style.display = 'flex';
+  document.getElementById('qrCodeWrap').style.display = 'none';
+  document.getElementById('qrUrl').style.display = 'none';
+  document.getElementById('qrCopyBtn').textContent = 'Copy Link';
+
+  // Clear previous QR
+  const canvas = document.getElementById('qrCodeCanvas');
+  canvas.innerHTML = '';
+  if (_qrInstance) { _qrInstance = null; }
+
+  // Open modal
+  document.getElementById('qrModal').classList.add('open');
+
+  // Short delay so the loader is visible before heavy QR render
+  setTimeout(() => {
+    _qrInstance = new QRCode(canvas, {
+      text: downloadUrl,
+      width: 200,
+      height: 200,
+      colorDark: '#1e2628',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // Show QR, hide loader
+    document.getElementById('qrLoader').style.display = 'none';
+    document.getElementById('qrCodeWrap').style.display = 'inline-block';
+    document.getElementById('qrUrl').textContent = downloadUrl;
+    document.getElementById('qrUrl').style.display = 'block';
+  }, 500);
+}
+
+function closeQr() {
+  document.getElementById('qrModal').classList.remove('open');
+  document.getElementById('qrCodectx-menu').innerHTML = '';
+  _qrInstance = null;
+}
+
+function copyQrUrl() {
+  if (!_qrCurrentUrl) return;
+  navigator.clipboard.writeText(_qrCurrentUrl).then(() => {
+    const btn = document.getElementById('qrCopyBtn');
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => { btn.textContent = 'Copy Link'; }, 2000);
+  });
 }
 
 function filterByType(type){setChip(type);}
@@ -1927,7 +2059,7 @@ function toggleSelect(name){selectedFiles.has(name)?selectedFiles.delete(name):s
 function clearSelection(){selectedFiles.clear();updateSelectionUI();renderFiles();}
 function updateSelectionUI(){const bar=document.getElementById('selectionBar');if(selectedFiles.size>0){bar.classList.add('visible');document.getElementById('selectionCount').textContent=`${selectedFiles.size} selected`;}else bar.classList.remove('visible');}
 function openCtx(e,name,isFolder){ctxTarget={name,isFolder};const menu=document.getElementById('ctxMenu');document.getElementById('ctxEdit').style.display=(!isFolder&&/\.(txt|html|css|js|py|json|csv)$/i.test(name))?'flex':'none';menu.style.cssText=`left:${e.clientX}px;top:${e.clientY}px`;menu.classList.add('visible');e.stopPropagation();}
-function ctxAction(action){if(!ctxTarget)return;const{name}=ctxTarget;if(action==='edit')editFile(name);if(action==='download')downloadFile(name);if(action==='rename')renameItem(name);if(action==='delete')deleteItem(name);if(action==='star'){const key='folder:'+name in starredFiles?'folder:'+name:name;starredFiles.has(key)?starredFiles.delete(key):starredFiles.add(key);saveStarred();renderFiles();}closeCtx();}
+function ctxAction(action){if(!ctxTarget)return;const{name}=ctxTarget;if(action==='edit')editFile(name);if(action==='download')downloadFile(name);if(action==='rename')renameItem(name);if(action==='delete')deleteItem(name);if (action==='qr')openQrCode(name);if(action==='star'){const key='folder:'+name in starredFiles?'folder:'+name:name;starredFiles.has(key)?starredFiles.delete(key):starredFiles.add(key);saveStarred();renderFiles();}closeCtx();}
 function closeCtx(){document.getElementById('ctxMenu').classList.remove('visible');ctxTarget=null;}
 document.addEventListener('click',closeCtx);
 document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){closeCtx();closeFocus();}if(document.getElementById('focusOverlay').style.display==='flex'){if(e.key==='ArrowRight')nextFocus();if(e.key==='ArrowLeft')prevFocus();}if((e.ctrlKey||e.metaKey)&&e.key==='x'&&selectedFiles.size>0)handleCut();if((e.ctrlKey||e.metaKey)&&e.key==='v'&&clipboard.files.length>0)handlePaste();});
