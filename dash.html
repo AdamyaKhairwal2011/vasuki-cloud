@@ -65,14 +65,13 @@ body {
 aside {
   width: 256px;
   min-height: 100dvh;
-  background: #3b2a13;
+  background: #3e494e;
   display: flex;
   flex-direction: column;
   position: sticky;
   top: 0;
   height: 100dvh;
   overflow-y: auto;
-  border-right: 1px solid var(--sidebar-border);
   flex-shrink: 0;
   z-index: 100;
   border-radius: 0 16px 16px 0;
@@ -85,8 +84,8 @@ aside {
   display: flex; align-items: center; gap: 12px;
 }
 .sidebar-logo img { width: 32px; height: 32px; border-radius: 8px; opacity: 0.9; }
-.sidebar-logo-text { font-family: 'Google Sans Display', sans-serif; font-size: 1rem; font-weight: 500; color: var(--lemon); letter-spacing: 0em; line-height: 1.2; }
-.sidebar-logo-sub { font-family: 'Roboto Mono', monospace; font-size: 0.55rem; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1px; }
+.sidebar-logo-text { font-family: 'Google Sans Display', sans-serif; font-size: 1.3rem; font-weight: 500; color: var(--lemon); letter-spacing: 0em; line-height: 1.2; }
+.sidebar-logo-sub { font-family: 'Roboto Mono', monospace; font-size: 0.55rem; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1px; display: none; }
 
 /* Search bar in sidebar */
 .sidebar-search {
@@ -102,7 +101,7 @@ aside {
   transition: all 0.15s;
 }
 .sidebar-search-inner:focus-within {
-  background: rgba(255,252,206,0.1);
+  background: #6d7a80;
   border-color: rgba(255,252,206,0.3);
 }
 .sidebar-search-inner svg { opacity: 0.4; flex-shrink: 0; }
@@ -150,15 +149,15 @@ aside {
 }
 
 .storage-section { padding: 14px 14px 18px; border-top: 1px solid rgba(255,255,255,0.04); }
-.storage-header { font-family: 'Roboto Mono', monospace; font-size: 0.55rem; color: rgba(255,255,255,0.25); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
-.storage-numbers { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
-.storage-used { font-family: 'Google Sans Display', sans-serif; font-size: 1.15rem; font-weight: 500; color: var(--lemon); }
-.storage-total { font-family: 'Roboto Mono', monospace; font-size: 0.6rem; color: rgba(255,255,255,0.2); }
+.storage-header { font-family: 'google sans', monospace; font-size: 0.55rem; color: rgba(255,255,255,0.25); letter-spacing: 0.12em;  margin-bottom: 8px; }
+.storage-numbers { display: flex; justify-content: left; align-items: baseline; margin-bottom: 8px; font-family: 'google sans';}
+.storage-used { font-family: 'Google Sans', sans-serif; font-size: 1.75rem; font-weight: 500; color: var(--ink); }
+.storage-total { font-family: 'Roboto Mono', monospace; font-size: 0.9rem; color: rgb(96, 96, 96); }
 .storage-bar-bg { height: 4px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; }
 .storage-bar-fill { height: 100%; background: linear-gradient(90deg, var(--lemon-dark), var(--lemon)); opacity: 0.85; transition: width 0.6s ease; width: 0%; border-radius: 100px; }
 
 /* Mobile */
-.mobile-top-bar { display: none; position: sticky; top: 0; background: var(--sidebar-bg); padding: 12px 18px; border-bottom: 1px solid var(--sidebar-border); z-index: 200; justify-content: space-between; align-items: center; }
+.mobile-top-bar { display: none; position: sticky; top: 0; background: var(--sidebar-bg); padding: 12px 18px; border: none; border-radius: 0px 0px 20px 20px; z-index: 200; justify-content: space-between; align-items: center; }
 .mobile-logo { font-family: 'Google Sans Display', sans-serif; font-weight: 500; color: var(--lemon); font-size: 1rem; }
 .hamburger { background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; padding: 4px; display: flex; }
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 99; }
@@ -171,14 +170,13 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   display: flex; align-items: center; gap: 12px;
   padding: 10px 36px;
   background: var(--card);
-  border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 50;
 }
 .topbar-search {
   flex: 1; max-width: 540px;
   display: flex; align-items: center; gap: 10px;
   background: var(--bg);
-  border: 1.5px solid var(--border);
+  box-shadow: 0px 0px 5px 0px #b0b0b0;
   border-radius: 100px;
   padding: 9px 18px;
   transition: all 0.15s;
@@ -371,7 +369,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   }
 }
 
-.main-header { padding: 24px 36px 0; border-bottom: 1px solid var(--border); }
+.main-header { padding: 24px 36px 0; background-color: #f8f8f8; border-radius: 0px 0px 50px 50px;}
 .breadcrumb {
   font-family: 'Google Sans Text', sans-serif;
   font-size: 0.8rem; color: var(--ink-faint);
@@ -388,9 +386,9 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   display: flex; align-items: center; gap: 10px;
 }
 .page-title-accent {
-  background: #634925;
-  border: 1.5px solid #634925;
-  border-radius: 8px; padding: 4px 15px;
+  background: #3e494e;
+  border: 1.5px solid #3e494e;
+  border-radius: 100px; padding: 8px 30px;
   font-size: 0.85rem; font-weight: 500;
   color: #fff; font-family: 'Google Sans Text', sans-serif;
 }
@@ -410,7 +408,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 .btn:hover { background: var(--bg-dark); border-color: var(--slate-light); color: var(--ink); }
 .btn-primary { background: var(--slate); color: var(--lemon); border-color: var(--slate); }
 .btn-primary:hover { background: var(--slate-deep); border-color: var(--slate-deep); }
-.btn-lemon { background: #634925; color: #fff; border-color: #634925; }
+.btn-lemon { background:#3e494e; color: #fff; border: none; }
 .btn-lemon:hover { background: var(--lemon-mid); border-color: var(--lemon-dark); color: var(--slate-deep); box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
 .btn-danger { border-color: #fca5a5; color: var(--red); background: var(--red-bg); }
 .btn-danger:hover { background: var(--red); color: white; border-color: var(--red); }
@@ -420,11 +418,10 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 /* ═══════════ UPLOAD ZONE ═══════════ */
 .upload-zone {
   margin: 20px 36px 0;
-  border: 2px dashed var(--border-dark);
   border-radius: 12px; padding: 24px 40px;
   text-align: center; cursor: pointer;
-  background: #ebebeb;
-  transition: all 0.15s; position: relative; overflow: hidden;
+  background: #ececec;
+  transition: rgb(241, 241, 241)5s; position: relative; overflow: hidden;
 }
 .upload-zone::before { content: ''; position: absolute; inset: 0; pointer-events: none; }
 .upload-zone:hover, .upload-zone.drag-over {
@@ -443,8 +440,14 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 
 /* TYPE BAR */
 .type-bar-section { padding: 16px 36px 0; }
-.type-bar-track { height: 5px; background: var(--border); border-radius: 100px; display: flex; overflow: hidden; }
-.type-bar-segment { height: 100%; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.type-bar-track { height: 15px; background: var(--border); border-radius: 100px; display: flex; overflow: hidden; }
+.type-bar-segment { height: 100%; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); border-radius: 0px 100px 100px 0px; border-right: 2px solid var(--bg);   
+}
+
+.type-bar-segment ~ .type-bar-segment {
+  margin-right: -10px; /* Half of height; pulls the next item underneath */
+}
+
 .type-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
 .type-legend-item {
   display: flex; align-items: center; gap: 5px;
@@ -485,11 +488,11 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   font-family: 'Google Sans Text', sans-serif;
   font-size: 0.78rem; font-weight: 500;
   padding: 5px 14px; border-radius: 100px;
-  border: 1.5px solid var(--border-dark);
-  background: var(--card); color: var(--ink-mid);
+  border:none;
+  background: var(--sidebar-border); color: var(--ink);
   cursor: pointer; transition: all 0.12s; display: flex; align-items: center; gap: 6px;
 }
-.chip:hover { border-color: var(--slate-light); background: var(--bg); color: var(--ink); }
+.chip:hover { border-color: var(--slate-light); background: var(--border-dark); color: var(--ink); }
 .chip.active { background: var(--slate); color: var(--lemon); border-color: var(--slate); }
 .chip svg { opacity: 0.7; }
 
@@ -537,7 +540,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 .file-card.card-wide { grid-column: span 2; aspect-ratio: 2/1; }
 .file-preview { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .file-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.file-icon-wrap { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: linear-gradient(135deg, var(--bg) 0%, var(--bg-dark) 100%); }
+.file-icon-wrap { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: #e8e8e8; }
 .file-footer {
   padding: 8px 10px; border-top: 1px solid var(--border);
   background: var(--card); flex-shrink: 0;
@@ -701,11 +704,15 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   aside.active { transform: translateX(280px); }
   .sidebar-overlay.active { display: block; }
   .mobile-top-bar { display: flex; }
-  .topbar, .main-header, .upload-zone, .type-bar-section, .content-area { padding-left: 18px; padding-right: 18px; }
+  .topbar, .main-header{ padding-left: 18px; padding-right: 18px; }
   .selection-bar, .paste-bar, .filter-chips { margin-left: 18px; margin-right: 18px; }
 
   .filter-chips {
     display: none;
+  }
+
+  .main-header {
+    padding-bottom: 10px;
   }
   .page-title { font-size: 1.3rem; }
   .files-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 8px; }
@@ -857,7 +864,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 <aside id="sidebar">
   <div class="sidebar-logo">
     <div>
-      <div class="sidebar-logo-text">Vasuki Neem</div>
+      <div class="sidebar-logo-text"><b>Vasuki</b> Neem</div>
       <div class="sidebar-logo-sub">Cloud Storage</div>
     </div>
   </div>
@@ -912,7 +919,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
         display: inline-flex;
         flex-direction: column;
         gap: 16px;
-        background-color: #624a28;
+        background-color: #20282c;
         margin: 20px;
         font-family: 'Roboto', sans-serif;
     }
@@ -944,10 +951,10 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 </style>
 
 <div class="qr-card">
-      <span class="storage-used">Referral Code:</span>
-      <div class="storage-header">Allow Your Friends To Join Vasuki Cloud By Scanning The QR</div>
+      <span class="storage-used" style="color: #ffffff; font-size: 1.45rem;">Referral Code:</span>
+      <div class="storage-header" style="color: #eeeeee;">Allow Your Friends To Join Vasuki Cloud By Scanning The QR</div>
       <div id="code_review" style="color: #f3f3f3"></div>
-      <button class="btn btn-n-f-d" onclick="copy()">Copy To Clipboard</button>
+      <button class="btn btn-n-f-d" onclick="copy()" style="border: none; background: #ffffff41; color: #fff;">Copy To Clipboard</button>
 </div>
 
 <script>
@@ -964,10 +971,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 <div id="flex-1"></div>
   <div class="storage-section">
     <div class="storage-header">Storage Used</div>
-    <div class="storage-numbers">
-      <span class="storage-used" id="usedText">0 MB</span>
-      <span class="storage-total">/ 500 MB</span>
-    </div>
+
     <div class="storage-bar-bg"><div class="storage-bar-fill" id="storageBarFill"></div></div>
     <button class="nav-item danger" style="margin-top:14px" onclick="signOut()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -1059,7 +1063,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
     </div>
     <div class="header-row">
       <h1 class="page-title">
-        <span id="pageTitle">Your Files</span>
+        <span id="pageTitle" style="font-family: 'google sans';">Your Files</span>
         <span class="page-title-accent" id="fileCount">—</span>
       </h1>
 
@@ -1069,7 +1073,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
       </div>
       <style>
         .advertisment {
-          background-color: #3b2a13;
+          background-color: #3e494e;
           color: #fef7e9;
           padding: 10px 10px 10px 20px;
           border-radius: 100px;
@@ -1078,7 +1082,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
         .btn-new-ad {
           padding: 10px;
           border-radius: 100px;
-          background-color: #79603d;
+          background-color: #fafafa13;
           color: #fff;
           border: none;
           margin-left: 5px;
@@ -1117,6 +1121,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   overflow: hidden;
   width: 88%;
   margin-left: 2%;
+  display: none;
 }
 
 
@@ -1129,12 +1134,14 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   overflow: hidden;
   width: 88%;
   margin-left: 2%;
+  display: none;
 }
 
 .swiper {
-  width: 100%;
+  width: 100dvw;
   height: 260px;
   padding: 0 !important;
+  display: none;
 }
 
 
@@ -1150,6 +1157,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   transform: scale(0.93);
   transition: opacity 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+              display: none;
 }
 
 .swiper-slide-active {
@@ -1375,7 +1383,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   </script>
 
 
-  <section id="this">
+  <section id="this" style="display: none;">
   <div class="swiper"><br><br>
     <div class="swiper-wrapper">
       <div class="swiper-slide swiper-slide--one">
@@ -1436,14 +1444,12 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 });
 </script>
 
-  <div class="upload-zone" id="uploadZone">
-    <input type="file" id="fileInput" multiple onchange="uploadFiles()">
-    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-    <div class="upload-title">Drop files here or click to upload</div>
-    <div class="upload-sub">Max 500 MB total &nbsp;·&nbsp; All file types accepted</div>
-  </div>
-
   <div class="type-bar-section">
+    
+    <div class="storage-numbers">
+      <span class="storage-used" id="usedText">0 MB</span>
+      <span class="storage-total">&nbsp;/ 500 MB</span>
+    </div>
     <div class="type-bar-track" id="typeBarTrack"></div>
     <div class="type-legend" id="typeLegend"></div>
   </div>
@@ -1474,6 +1480,16 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
       Starred
     </button>
   </div>
+
+  <div class="upload-zone" id="uploadZone">
+    <input type="file" id="fileInput" multiple onchange="uploadFiles()">
+    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <div class="upload-title">Drop files here or click to upload</div>
+    <div class="upload-sub">Max 500 MB total &nbsp;·&nbsp; All file types accepted</div>
+  </div>
+
+
+
 
   <div class="selection-bar" id="selectionBar">
     <span class="selection-count" id="selectionCount">0 selected</span>
@@ -1747,7 +1763,7 @@ function cycleSortOrder(){
   renderFiles();
 }
 
-const FILE_TYPES={Images:{color:"#4a6a5a",match:/\.(png|jpg|jpeg|gif|webp)$/i},Code:{color:"#5a6a50",match:/\.(html|css|js|json|ts|py|java)$/i},Docs:{color:"#4a5a6a",match:/\.(pdf|docx?|pptx?|xlsx?)$/i},Video:{color:"#6a4a5a",match:/\.(mp4|mov|avi|mkv)$/i},Audio:{color:"#6a5a3a",match:/\.(mp3|wav|ogg)$/i},Zip:{color:"#5a5a4a",match:/\.(zip|rar|7z)$/i},Other:{color:"#7a7a6a",match:/.*/}};
+const FILE_TYPES={Images:{color:"red",match:/\.(png|jpg|jpeg|gif|webp)$/i},Code:{color:"navy",match:/\.(html|css|js|json|ts|py|java)$/i},Docs:{color:"maroon",match:/\.(pdf|docx?|pptx?|xlsx?)$/i},Video:{color:"orange",match:/\.(mp4|mov|avi|mkv)$/i},Audio:{color:"sage",match:/\.(mp3|wav|ogg)$/i},Zip:{color:"gray",match:/\.(zip|rar|7z)$/i},Other:{color:"#7a7a6a",match:/.*/}};
 
 function getTypeKey(name){for(const k in FILE_TYPES){if(FILE_TYPES[k].match.test(name))return k;}return 'Other';}
 function getExt(name){const p=name.split('.');return p.length>1?p.pop().toUpperCase():'FILE';}
@@ -1761,7 +1777,7 @@ function renderTypeBar(files){
   for(const k in stats){const pct=(stats[k]/total)*100,seg=document.createElement('div');seg.className='type-bar-segment';seg.style.cssText=`width:${pct}%;background:${FILE_TYPES[k].color}`;track.appendChild(seg);const item=document.createElement('div');item.className='type-legend-item';item.innerHTML=`<div class="type-dot" style="background:${FILE_TYPES[k].color}"></div>${k} <span style="opacity:.5">${(stats[k]/1024).toFixed(0)}kb</span>`;legend.appendChild(item);}
 }
 
-function getFileIcon(name,size=40){const s=size;if(/\.(pdf)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#4a5a6a"/><text x="12" y="15.5" text-anchor="middle" fill="white" font-size="6" font-family="sans-serif" font-weight="600">PDF</text></svg>`;if(/\.(zip|rar|7z)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#5a5a4a"/><text x="12" y="15.5" text-anchor="middle" fill="white" font-size="6" font-family="sans-serif" font-weight="600">ZIP</text></svg>`;if(/\.(mp3|wav|ogg)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#6a5a3a"/><path d="M9 17V7l8 3-8 4" fill="white"/></svg>`;if(/\.(mp4|mov|avi|mkv)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#6a4a5a"/><path d="M10 8l6 4-6 4V8z" fill="white"/></svg>`;if(/\.(html|css|js|py|json|ts)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#5a6a50"/><path d="M8 9l-3 3 3 3M16 9l3 3-3 3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`;if(/\.(docx?|pptx?|xlsx?)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#4a5a6a"/><rect x="6" y="7" width="12" height="2" rx="1" fill="white"/><rect x="6" y="11" width="10" height="2" rx="1" fill="white"/><rect x="6" y="15" width="8" height="2" rx="1" fill="white"/></svg>`;return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#7a7a6a"/><path d="M7 7h10M7 12h10M7 17h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`;}
+function getFileIcon(name,size=40){const s=size;if(/\.(pdf)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#777b7e"A9A9A9"4a5a6a"/><text x="12" y="15.5" text-anchor="middle" fill="white" font-size="6" font-family="sans-serif" font-weight="600">PDF</text></svg>`;if(/\.(zip|rar|7z)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#777b7e"A9A9A9"5a5a4a"/><text x="12" y="15.5" text-anchor="middle" fill="white" font-size="6" font-family="sans-serif" font-weight="600">ZIP</text></svg>`;if(/\.(mp3|wav|ogg)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#777b7e"A9A9A9"6a5a3a"/><path d="M9 17V7l8 3-8 4" fill="white"/></svg>`;if(/\.(mp4|mov|avi|mkv)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#777b7e"A9A9A9"6a4a5a"/><path d="M10 8l6 4-6 4V8z" fill="white"/></svg>`;if(/\.(html|css|js|py|json|ts)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#777b7e"A9A9A9"5a6a50"/><path d="M8 9l-3 3 3 3M16 9l3 3-3 3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`;if(/\.(docx?|pptx?|xlsx?)$/i.test(name))return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#777b7e"A9A9A9"4a5a6a"/><rect x="6" y="7" width="12" height="2" rx="1" fill="white"/><rect x="6" y="11" width="10" height="2" rx="1" fill="white"/><rect x="6" y="15" width="8" height="2" rx="1" fill="white"/></svg>`;return`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#777b7e"A9A9A9"7a7a6a"/><path d="M7 7h10M7 12h10M7 17h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>`;}
 
 async function listFiles(){
   const res=await fetch(`${BASE_URL}/list-files`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:userEmail,folder:currentFolder})});
