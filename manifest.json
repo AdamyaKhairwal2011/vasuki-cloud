@@ -9,9 +9,9 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "/logo-blk-bg.jpg",
+      "src": "/logo.png",
       "sizes": "192x192 512x512",
-      "type": "image/jpg"
+      "type": "image/png"
     }
   ]
 }
