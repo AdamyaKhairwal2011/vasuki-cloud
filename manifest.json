@@ -1,0 +1,17 @@
+{
+  "name": "Vasuki Cloud",
+  "short_name": "Vasuki",
+  "description": "Enterprise cloud platform and infrastructure solutions.",
+  "start_url": "/dash.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/logo-blk-bg.jpg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpg"
+    }
+  ]
+}
