@@ -490,6 +490,10 @@
                         <input type="password" id="re-password" placeholder="Confirm password" autocomplete="new-password">
                     </div>
 
+                    <div class="input-group">
+                        <input type="password" id="mpin" placeholder="Enter 6 Digit MPIN For Your Account" autocomplete="mpin">
+                    </div>
+
                     <div class="form-footer-actions">
                         <button type="button" class="btn-text" onclick="location.reload()">Reset</button>
                         <button type="button" class="btn-primary" id="signupBtn" onclick="submitSignup()">Create</button>
@@ -593,8 +597,9 @@
             const phone = document.getElementById("phone").value.trim();
             const rePassword = document.getElementById("re-password").value;
             const signupBtn = document.getElementById("signupBtn");
+            const mpin = document.getElementById("mpin").value.trim()
 
-            if (!first || !last || !email || !password || !phone) {
+            if (!first || !last || !email || !password || !phone || !mpin) {
                 return alert("Please fill all fields");
             }
 
@@ -612,7 +617,8 @@
                     email: email,
                     name: name,
                     password: password,
-                    phone_number: phone
+                    phone_number: phone,
+                    mpin: mpin
                 });
 
                 localStorage.setItem('vcloud_user', email);
