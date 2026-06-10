@@ -671,9 +671,6 @@
         const originalContent = qrBtn.innerHTML;
         
         // Show loading state on button
-        qrBtn.innerHTML = `Verifying ID...`;
-        qrBtn.disabled = true;
-        qrBtn.style.opacity = '0.7';
 
         try {
             await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
@@ -681,14 +678,22 @@
             
             // Search database for the given ID text
             const user = data.find(u => u && u.id && u.id.toString() === scannedId.trim());
+            let mpin = prompt("ENTER YOUR ACCOUNT MPIN:")
 
             if (user && user.username) {
-                // Set explicitly requested local storage keys
-                localStorage.setItem('vcloud_user', user.username);
-                localStorage.setItem('vcloud_username', user.name || '');
-                
-                // Redirect user to dash
-                window.location.href = './dash.html?email=' + encodeURIComponent(user.username);
+                if (mpin == user.mpin) {  
+                    qrBtn.innerHTML = `Verifying ID...`;
+                    qrBtn.disabled = true;
+                    qrBtn.style.opacity = '0.7';
+                    // Set explicitly requested local storage keys
+                    localStorage.setItem('vcloud_user', user.username);
+                    localStorage.setItem('vcloud_username', user.name || '');
+                    
+                    // Redirect user to dash
+                    window.location.href = './dash.html';
+                } else {
+                    alert("WRONG MPIN, SCAN AND TRY AGAIN.")
+                }
             } else {
                 alert("No matching user found for this QR ID.");
                 resetQRButton(qrBtn, originalContent);
@@ -971,4 +976,3 @@
 </script>
 </body>
 </html>
-
