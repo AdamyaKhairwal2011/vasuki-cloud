@@ -4,14 +4,14 @@
   "description": "Enterprise cloud platform and infrastructure solutions.",
   "start_url": "/dash.html",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#0e0e0e",
+  "theme_color": "#0e0e0e",
   "orientation": "any",
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "/logo-blk-bg.jpg",
       "sizes": "192x192 512x512",
-      "type": "image/png"
+      "type": "image/jpg"
     }
   ]
 }
