@@ -4,18 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vaimanika AI - Advanced AI Solutions</title>
-    <style>
-        @font-face {
-            font-family: 'CustomFont';
-            src: url('../custom.ttf') format('truetype');
-        }
-        
-        body {
-            font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -26,472 +18,780 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
 
-  <style>
-    :root {
-      --bg-color: #f0f4f9;
-      --text-main: #1f1f1f;
-      --text-sub: #444746;
-      --white: #ffffff;
-      --border: #dee2e6;
-      --accent: #4285f4;
-    }
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-main: #1f1f1f;
+            --text-sub: #444746;
+            --white: #ffffff;
+            --border: #e0e2e0;
+            --accent: #1a73e8;
+            --accent-hover: #1557b0;
+            --surface-variant: #e8f0fe;
+            --chip-bg: #ffffff;
+            --chip-hover: #f1f3f4;
+            --transition-fluid: cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body { 
-      font-family: 'Google Sans', Roboto, Arial, sans-serif; 
-      background-color: var(--bg-color); 
-      color: var(--text-main); 
-      height: 100vh; 
-      display: flex; 
-      flex-direction: column;
-      align-items: center;
-      overflow: hidden;
-    }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: 'Google Sans', 'Roboto', Arial, sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    header {
-      width: 100%;
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: absolute;
-      top: 0;
-      z-index: 10;
-    }
+        /* Header UI Customizations */
+        header {
+            width: 100%;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 100;
+            background: rgba(248, 249, 250, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid transparent;
+            transition: background 0.3s, border-color 0.3s;
+        }
 
-    .gemini-logo { font-size: 18px; font-weight: 500; color: var(--text-sub); }
-    .header-right { display: flex; align-items: center; gap: 16px; }
-    .upgrade-btn {
-      background: #c2e7ff;
-      color: #001d35;
-      padding: 10px 16px;
-      border-radius: 24px;
-      font-size: 14px;
-      font-weight: 500;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+        header.scrolled {
+            background: var(--white);
+            border-color: var(--border);
+        }
 
-    .container {
-      margin-top: 15vh;
-      height: 55vh; 
-      width: 100%;
-      max-width: 800px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      transition: all 0.5s ease;
-    }
+        .gemini-logo { 
+            font-size: 22px; 
+            font-weight: 500; 
+            color: var(--text-main); 
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .header-right { 
+            display: flex; 
+            align-items: center; 
+            gap: 16px; 
+        }
 
-    .greeting { font-size: 36px; font-weight: 400; margin-bottom: 8px; color: var(--text-main); margin-top:10vh;}
-    .greeting span { display: block; font-size: 18px; color: #444746; margin-bottom: 4px; }
+        .upgrade-btn {
+            background: #c2e7ff;
+            color: #001d35;
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: box-shadow 0.2s var(--transition-fluid), background-color 0.2s;
+        }
 
-    .input-wrapper {
-      width: 90%;
-      max-width: 720px;
-      background: var(--white);
-      border-radius: 28px;
-      padding: 12px 24px;
-      margin-top: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s ease;
-    }
+        .upgrade-btn:hover {
+            background: #b3dbf7;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+        }
 
-    .input-top { display: flex; align-items: center; width: 100%; gap: 10px; }
-    input#query {
-      flex: 1;
-      border: none;
-      outline: none;
-      font-size: 18px;
-      padding: 12px 0;
-      color: var(--text-main);
-      background: transparent;
-    }
+        #userInit {
+            transition: transform 0.2s var(--transition-fluid);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #userInit:hover {
+            transform: scale(1.05);
+        }
 
-    .stop-btn-container {
-      position: relative;
-      display: none; 
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
-    }
+        /* Central Container Configurations */
+        .container {
+            margin-top: 14vh;
+            width: 100%;
+            max-width: 820px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 24px;
+            transition: transform 0.6s var(--transition-fluid), opacity 0.4s var(--transition-fluid), margin 0.6s var(--transition-fluid);
+            opacity: 1;
+        }
 
-    .loader-ring {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border: 3px solid #e8f0fe;
-      border-top: 3px solid var(--accent);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
+        .container.hidden {
+            transform: translateY(-40px) scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+            margin-top: 0;
+            height: 0;
+            overflow: hidden;
+        }
 
-    #stopBtn {
-      position: relative;
-      width: 12px;
-      height: 12px;
-      background: #1f1f1f;
-      border: none;
-      border-radius: 2px;
-      cursor: pointer;
-      z-index: 2;
-    }
+        .greeting { 
+            font-size: 40px; 
+            font-weight: 400; 
+            margin-bottom: 32px; 
+            color: var(--text-main); 
+            line-height: 1.25;
+            letter-spacing: -0.5px;
+        }
+        
+        .greeting span { 
+            display: block; 
+            font-size: 20px; 
+            color: var(--text-sub); 
+            margin-bottom: 12px; 
+            font-weight: 400;
+        }
+        
+        .greeting img {
+            margin-bottom: 16px;
+            animation: pulseLogo 3s infinite ease-in-out;
+        }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+        @keyframes pulseLogo {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(26,115,232,0)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 4px 12px rgba(26,115,232,0.15)); }
+        }
 
-    .input-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 8px;
-      margin-top: 4px;
-    }
+        /* Workspace Input Optimization */
+        .input-wrapper {
+            width: 100%;
+            background: var(--white);
+            border-radius: 28px;
+            padding: 8px 24px;
+            box-shadow: 0px 0px 8px 0px #0000002b;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.28s var(--transition-fluid), background-color 0.28s;
+            border: 1px solid transparent;
+        }
 
-    .tools-group { display: flex; align-items: center; gap: 16px; color: #444746; font-size: 14px; }
-    .tool-btn { cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 8px; transition: 0.2s; background-color: #def2ff;}
-    .tool-btn:hover { background: #f1f3f4; }
+        .input-wrapper:focus-within {
+            box-shadow: 0 1px 2px rgba(60,64,67,0.3), 0 6px 12px 4px rgba(60,64,67,0.15);
+            background: #fff;
+        }
 
-    /* Code Block Enhancements */
-    pre {
-      position: relative;
-      padding: 1em !important;
-      border-radius: 12px !important;
-      margin: 1.5em 0 !important;
-      overflow-x: auto;
-    }
+        .input-top { 
+            display: flex; 
+            align-items: center; 
+            width: 100%; 
+            gap: 12px; 
+        }
+        
+        input#query {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-family: inherit;
+            padding: 14px 0;
+            color: var(--text-main);
+            background: transparent;
+        }
+        
+        input#query::placeholder {
+            color: #757575;
+        }
 
-    .code-copy-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 6px 10px;
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.2s, background 0.2s;
-      z-index: 5;
-    }
+        /* Loading / Stop Control Systems */
+        .stop-btn-container {
+            display: none; 
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            position: relative;
+        }
 
-    pre:hover .code-copy-btn {
-      opacity: 1;
-    }
+        .loader-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid #e8f0fe;
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.85s linear infinite;
+        }
 
-    .code-copy-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
+        #stopBtn {
+            position: relative;
+            width: 12px;
+            height: 12px;
+            background: var(--text-main);
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            z-index: 2;
+            transition: transform 0.15s ease;
+        }
+        
+        #stopBtn:hover {
+            transform: scale(1.1);
+            background: #000;
+        }
 
-    .mode-select-container { position: relative; display: flex; align-items: center; gap: 10px; }
-    #modeLabel { font-size: 13px; color: var(--accent); font-weight: 500; cursor: pointer; padding: 6px 12px; border-radius: 18px; background: #e8f0fe; }
-    
-    .mode-dropdown {
-      position: absolute;
-      bottom: 110%;
-      right: 0;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      display: none;
-      flex-direction: column;
-      width: 120px;
-      overflow: hidden;
-      z-index: 100;
-    }
-    .mode-option { padding: 10px 15px; font-size: 13px; cursor: pointer; text-align: left; }
-    .mode-option:hover { background: #f8f9fa; color: var(--accent); }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-    .chips-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 32px;
-      max-width: 700px;
-    }
+        .input-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0 12px 0;
+            border-top: 1px solid #f1f3f4;
+            margin-top: 4px;
+        }
 
-    .chip {
-      background: var(--white);
-      padding: 10px 18px;
-      border-radius: 20px;
-      font-size: 14px;
-      color: #1f1f1f;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .chip:hover { background: #eef2f7; border-color: var(--border); }
-    .chip svg { width: 18px; height: 18px; fill: none; stroke: var(--text-sub); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .tools-group { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            color: var(--text-sub); 
+        }
+        
+        .tool-btn { 
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            padding: 6px 14px; 
+            border-radius: 100px; 
+            transition: all 0.2s var(--transition-fluid); 
+            background-color: #f1f8ff;
+        }
+        
+        .tool-btn:hover { 
+            background: #e1f0ff; 
+            color: var(--accent-hover);
+        }
 
-    #chatArea {
-      width: 100%;
-      max-width: 800px;
-      overflow-y: auto;
-      display: none;
-      flex-direction: column;
-      gap: 40px;
-      margin-top: 80px;
-      padding: 40px 20px;
-      height: calc(100vh - 240px); 
-      scroll-behavior: smooth;
-    }
+        .mode-select-container { 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+        }
+        
+        #modeLabel { 
+            font-size: 13px; 
+            color: var(--text-sub); 
+            font-weight: 500; 
+            cursor: pointer; 
+            padding: 6px 14px; 
+            border-radius: 100px; 
+            background: #f1f3f4; 
+            transition: all 0.2s var(--transition-fluid);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        #modeLabel:hover {
+            background: #e8eaed;
+            color: var(--text-main);
+        }
+        
+        .mode-dropdown {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            right: 0;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+            display: none;
+            flex-direction: column;
+            width: 140px;
+            overflow: hidden;
+            z-index: 200;
+            padding: 6px 0;
+            animation: slideUp 0.25s var(--transition-fluid);
+        }
 
-    .message { max-width: 100%; line-height: 1.6; font-size: 16px; position: relative; }
-    .user-msg { align-self: flex-end; color: #1f1f1f; font-size: 24px; font-weight: 400; text-align: right; }
-    .bot-msg { align-self: flex-start; color: #1f1f1f; width: 100%; text-align: left; }
-    
-    .action-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-      opacity: 0.6;
-      transition: opacity 0.3s;
-    }
-    .bot-msg:hover .action-row { opacity: 1; }
-    .action-btn {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-    .action-btn:hover { background: #e8eaed; }
-    .action-btn svg { width: 18px; height: 18px; fill: none; stroke: var(--text-sub); stroke-width: 2; }
+        @keyframes slideUp {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
 
-    .docked-footer {
-      position: fixed;
-      bottom: 24px;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      background: transparent;
-      z-index: 10;
-    }
-  </style>
+        .mode-option { 
+            padding: 8px 16px; 
+            font-size: 14px; 
+            cursor: pointer; 
+            text-align: left; 
+            color: var(--text-sub);
+            transition: background 0.15s;
+        }
+        
+        .mode-option:hover { 
+            background: #f1f3f4; 
+            color: var(--text-main); 
+        }
+
+        /* Fluid Modular Chips styling */
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 40px;
+            max-width: 720px;
+            animation: fadeInUp 0.8s var(--transition-fluid);
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .chip {
+            background: var(--chip-bg);
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-sub);
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: all 0.25s var(--transition-fluid);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chip:hover { 
+            background: var(--chip-hover); 
+            border-color: #dadce0;
+            color: var(--text-main);
+            transform: translateY(-1px);
+        }
+        
+        .chip svg { 
+            width: 18px; 
+            height: 18px; 
+            fill: none; 
+            stroke: var(--accent); 
+            stroke-width: 2; 
+            stroke-linecap: round; 
+            stroke-linejoin: round; 
+        }
+
+        /* Streaming & Conversation Interface */
+        #chatArea {
+            width: 100%;
+            max-width: 820px;
+            overflow-y: auto;
+            display: none;
+            flex-direction: column;
+            gap: 48px;
+            margin-top: 72px;
+            padding: 40px 24px;
+            height: calc(100vh - 180px); 
+            scroll-behavior: smooth;
+        }
+
+        .message { 
+            max-width: 100%; 
+            font-size: 16px; 
+            position: relative; 
+            animation: fadeInMsg 0.4s var(--transition-fluid);
+        }
+
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-msg { 
+            align-self: flex-end; 
+            color: var(--text-main); 
+            font-size: 28px; 
+            font-weight: 400; 
+            text-align: left; 
+            width: 100%;
+            border-bottom: 1px solid #eef0f1;
+            padding-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        
+        .bot-msg { 
+            align-self: flex-start; 
+            color: var(--text-main); 
+            width: 100%; 
+            text-align: left; 
+        }
+
+        /* Standardized Markdown Engine Presentation Styling */
+        .bot-msg h1, .bot-msg h2, .bot-msg h3, .bot-msg h4 {
+            color: var(--text-main);
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            margin-top: 28px;
+            margin-bottom: 12px;
+        }
+        .bot-msg h1 { font-size: 24px; margin-top: 36px; }
+        .bot-msg h2 { font-size: 20px; }
+        .bot-msg h3 { font-size: 18px; }
+        
+        .bot-msg p {
+            margin-top: 0;
+            margin-bottom: 16px;
+            line-height: 1.7;
+            color: #303132;
+        }
+
+        .bot-msg ul, .bot-msg ol {
+            margin-top: 8px;
+            margin-bottom: 20px;
+            padding-left: 28px;
+        }
+
+        .bot-msg li {
+            margin-bottom: 8px;
+            line-height: 1.65;
+            padding-left: 4px;
+            color: #303132;
+        }
+
+        .bot-msg li::marker {
+            color: var(--accent);
+        }
+
+        /* Structured Code Block Elements */
+        pre {
+            position: relative;
+            padding: 16px 20px !important;
+            border-radius: 16px !important;
+            margin: 24px 0 !important;
+            background: #1e1e1e !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #2d2d2d;
+        }
+
+        code {
+            font-family: 'Roboto Mono', Consolas, Monaco, monospace !important;
+            font-size: 14px !important;
+        }
+
+        .code-copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #e3e3e3;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s var(--transition-fluid);
+            z-index: 10;
+        }
+
+        pre:hover .code-copy-btn {
+            opacity: 1;
+        }
+
+        .code-copy-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Action Component Row Elements */
+        .action-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 16px;
+            opacity: 0;
+            transition: opacity 0.25s var(--transition-fluid);
+        }
+        
+        .bot-msg:hover .action-row { 
+            opacity: 1; 
+        }
+        
+        .action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            color: var(--text-sub);
+        }
+        
+        .action-btn:hover { 
+            background: #e8eaed; 
+            color: var(--text-main);
+        }
+        
+        .action-btn svg { 
+            width: 18px; 
+            height: 18px; 
+            fill: none; 
+            stroke: currentColor; 
+            stroke-width: 2; 
+        }
+
+        /* Docked Input Wrapper System */
+        .docked-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 820px;
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(180deg, rgba(248,249,250,0) 0%, rgba(248,249,250,1) 25%);
+            padding: 16px 24px 32px 24px;
+            z-index: 90;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.5s var(--transition-fluid), opacity 0.4s ease;
+        }
+
+        .docked-footer.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <div class="gemini-logo">Vaimanika</div>
-  <div class="header-right">
-    <a href="#" class="upgrade-btn">✦ Get Access To Argon</a>
-    <div id="userInit" style="width: 32px; height: 32px; background: #512da8; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; cursor: pointer;">?</div>
-  </div>
+<header id="appHeader">
+    <div class="gemini-logo">
+        Vasuki Vaimanika
+    </div>
+    <div class="header-right">
+        <a href="#" class="upgrade-btn">✦ Get Access To Argon</a>
+        <div id="userInit" style="width: 32px; height: 32px; background: #0b57d0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500; font-size: 14px; cursor: pointer;">?</div>
+    </div>
 </header>
 
 <div class="container" id="homeUI">
-  <div class="greeting">
-    <span id="userName">✦ Hi Guest</span>
-    Where should we start?
-  </div>
-
-  <div class="input-wrapper" id="mainInput">
-    <div class="input-top">
-      <input type="text" id="query" placeholder="Ask Vaimanika..." autocomplete="off">
-      <div class="stop-btn-container" id="stopContainer">
-        <div class="loader-ring"></div>
-        <button id="stopBtn" onclick="stopAIResponse()" title="Stop response"></button>
-      </div>
+    <div class="greeting">
+        <img src="../logo-black-png.png" alt="" style="width: 60px; height: 60px; display: block; margin-left: auto; margin-right: auto;" onerror="this.style.display='none'">
+        <span id="userName">✦ Hi Guest</span>
+        Where Should We Start?
     </div>
-    <div class="input-bottom">
-      <div class="tools-group">
-        <div class="tool-btn">Vasuki Vaimanika Shikharam</div>
-      </div>
-      <div class="mode-select-container">
-        <div id="modeLabel" onclick="toggleModeDropdown()">Ask ▾</div>
-        <div class="mode-dropdown" id="modeDropdown">
-          <div class="mode-option" onclick="setMode('research')">Ask</div>
-          <div class="mode-option" onclick="setMode('research')">Research</div>
-          <div class="mode-option" onclick="setMode('coder')">Coder</div>
+
+    <div class="input-wrapper" id="mainInput">
+        <div class="input-top">
+            <input type="text" id="query" placeholder="Ask Vaimanika..." autocomplete="off">
+            <div class="stop-btn-container" id="stopContainer">
+                <div class="loader-ring"></div>
+                <button id="stopBtn" onclick="stopAIResponse()" title="Stop response"></button>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-
- <div class="chips-container">
-
-    <div class="chip" onclick="handleQuickAction('Write HTML & CSS code to make a website in one file')">
-
-      <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-
-      Coding Help
-
-    </div>
-
-    <div class="chip" onclick="handleQuickAction('Write a professional email to a client')">
-
-      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-
-      Write anything
-
+        <div class="input-bottom">
+            <div class="tools-group">
+                <div class="tool-btn">
+                    <span class="material-icons-outlined" style="font-size: 16px;">auto_awesome</span>
+                    Vasuki Vaimanika Shikharam
+                </div>
+            </div>
+            <div class="mode-select-container">
+                <div id="modeLabel" onclick="toggleModeDropdown()">Ask <span class="material-icons-outlined" style="font-size:16px; vertical-align:middle;">expand_more</span></div>
+                <div class="mode-dropdown" id="modeDropdown">
+                    <div class="mode-option" onclick="setMode('ask')">Ask</div>
+                    <div class="mode-option" onclick="setMode('research')">Research</div>
+                    <div class="mode-option" onclick="setMode('coder')">Coder</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="chip" onclick="handleQuickAction('Suggest a 10 minute workout plan')">
-
-      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-
-      Boost my day
-
+    <div class="chips-container">
+        <div class="chip" onclick="handleQuickAction('Write HTML & CSS code to make a website in one file')">
+            <svg viewBox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"></path></svg>
+            Coding Help
+        </div>
+        <div class="chip" onclick="handleQuickAction('Write a professional email to a client')">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            Write anything
+        </div>
+        <div class="chip" onclick="handleQuickAction('Suggest a 10 minute workout plan')">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            Boost my day
+        </div>
+        <div class="chip" onclick="handleQuickAction('Tell me a joke to make my day better')">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+            Make Me Smile
+        </div>
     </div>
-
-    <div class="chip" onclick="handleQuickAction('Tell me a joke to make my day better')">
-
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
-
-      Make Me Smile
-
-    </div>
-
-
-</div>
 </div>
 
 <div id="chatArea"></div>
-<div id="footerDock" class="hidden docked-footer"></div>
+<div id="footerDock" class="docked-footer"></div>
 
 <script type="module">
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const queryInput = document.getElementById('query');
-  const stopContainer = document.getElementById('stopContainer');
-  const homeUI = document.getElementById('homeUI');
-  const chatArea = document.getElementById('chatArea');
-  const footerDock = document.getElementById('footerDock');
-  const mainInput = document.getElementById('mainInput');
-  const modeLabel = document.getElementById('modeLabel');
-  const modeDropdown = document.getElementById('modeDropdown');
-  const userNameDisplay = document.getElementById('userName');
+    const queryInput = document.getElementById('query');
+    const stopContainer = document.getElementById('stopContainer');
+    const homeUI = document.getElementById('homeUI');
+    const chatArea = document.getElementById('chatArea');
+    const footerDock = document.getElementById('footerDock');
+    const mainInput = document.getElementById('mainInput');
+    const modeLabel = document.getElementById('modeLabel');
+    const modeDropdown = document.getElementById('modeDropdown');
+    const userNameDisplay = document.getElementById('userName');
+    const appHeader = document.getElementById('appHeader');
 
-  let currentMode = 'research';
-  let abortController = null;
+    let currentMode = 'research';
+    let abortController = null;
 
-  async function initUser() {
-    const vcloudUser = localStorage.getItem('vcloud_user');
-    if (!vcloudUser) return;
-    try {
-      const { data } = await supabase.from('users').select('name').eq('username', vcloudUser).single();
-      if (data && data.name) {
-        userNameDisplay.textContent = `✦ Welcome Back, ${data.name}`;
-        document.getElementById('userInit').textContent = data.name.charAt(0).toUpperCase();
-      }
-    } catch (err) {}
-  }
-  initUser();
-
-  function renderContent(text) {
-    let processed = text.replace(/\\\[/g, '$$$$').replace(/\\\]/g, '$$$$').replace(/\\\(/g, '$').replace(/\\\)/g, '$');
-    let htmlContent = marked.parse(processed);
-    
-    const temp = document.createElement('div');
-    temp.innerHTML = htmlContent;
-
-    // LaTeX handling
-    temp.innerHTML = temp.innerHTML.replace(/\$\$([\s\S]+?)\$\$/g, (_, formula) => katex.renderToString(formula, { displayMode: true, throwOnError: false }));
-    temp.innerHTML = temp.innerHTML.replace(/\$([^\$\n]+?)\$/g, (_, formula) => katex.renderToString(formula, { displayMode: false, throwOnError: false }));
-
-    // Add Copy buttons to Pre blocks
-    temp.querySelectorAll('pre').forEach(pre => {
-        const btn = document.createElement('button');
-        btn.className = 'code-copy-btn';
-        btn.innerText = 'Copy';
-        btn.onclick = () => {
-            const code = pre.querySelector('code')?.innerText || pre.innerText;
-            navigator.clipboard.writeText(code);
-            btn.innerText = 'Copied!';
-            setTimeout(() => btn.innerText = 'Copy', 2000);
-        };
-        pre.appendChild(btn);
+    // Scroll optimization for Header border definitions
+    chatArea.addEventListener('scroll', () => {
+        if (chatArea.scrollTop > 10) {
+            appHeader.classList.add('scrolled');
+        } else {
+            appHeader.classList.remove('scrolled');
+        }
     });
 
-    return temp.innerHTML;
-  }
+    async function initUser() {
+        const vcloudUser = localStorage.getItem('vcloud_user');
+        if (!vcloudUser) return;
+        try {
+            const { data } = await supabase.from('users').select('name').eq('username', vcloudUser).single();
+            if (data && data.name) {
+                userNameDisplay.textContent = `✦ Welcome Back, ${data.name}`;
+                document.getElementById('userInit').textContent = data.name.charAt(0).toUpperCase();
+            }
+        } catch (err) {}
+    }
+    initUser();
 
-  window.toggleModeDropdown = () => modeDropdown.style.display = modeDropdown.style.display === 'flex' ? 'none' : 'flex';
-  window.setMode = (mode) => {
-    currentMode = mode;
-    modeLabel.textContent = mode.charAt(0).toUpperCase() + mode.slice(1) + ' ▾';
-    modeDropdown.style.display = 'none';
-  }
-  window.stopAIResponse = () => abortController?.abort();
+    function renderContent(text) {
+        let processed = text.replace(/\\\[/g, '$$$$').replace(/\\\]/g, '$$$$').replace(/\\\(/g, '$').replace(/\\\)/g, '$');
+        let htmlContent = marked.parse(processed);
+        
+        const temp = document.createElement('div');
+        temp.innerHTML = htmlContent;
 
-  async function startConversation(text) {
-    document.querySelector(".greeting").style.display = 'none';
-    document.querySelector(".container").style.display = 'none';
-    if (!text.trim()) return;
-    if (!homeUI.classList.contains('hidden')) {
-      homeUI.classList.add('hidden');
-      chatArea.style.display = 'flex';
-      footerDock.classList.remove('hidden');
-      footerDock.appendChild(mainInput);
+        // LaTeX Equation processing Engine elements
+        temp.innerHTML = temp.innerHTML.replace(/\$\$([\s\S]+?)\$\$/g, (_, formula) => katex.renderToString(formula, { displayMode: true, throwOnError: false }));
+        temp.innerHTML = temp.innerHTML.replace(/\$([^\$\n]+?)\$/g, (_, formula) => katex.renderToString(formula, { displayMode: false, throwOnError: false }));
+
+        // Standardized Copy Action Component Assignment
+        temp.querySelectorAll('pre').forEach(pre => {
+            const btn = document.createElement('button');
+            btn.className = 'code-copy-btn';
+            btn.innerText = 'Copy';
+            btn.onclick = () => {
+                const code = pre.querySelector('code')?.innerText || pre.innerText;
+                navigator.clipboard.writeText(code);
+                btn.innerText = 'Copied!';
+                setTimeout(() => btn.innerText = 'Copy', 2000);
+            };
+            pre.appendChild(btn);
+        });
+
+        return temp.innerHTML;
     }
 
-    const uMsg = document.createElement('div');
-    uMsg.className = 'message user-msg';
-    uMsg.textContent = text;
-    chatArea.appendChild(uMsg);
-    queryInput.value = '';
-
-    const bMsg = document.createElement('div');
-    bMsg.className = 'message bot-msg';
-    const contentDiv = document.createElement('div');
-    contentDiv.innerHTML = '<em>Thinking...</em>';
-    bMsg.appendChild(contentDiv);
-    chatArea.appendChild(bMsg);
-
-    stopContainer.style.display = 'flex';
-    abortController = new AbortController();
-
-    try {
-      const resp = await fetch(`https://adamyakhairwal2011-vasuki-ai.hf.space/research?topic=${encodeURIComponent(text)}&mode=${currentMode}`, {
-        signal: abortController.signal
-      });
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let fullText = "";
-
-      while (true) {
-        const {done, value} = await reader.read();
-        if (done) break;
-        fullText += decoder.decode(value, {stream: true});
-        contentDiv.innerHTML = renderContent(fullText);
-        // Highlight code after rendering
-        Prism.highlightAllUnder(contentDiv);
-        chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'auto' });
-      }
-    } catch (e) {
-      contentDiv.innerHTML = e.name === 'AbortError' ? "<em>Stopped.</em>" : "<p style='color:red'>Error.</p>";
-    } finally {
-      stopContainer.style.display = 'none';
+    window.toggleModeDropdown = () => modeDropdown.style.display = modeDropdown.style.display === 'flex' ? 'none' : 'flex';
+    
+    window.setMode = (mode) => {
+        currentMode = mode;
+        modeLabel.innerHTML = mode.charAt(0).toUpperCase() + mode.slice(1) + ' <span class="material-icons-outlined" style="font-size:16px; vertical-align:middle;">expand_more</span>';
+        modeDropdown.style.display = 'none';
     }
-  }
+    
+    window.stopAIResponse = () => abortController?.abort();
 
-  queryInput.addEventListener('keydown', (e) => e.key === 'Enter' && startConversation(queryInput.value));
-  window.handleQuickAction = (t) => startConversation(t);
+    async function startConversation(text) {
+        if (!text.trim()) return;
+
+        if (!homeUI.classList.contains('hidden')) {
+            // Initiate clean workspace fluid transition morph layout
+            homeUI.classList.add('hidden');
+            
+            setTimeout(() => {
+                homeUI.style.display = 'none';
+                chatArea.style.display = 'flex';
+                footerDock.classList.add('visible');
+                footerDock.appendChild(mainInput);
+                queryInput.focus();
+            }, 300);
+        }
+
+        const uMsg = document.createElement('div');
+        uMsg.className = 'message user-msg';
+        uMsg.textContent = text;
+        chatArea.appendChild(uMsg);
+        queryInput.value = '';
+
+        const bMsg = document.createElement('div');
+        bMsg.className = 'message bot-msg';
+        const contentDiv = document.createElement('div');
+        contentDiv.innerHTML = '<p style="color: var(--text-sub); font-style: italic;">Thinking...</p>';
+        bMsg.appendChild(contentDiv);
+        
+        // Google Workspace styled actionable elements block
+        const actionRow = document.createElement('div');
+        actionRow.className = 'action-row';
+        actionRow.innerHTML = `
+            <button class="action-btn" title="Good response"><svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button>
+            <button class="action-btn" title="Bad response"><svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm12-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg></button>
+            <button class="action-btn" title="Copy response" onclick="navigator.clipboard.writeText(this.closest('.bot-msg').querySelector('div').innerText)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+        `;
+        bMsg.appendChild(actionRow);
+        chatArea.appendChild(bMsg);
+
+        stopContainer.style.display = 'flex';
+        abortController = new AbortController();
+
+        try {
+            const resp = await fetch(`https://adamyakhairwal2011-vasuki-ai.hf.space/research?topic=${encodeURIComponent(text)}&mode=${currentMode}`, {
+                signal: abortController.signal
+            });
+            const reader = resp.body.getReader();
+            const decoder = new TextDecoder();
+            let fullText = "";
+
+            while (true) {
+                const {done, value} = await reader.read();
+                if (done) break;
+                fullText += decoder.decode(value, {stream: true});
+                contentDiv.innerHTML = renderContent(fullText);
+                Prism.highlightAllUnder(contentDiv);
+                chatArea.scrollTo({ top: chatArea.scrollHeight, behavior: 'auto' });
+            }
+        } catch (e) {
+            contentDiv.innerHTML = e.name === 'AbortError' ? "<p style='color: var(--text-sub); font-style: italic;'>Response cancelled.</p>" : "<p style='color:#d93025'>Error connecting to service layer.</p>";
+        } finally {
+            stopContainer.style.display = 'none';
+        }
+    }
+
+    queryInput.addEventListener('keydown', (e) => e.key === 'Enter' && startConversation(queryInput.value));
+    window.handleQuickAction = (t) => startConversation(t);
 </script>
 </body>
 </html>
