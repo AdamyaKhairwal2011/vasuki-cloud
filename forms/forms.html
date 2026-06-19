@@ -5,26 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vasuki Form Studio | Workspace Admin</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --google-blue: #614a1a;
-            --google-blue-hover: #61440e;
-            --google-blue-alpha: rgba(26, 115, 232, 0.04);
-            --text-dark: #202124;
-            --text-light: #5f6368;
-            --border-color: #e0deda;
-            --border-focus: #936b1a;
-            --error-red: #d93025;
-            --error-bg: #fce8e6;
-            --bg-surface: #ffffff;
-            --bg-body: #f9f6f0;
-            --font-family: 'Google Sans', 'Roboto', Arial, sans-serif;
-            --radius-container: 16px;
-            --radius-card: 8px;
-            --radius-input: 4px;
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow-subtle: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+            --bg-black: #080808;
+            --bg-card: #121212;
+            --bg-card-inner: #181818;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(255, 255, 255, 0.24);
+            
+            --text-pure: #ffffff;
+            --text-muted: #8e8e93;
+            --text-dark: #636366;
+            
+            --orange-accent: #ff6b00;
+            --green-accent: #34c759;
+            --error-red: #ff453a;
+            --red-diff: rgba(255, 69, 58, 0.15);
+            
+            --font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'Fira Code', monospace;
+            --radius-card: 12px;
+            --radius-input: 6px;
+            --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -36,20 +39,21 @@
 
         body {
             font-family: var(--font-family);
-            background-color: var(--bg-body);
-            color: var(--text-dark);
+            background-color: var(--bg-black);
+            color: var(--text-pure);
             min-height: 100vh;
             min-height: 100dvh;
             overflow-x: hidden;
             line-height: 1.5;
         }
 
-        /* --- GOOGLE WORKSPACE NAVIGATION BAR --- */
+        /* --- NAVIGATION BAR --- */
         nav {
-            background: var(--bg-surface);
-            padding: 0 clamp(1rem, 4vw, 2rem);
-            height: 64px;
-            border-bottom: 1px solid var(--border-color);
+            background: rgba(8, 8, 8, 0.7);
+            backdrop-filter: blur(20px);
+            padding: 0 clamp(1.5rem, 6vw, 4rem);
+            height: 72px;
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -59,29 +63,35 @@
         }
 
         .nav-logo {
-            font-size: clamp(18px, 4vw, 22px);
-            font-weight: 500;
+            font-size: 20px;
+            font-weight: 700;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 12px;
             cursor: pointer;
             user-select: none;
         }
-        .nav-logo span:nth-child(1) { color: #4285F4; }
-        .nav-logo span:nth-child(2) { color: #EA4335; }
-        .nav-logo span:nth-child(3) { color: #FBBC05; }
-        .nav-logo span:nth-child(4) { color: #34A853; }
-        .nav-logo .logo-app { color: var(--text-light); margin-left: 4px; font-weight: 400; }
+        
+        .nav-logo img {
+            border-radius: 6px;
+            filter: grayscale(1) brightness(1.2);
+            border: 1px solid var(--border-subtle);
+        }
 
-        /* --- INDETERMINATE PROGRESS BAR --- */
+        .logo-app {
+            color: var(--text-pure);
+            font-weight: 500;
+        }
+
+        /* --- TIMELINE LOADING INDICATOR --- */
         .top-progress-bar {
             position: fixed;
-            top: 64px;
+            top: 72px;
             left: 0;
             width: 100%;
-            height: 4px;
-            background-color: #e8eaed;
+            height: 2px;
+            background-color: transparent;
             overflow: hidden;
             opacity: 0;
             transition: opacity 0.25s ease;
@@ -91,73 +101,80 @@
         .top-progress-bar .progress-line {
             width: 100%;
             height: 100%;
-            background-color: var(--google-blue);
+            background-color: var(--orange-accent);
             transform-origin: left;
-            animation: indeterminate-loader 1.5s linear infinite;
+            animation: loader-slide 1.2s linear infinite;
         }
-        @keyframes indeterminate-loader {
+        @keyframes loader-slide {
             0% { transform: translateX(-100%) scaleX(1); }
             50% { transform: translateX(0%) scaleX(0.4); }
             100% { transform: translateX(100%) scaleX(1); }
         }
 
-        /* --- FLUID CONTAINERS --- */
+        /* --- LAYOUT CONTAINERS --- */
         .container {
-            max-width: 900px;
+            max-width: 960px;
             margin: 0 auto;
-            padding: clamp(1rem, 4vw, 2rem) clamp(1rem, 3vw, 1.5rem) 120px clamp(1rem, 3vw, 1.5rem);
+            padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 1.5rem) 140px clamp(1rem, 3vw, 1.5rem);
             animation: viewFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes viewFadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- WORKSPACE CARDS --- */
+        /* --- CARDS & FORM HOVERS --- */
         .card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-card);
-            padding: clamp(1.25rem, 3vw, 2rem);
-            margin-bottom: 16px;
+            padding: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 20px;
             position: relative;
             transition: var(--transition-smooth);
         }
 
         .form-item {
-            background: var(--bg-surface);
+            background: var(--bg-card);
             border-radius: var(--radius-card);
-            border: 1px solid var(--border-color);
-            padding: 16px;
+            border: 1px solid var(--border-subtle);
+            padding: 20px;
             transition: var(--transition-smooth);
             cursor: pointer;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
+            height: 190px;
         }
-        .form-item:hover { box-shadow: var(--shadow-subtle); border-color: #chddf2; }
+        .form-item:hover { 
+            border-color: var(--border-focus); 
+            background: var(--bg-card-inner);
+        }
 
-        /* --- DYNAMIC FORM EDITOR CARDS --- */
+        /* --- FIELD INTERACTIVE EDITING BOXES --- */
         .field-box {
-            border-left: 1px solid var(--border-color);
-            transition: border-left-width 0.15s ease, border-left-color 0.15s ease, box-shadow 0.2s ease;
+            border-left: 1px solid var(--border-subtle);
+            background: var(--bg-card);
         }
         .field-box:focus-within {
-            border-left: 5px solid var(--google-blue);
-            box-shadow: var(--shadow-subtle);
+            border-left: 3px solid var(--orange-accent);
+            background: var(--bg-card-inner);
+            border-top-color: rgba(255, 255, 255, 0.12);
+            border-right-color: rgba(255, 255, 255, 0.12);
+            border-bottom-color: rgba(255, 255, 255, 0.12);
         }
 
-        /* --- STRUCTURAL BUTTONS --- */
+        /* --- PREMIUM BUTTON DESIGN SYSTEMS --- */
         .btn {
-            padding: 0 24px;
-            height: 36px;
-            border-radius: var(--radius-input);
+            padding: 0 20px;
+            height: 40px;
+            border-radius: 20px;
             font-weight: 500;
             cursor: pointer;
             font-size: 14px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-subtle);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -165,101 +182,145 @@
             transition: var(--transition-smooth);
             font-family: var(--font-family);
             user-select: none;
-            background: var(--bg-surface);
-            color: var(--text-dark);
+            background: transparent;
+            color: var(--text-pure);
         }
-        .btn:hover { background: #f8f9fa; border-color: #c0c1c4; }
+        .btn:hover { 
+            background: rgba(255, 255, 255, 0.04); 
+            border-color: var(--border-focus); 
+        }
 
-        .btn-primary { background: var(--google-blue); color: white; border: none; }
-        .btn-primary:hover { background: var(--google-blue-hover); box-shadow: 0 1px 2px 0 rgba(66,133,244,0.3), 0 1px 3px 1px rgba(66,133,244,0.15); }
+        .btn-primary { 
+            background: var(--text-pure); 
+            color: var(--bg-black); 
+            border: none; 
+        }
+        .btn-primary:hover { 
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
         
-        .btn-text { background: transparent; border: none; color: var(--google-blue); padding: 0 12px; }
-        .btn-text:hover { background: var(--google-blue-alpha); }
+        .btn-text { 
+            background: transparent; 
+            border: none; 
+            color: var(--text-muted); 
+            padding: 0 12px; 
+            border-radius: 6px;
+        }
+        .btn-text:hover { 
+            color: var(--text-pure);
+            background: rgba(255, 255, 255, 0.05); 
+        }
         
-        .btn-danger-text { background: transparent; border: none; color: var(--error-red); padding: 0 12px; }
-        .btn-danger-text:hover { background: rgba(217, 48, 37, 0.04); }
+        .btn-danger-text { 
+            background: transparent; 
+            border: none; 
+            color: var(--error-red); 
+            padding: 0 12px; 
+            border-radius: 6px;
+        }
+        .btn-danger-text:hover { 
+            background: var(--red-diff); 
+        }
 
-        /* --- INPUT & SELECT FLOW FIELDS --- */
+        /* --- CONTROL INPUTS & INPUT OVERHAUL --- */
         input, select {
             width: 100%;
             padding: 12px 14px;
             border: 1px solid transparent;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-subtle);
             font-size: 14px;
             font-family: inherit;
-            color: var(--text-dark);
-            background: #f8f9fa;
-            border-radius: var(--radius-input) var(--radius-input) 0 0;
+            color: var(--text-pure);
+            background: transparent;
             outline: none;
             transition: var(--transition-smooth);
+            border-radius: 0;
+        }
+        input::placeholder {
+            color: var(--text-dark);
         }
         input:focus, select:focus {
-            background: var(--bg-surface);
-            border-bottom: 2px solid var(--google-blue);
+            background: transparent;
+            border-bottom: 1px solid var(--text-pure);
         }
 
         .options-list {
-            margin: 16px 0;
+            margin: 20px 0 12px 0;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
         .opt-item { display: flex; align-items: center; gap: 12px; width: 100%; }
-        .opt-input { border-bottom: 1px solid var(--border-color); padding: 8px 4px !important; background: transparent; border-radius: 0; }
-        .opt-input:focus { border-bottom: 2px solid var(--google-blue); }
+        .opt-input { 
+            border-bottom: 1px solid var(--border-subtle); 
+            padding: 8px 0 !important; 
+            background: transparent; 
+        }
+        .opt-input:focus { border-bottom: 1px solid var(--orange-accent); }
 
-        /* --- RESPONSIVE RESPONSES TABLE --- */
+        /* --- TERMINAL STYLED DATA TABLES --- */
         .table-responsive-container {
             overflow-x: auto;
             width: 100%;
-            border-radius: 0 0 var(--radius-card) var(--radius-card);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
         }
-        table { width: 100%; border-collapse: collapse; text-align: left; background: var(--bg-surface); }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
         th { 
-            padding: 14px 16px; 
-            background: #f8f9fa; 
-            border-bottom: 2px solid var(--border-color); 
-            color: var(--text-light); 
-            font-size: 11px; 
-            font-weight: 700;
+            padding: 16px; 
+            background: var(--bg-card-inner); 
+            border-bottom: 1px solid var(--border-subtle); 
+            color: var(--text-muted); 
+            font-family: var(--font-mono);
+            font-size: 12px; 
+            font-weight: 500;
             text-transform: uppercase; 
             letter-spacing: 0.5px;
             white-space: nowrap;
         }
-        td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); font-size: 14px; color: var(--text-dark); white-space: nowrap; }
-        tr:hover td { background-color: #f8f9fa; }
+        td { 
+            padding: 16px; 
+            border-bottom: 1px solid var(--border-subtle); 
+            font-size: 14px; 
+            color: rgba(255,255,255,0.85); 
+            white-space: nowrap; 
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: var(--bg-card-inner); }
 
-        /* --- ADAPTIVE BOTTOM ACTIONS STICKY FOOTER --- */
+        /* --- STICKY FOOTER --- */
         .sticky-footer {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border-color);
-            padding: 16px;
+            background: rgba(8, 8, 8, 0.85);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+            gap: 16px;
             z-index: 90;
         }
 
-        /* --- TOAST NOTIFICATION LAYER --- */
+        /* --- PREMIUM TOAST --- */
         #toast {
             position: fixed;
-            bottom: 24px;
-            left: 24px;
-            background: #323232;
-            color: #f5f5f5;
+            bottom: 32px;
+            left: 32px;
+            background: #1c1c1e;
+            color: var(--text-pure);
             padding: 14px 24px;
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 14px;
-            font-weight: 400;
-            box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14);
-            transform: translateY(120px);
-            transition: transform 0.25s cubic-bezier(0, 0, 0.2, 1);
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+            transform: translateY(140px);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             z-index: 9999;
         }
         #toast.show { transform: translateY(0); }
@@ -271,7 +332,6 @@
 
 <nav>
     <div class="nav-logo" onclick="window.showPage('dashboard')">
-        <img src="../logo.jpg" alt="" width="50px">
         <div class="logo-app">Vasuki Forms</div>
     </div>
 </nav>
@@ -281,36 +341,34 @@
 </div>
 
 <div id="page-dashboard" class="container hidden">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:16px;">
-        <h2 style="font-weight: 400; font-size: 22px;">Recent Forms</h2>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:36px; flex-wrap:wrap; gap:16px;">
+        <h2 style="font-weight: 500; font-size: 26px; letter-spacing: -0.5px;">Recent Forms</h2>
         <button class="btn btn-primary" onclick="window.openEditor()">+ Blank Form</button>
     </div>
-    <div id="formsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;"></div>
+    <div id="formsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;"></div>
 </div>
 
 <div id="page-editor" class="container hidden">
-    <div class="card" style="border-top: 8px solid var(--google-blue); border-radius: 8px 8px var(--radius-card) var(--radius-card);">
-        <input id="edit-title" style="font-size: 28px; font-weight: 400; border: none; border-bottom: 1px solid transparent; background: transparent; padding: 4px 0;" placeholder="Untitled Form">
-        <input id="edit-id" style="font-size: 13px; color: var(--google-blue); border: none; background: transparent; margin-top: 12px; padding: 2px 0;" placeholder="form-id-slug">
+    <div class="card" style="background: var(--bg-card-inner); border-top: 2px solid var(--text-pure);">
+        <input id="edit-title" style="font-size: 28px; font-weight: 500; border: none; border-bottom: 1px solid transparent; background: transparent; padding: 4px 0; letter-spacing: -0.5px;" placeholder="Untitled Form">
+        <input id="edit-id" style="font-family: var(--font-mono); font-size: 13px; color: var(--orange-accent); border: none; background: transparent; margin-top: 16px; padding: 2px 0;" placeholder="form-id-slug">
     </div>
 
     <div id="fieldsList"></div>
     
     <div class="sticky-footer">
-        <button class="btn btn-text" onclick="window.addField()">+ Add Question</button>
+        <button class="btn" onclick="window.addField()">+ Add Question</button>
         <button class="btn btn-primary" id="saveBtn" onclick="window.saveFormToCloud()">Save Form</button>
-        <button class="btn" onclick="window.showPage('dashboard')">Back</button>
+        <button class="btn btn-text" onclick="window.showPage('dashboard')">Back</button>
     </div>
 </div>
 
 <div id="page-responses" class="container hidden">
-    <div class="card" style="margin-bottom: 20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-            <h2 id="resp-title" style="margin:0; font-weight:400; font-size: 22px;">Responses</h2>
-            <button class="btn" onclick="window.showPage('dashboard')">Close Dashboard</button>
-        </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom: 32px;">
+        <h2 id="resp-title" style="margin:0; font-weight:500; font-size: 26px; letter-spacing: -0.5px;">Responses</h2>
+        <button class="btn" onclick="window.showPage('dashboard')">Close Dashboard</button>
     </div>
-    <div class="card" id="resp-content" style="padding:0; overflow:hidden;"></div>
+    <div id="resp-content"></div>
 </div>
 
 <div id="toast">Link copied to clipboard</div>
@@ -334,7 +392,6 @@ window.showPage = (id) => {
     if(id === 'dashboard') fetchForms();
 };
 
-// Check platform core authentication block execution
 const userBlob = localStorage.getItem("vcloud_user");
 if(!userBlob) { 
     location.href = "../login.html"; 
@@ -354,7 +411,7 @@ async function fetchForms() {
     if(!data || data.length === 0) {
         grid.style.display = "block";
         grid.innerHTML = `
-            <div style="text-align:center; padding: 48px 16px; color: var(--text-light); border: 1px dashed var(--border-color); border-radius:8px; background:var(--bg-surface);">
+            <div style="text-align:center; padding: 64px 16px; color: var(--text-muted); border: 1px dashed var(--border-subtle); border-radius: var(--radius-card); background: var(--bg-card);">
                 <p style="font-size: 15px;">No forms found inside your workspace channel yet.</p>
             </div>`;
         return;
@@ -363,16 +420,15 @@ async function fetchForms() {
     grid.style.display = "grid";
     grid.innerHTML = data.map(f => `
         <div class="form-item" onclick="window.openEditor('${f.id}')">
-            <div style="height:110px; background:#d4cab6; margin:-16px -16px 16px -16px; border-radius:7px 7px 0 0; display:flex; align-items:center; justify-content:center; position:relative; border-bottom: 1px solid var(--border-color);">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="var(--google-blue)"><path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M9,17H7v-2h2V17z M9,13H7v-2h2V13z M9,9H7V7h2V9z M17,17h-6v-2h6V17z M17,13h-6v-2h6V13z M17,9h-6V7h6V9z"/></svg>
-                <button onclick="event.stopPropagation(); window.deleteForm('${f.id}')" style="position:absolute; top:8px; right:8px; background:var(--bg-surface); border-radius:50%; border:1px solid var(--border-color); width:32px; height:32px; cursor:pointer; color:var(--error-red); display:flex; align-items:center; justify-content:center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: 0.2s;" onmouseover="this.style.background='#fce8e6'" onmouseout="this.style.background='#fff'">
+            <div style="height:70px; background: #111111; margin:-20px -20px 20px -20px; border-radius:11px 11px 0 0; display:flex; align-items:center; justify-content:center; position:relative; border-bottom: 1px solid var(--border-subtle);">
+                <button onclick="event.stopPropagation(); window.deleteForm('${f.id}')" style="position:absolute; top:12px; right:12px; background:var(--bg-card-inner); border-radius:50%; border:1px solid var(--border-subtle); width:32px; height:32px; cursor:pointer; color:var(--error-red); display:flex; align-items:center; justify-content:center; transition: 0.2s;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path></svg>
                 </button>
             </div>
-            <h3 style="margin:0; font-size:15px; font-weight:500; color:var(--text-dark); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${f.title || 'Untitled Form'}</h3>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; gap: 8px;">
-                <button class="btn btn-text" style="font-size:12px; height: 32px;" onclick="event.stopPropagation(); window.viewResponses('${f.id}', '${f.title}')">Responses</button>
-                <button class="btn btn-text" style="font-size:12px; height: 32px;" onclick="event.stopPropagation(); window.copyLink('${f.id}')">Copy Link</button>
+            <h3 style="margin:0; font-size:16px; font-weight:500; color:var(--text-pure); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${f.title || 'Untitled Form'}</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; gap: 8px; width: 100%;">
+                <button class="btn btn-text" style="font-size:13px; height: 32px; padding: 0 8px;" onclick="event.stopPropagation(); window.viewResponses('${f.id}', '${f.title}')">Responses</button>
+                <button class="btn" style="font-size:13px; height: 32px; padding: 0 12px; border-radius: 16px;" onclick="event.stopPropagation(); window.copyLink('${f.id}')">Copy Link</button>
             </div>
         </div>
     `).join('');
@@ -418,25 +474,25 @@ window.addField = (f = { label: "", type: "text", options: [] }) => {
     const div = document.createElement("div");
     div.className = "card field-box";
     div.innerHTML = `
-        <div style="display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; align-items: center;">
             <div style="flex: 2; min-width: 200px;">
                 <input class="f-label" value="${f.label}" placeholder="Question Statement">
             </div>
-            <div style="flex: 1; min-width: 150px;">
-                <select class="f-type" style="-webkit-appearance: none; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22%235f6368%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/></svg>'); background-repeat: no-repeat; background-position: right 12px center;">
+            <div style="flex: 1; min-width: 150px; position: relative;">
+                <select class="f-type" style="-webkit-appearance: none; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22%238e8e93%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-color: var(--bg-card-inner); border: 1px solid var(--border-subtle); border-radius: var(--radius-input); padding: 10px 14px;">
                     <option value="text" ${f.type==='text'?'selected':''}>Short Answer</option>
                     <option value="textarea" ${f.type==='textarea'?'selected':''}>Paragraph</option>
                     <option value="radio" ${f.type==='radio'?'selected':''}>Multiple Choice</option>
                     <option value="checkbox" ${f.type==='checkbox'?'selected':''}>Checkboxes</option>
                 </select>
             </div>
-            <button class="btn-text" style="color:var(--text-light); padding: 0 8px;" onclick="this.closest('.field-box').remove()" title="Delete Question">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            <button class="btn-text" style="color:var(--text-dark); padding: 8px;" onclick="this.closest('.field-box').remove()" title="Delete Question">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
             </button>
         </div>
         <div class="opt-section ${['text','textarea'].includes(f.type) ? 'hidden' : ''}">
             <div class="options-list"></div>
-            <button class="btn btn-text" style="font-size:13px; height: 32px;" onclick="window.addOption(this.previousElementSibling)">+ Add Option</button>
+            <button class="btn" style="font-size:13px; height: 32px; border-radius: 16px;" onclick="window.addOption(this.previousElementSibling)">+ Add Option</button>
         </div>
     `;
 
@@ -454,9 +510,9 @@ window.addOption = (container, val = "") => {
     const div = document.createElement("div");
     div.className = "opt-item";
     div.innerHTML = `
-        <div style="width:16px; height:16px; border:2px solid var(--border-color); border-radius:50%; flex-shrink: 0;"></div>
+        <div style="width:14px; height:14px; border:1px solid var(--border-subtle); border-radius:50%; flex-shrink: 0; background: var(--bg-black);"></div>
         <input class="opt-input" value="${val}" placeholder="Option description" style="padding: 6px 0!important;">
-        <button class="btn-text" style="color:var(--text-light); padding:4px 8px; font-size:16px;" onclick="this.parentElement.remove()">✕</button>
+        <button class="btn-text" style="color:var(--text-dark); padding:4px 8px; font-size:16px;" onclick="this.parentElement.remove()">✕</button>
     `;
     container.appendChild(div);
 };
@@ -494,7 +550,7 @@ window.saveFormToCloud = async () => {
 };
 
 window.viewResponses = async (id, title) => {
-    document.getElementById("resp-content").innerHTML = "<div style='padding:32px; text-align:center; color:var(--text-light);'>Loading responses dataset...</div>";
+    document.getElementById("resp-content").innerHTML = "<div style='padding:32px; text-align:center; color:var(--text-muted); font-family:var(--font-mono); font-size:14px;'>Loading responses dataset...</div>";
     window.showPage('responses');
     document.getElementById("resp-title").innerText = `${title || 'Form Responses'}`;
     
@@ -505,17 +561,17 @@ window.viewResponses = async (id, title) => {
 
     if (rErr || fErr || !resps?.length) {
         document.getElementById("resp-content").innerHTML = `
-            <div style='padding:64px 16px; text-align:center;'>
-                <p style="color:var(--text-light); font-size:15px; margin-bottom:16px;">No responses synchronized to this schema yet.</p>
+            <div style='padding:64px 16px; text-align:center; border: 1px dashed var(--border-subtle); border-radius: var(--radius-card); background: var(--bg-card);'>
+                <p style="color:var(--text-muted); font-size:15px; margin-bottom:20px;">No responses synchronized to this schema yet.</p>
                 <button class="btn" onclick="window.showPage('dashboard')">Return to Workspace</button>
             </div>`;
         return;
     }
 
     let html = `
-        <div style="padding: 16px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fff; flex-wrap: wrap; gap: 12px;">
-            <span style="font-size: 14px; color: var(--text-light); font-weight: 500;">${resps.length} Submissions Total</span>
-            <div style="display:flex; gap: 8px;">
+        <div style="padding: 16px 0; display: flex; justify-content: space-between; align-items: center; background: transparent; flex-wrap: wrap; gap: 12px; margin-bottom:16px;">
+            <span style="font-size: 14px; color: var(--text-muted); font-family: var(--font-mono);">${resps.length} Submissions Total</span>
+            <div style="display:flex; gap: 12px;">
                 <button class="btn btn-danger-text" style="font-size: 13px;" onclick="window.clearAllResponses('${id}', '${title}')">Clear Table</button>
                 <button class="btn btn-text" style="font-size: 13px;" onclick="window.deleteForm('${id}')">Wipe Form</button>
             </div>
@@ -524,7 +580,7 @@ window.viewResponses = async (id, title) => {
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 50px; text-align: center;">Actions</th>
+                        <th style="width: 60px; text-align: center;">Actions</th>
                         <th style="min-width: 180px;">Submission Timestamp</th>`;
     
     form.fields.forEach(f => {
@@ -536,9 +592,9 @@ window.viewResponses = async (id, title) => {
         const sub = r.submission || {};
         html += `<tr>
             <td style="text-align:center;">
-                <button class="btn-text" style="color:var(--text-light); padding:4px 8px; font-size:13px;" onclick="window.deleteSingleResponse('${r.id}', '${id}', '${title}')" title="Delete Row">✕</button>
+                <button class="btn-text" style="color:var(--text-dark); padding:4px 8px; font-size:13px;" onclick="window.deleteSingleResponse('${r.id}', '${id}', '${title}')" title="Delete Row">✕</button>
             </td>
-            <td style="color: var(--text-light); font-size: 13px;">${new Date(r.created_at).toLocaleString('en-IN')}</td>`;
+            <td style="color: var(--text-muted); font-family: var(--font-mono); font-size: 13px;">${new Date(r.created_at).toLocaleString('en-IN')}</td>`;
         
         form.fields.forEach((f, index) => {
             let val = sub[f.id] || sub[f.label] || sub[`q_${index}`];
