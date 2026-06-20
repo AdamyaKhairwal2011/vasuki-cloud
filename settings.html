@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings - Vasuki</title>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --g-blue: #815521;
+      --g-blue-hover: #65441b;
+      --g-blue-light: #f5efe8;
+      --border: #dadce0;
+      --text-primary: #202124;
+      --text-secondary: #5f6368;
+      --font: 'Google Sans', Roboto, Arial, sans-serif;
+      --danger: #d93025;
+      --bg: #efe5d8;
+      --surface: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 32px 16px 64px;
+    }
+
+    /* ── Page loader ── */
+    #page-loader {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; pointer-events: none;
+    }
+    .lb {
+      height: 100%; flex: 1;
+      background: #3b2a13;
+      transition: transform 0.8s cubic-bezier(0.77,0,0.175,1);
+      will-change: transform; pointer-events: auto;
+    }
+    #page-loader.loaded .lb { transform: translateY(-100%); }
+    .lb:nth-child(1)  { transition-delay: 0.00s; }
+    .lb:nth-child(2)  { transition-delay: 0.05s; }
+    .lb:nth-child(3)  { transition-delay: 0.10s; }
+    .lb:nth-child(4)  { transition-delay: 0.15s; }
+    .lb:nth-child(5)  { transition-delay: 0.20s; }
+    .lb:nth-child(6)  { transition-delay: 0.25s; }
+    .lb:nth-child(7)  { transition-delay: 0.30s; }
+    .lb:nth-child(8)  { transition-delay: 0.35s; }
+    .lb:nth-child(9)  { transition-delay: 0.40s; }
+    .lb:nth-child(10) { transition-delay: 0.45s; }
+    .loader-spinner-wrap {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000; transition: opacity 0.4s ease;
+      pointer-events: auto;
+    }
+    #page-loader.loaded .loader-spinner-wrap { opacity: 0; }
+    .spinner {
+      width: 60px; display: flex;
+      align-items: flex-start; aspect-ratio: 1;
+    }
+    .spinner:before, .spinner:after {
+      content: ""; flex: 1; aspect-ratio: 1;
+      --g: conic-gradient(from -90deg at 10px 10px, #ffffff 90deg, transparent 0);
+      background: var(--g), var(--g), var(--g);
+      filter: drop-shadow(30px 30px 0 #ffffff);
+      animation: spin 1s infinite;
+    }
+    .spinner:after { transform: scaleX(-1); }
+    @keyframes spin {
+      0%   { background-position: 0 0, 10px 10px, 20px 20px; }
+      33%  { background-position: 10px 10px; }
+      66%  { background-position: 0 20px, 10px 10px, 20px 0; }
+      100% { background-position: 0 0, 10px 10px, 20px 20px; }
+    }
+
+    /* ── Top progress bar ── */
+    .top-progress {
+      position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+      background: #e8eaed; opacity: 0; transition: opacity 0.2s;
+      overflow: hidden; z-index: 999;
+    }
+    .top-progress.active { opacity: 1; }
+    .top-progress .bar {
+      height: 100%; background: var(--g-blue);
+      animation: progbar 1.4s linear infinite; transform-origin: left;
+    }
+    @keyframes progbar {
+      0%   { transform: translateX(-100%) scaleX(1); }
+      50%  { transform: translateX(0) scaleX(0.35); }
+      100% { transform: translateX(100%) scaleX(1); }
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 0 40px 36px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 0 20px 28px; border-radius: 0; border: none; }
+      body { padding: 0 0 64px; }
+    }
+
+    /* ── Page heading ── */
+    .page-head {
+      padding: 32px 0 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-head h1 { font-size: 24px; font-weight: 400; color: var(--text-primary); }
+    .page-head p  { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+
+    /* ── Avatar row ── */
+    .avatar-row {
+      display: flex; align-items: center; gap: 20px;
+      padding: 24px 0 20px; border-bottom: 1px solid var(--border);
+    }
+    .avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: #e8ddd0; border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 500; color: var(--g-blue);
+      cursor: pointer; position: relative; overflow: hidden;
+      flex-shrink: 0;
+    }
+    .avatar-overlay {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.34);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.15s; border-radius: 50%;
+    }
+    .avatar:hover .avatar-overlay { opacity: 1; }
+    .avatar-overlay svg { width: 20px; height: 20px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .avatar-info h2 { font-size: 16px; font-weight: 500; }
+    .avatar-info p  { font-size: 13px; color: var(--text-secondary); margin-top: 3px; }
+    .avatar-info .created-badge {
+      display: inline-block; margin-top: 6px;
+      font-size: 11px; color: var(--text-secondary);
+      background: #f1f3f4; padding: 2px 8px; border-radius: 20px;
+    }
+
+    /* ── Sections ── */
+    .section { border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .section:last-of-type { border-bottom: none; padding-bottom: 0; }
+    .section-label {
+      font-size: 11px; font-weight: 500; color: var(--g-blue);
+      text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 16px;
+    }
+
+    /* ── Field rows ── */
+    .field-row {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 16px; padding: 10px 0;
+    }
+    .field-meta { flex: 1; min-width: 0; }
+    .field-meta label  { font-size: 14px; font-weight: 500; display: block; margin-bottom: 2px; }
+    .field-meta .hint  { font-size: 12px; color: var(--text-secondary); }
+    .field-ctrl { flex-shrink: 0; width: 220px; }
+
+    @media (max-width: 520px) {
+      .field-row { flex-direction: column; gap: 8px; }
+      .field-ctrl { width: 100%; }
+    }
+
+    /* ── Inputs ── */
+    .g-input, .g-select {
+      width: 100%; height: 40px; padding: 0 12px;
+      border: 1px solid var(--border); border-radius: 4px;
+      font-family: var(--font); font-size: 14px; color: var(--text-primary);
+      background: #fff; outline: none;
+      transition: border-color 0.15s;
+      appearance: none; -webkit-appearance: none;
+    }
+    .g-input:focus, .g-select:focus { border-color: var(--g-blue); }
+    .g-input:disabled, .g-select:disabled {
+      background: #f8f9fa; color: var(--text-secondary); cursor: not-allowed;
+    }
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '';
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--text-secondary);
+      margin-top: 3px; pointer-events: none;
+    }
+
+    /* ── Radio pills ── */
+    .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .radio-item {
+      display: flex; align-items: center; gap: 10px;
+      height: 36px; padding: 0 12px;
+      border: 1px solid var(--border); border-radius: 20px;
+      cursor: pointer; font-size: 14px; color: var(--text-primary);
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .radio-item:hover { background: #f8f9fa; }
+    .radio-item.sel  { border-color: var(--g-blue); background: var(--g-blue-light); }
+    .radio-dot {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid var(--text-secondary); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.15s;
+    }
+    .radio-item.sel .radio-dot { border-color: var(--g-blue); }
+    .radio-dot::after {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--g-blue);
+      transform: scale(0); transition: transform 0.15s;
+    }
+    .radio-item.sel .radio-dot::after { transform: scale(1); }
+
+    /* ── Toggle ── */
+    .toggle-row {
+      display: flex; align-items: center;
+      justify-content: space-between; padding: 10px 0;
+    }
+    .toggle-sw { position: relative; width: 36px; height: 20px; cursor: pointer; flex-shrink: 0; margin-left: 16px; }
+    .toggle-sw input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-track {
+      position: absolute; inset: 0; border-radius: 10px;
+      background: #bdc1c6; transition: background 0.2s;
+    }
+    .toggle-sw input:checked + .toggle-track { background: var(--g-blue); }
+    .toggle-thumb {
+      position: absolute; width: 16px; height: 16px;
+      border-radius: 50%; background: #fff;
+      top: 2px; left: 2px; transition: transform 0.2s;
+    }
+    .toggle-sw input:checked ~ .toggle-thumb { transform: translateX(16px); }
+
+    /* ── MPIN editor ── */
+    .mpin-wrap {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .mpin-boxes {
+      display: flex; gap: 10px; align-items: center;
+    }
+    .mpin-box {
+      width: 48px; height: 56px;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-family: var(--font); font-size: 22px; font-weight: 500;
+      color: var(--text-primary); text-align: center;
+      background: #fff; outline: none; caret-color: var(--g-blue);
+      transition: border-color 0.15s;
+      /* prevent zoom on mobile */
+      -webkit-text-size-adjust: 100%;
+    }
+    .mpin-box:focus { border-color: var(--g-blue); border-width: 2px; }
+    .mpin-box.filled { background: var(--g-blue-light); }
+    /* hide the actual character, show dot instead */
+    .mpin-box.masked { color: transparent; position: relative; }
+    .mpin-box.masked::after {
+      content: '●';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 14px; color: var(--text-primary);
+      pointer-events: none;
+    }
+    .mpin-toggle {
+      font-size: 12px; color: var(--g-blue);
+      cursor: pointer; background: none; border: none;
+      font-family: var(--font); padding: 0; text-decoration: underline;
+      white-space: nowrap;
+    }
+    .mpin-hint { font-size: 12px; color: var(--text-secondary); }
+    .mpin-hint.error { color: var(--danger); }
+
+    @media (max-width: 520px) {
+      .mpin-box { width: 52px; height: 60px; font-size: 24px; }
+    }
+
+    /* ── Buttons ── */
+    .btn-row {
+      display: flex; align-items: center;
+      justify-content: space-between; padding-top: 28px; flex-wrap: wrap; gap: 12px;
+    }
+    .btn {
+      font-family: var(--font); font-size: 14px; font-weight: 500;
+      height: 36px; padding: 0 24px; border-radius: 4px;
+      border: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-primary { background: var(--g-blue); color: #fff; }
+    .btn-primary:hover { background: var(--g-blue-hover); }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-ghost { background: transparent; color: var(--g-blue); }
+    .btn-ghost:hover { background: var(--g-blue-light); }
+    .btn-danger { background: transparent; color: var(--danger); }
+    .btn-danger:hover { background: #fce8e6; }
+    .btn-group { display: flex; gap: 8px; }
+
+    /* ── Snackbar ── */
+    .snackbar {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #202124; color: #fff;
+      font-family: var(--font); font-size: 14px;
+      padding: 12px 20px; border-radius: 4px;
+      display: flex; align-items: center; gap: 10px;
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      z-index: 1000; white-space: nowrap;
+    }
+    .snackbar.show { transform: translateX(-50%) translateY(0); }
+    .snack-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .snack-ok  { background: #34a853; }
+    .snack-err { background: #ea4335; }
+  </style>
+</head>
+<body>
+
+  <!-- Page loader -->
+  <div id="page-loader">
+    <div class="lb"></div><div class="lb"></div><div class="lb"></div>
+    <div class="lb"></div><div class="lb"></div><div class="lb"></div>
+    <div class="lb"></div><div class="lb"></div><div class="lb"></div>
+    <div class="lb"></div>
+    <div class="loader-spinner-wrap"><div class="spinner"></div></div>
+  </div>
+
+  <!-- Top progress -->
+  <div class="top-progress" id="prog"><div class="bar"></div></div>
+
+  <div class="card">
+
+    <div class="page-head">
+      <h1>Account settings</h1>
+      <p>Manage your profile and preferences</p>
+    </div>
+
+    <!-- Avatar -->
+    <div class="avatar-row">
+      <div class="avatar" id="avatarEl" title="Change photo">
+        <span id="avatarInitials">?</span>
+        <div class="avatar-overlay">
+          <svg viewBox="0 0 24 24">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="avatar-info">
+        <h2 id="displayName">Loading…</h2>
+        <p id="displayEmail"></p>
+        <span class="created-badge" id="createdBadge" style="display:none"></span>
+      </div>
+    </div>
+
+    <!-- ── PROFILE ── -->
+    <div class="section">
+      <div class="section-label">Profile</div>
+
+      <div class="field-row">
+        <div class="field-meta">
+          <label for="f-name">Full name</label>
+          <div class="hint">Your display name across the workspace</div>
+        </div>
+        <div class="field-ctrl">
+          <input class="g-input" id="f-name" type="text" placeholder="Your name">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-meta">
+          <label for="f-username">Username</label>
+          <div class="hint">Unique account identifier (read-only)</div>
+        </div>
+        <div class="field-ctrl">
+          <input class="g-input" id="f-username" type="text" disabled placeholder="Username">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-meta">
+          <label for="f-upi">UPI ID</label>
+          <div class="hint">Used for payments within the platform</div>
+        </div>
+        <div class="field-ctrl">
+          <input class="g-input" id="f-upi" type="text" placeholder="name@bank">
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECURITY ── -->
+    <div class="section">
+      <div class="section-label">Security</div>
+
+      <div class="field-row">
+        <div class="field-meta">
+          <label for="f-password">Password</label>
+          <div class="hint">Leave blank to keep current password</div>
+        </div>
+        <div class="field-ctrl">
+          <input class="g-input" id="f-password" type="password" placeholder="New password" autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="field-row" style="align-items: flex-start; padding-top: 14px;">
+        <div class="field-meta">
+          <label>MPIN</label>
+          <div class="hint">4-digit PIN for quick access and payments</div>
+        </div>
+        <div class="field-ctrl">
+          <div class="mpin-wrap">
+            <div class="mpin-boxes" id="mpinBoxes">
+              <input class="mpin-box" id="mp0" type="tel" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="one-time-code">
+              <input class="mpin-box" id="mp1" type="tel" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off">
+              <input class="mpin-box" id="mp2" type="tel" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off">
+              <input class="mpin-box" id="mp3" type="tel" inputmode="numeric" maxlength="1" pattern="[0-9]" autocomplete="off">
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span class="mpin-hint" id="mpinHint">Enter a new 4-digit MPIN to change it</span>
+              <button class="mpin-toggle" id="mpinToggleBtn" type="button" onclick="toggleMpinMask()">Show</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── GENDER ── -->
+    <div class="section">
+      <div class="section-label">Gender</div>
+      <div class="field-row" style="align-items: center;">
+        <div class="field-meta">
+          <label>Identity</label>
+          <div class="hint">Used to personalise your experience</div>
+        </div>
+        <div class="field-ctrl">
+          <div class="radio-group" id="gender-group">
+            <div class="radio-item" data-value="female" onclick="setGender('female', this)">
+              <div class="radio-dot"></div>Female
+            </div>
+            <div class="radio-item" data-value="male" onclick="setGender('male', this)">
+              <div class="radio-dot"></div>Male
+            </div>
+            <div class="radio-item" data-value="rather not say" onclick="setGender('rather not say', this)">
+              <div class="radio-dot"></div>Rather not say
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROFESSION ── -->
+    <div class="section">
+      <div class="section-label">Profession</div>
+      <div class="field-row" style="align-items: center;">
+        <div class="field-meta">
+          <label for="f-profession">Role</label>
+          <div class="hint">Helps customise your workspace</div>
+        </div>
+        <div class="field-ctrl">
+          <div class="select-wrap">
+            <select class="g-select" id="f-profession">
+              <option value="">Select a role</option>
+              <option value="developer">Developer / Architect</option>
+              <option value="manager">Product Lead / Manager</option>
+              <option value="student">Student</option>
+              <option value="other">Other Professional</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NOTIFICATIONS ── -->
+    <div class="section">
+      <div class="section-label">Notifications</div>
+
+      <div class="toggle-row">
+        <div class="field-meta">
+          <label style="font-size:14px;font-weight:500;">Email notifications</label>
+          <div class="hint">Receive updates and activity digests</div>
+        </div>
+        <label class="toggle-sw">
+          <input type="checkbox" id="t-email" checked>
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+
+      <div class="toggle-row">
+        <div class="field-meta">
+          <label style="font-size:14px;font-weight:500;">Product announcements</label>
+          <div class="hint">New features and platform updates</div>
+        </div>
+        <label class="toggle-sw">
+          <input type="checkbox" id="t-product">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- ── DANGER ── -->
+    <div class="btn-row">
+      <button class="btn btn-danger" onclick="handleDelete()">Delete account</button>
+      <div class="btn-group">
+        <button class="btn btn-ghost" onclick="loadUser()">Discard</button>
+        <button class="btn btn-primary" id="saveBtn" onclick="saveUser()">Save changes</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Snackbar -->
+  <div class="snackbar" id="snackbar">
+    <div class="snack-dot snack-ok" id="snack-dot"></div>
+    <span id="snack-text">Changes saved</span>
+  </div>
+
+  <script type="module">
+    import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
+
+    const db = new Vasuki();
+    let userRecord = null;
+    let selectedGender = null;
+    let mpinMasked = true;
+
+    const $ = id => document.getElementById(id);
+
+    /* ── Progress / snack ── */
+    function showProgress() { $('prog').classList.add('active'); }
+    function hideProgress() { $('prog').classList.remove('active'); }
+
+    function showSnack(msg, ok = true) {
+      $('snack-text').textContent = msg;
+      $('snack-dot').className = 'snack-dot ' + (ok ? 'snack-ok' : 'snack-err');
+      const bar = $('snackbar');
+      bar.classList.add('show');
+      setTimeout(() => bar.classList.remove('show'), 3200);
+    }
+
+    function initials(name) {
+      if (!name) return '?';
+      const parts = name.trim().split(/\s+/);
+      return parts.length >= 2
+        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        : parts[0].slice(0, 2).toUpperCase();
+    }
+
+    /* ── MPIN logic ── */
+    const mpinInputs = [0,1,2,3].map(i => $('mp' + i));
+
+    function getMpinValue() {
+      return mpinInputs.map(el => el.value).join('');
+    }
+
+    function setMpinValue(val) {
+      const digits = (val || '').toString().padEnd(4, '').slice(0, 4).split('');
+      mpinInputs.forEach((el, i) => {
+        el.value = digits[i] || '';
+        el.classList.toggle('filled', !!el.value);
+        updateMaskClass(el);
+      });
+    }
+
+    function updateMaskClass(el) {
+      if (mpinMasked && el.value) {
+        el.classList.add('masked');
+        el.style.color = '#000';
+      } else {
+        el.classList.remove('masked');
+        el.style.color = '';
+      }
+    }
+
+    window.toggleMpinMask = function() {
+      mpinMasked = !mpinMasked;
+      $('mpinToggleBtn').textContent = mpinMasked ? 'Show' : 'Hide';
+      mpinInputs.forEach(updateMaskClass);
+    };
+
+    mpinInputs.forEach((el, idx) => {
+      /* keydown: handle backspace navigation */
+      el.addEventListener('keydown', e => {
+        if (e.key === 'Backspace') {
+          if (el.value === '' && idx > 0) {
+            mpinInputs[idx - 1].value = '';
+            mpinInputs[idx - 1].classList.remove('filled', 'masked');
+            mpinInputs[idx - 1].style.color = '';
+            mpinInputs[idx - 1].focus();
+          } else {
+            el.value = '';
+            el.classList.remove('filled', 'masked');
+            el.style.color = '';
+          }
+          e.preventDefault();
+          validateMpin();
+        } else if (e.key === 'ArrowLeft' && idx > 0) {
+          mpinInputs[idx - 1].focus();
+        } else if (e.key === 'ArrowRight' && idx < 3) {
+          mpinInputs[idx + 1].focus();
+        }
+      });
+
+      /* input: accept digit and auto-advance */
+      el.addEventListener('input', e => {
+        /* strip non-digits */
+        let raw = el.value.replace(/\D/g, '');
+
+        /* handle paste of full 4-digit code */
+        if (raw.length > 1) {
+          const all = raw.slice(0, 4).split('');
+          all.forEach((d, i) => {
+            if (mpinInputs[i]) mpinInputs[i].value = d;
+          });
+          setMpinValue(raw.slice(0, 4));
+          const nextFocus = Math.min(3, all.length - 1);
+          mpinInputs[nextFocus].focus();
+          validateMpin();
+          return;
+        }
+
+        el.value = raw.slice(0, 1);
+        el.classList.toggle('filled', !!el.value);
+        updateMaskClass(el);
+
+        if (el.value && idx < 3) {
+          mpinInputs[idx + 1].focus();
+        }
+        validateMpin();
+      });
+
+      /* focus: select existing content for easy replace */
+      el.addEventListener('focus', () => {
+        setTimeout(() => el.select(), 0);
+      });
+
+      /* prevent non-numeric keys (desktop) */
+      el.addEventListener('keypress', e => {
+        if (!/[0-9]/.test(e.key)) e.preventDefault();
+      });
+    });
+
+    function validateMpin() {
+      const val = getMpinValue();
+      const hint = $('mpinHint');
+      if (val.length === 0) {
+        hint.textContent = 'Enter a new 4-digit MPIN to change it';
+        hint.classList.remove('error');
+      } else if (val.length < 4) {
+        hint.textContent = `${val.length}/4 digits entered`;
+        hint.classList.remove('error');
+      } else {
+        hint.textContent = 'MPIN ready to save';
+        hint.classList.remove('error');
+      }
+    }
+
+    /* ── Gender ── */
+    window.setGender = function(val, el) {
+      selectedGender = val;
+      document.querySelectorAll('#gender-group .radio-item').forEach(r => r.classList.remove('sel'));
+      el.classList.add('sel');
+    };
+
+    /* ── Populate form ── */
+    function populateForm(u) {
+      userRecord = u;
+
+      $('f-username').value  = u.username || '';
+      $('f-name').value      = u.name || '';
+      $('f-upi').value       = u.upi_id || '';
+
+      const displayNameText = u.name || u.username || '';
+      $('displayName').textContent    = displayNameText || 'Your account';
+      $('displayEmail').textContent   = u.username || '';
+      $('avatarInitials').textContent = initials(displayNameText);
+      $('f-password').value = u.password
+
+      if (u.created_at) {
+        const badge = $('createdBadge');
+        badge.textContent = 'Joined ' + u.created_at;
+        badge.style.display = 'inline-block';
+      }
+
+      if (u.profession) $('f-profession').value = u.profession;
+
+      if (u.gender) {
+        selectedGender = u.gender.toLowerCase();
+        document.querySelectorAll('#gender-group .radio-item').forEach(r => {
+          if (r.dataset.value === selectedGender) r.classList.add('sel');
+        });
+      }
+
+      /* set mpin if present */
+      if (u.mpin) setMpinValue(u.mpin);
+    }
+
+    /* ── Load ── */
+    window.loadUser = async function() {
+      const email = localStorage.getItem('vcloud_user');
+      if (!email) { showSnack('No active session found.', false); return; }
+      showProgress();
+      try {
+        await db.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
+        const rows = await db.fetchTable('users_rows', 'Sheet1');
+        const u = rows.find(r => r.username === email);
+        if (!u) throw new Error('Profile not found.');
+        populateForm(u);
+      } catch (e) {
+        showSnack('Failed to load profile: ' + e.message, false);
+      } finally {
+        hideProgress();
+      }
+    };
+
+    /* ── Save ── */
+    window.saveUser = async function() {
+      if (!userRecord) return;
+
+      /* validate mpin if touched */
+      const mpinVal = getMpinValue();
+      if (mpinVal.length > 0 && mpinVal.length < 4) {
+        $('mpinHint').textContent = 'MPIN must be exactly 4 digits';
+        $('mpinHint').classList.add('error');
+        mpinInputs[mpinVal.length]?.focus();
+        return;
+      }
+
+      const btn = $('saveBtn');
+      btn.disabled = true;
+      showProgress();
+
+      try {
+        const payload = {
+          email_notifications:   $('t-email').checked   ? 'true' : 'false',
+          product_announcements: $('t-product').checked ? 'true' : 'false',
+        };
+
+        const name = $('f-name').value.trim();
+        const upi  = $('f-upi').value.trim();
+        const pwd  = $('f-password').value;
+
+        if (name)         payload.name       = name;
+        if (upi)          payload.upi_id     = upi;
+        if (pwd)          payload.password   = pwd;
+        if (selectedGender)   payload.gender     = selectedGender;
+        if ($('f-profession').value) payload.profession = $('f-profession').value;
+        if (mpinVal.length === 4)   payload.mpin = mpinVal;
+
+        await db.updateRow('users_rows', 'Sheet1', userRecord.id, payload);
+
+        /* update avatar display */
+        const displayNameText = name || userRecord.username || '';
+        $('displayName').textContent    = displayNameText;
+        $('avatarInitials').textContent = initials(displayNameText);
+
+        /* clear password field after save */
+        $('f-password').value = '';
+
+        showSnack('Changes saved successfully');
+      } catch (e) {
+        showSnack('Save failed: ' + e.message, false);
+      } finally {
+        hideProgress();
+        btn.disabled = false;
+      }
+    };
+
+    /* ── Delete ── */
+    window.handleDelete = function() {
+      if (confirm('Permanently delete your account? This cannot be undone.')) {
+        showSnack('Account deletion requested. Contact support to proceed.', false);
+      }
+    };
+
+    /* ── Page loader ── */
+    window.addEventListener('load', () => {
+      setTimeout(() => $('page-loader').classList.add('loaded'), 300);
+      setTimeout(() => $('page-loader').style.display = 'none', 1500);
+    });
+
+    window.addEventListener('DOMContentLoaded', loadUser);
+  </script>
+</body>
+</html>
