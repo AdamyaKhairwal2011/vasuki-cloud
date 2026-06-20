@@ -441,7 +441,7 @@ body{font-family:'Roboto',Arial,sans-serif;font-size:14px;color:var(--text);back
 
 <script>
 /* ══ CONFIG ══ */
-const BASE_URL   = "https://adamyakhairwal2011-vasuki-cloud.hf.space";
+const BASE_URL   = localStorage.getItem("vcloud_base_url") || "https://adamyakhairwal2011-vasuki-cloud.hf.space";
 const VASUKI_API = "https://adamyakhairwal2011-vasuki-coding.hf.space/research";
 const params     = new URLSearchParams(location.search);
 const EMAIL      = params.get("email") || "";
