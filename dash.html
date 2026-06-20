@@ -1,3 +1,6 @@
+
+Anuradha Maheshwari <anuradhamaheshwari48@gmail.com>	Sat, Jun 20, 2026 at 7:35 AM
+To: Megha Maheshwari <raomaheshwarimegha@gmail.com>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,14 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="/manifest.json">
     <title>Vasuki Cloud Dashboard</title>
-    
+   
   <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css'>
     <style>
         @font-face {
             font-family: 'CustomFont';
             src: url('custom.ttf') format('truetype');
         }
-        
+       
         body {
             font-family: 'CustomFont', -apple-system, BlinkMacSystemFont, sans-serif;
         }
@@ -345,26 +348,26 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   .vasuki-apps-dropdown {
     margin-left: 8px;
   }
-  
+ 
   .vasuki-apps-btn {
     padding: 8px 12px;
     font-size: 0.8rem;
   }
-  
+ 
   .vasuki-apps-menu {
     width: 320px;
     right: -12px;
   }
-  
+ 
   .app-icon {
     width: 36px;
     height: 36px;
   }
-  
+ 
   .app-name {
     font-size: 0.85rem;
   }
-  
+ 
   .app-desc {
     font-size: 0.7rem;
   }
@@ -442,7 +445,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 /* TYPE BAR */
 .type-bar-section { padding: 16px 36px 0; }
 .type-bar-track { height: 15px; background: var(--border); border-radius: 100px; display: flex; overflow: hidden; }
-.type-bar-segment { height: 100%; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); border-radius: 0px 100px 100px 0px; border-right: 2px solid var(--bg);   
+.type-bar-segment { height: 100%; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); border-radius: 0px 100px 100px 0px; border-right: 2px solid var(--bg);  
 }
 
 .type-bar-segment ~ .type-bar-segment {
@@ -707,10 +710,6 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   .mobile-top-bar { display: flex; }
   .topbar, .main-header{ padding-left: 18px; padding-right: 18px; }
   .selection-bar, .paste-bar, .filter-chips { margin-left: 18px; margin-right: 18px; }
-
-  .filter-chips {
-    display: none;
-  }
 
   .main-header {
     padding-bottom: 10px;
@@ -1043,7 +1042,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" placeholder="Search in Cloud…" id="topbarSearchInput" oninput="handleTopbarSearch(this.value)">
     </div>
-    
+   
     <!-- Vasuki Apps Dropdown -->
     <div class="vasuki-apps-dropdown">
       <button class="vasuki-apps-btn" onclick="toggleVasukiApps()">
@@ -1058,7 +1057,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
           <polyline points="6 9 12 15 18 9"/>
         </svg>
       </button>
-      
+     
       <div class="vasuki-apps-menu" id="vasukiAppsMenu">
         <div class="apps-section">
           <div class="apps-section-title">Productivity</div>
@@ -1087,8 +1086,8 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
               <div class="app-desc">Intelligent chatbot</div>
             </div>
           </a>
-          
-          
+         
+         
         </div>
       </div>
     </div>
@@ -1164,6 +1163,21 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
       </div>
     </div>
   </div>
+
+  <!-- BASE URL SETTINGS MODAL -->
+<div class="modal-backdrop" id="baseUrlModal">
+  <div class="modal-box">
+    <div class="modal-title">Server Settings</div>
+    <div class="modal-sub">Set a custom base URL for your Vasuki Cloud backend.</div>
+    <label class="modal-label">Base URL</label>
+    <input class="modal-input" id="baseUrlInput" placeholder="https://your-server.example.com">
+    <div class="modal-row">
+      <button class="btn btn-primary" onclick="saveBaseUrl()">Save</button>
+      <button class="btn" onclick="resetBaseUrl()">Reset to Default</button>
+      <button class="btn" onclick="closeBaseUrlModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 
   <style>
@@ -1424,17 +1438,17 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 <script>
     window.addEventListener('load', () => {
       const loaderContainer = document.getElementById('loader-container');
-      
+     
       // 1. Fade out the spinner quickly first
       setTimeout(() => {
         loaderContainer.classList.add('loaded');
         document.body.classList.add('content-ready');
       }, 300); // Small initial buffer for smoother visuals
-      
+     
       // 2. Completely remove container from DOM layout after transition finishes
       setTimeout(() => {
         loaderContainer.style.display = 'none';
-      }, 1500); 
+      }, 1500);
     });
   </script>
 
@@ -1469,7 +1483,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
     </div>
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>
-    
+   
   </div>
 </section>
 
@@ -1501,7 +1515,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 </script>
 
   <div class="type-bar-section">
-    
+   
     <div class="storage-numbers">
       <span class="storage-used" id="usedText">0 MB</span>
       <span class="storage-total">&nbsp;/ 500 MB</span>
@@ -1535,6 +1549,38 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
       <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
       Starred
     </button>
+      <button class="topbar-icon-btn" title="Server Settings" onclick="openBaseUrlModal()">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 005 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 005 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 008.4 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+  </svg>
+</button>
+
+<script>
+  function openBaseUrlModal(){
+  document.getElementById('baseUrlInput').value = BASE_URL;
+  document.getElementById('baseUrlModal').classList.add('open');
+}
+function closeBaseUrlModal(){
+  document.getElementById('baseUrlModal').classList.remove('open');
+}
+function saveBaseUrl(){
+  let val = document.getElementById('baseUrlInput').value.trim();
+  if(!val) return alert("Enter a valid URL");
+  val = val.replace(/\/+$/, ''); // strip trailing slash
+  localStorage.setItem('vcloud_base_url', val);
+  BASE_URL = val;
+  closeBaseUrlModal();
+  listFiles();
+}
+function resetBaseUrl(){
+  localStorage.removeItem('vcloud_base_url');
+  BASE_URL = 'https://adamyakhairwal2011-vasuki-cloud.hf.space';
+  document.getElementById('baseUrlInput').value = BASE_URL;
+  closeBaseUrlModal();
+  listFiles();
+}
+</script>
   </div>
 
   <div class="upload-zone" id="uploadZone">
@@ -1562,6 +1608,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
     <button class="btn btn-primary" onclick="handlePaste()" style="padding:6px 16px;font-size:0.8rem;margin-left:auto;border-radius:100px;">Paste Here</button>
     <button onclick="clearClipboard()" style="background:none;border:none;color:var(--slate-light);cursor:pointer;font-size:0.85rem;">✕</button>
   </div>
+
 
   <div class="content-area">
     <div id="foldersSection" style="display:none;">
@@ -1692,7 +1739,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 
       let access_codes = await vdb.fetchTable('users_rows','access_asked')
     let randomCode = access_codes[Math.floor(Math.random() * access_codes.length)].value
-  
+ 
     document.getElementById('code_review').innerHTML = `Your referral code is:<b> ${randomCode}</b>`;
 
     function generateQR() {
@@ -1702,7 +1749,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
         }
     }
 
-    
+   
 
 async function welcome() {
   await vdb.login('codeclutch.adamyarao@gmail.com','wkmeupb4ugo')
@@ -1730,7 +1777,7 @@ welcome()
 function toggleVasukiApps() {
     const menu = document.getElementById('vasukiAppsMenu');
     menu.classList.toggle('show');
-    
+   
     // Close dropdown when clicking outside
     document.addEventListener('click', function closeDropdown(e) {
         if (!e.target.closest('.vasuki-apps-dropdown')) {
@@ -1740,7 +1787,7 @@ function toggleVasukiApps() {
     });
 }
 
-const BASE_URL='https://adamyakhairwal2011-vasuki-cloud.hf.space';
+let BASE_URL = localStorage.getItem('vcloud_base_url') || 'https://adamyakhairwal2011-vasuki-cloud.hf.space';
 const params=new URLSearchParams(location.search);
 const userEmail=localStorage.getItem('vcloud_user');
 const MAX_MB=500;
@@ -1945,11 +1992,11 @@ updateSliderWithCloudImages(files);
 }
 // Add this new function anywhere in your <script>
 function updateSliderWithCloudImages(files) {
-  const imageFiles = files.filter(f => 
+  const imageFiles = files.filter(f =>
     !f.isFolder && /\.(png|jpg|jpeg|webp|gif|jfif)$/i.test(f.name)
   );
 
-  
+ 
   if (!imageFiles.length) return; // keep placeholder images if no cloud images
 
   const slides = document.querySelectorAll('.swiper-slide');
