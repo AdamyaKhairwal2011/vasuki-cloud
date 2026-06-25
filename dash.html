@@ -61,6 +61,9 @@ body {
   color: var(--ink);
   display: flex;
   font-size: 14px;
+  margin-top: 30px;
+    background: #3e494e;
+
 }
 
 /* ═══════════ SIDEBAR ═══════════ */
@@ -76,7 +79,6 @@ aside {
   overflow-y: auto;
   flex-shrink: 0;
   z-index: 100;
-  border-radius: 0 16px 16px 0;
 }
 
 ::-webkit-scrollbar { display: none;}
@@ -159,13 +161,13 @@ aside {
 .storage-bar-fill { height: 100%; background: linear-gradient(90deg, var(--lemon-dark), var(--lemon)); opacity: 0.85; transition: width 0.6s ease; width: 0%; border-radius: 100px; }
 
 /* Mobile */
-.mobile-top-bar { display: none; position: sticky; top: 0; background: var(--sidebar-bg); padding: 12px 18px; border: none; border-radius: 0px 0px 20px 20px; z-index: 200; justify-content: space-between; align-items: center; }
+.mobile-top-bar { display: none; position: sticky; top: 0; background: #3e494e; padding: 12px 18px; border: none; border-radius: 0px 0px 20px 20px; z-index: 200; justify-content: space-between; align-items: center; }
 .mobile-logo { font-family: 'Google Sans Display', sans-serif; font-weight: 500; color: var(--lemon); font-size: 1rem; }
 .hamburger { background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; padding: 4px; display: flex; }
 .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 99; }
 
 /* ═══════════ MAIN ═══════════ */
-main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-width: 100dvw; width: 100%; overflow: hidden;}
+main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-width: 100dvw; width: 100%; overflow: hidden; border-radius: 20px; background-color: #fff;}
 
 /* ═══════════ TOPBAR ═══════════ */
 .topbar {
@@ -507,13 +509,13 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 /* FOLDERS GRID */
 .folders-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 10px; margin-bottom: 24px; }
 .folder-tile {
-  background: var(--card); border: 1.5px solid var(--border);
+  background: #ecedf0; 
   border-radius: 12px; padding: 16px; cursor: pointer;
   transition: all 0.13s; position: relative; overflow: hidden;
   display: flex; flex-direction: column; gap: 8px;
 }
 .folder-tile::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: transparent; transition: background 0.12s; border-radius: 12px 12px 0 0; }
-.folder-tile:hover { border-color: var(--slate-light); background: var(--lemon-faint); box-shadow: 0 2px 10px rgba(62,73,78,0.1); }
+.folder-tile:hover {  background: var(--lemon-faint); box-shadow: 0 2px 10px rgba(62,73,78,0.1); }
 .folder-tile:hover::before { background: var(--lemon-dark); }
 .folder-tile .menu-btn {
   position: absolute; top: 8px; right: 8px;
@@ -532,7 +534,7 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 /* FILES GRID */
 .files-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
 .file-card {
-  background: var(--card); border: 1.5px solid var(--border);
+  background: var(--card); 
   border-radius: 12px; position: relative; cursor: pointer;
   overflow: hidden; aspect-ratio: 1; display: flex; flex-direction: column;
   transition: all 0.13s;
@@ -839,7 +841,38 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
 }
 </style>
 </head>
-<body>
+<!-- Keep your responsive nav bar (added an ID for JavaScript targeting) -->
+<nav id="fixed-nav" style="position: fixed; top: 0; left: 0; width: 100%; min-height: 40px; background-color: #3e494e; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 5px 0;">
+  <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px 30px; font-family: sans-serif; max-width: 100%; padding: 0 15px; box-sizing: border-box;">
+    <a href="https://vasuki.cloud/ai/index.html" style="text-decoration: none; color: #dddddd; white-space: nowrap;">Vaimanika AI</a>
+    <a href="https://vasuki.cloud/forms/forms.html" style="text-decoration: none; color: #ddd; white-space: nowrap;">Forms</a>
+    <a href="https://vasuki.cloud/dash.html" style="text-decoration: none; color: #ddd; white-space: nowrap;">Vasuki Cloud</a>
+    <a href="https://vasuki.cloud/dbms/dashboard.html" style="text-decoration: none; color: #ddd; white-space: nowrap;">Guppt</a>
+    <a href="https://vasuki.cloud/vypaar/dashboard.html" style="text-decoration: none; color: #ddd; white-space: nowrap;">Vypaar</a>
+  </div>
+</nav>
+
+<!-- JavaScript to dynamically update body margin on load and window resize -->
+<script>
+  function adjustBodyMargin() {
+    const nav = document.getElementById('fixed-nav');
+    if (nav) {
+      document.body.style.marginTop = nav.offsetHeight + 'px';
+    }
+  }
+
+  // Run on page load
+  window.addEventListener('DOMContentLoaded', adjustBodyMargin);
+  // Run whenever the window layout changes (mobile rotation, scaling)
+  window.addEventListener('resize', adjustBodyMargin);
+</script>
+
+
+<body><!-- Fixed Navigation Bar -->
+
+
+
+
 
   <div class="modal-backdrop" id="qrModal">
   <div class="modal-box" style="width:320px;text-align:center;">
@@ -910,14 +943,14 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
   <button class="hamburger" onclick="toggleSidebar()">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
-  <span class="mobile-logo">Vasuki Neem</span>
+  <span class="mobile-logo">Vasuki Neem Ecosystem</span>
   <div style="width:24px"></div>
 </div>
 
 <aside id="sidebar">
   <div class="sidebar-logo">
     <div>
-      <div class="sidebar-logo-text"><b>Vasuki</b> Neem</div>
+      <div class="sidebar-logo-text">Vasuki Neem</div>
       <div class="sidebar-logo-sub">Cloud Storage</div>
     </div>
   </div>
