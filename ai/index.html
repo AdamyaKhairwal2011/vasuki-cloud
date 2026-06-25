@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vaimanika AI — Advanced AI Solutions</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -13,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
@@ -21,17 +23,19 @@
 
     <style>
         :root {
-            --bg-pure: #000000;
-            --bg-surface: #0a0a0a;
-            --bg-card: #121212;
-            --bg-card-hover: #161616;
-            --text-main: #f5f5f7;
-            --text-sub: #86868b;
-            --border-muted: #1f1f23;
-            --border-focus: #333336;
-            --accent-glow: #749abb;
-            --accent-glow-subtle: rgba(255, 106, 0, 0.1);
-            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+            /* Claude.ai Color Palette */
+            --bg-pure: #fbfaf7;
+            --bg-surface: #ffffff;
+            --bg-input-banner: #f4f0ea;
+            --text-main: #191919;
+            --text-sub: #666360;
+            --text-placeholder: #b0ada9;
+            --border-muted: #e5e2dd;
+            --border-focus: #ccbead;
+            --accent-orange: #e05c36;
+            --btn-black: #191919;
+            --btn-black-hover: #333333;
+            --transition-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         * { 
@@ -41,163 +45,190 @@
         }
         
         body { 
-            font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif; 
+            font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, sans-serif; 
             background-color: var(--bg-pure); 
             color: var(--text-main); 
             height: 100vh; 
             display: flex; 
-            flex-direction: column;
-            align-items: center;
+            flex-direction: row;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Top Navigation Header bar */
-        header {
-            width: 100%;
-            padding: 16px 32px;
+        /* Claude Left Sidebar Layout */
+        .claude-sidebar {
+            width: 64px;
+            height: 100%;
+            border-right: 1px solid var(--border-muted);
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
             justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            z-index: 100;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-muted);
-            transition: background 0.3s, border-color 0.3s;
+            background: var(--bg-pure);
+            z-index: 5;
         }
 
-        .brand-container { 
+        .sidebar-top, .sidebar-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+            width: 100%;
+        }
+
+        .sidebar-icon {
+            color: var(--text-sub);
+            cursor: pointer;
+            font-size: 20px;
+            user-select: none;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
         }
 
-        .brand-logo-mark {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            font-size: 20px;
-            color: #fff;
-            background: linear-gradient(135deg, #fff 0%, #777 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
-        }
-
-        .brand-name {
-            font-size: 15px;
-            font-weight: 500;
-            letter-spacing: -0.2px;
+        .sidebar-icon:hover {
+            background: #f1ede4;
             color: var(--text-main);
         }
-        
-        .header-right { 
-            display: flex; 
-            align-items: center; 
-            gap: 20px; 
-        }
 
-        .upgrade-btn {
-            background: var(--text-main);
-            color: var(--bg-pure);
-            padding: 8px 18px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 500;
-            text-decoration: none;
+        .user-avatar-circle {
+            width: 28px;
+            height: 28px;
+            background: #191919;
+            color: #ffffff;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 6px;
-            transition: opacity 0.2s var(--transition-smooth);
-        }
-
-        .upgrade-btn:hover {
-            opacity: 0.9;
-        }
-
-        .grok-badge {
-            background: var(--bg-card);
-            border: 1px solid var(--border-muted);
-            color: var(--accent-glow);
-            padding: 4px 10px;
-            border-radius: 100px;
+            justify-content: center;
             font-size: 11px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 500;
-            letter-spacing: 0.5px;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+            text-transform: uppercase;
         }
 
-        #userInit {
-            transition: transform 0.2s var(--transition-smooth);
-            border: 1px solid var(--border-muted);
-        }
-        #userInit:hover {
-            transform: scale(1.05);
+        /* Main App Panel Wrapper */
+        .main-app-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            height: 100%;
+            overflow: hidden;
         }
 
-        /* Central Container Configurations */
-        .container {
-            margin-top: 22vh;
+        /* Top Bar Info Details */
+        .claude-top-tier-banner {
             width: 100%;
-            max-width: 760px;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .tier-pill {
+            font-size: 13px;
+            color: var(--text-sub);
+            font-weight: 400;
+        }
+
+        .tier-pill span {
+            color: var(--text-sub);
+            text-decoration: underline;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+
+        /* Container Configurations */
+        .container {
+            margin-top: 24vh;
+            width: 100%;
+            max-width: 680px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            padding: 0 24px;
-            transition: transform 0.6s var(--transition-smooth), opacity 0.4s var(--transition-smooth), margin 0.6s var(--transition-smooth);
+            padding: 0 20px;
+            transition: transform 0.5s var(--transition-smooth), opacity 0.4s var(--transition-smooth);
             opacity: 1;
+            z-index: 2;
         }
 
         .container.hidden {
-            transform: translateY(-30px) scale(0.98);
+            transform: translateY(-20px);
             opacity: 0;
             pointer-events: none;
-            margin-top: 0;
             height: 0;
+            margin-top: 0;
             overflow: hidden;
         }
 
+        /* Claude elegant serif greeting style */
         .greeting { 
-            font-size: 38px; 
+            font-family: 'Lora', Georgia, serif;
+            font-size: 36px; 
             font-weight: 400; 
-            margin-bottom: 40px; 
-            color: var(--text-main); 
+            margin-bottom: 32px; 
+            color: #191919; 
             line-height: 1.2;
-            letter-spacing: -1px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* Custom Claude Asterisk-styled icon logo */
+        .claude-asterisk {
+            color: var(--accent-orange);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .greeting span { 
-            display: block; 
-            font-size: 14px; 
-            font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #777; 
-            margin-bottom: 16px; 
-            text-transform: capitalize;
-            letter-spacing: 1.5px;
+        .claude-asterisk svg {
+            width: 30px;
+            height: 30px;
+            fill: currentColor;
         }
 
-        /* Grok-Style Input Panel Optimization */
-        .input-wrapper {
+        /* Claude Input Container Suite Elements */
+        .input-outer-box {
             width: 100%;
             background: var(--bg-surface);
-            border-radius: 20px;
-            padding: 16px 20px;
-            display: flex;
-            border: 1px solid #252527;
-            flex-direction: column;
+            border-radius: 24px;
+            border: 1px solid var(--border-muted);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
             transition: border-color 0.2s var(--transition-smooth), box-shadow 0.2s var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .input-wrapper:focus-within {
+        .input-outer-box:focus-within {
             border-color: var(--border-focus);
-            box-shadow: 0 0 0 1px var(--border-focus), 0 12px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        .input-wrapper {
+            width: 100%;
+            padding: 20px 24px 14px 24px;
+            display: flex;
+            flex-direction: column;
         }
 
         .input-top { 
             display: flex; 
-            align-items: center; 
+            align-items: flex-start; 
             width: 100%; 
             gap: 12px; 
         }
@@ -208,13 +239,13 @@
             outline: none;
             font-size: 16px;
             font-family: inherit;
-            padding: 4px 0 12px 0;
+            padding: 2px 0;
             color: var(--text-main);
             background: transparent;
         }
         
         input#query::placeholder {
-            color: #44444a;
+            color: var(--text-placeholder);
         }
 
         /* Streaming Stop Systems */
@@ -222,9 +253,10 @@
             display: none; 
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             position: relative;
+            margin-top: 2px;
         }
 
         .loader-ring {
@@ -232,15 +264,15 @@
             width: 100%;
             height: 100%;
             border: 2px solid var(--border-muted);
-            border-top: 2px solid var(--accent-glow);
+            border-top: 2px solid var(--text-main);
             border-radius: 50%;
             animation: spin 0.85s linear infinite;
         }
 
         #stopBtn {
             position: relative;
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             background: var(--text-main);
             border: none;
             border-radius: 1px;
@@ -257,28 +289,38 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-muted);
+            padding-top: 14px;
         }
 
         .tools-group { 
             display: flex; 
             align-items: center; 
-            gap: 12px; 
+            gap: 8px; 
         }
         
-        .tool-btn { 
-            font-size: 12px;
-            font-weight: 500;
+        .tool-btn-attach { 
             color: var(--text-sub);
-            cursor: default; 
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
-            padding: 6px 14px; 
-            border-radius: 100px; 
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        
+        .tool-btn-attach:hover {
+            background: #f5f2eb;
+            color: var(--text-main);
+        }
+
+        .tool-btn-attach svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
         }
 
         .mode-select-container { 
@@ -288,14 +330,12 @@
         }
         
         #modeLabel { 
-            font-size: 12px; 
-            color: var(--text-main); 
-            font-weight: 500; 
+            font-size: 13px; 
+            color: var(--text-sub); 
+            font-weight: 400; 
             cursor: pointer; 
-            padding: 6px 14px; 
+            padding: 6px 12px; 
             border-radius: 100px; 
-            background: var(--bg-card); 
-            border: 1px solid var(--border-muted);
             transition: all 0.2s var(--transition-smooth);
             display: flex;
             align-items: center;
@@ -303,34 +343,28 @@
         }
         
         #modeLabel:hover {
-            border-color: var(--border-focus);
-            color: #fff;
+            background: #f5f2eb;
+            color: var(--text-main);
         }
         
         .mode-dropdown {
             position: absolute;
             bottom: calc(100% + 8px);
             right: 0;
-            background: var(--bg-card);
+            background: var(--bg-surface);
             border-radius: 12px;
             border: 1px solid var(--border-muted);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             display: none;
             flex-direction: column;
-            width: 140px;
+            width: 130px;
             overflow: hidden;
-            z-index: 200;
+            z-index: 1000;
             padding: 4px 0;
-            animation: slideUp 0.2s var(--transition-smooth);
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(6px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
 
         .mode-option { 
-            padding: 8px 16px; 
+            padding: 8px 14px; 
             font-size: 13px; 
             cursor: pointer; 
             text-align: left; 
@@ -339,29 +373,61 @@
         }
         
         .mode-option:hover { 
-            background: var(--bg-surface); 
+            background: var(--bg-pure); 
             color: var(--text-main); 
         }
 
-        /* Bento-style Modular Grid Architecture */
-        .chips-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 48px;
-            width: 100%;
-            animation: fadeInUp 0.6s var(--transition-smooth);
+        /* Claude Input Static Footer Banner */
+        .input-banner-notice {
+            background: var(--bg-input-banner);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-main);
+            border-top: 1px solid var(--border-muted);
         }
 
-        @keyframes fadeInUp {
-            from { transform: translateY(15px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .notice-left-text {
+            color: var(--text-sub);
+        }
+        
+        .notice-left-text span {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .banner-upgrade-btn {
+            background: var(--btn-black);
+            color: #ffffff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .banner-upgrade-btn:hover {
+            background: var(--btn-black-hover);
+        }
+
+        /* Minimalist Horizontal Prompt Chips Architecture */
+        .chips-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 24px;
+            width: 100%;
         }
 
         .chip {
             background: var(--bg-surface);
-            padding: 16px;
-            border-radius: 14px;
+            padding: 8px 16px;
+            border-radius: 99px;
             font-size: 13px;
             font-weight: 400;
             color: var(--text-sub);
@@ -369,55 +435,43 @@
             border: 1px solid var(--border-muted);
             transition: all 0.2s var(--transition-smooth);
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            text-align: left;
-            gap: 8px;
-        }
-        
-        .chip:hover { 
-            background: var(--bg-card-hover); 
-            border-color: var(--border-focus);
-            color: var(--text-main);
-            transform: translateY(-2px);
-        }
-
-        .chip-title {
-            font-weight: 500;
-            color: var(--text-main);
-            display: flex;
             align-items: center;
             gap: 6px;
         }
         
+        .chip:hover { 
+            background: var(--bg-pure);
+            border-color: var(--border-focus);
+            color: var(--text-main);
+        }
+
         .chip svg { 
-            width: 16px; 
-            height: 16px; 
+            width: 14px; 
+            height: 14px; 
             fill: none; 
             stroke: var(--text-sub); 
             stroke-width: 2; 
         }
         .chip:hover svg {
-            stroke: var(--accent-glow);
+            stroke: var(--text-main);
         }
 
         /* Streaming & Conversation Interface Layout */
         #chatArea {
             width: 100%;
-            max-width: 760px;
+            max-width: 640px;
             overflow-y: auto;
             display: none;
             flex-direction: column;
-            gap: 40px;
-            margin-top: 80px;
-            padding: 40px 24px;
+            gap: 32px;
+            margin-top: 50px;
+            padding: 40px 0;
             height: calc(100vh - 180px); 
             scroll-behavior: smooth;
         }
 
-        /* Scrollbar aesthetics customization */
         #chatArea::-webkit-scrollbar {
-            width: 4px;
+            width: 6px;
         }
         #chatArea::-webkit-scrollbar-thumb {
             background: var(--border-muted);
@@ -426,26 +480,20 @@
 
         .message { 
             max-width: 100%; 
-            font-size: 15px; 
+            font-size: 16px; 
             position: relative; 
-            animation: fadeInMsg 0.3s var(--transition-smooth);
-        }
-
-        @keyframes fadeInMsg {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .user-msg { 
             align-self: flex-end; 
             color: var(--text-main); 
-            font-size: 24px; 
+            font-size: 20px; 
+            font-family: 'Lora', Georgia, serif;
             font-weight: 400; 
             text-align: left; 
             width: 100%;
-            border-bottom: 1px solid var(--border-muted);
-            padding-bottom: 20px;
-            letter-spacing: -0.5px;
+            padding-bottom: 8px;
+            letter-spacing: -0.2px;
         }
         
         .bot-msg { 
@@ -453,72 +501,73 @@
             color: var(--text-main); 
             width: 100%; 
             text-align: left; 
+            line-height: 1.6;
         }
 
         /* Standardized Markdown Presentation Engine Layouts */
         .bot-msg h1, .bot-msg h2, .bot-msg h3, .bot-msg h4 {
-            color: #fff;
-            font-weight: 500;
-            letter-spacing: -0.3px;
-            margin-top: 32px;
-            margin-bottom: 12px;
+            color: var(--text-main);
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 10px;
         }
-        .bot-msg h1 { font-size: 22px; }
+        .bot-msg h1 { font-size: 20px; }
         .bot-msg h2 { font-size: 18px; }
         .bot-msg h3 { font-size: 16px; }
         
         .bot-msg p {
             margin-top: 0;
-            margin-bottom: 16px;
-            line-height: 1.65;
-            color: #e1e1e6;
+            margin-bottom: 14px;
+            color: var(--text-main);
         }
 
         .bot-msg ul, .bot-msg ol {
-            margin-top: 8px;
-            margin-bottom: 20px;
-            padding-left: 24px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            padding-left: 20px;
         }
 
         .bot-msg li {
-            margin-bottom: 8px;
-            line-height: 1.6;
-            color: #e1e1e6;
+            margin-bottom: 6px;
         }
 
-        .bot-msg li::marker {
-            color: var(--accent-glow);
-        }
-
-        /* Obsidian Dark Theme Structured Code Block Elements */
+        /* Code Elements Styling */
         pre {
             position: relative;
-            padding: 18px 20px !important;
+            padding: 16px 20px !important;
             border-radius: 12px !important;
-            margin: 24px 0 !important;
-            background: #050505 !important;
+            margin: 20px 0 !important;
+            background: #f9f8f5 !important;
             border: 1px solid var(--border-muted) !important;
         }
 
         code {
-            font-family: 'JetBrains Mono', Consolas, Monaco, monospace !important;
+            font-family: 'JetBrains Mono', Consolas, monospace !important;
             font-size: 13.5px !important;
+            background: #f4f1eb;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
         }
 
         .code-copy-btn {
             position: absolute;
             top: 12px;
             right: 12px;
-            padding: 4px 10px;
-            background: var(--bg-card);
+            padding: 4px 8px;
+            background: var(--bg-surface);
             color: var(--text-sub);
             border: 1px solid var(--border-muted);
             border-radius: 6px;
             font-size: 11px;
-            font-weight: 500;
             cursor: pointer;
             opacity: 0;
-            transition: all 0.2s var(--transition-smooth);
+            transition: opacity 0.2s;
         }
 
         pre:hover .code-copy-btn {
@@ -534,9 +583,9 @@
         .action-row {
             display: flex;
             gap: 4px;
-            margin-top: 20px;
+            margin-top: 12px;
             opacity: 0;
-            transition: opacity 0.2s var(--transition-smooth);
+            transition: opacity 0.2s;
         }
         
         .bot-msg:hover .action-row { 
@@ -547,42 +596,41 @@
             background: transparent;
             border: none;
             cursor: pointer;
-            padding: 6px;
+            padding: 4px;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
             color: var(--text-sub);
         }
         
         .action-btn:hover { 
-            background: var(--bg-surface);
+            background: #f4f1eb;
             color: var(--text-main);
         }
         
         .action-btn svg { 
-            width: 15px; 
-            height: 15px; 
+            width: 16px; 
+            height: 16px; 
             fill: none; 
             stroke: currentColor; 
-            stroke-width: 2; 
+            stroke-width: 1.5; 
         }
 
         /* Docked Footing Positioning Layout */
         .docked-footer {
             position: fixed;
             bottom: 0;
-            width: 100%;
-            max-width: 760px;
+            width: calc(100% - 64px);
+            max-width: 640px;
             display: flex;
             justify-content: center;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 30%);
-            padding: 16px 24px 36px 24px;
+            background: linear-gradient(180deg, rgba(251,250,247,0) 0%, rgba(251,250,247,1) 40%);
+            padding: 20px 0 40px 0;
             z-index: 90;
             transform: translateY(100px);
             opacity: 0;
-            transition: transform 0.5s var(--transition-smooth), opacity 0.4s ease;
+            transition: transform 0.4s var(--transition-smooth), opacity 0.3s ease;
         }
 
         .docked-footer.visible {
@@ -591,13 +639,12 @@
         }
 
         @media (max-width: 768px) {
-            .upgrade-btn {
-                display: none;
-            }
+            .claude-sidebar { display: none; }
+            .docked-footer { width: 100%; padding: 20px; }
         }
     </style>
 </head>
-<nav id="fixed-nav" style="position: fixed; top: 0; left: 0; width: 100%; min-height: 40px; background-color: #3e494e; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 5px 0;">
+<nav id="fixed-nav" style="position: fixed; top: 0; left: 0; width: 100%; min-height: 40px; background-color: #3e494e; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 5px 0; font-size: 12px;">
   <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px 30px; font-family: sans-serif; max-width: 100%; padding: 0 15px; box-sizing: border-box;">
     <a href="https://vasuki.cloud/ai/index.html" style="text-decoration: none; color: #dddddd; white-space: nowrap;">Vaimanika AI</a>
     <a href="https://vasuki.cloud/forms/forms.html" style="text-decoration: none; color: #ddd; white-space: nowrap;">Forms</a>
@@ -607,101 +654,89 @@
   </div>
 </nav>
 
-<!-- JavaScript to dynamically update body margin on load and window resize -->
 <script>
   function adjustBodyMargin() {
     const nav = document.getElementById('fixed-nav');
     if (nav) {
-      document.body.style.marginTop = nav.offsetHeight + 'px';
+      document.body.style.paddingTop = nav.offsetHeight + 'px';
     }
   }
-
-  // Run on page load
   window.addEventListener('DOMContentLoaded', adjustBodyMargin);
-  // Run whenever the window layout changes (mobile rotation, scaling)
   window.addEventListener('resize', adjustBodyMargin);
 </script>
 
 <body>
 
-<header id="appHeader">
-    <div class="brand-container">
-        <div class="brand-logo-mark"></div>
-        <div class="brand-name">Vasuki Vaimanika</div>
-    </div>
-    <div class="header-right">
-        <div class="grok-badge">Manavik Research V1</div>
-        <a href="#" class="upgrade-btn">✦ Get Premium</a>
-        <div id="userInit" style="width: 28px; height: 28px; background: #111; border: 1px solid var(--border-muted); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-main); font-weight: 500; font-size: 12px; cursor: pointer;">?</div>
-    </div>
-</header>
 
-<div class="container" id="homeUI">
-    <div class="greeting">
-        <span id="userName">✦ INITIALIZING CORE SUBSYSTEMS</span>
-        Where should we begin?
+
+<div class="main-app-panel">
+    <div class="claude-top-tier-banner">
+        <div class="tier-pill">Free plan <span>Upgrade</span></div>
     </div>
 
-    <div class="input-wrapper" id="mainInput">
-        <div class="input-top">
-            <input type="text" id="query" placeholder="Ask Vaimanika anything..." autocomplete="off">
-            <div class="stop-btn-container" id="stopContainer">
-                <div class="loader-ring"></div>
-                <button id="stopBtn" onclick="stopAIResponse()" title="Abort Stream"></button>
-            </div>
+    <div class="container" id="homeUI">
+        <div class="greeting">
+            <div id="greetingText">Good Evening, <span id="userName">Innovator</span></div>
         </div>
-        <div class="input-bottom">
-            <div class="tools-group">
-                <div class="tool-btn">
-                    <span class="material-icons-outlined" style="font-size: 14px; color: var(--accent-glow);">auto_awesome</span>
-                    Vasuki Vaimanika Shikharam V1
+
+        <div class="input-outer-box">
+            <div class="input-wrapper" id="mainInput">
+                <div class="input-top">
+                    <input type="text" id="query" placeholder="Ask Vaimanika AI Anything and Let It Cook!" autocomplete="off">
+                    <div class="stop-btn-container" id="stopContainer">
+                        <div class="loader-ring"></div>
+                        <button id="stopBtn" onclick="stopAIResponse()" title="Abort Stream"></button>
+                    </div>
+                </div>
+                <div class="input-bottom">
+                    <div class="tools-group">
+                    </div>
+                    <div class="mode-select-container">
+                        <div id="modeLabel" onclick="toggleModeDropdown()">Vasuki Vaimanika <span style="color:var(--text-sub); margin-left: 4px;">Low</span> <span class="material-icons-outlined" style="font-size:16px; margin-left:2px;">expand_more</span></div>
+                        <div class="mode-dropdown" id="modeDropdown">
+                            <div class="mode-option" onclick="setMode('ask')">Ask</div>
+                            <div class="mode-option" onclick="setMode('research')">Research</div>
+                            <div class="mode-option" onclick="setMode('coder')">Coder</div>
+                        </div>
+                        <span class="material-icons-outlined" style="font-size: 18px; color: var(--text-sub); margin-left: 12px; cursor: pointer;">mic</span>
+                        <span class="material-icons-outlined" style="font-size: 18px; color: var(--text-sub); margin-left: 10px; cursor: pointer;">graphic_eq</span>
+                    </div>
                 </div>
             </div>
-            <div class="mode-select-container">
-                <div id="modeLabel" onclick="toggleModeDropdown()">Research <span class="material-icons-outlined" style="font-size:14px; vertical-align:middle;">expand_more</span></div>
-                <div class="mode-dropdown" id="modeDropdown">
-                    <div class="mode-option" onclick="setMode('ask')">Ask</div>
-                    <div class="mode-option" onclick="setMode('research')">Research</div>
-                    <div class="mode-option" onclick="setMode('coder')">Coder</div>
-                </div>
+            
+            <div class="input-banner-notice" id="quotaBanner">
+                <div class="notice-left-text">Store Your Files on The Cloud for Free and Access Them Anywhere</div>
+                <button class="banner-upgrade-btn" onclick="window.location.href = 'https://vasuki.cloud/dash.html'">Try vCloud Now ⇲</button>
             </div>
         </div>
-    </div>
 
-    <div class="chips-container">
-        <div class="chip" onclick="handleQuickAction('Write HTML & CSS code to make a website in one file')">
-            <div class="chip-title">
+        <div class="chips-container">
+            <div class="chip" onclick="handleQuickAction('Write HTML & CSS code to make a website in one file')">
                 <svg viewBox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"></path></svg>
-                Coding Infrastructure
+                Code
             </div>
-            <span>Generate, refactor and build complex software architectures effortlessly.</span>
-        </div>
-        <div class="chip" onclick="handleQuickAction('Write a professional email to a client')">
-            <div class="chip-title">
-                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                Deep Research & Analysis
+            <div class="chip" onclick="handleQuickAction('Write a professional email to a client')">
+                <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                Write
             </div>
-            <span>Analyze technical documentation or compose complex literature.</span>
-        </div>
-        <div class="chip" onclick="handleQuickAction('Suggest a 10 minute workout plan')">
-            <div class="chip-title">
-                <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                Optimize My Workflow
+            <div class="chip" onclick="handleQuickAction('Suggest a 10 minute workout plan')">
+                <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10v6M12 4v16M4 8h16M4 16h16"></path></svg>
+                Learn
             </div>
-            <span>Construct operational system templates and process routines.</span>
-        </div>
-        <div class="chip" onclick="handleQuickAction('Tell me a joke to make my day better')">
-            <div class="chip-title">
+            <div class="chip" onclick="handleQuickAction('Tell me a joke to make my day better')">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path></svg>
-                Creative Brainstorming
+                Life stuff
             </div>
-            <span>Synthesize unique strategic formulas or alternative artistic approaches.</span>
+            <div class="chip" onclick="handleQuickAction('Creative Brainstorming Session')">
+                <svg viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.7c-.306.391-.472.88-.472 1.385V18a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-.657c0-.504-.166-.994-.472-1.385l-.548-.7z"></path></svg>
+                Vaimanika's choice
+            </div>
         </div>
     </div>
-</div>
 
-<div id="chatArea"></div>
-<div id="footerDock" class="docked-footer"></div>
+    <div id="chatArea"></div>
+    <div id="footerDock" class="docked-footer"></div>
+</div>
 
 <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -718,19 +753,32 @@
     const modeLabel = document.getElementById('modeLabel');
     const modeDropdown = document.getElementById('modeDropdown');
     const userNameDisplay = document.getElementById('userName');
-    const appHeader = document.getElementById('appHeader');
+    const userInit = document.getElementById('userInit');
 
     let currentMode = 'research';
     let abortController = null;
 
+    // Fixed setup getting directly from vcloud_username key inside localStorage
     async function initUser() {
-        const vcloudUser = localStorage.getItem('vcloud_user');
-        if (!vcloudUser) return;
+        let targetUser = localStorage.getItem('vcloud_username');
+        
+        // Secondary backup lookup check if primary wasn't configured
+        if (!targetUser) {
+            targetUser = localStorage.getItem('vcloud_user') || 'adamya khairwal';
+        }
+
+        if (!targetUser) return;
+        
         try {
-            const { data } = await supabase.from('users').select('name').eq('username', vcloudUser).single();
+            // Apply straight to UI immediately
+            userNameDisplay.textContent = targetUser;
+            userInit.textContent = targetUser.charAt(0).toUpperCase();
+
+            // Query Supabase backend to get full canonical profile name mapping if available
+            const { data } = await supabase.from('users').select('name').eq('email', localStorage.getItem('vcloud_user')).single();
             if (data && data.name) {
-                userNameDisplay.textContent = `✦ Welocme Back, ${data.name}`;
-                document.getElementById('userInit').textContent = data.name.charAt(0).toUpperCase();
+                userNameDisplay.textContent = data.name.toLowerCase();
+                userInit.textContent = data.name.charAt(0).toUpperCase();
             }
         } catch (err) {}
     }
@@ -743,8 +791,8 @@
         const temp = document.createElement('div');
         temp.innerHTML = htmlContent;
 
-        // LaTeX Equation Processing Module Engine elements
-        temp.innerHTML = temp.innerHTML.replace(/\$\$([\s\S]+?)\$\$/g, (_, formula) => katex.renderToString(formula, { displayMode: true, throwOnError: false }));
+        // LaTeX Equation Processing Engine elements
+        temp.innerHTML = temp.innerHTML.replace(/\$$([\s\S]+?)\$\$/g, (_, formula) => katex.renderToString(formula, { displayMode: true, throwOnError: false }));
         temp.innerHTML = temp.innerHTML.replace(/\$([^\$\n]+?)\$/g, (_, formula) => katex.renderToString(formula, { displayMode: false, throwOnError: false }));
 
         // Standardized Copy Action Component Assignment
@@ -768,7 +816,7 @@
     
     window.setMode = (mode) => {
         currentMode = mode;
-        modeLabel.innerHTML = mode.charAt(0).toUpperCase() + mode.slice(1) + ' <span class="material-icons-outlined" style="font-size:14px; vertical-align:middle;">expand_more</span>';
+        modeLabel.innerHTML = mode.charAt(0).toUpperCase() + mode.slice(1) + ' <span style="color:var(--text-sub); margin-left:4px;">Low</span> <span class="material-icons-outlined" style="font-size:16px; vertical-align:middle;">expand_more</span>';
         modeDropdown.style.display = 'none';
     }
     
@@ -784,6 +832,8 @@
                 homeUI.style.display = 'none';
                 chatArea.style.display = 'flex';
                 footerDock.classList.add('visible');
+                document.getElementById('quotaBanner').style.display = 'none';
+                mainInput.style.borderRadius = '24px';
                 footerDock.appendChild(mainInput);
                 queryInput.focus();
             }, 300);
@@ -801,13 +851,11 @@
         contentDiv.innerHTML = '<p style="color: var(--text-sub); font-style: italic;">Accessing cluster neural weights...</p>';
         bMsg.appendChild(contentDiv);
         
-        // Premium minimal xAI styled Action Control blocks
         const actionRow = document.createElement('div');
         actionRow.className = 'action-row';
         actionRow.innerHTML = `
-            <button class="action-btn" title="Upvote"><svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button>
-            <button class="action-btn" title="Downvote"><svg viewBox="0 0 24 24"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm12-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg></button>
-            <button class="action-btn" title="Copy Text Blocks" onclick="navigator.clipboard.writeText(this.closest('.bot-msg').querySelector('div').innerText)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+            <button class="action-btn" title="Copy Text" onclick="navigator.clipboard.writeText(this.closest('.bot-msg').querySelector('div').innerText)"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
+            <button class="action-btn" title="Thumbs Up"><svg viewBox="0 0 24 24"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button>
         `;
         bMsg.appendChild(actionRow);
         chatArea.appendChild(bMsg);
