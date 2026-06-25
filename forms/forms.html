@@ -328,6 +328,32 @@
         .hidden { display: none !important; }
     </style>
 </head>
+
+<nav id="fixed-nav" style="position: fixed; top: 0; left: 0; width: 100%; min-height: 40px; background-color: #3e494e; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 5px 0;">
+  <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 15px 30px; font-family: sans-serif; max-width: 100%; padding: 0 15px; box-sizing: border-box;">
+    <a href="https://vasuki.cloud/ai/index.html" style="text-decoration: none; color: #dddddd; white-space: nowrap;">Vaimanika AI</a>
+    <a href="https://vasuki.cloud/forms/forms.html" style="text-decoration: none; color: #ddd; white-space: nowrap;">Forms</a>
+    <a href="https://vasuki.cloud/dash.html" style="text-decoration: none; color: #ddd; white-space: nowrap;">Vasuki Cloud</a>
+    <a href="https://vasuki.cloud/dbms/dashboard.html" style="text-decoration: none; color: #ddd; white-space: nowrap;">Guppt</a>
+    <a href="https://vasuki.cloud/vypaar/dashboard.html" style="text-decoration: none; color: #ddd; white-space: nowrap;">Vypaar</a>
+  </div>
+</nav>
+
+<!-- JavaScript to dynamically update body margin on load and window resize -->
+<script>
+  function adjustBodyMargin() {
+    const nav = document.getElementById('fixed-nav');
+    if (nav) {
+      document.body.style.marginTop = nav.offsetHeight + 'px';
+    }
+  }
+
+  // Run on page load
+  window.addEventListener('DOMContentLoaded', adjustBodyMargin);
+  // Run whenever the window layout changes (mobile rotation, scaling)
+  window.addEventListener('resize', adjustBodyMargin);
+</script>
+
 <body>
 
 <nav>
