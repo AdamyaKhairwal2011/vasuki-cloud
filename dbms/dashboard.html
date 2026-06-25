@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Vasuki Guppt | Workspace</title>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
 <style>
@@ -148,7 +148,7 @@ body {
   border-bottom: 1px solid rgba(255,255,255,0.05);
   display: flex; align-items: center; justify-content: space-between;
 }
-.sidebar-title { font-family: 'google sans', monospace; font-size: 0.55rem; letter-spacing: 0.16em;  color: rgba(255,255,255,0.25); }
+.sidebar-title { font-family: 'google sans', monospace; font-size: 0.55rem; letter-spacing: 0.16em; color: rgba(255,255,255,0.25); }
 .sidebar-search { margin: 8px 10px; position: relative; }
 .sidebar-search-input {
   width: 100%; background: rgba(255,255,255,0.05);
@@ -282,7 +282,7 @@ th {
 .th-inner { display: flex; align-items: center; padding: 7px 12px; gap: 6px; cursor: pointer; transition: background 0.1s; }
 .th-inner:hover { background: var(--bg-dark); }
 .th-type-icon { opacity: 0.4; flex-shrink: 0; }
-.th-label { font-family: 'google sans', monospace; font-size: 0.6rem; letter-spacing: 0.1em;  color: var(--ink-mid); font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.th-label { font-family: 'google sans', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--ink-mid); font-weight: 500; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .th-type-tag { font-family: 'Google Sans', monospace; font-size: 0.5rem; color: var(--ink-faint); letter-spacing: 0.06em; background: var(--bg-dark); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); flex-shrink: 0; }
 .th-sort { flex-shrink: 0; opacity: 0; transition: opacity 0.1s; color: var(--ink-faint); }
 th:hover .th-sort { opacity: 1; }
@@ -322,7 +322,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 .sql-view { flex: 1; display: none; flex-direction: column; overflow: hidden; }
 .sql-view.active { display: flex; }
 .sql-editor-wrap { height: 220px; flex-shrink: 0; border-bottom: 1px solid var(--border); position: relative; background: var(--card); }
-.sql-editor-label { position: absolute; top: 10px; left: 14px; font-family: 'Google Sans', monospace; font-size: 0.55rem; letter-spacing: 0.14em;  color: var(--ink-faint); z-index: 2; pointer-events: none; }
+.sql-editor-label { position: absolute; top: 10px; left: 14px; font-family: 'Google Sans', monospace; font-size: 0.55rem; letter-spacing: 0.14em; color: var(--ink-faint); z-index: 2; pointer-events: none; }
 .sql-textarea { width: 100%; height: 100%; border: none; padding: 28px 14px 14px; font-family: 'Google Sans', monospace; font-size: 0.78rem; color: var(--ink); background: transparent; outline: none; resize: none; line-height: 1.6; letter-spacing: 0.02em; }
 .sql-run-bar { position: absolute; bottom: 10px; right: 12px; display: flex; gap: 8px; align-items: center; }
 .sql-info { font-family: 'Google Sans', monospace; font-size: 0.58rem; color: var(--ink-faint); letter-spacing: 0.06em; }
@@ -330,7 +330,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 .sql-results::-webkit-scrollbar { width: 6px; height: 6px; }
 .sql-results::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 3px; }
 .sql-result-header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 5; }
-.sql-result-tag { font-family: 'google sans', monospace; font-size: 0.58rem; letter-spacing: 0.1em;  padding: 3px 10px; border-radius: 100px; background: var(--bg-dark); color: var(--ink-light); }
+.sql-result-tag { font-family: 'google sans', monospace; font-size: 0.58rem; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 100px; background: var(--bg-dark); color: var(--ink-light); }
 .sql-result-tag.success { background: rgba(42,107,58,0.12); color: var(--green); }
 .sql-result-tag.error   { background: var(--red-faint); color: var(--red); }
 .sql-result-time { font-family: 'google sans', monospace; font-size: 0.58rem; color: var(--ink-faint); letter-spacing: 0.06em; }
@@ -347,7 +347,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 .schema-col-row:last-child { border-bottom: none; }
 .schema-col-row:hover { background: var(--lemon-faint); }
 .schema-col-row.header { background: var(--bg-dark); padding: 7px 18px; }
-.schema-col-row.header span { font-family: 'Google Sans', monospace; font-size: 0.55rem; letter-spacing: 0.12em;  color: var(--ink-faint); }
+.schema-col-row.header span { font-family: 'Google Sans', monospace; font-size: 0.55rem; letter-spacing: 0.12em; color: var(--ink-faint); }
 .schema-col-name { font-family: 'Google Sans', monospace; font-size: 0.7rem; color: var(--ink); display: flex; align-items: center; gap: 6px; }
 .pk-badge { font-family: 'Google Sans', monospace; font-size: 0.5rem; background: rgba(62,73,78,0.12); color: var(--slate); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border-dark); letter-spacing: 0.06em; }
 .schema-type-badge { font-family: 'Google Sans', monospace; font-size: 0.6rem; color: var(--ink-light); letter-spacing: 0.04em; }
@@ -363,7 +363,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 .stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: transparent; transition: background 0.12s; }
 .stat-card:hover { border-color: var(--slate-light); }
 .stat-card:hover::after { background: var(--lemon); }
-.stat-label { font-family: 'Google Sans', monospace; font-size: 0.55rem; letter-spacing: 0.14em;  color: var(--ink-faint); margin-bottom: 8px; }
+.stat-label { font-family: 'Google Sans', monospace; font-size: 0.55rem; letter-spacing: 0.14em; color: var(--ink-faint); margin-bottom: 8px; }
 .stat-value { font-family: 'google sans', serif; font-size: 1.8rem; font-weight: 100; color: var(--ink); line-height: 1; }
 .stat-sub { font-family: 'Google Sans', monospace; font-size: 0.58rem; color: var(--ink-faint); margin-top: 4px; }
 .col-stats-section { margin-top: 20px; }
@@ -396,7 +396,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 .modal-title { font-family: 'google sans', serif; font-size: 1.25rem; font-weight: 300; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 4px; }
 .modal-subtitle { font-family: 'google sans', serif; font-size: 0.85rem; color: var(--ink-light); font-style: italic; }
 .modal-body { padding: 18px 24px 22px; display: flex; flex-direction: column; gap: 14px; }
-.field-label { font-family: 'google sans', monospace; font-size: 0.56rem; letter-spacing: 0.12em;  color: var(--ink-faint); display: block; margin-bottom: 5px; }
+.field-label { font-family: 'google sans', monospace; font-size: 0.56rem; letter-spacing: 0.12em; color: var(--ink-faint); display: block; margin-bottom: 5px; }
 .field-input, .field-select, .field-textarea { font-family: 'google sans', monospace; font-size: 0.74rem; width: 100%; padding: 9px 12px; border: 1.5px solid var(--border-dark); border-radius: 8px; background: var(--bg); color: var(--ink); outline: none; transition: border-color 0.12s; }
 .field-input:focus, .field-select:focus, .field-textarea:focus { border-color: var(--slate); }
 .field-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
@@ -405,7 +405,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 .field-check-row { display: flex; align-items: center; gap: 8px; font-family: 'google sans', monospace; font-size: 0.65rem; color: var(--ink-light); letter-spacing: 0.04em; }
 .field-check-row input[type=checkbox] { accent-color: var(--slate); width: 14px; height: 14px; }
 .modal-footer { padding: 0 24px 20px; display: flex; gap: 10px; }
-.mbtn { flex: 1; font-family: 'google sans', monospace; font-size: 0.6rem; letter-spacing: 0.1em;  padding: 10px; border-radius: 100px; border: 1.5px solid var(--border-dark); background: var(--bg); color: var(--ink-mid); cursor: pointer; transition: all 0.12s; }
+.mbtn { flex: 1; font-family: 'google sans', monospace; font-size: 0.6rem; letter-spacing: 0.1em; padding: 10px; border-radius: 100px; border: 1.5px solid var(--border-dark); background: var(--bg); color: var(--ink-mid); cursor: pointer; transition: all 0.12s; }
 .mbtn:hover { background: var(--slate); color: var(--lemon); border-color: var(--slate); }
 .mbtn.primary { background: var(--slate); color: var(--lemon); border-color: var(--slate); }
 .mbtn.primary:hover { background: var(--slate-deep); }
@@ -413,7 +413,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 .mbtn.danger:hover { background: var(--red); color: white; }
 
 /* TOAST */
-#toastContainer { position: fixed; left: 280px; bottom: 36px; z-index: 900; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+#toastContainer { position: fixed; left: 50%; transform: translateX(-50%); bottom: 36px; z-index: 900; display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
 .toast { background: var(--slate-deep); border: 1px solid rgba(255,255,255,0.09); border-radius: 10px; padding: 10px 16px; display: flex; align-items: center; gap: 10px; font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.06em; color: rgba(255,252,206,0.7); animation: toastIn 0.22s ease; pointer-events: all; }
 @keyframes toastIn { from { transform:translateY(6px);opacity:0; } to { transform:translateY(0);opacity:1; } }
 .toast-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
@@ -449,7 +449,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 /* Sheet tab in panel */
 .sheet-tab-btn {
   font-family: 'google sans', monospace; font-size: 0.58rem;
-  letter-spacing: 0.08em; 
+  letter-spacing: 0.08em;
   padding: 0 12px; border: none; background: none;
   color: var(--ink-faint); cursor: pointer;
   border-bottom: 2px solid transparent; transition: all 0.12s;
@@ -463,14 +463,252 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 .hidden { display: none !important; }
 .no-scroll::-webkit-scrollbar { display: none; }
 
-/* Confirmation dialog  */
+/* Confirmation dialog */
 .confirm-overlay { position: fixed; inset: 0; background: rgba(20,16,10,0.65); backdrop-filter: blur(3px); z-index: 600; display: flex; align-items: center; justify-content: center; }
-.confirm-box { background: var(--card); border: 1.5px solid var(--border-dark); border-radius: 14px; width: 360px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: scaleIn 0.15s ease; }
+.confirm-box { background: var(--card); border: 1.5px solid var(--border-dark); border-radius: 14px; width: 360px; max-width: 94vw; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: scaleIn 0.15s ease; }
 .confirm-box::before { content: ''; display: block; height: 3px; background: var(--red); }
 .confirm-head { padding: 18px 22px 12px; }
 .confirm-title { font-family: 'google sans', serif; font-size: 1.1rem; font-weight: 300; color: var(--red); }
 .confirm-msg { font-family: 'google sans', serif; font-size: 0.88rem; color: var(--ink-light); font-style: italic; margin-top: 4px; }
 .confirm-footer { padding: 12px 22px 18px; display: flex; gap: 8px; }
+
+/* ══════════════════════════════════════════════════
+   MOBILE OVERLAY SIDEBAR BACKDROP
+══════════════════════════════════════════════════ */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 150;
+  backdrop-filter: blur(2px);
+}
+.sidebar-backdrop.open { display: block; }
+
+/* ══════════════════════════════════════════════════
+   MOBILE BOTTOM NAV
+══════════════════════════════════════════════════ */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 56px;
+  background: var(--slate-deep);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  z-index: 300;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+.mob-nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.35);
+  padding: 6px 4px;
+  border-radius: 10px;
+  transition: all 0.12s;
+  min-height: 44px;
+}
+.mob-nav-btn.active { color: var(--lemon); }
+.mob-nav-btn span {
+  font-family: 'Google Sans', monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.08em;
+}
+.mob-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  padding: 8px;
+  margin-right: 4px;
+  border-radius: 6px;
+  transition: all 0.12s;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+.mob-hamburger:hover { background: rgba(255,255,255,0.08); color: white; }
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE — TABLET (≤ 900px)
+══════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .sidebar { width: 180px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .col-stat-row { grid-template-columns: 120px 1fr auto; gap: 10px; }
+}
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE — MOBILE (≤ 768px)
+══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Show hamburger, hide left rail */
+  .mob-hamburger { display: flex; }
+  .left-rail { display: none; }
+  .mobile-bottom-nav { display: flex; }
+
+  /* Sidebar becomes slide-over overlay */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%;
+    width: 280px !important;
+    z-index: 160;
+    transform: translateX(-100%);
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Top nav adjustments */
+  .top-nav { padding: 0 8px; gap: 4px; }
+  .nav-logo-wrap { padding-right: 8px; margin-right: 0; }
+  .nav-logo-name { font-size: 0.82rem; }
+  .nav-breadcrumb { flex: 1; }
+  .bc-item { max-width: 90px; font-size: 0.58rem; }
+
+  /* Hide verbose nav buttons */
+  .btn-nav.ghost { display: none; }
+  .nav-right { gap: 6px; }
+  .btn-nav { font-size: 0.55rem; padding: 5px 10px; }
+  .sync-indicator { display: none; }
+
+  /* Main panel full width */
+  .main-panel { width: 100%; }
+
+  /* Bottom padding for mobile nav bar */
+  #editorPanel { padding-bottom: 56px; }
+  .welcome-panel { padding-bottom: 72px; }
+  .status-bar { display: none; }
+
+  /* Action bar: scrollable, smaller */
+  .action-bar {
+    height: auto;
+    min-height: 44px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+  .action-bar::-webkit-scrollbar { display: none; }
+  .action-btn { font-size: 0.55rem; padding: 5px 10px; flex-shrink: 0; }
+  .row-counter { display: none; }
+  .action-div { display: none; }
+  .action-spacer { min-width: 4px; }
+
+  /* Panel tabs: scrollable */
+  .panel-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    gap: 0;
+    padding: 0 8px;
+  }
+  .panel-tabs::-webkit-scrollbar { display: none; }
+  .panel-tab { padding: 0 10px; font-size: 0.55rem; flex-shrink: 0; }
+
+  /* Sheet tabs in panel tabs */
+  #sheetTabs { display: none !important; }
+  .panel-tabs > button[onclick="openAddSheetModal()"] { display: none !important; }
+  .panel-tabs > div[style*="width:1px"] { display: none; }
+
+  /* Table: allow horizontal scroll */
+  .table-view { overflow: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 500px; }
+
+  /* Bigger touch targets for cells */
+  .cell-input { font-size: 0.78rem; padding: 10px 10px; }
+  th { min-width: 110px; }
+  th.rn, td.rn { width: 36px; min-width: 36px; }
+
+  /* Formula bar: compact */
+  .formula-bar { height: 28px; padding: 0 8px; }
+  .fx-label { display: none; }
+  .fx-input { font-size: 0.62rem; }
+
+  /* Filter panel */
+  .filter-panel { padding: 8px 10px; }
+  .filter-chip { font-size: 0.55rem; padding: 4px 8px; }
+
+  /* SQL view: shorter editor */
+  .sql-editor-wrap { height: 160px; }
+  .sql-textarea { font-size: 0.7rem; padding: 24px 10px 10px; }
+  .sql-run-bar { bottom: 6px; right: 8px; }
+  .sql-empty { padding: 24px; font-size: 0.9rem; }
+
+  /* Schema view */
+  .schema-view { padding: 12px; }
+  .schema-table-card { max-width: 100%; }
+  .schema-col-row {
+    grid-template-columns: 1fr 80px auto;
+  }
+  .schema-col-row > :nth-child(3),
+  .schema-col-row > :nth-child(4) { display: none; }
+  .schema-col-row.header > :nth-child(3),
+  .schema-col-row.header > :nth-child(4) { display: none; }
+  .schema-table-header { padding: 12px 14px; }
+
+  /* Stats view */
+  .stats-view { padding: 12px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .stat-card { padding: 14px 14px; border-radius: 10px; }
+  .stat-value { font-size: 1.5rem; }
+  .col-stat-row { grid-template-columns: 100px 1fr auto; gap: 8px; padding: 10px 12px; }
+
+  /* Welcome panel */
+  .welcome-panel { padding: 24px 16px; }
+  .welcome-title { font-size: 1.2rem; }
+
+  /* Filter search input */
+  .filter-input { width: 130px; }
+  .filter-input:focus { width: 150px; }
+
+  /* Modal: taller on small screens, scrollable */
+  .modal-box { width: 96vw; max-height: 90vh; overflow-y: auto; }
+  .modal-head { padding: 16px 18px 12px; }
+  .modal-body { padding: 14px 18px 18px; }
+  .modal-footer { padding: 0 18px 16px; }
+  .field-row { grid-template-columns: 1fr; }
+
+  /* Toast: centered at bottom above mobile nav */
+  #toastContainer { bottom: 68px; width: 90vw; left: 5vw; transform: none; }
+}
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE — SMALL MOBILE (≤ 480px)
+══════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .nav-logo-name { font-size: 0.72rem; }
+  .btn-nav { font-size: 0.5rem; padding: 4px 8px; }
+  .bc-item { max-width: 70px; }
+
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .stat-value { font-size: 1.3rem; }
+  .stat-card { padding: 12px; }
+
+  .schema-col-row { grid-template-columns: 1fr auto; }
+  .schema-col-row > :nth-child(2) { display: none; }
+  .schema-col-row.header > :nth-child(2) { display: none; }
+
+  .col-stat-row { grid-template-columns: 80px 1fr auto; }
+  .col-stat-name { font-size: 0.58rem; }
+
+  .sql-editor-wrap { height: 130px; }
+  .sql-textarea { font-size: 0.65rem; }
+
+  th { min-width: 100px; }
+  .cell-input { font-size: 0.72rem; padding: 9px 8px; }
+}
 </style>
 </head>
 
@@ -484,7 +722,6 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
   </div>
 </nav>
 
-<!-- JavaScript to dynamically update body margin on load and window resize -->
 <script>
   function adjustBodyMargin() {
     const nav = document.getElementById('fixed-nav');
@@ -492,10 +729,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
       document.body.style.marginTop = nav.offsetHeight + 'px';
     }
   }
-
-  // Run on page load
   window.addEventListener('DOMContentLoaded', adjustBodyMargin);
-  // Run whenever the window layout changes (mobile rotation, scaling)
   window.addEventListener('resize', adjustBodyMargin);
 </script>
 
@@ -503,6 +737,9 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 
 <div id="toastContainer"></div>
 <input class="hidden" type="file" id="uploadCloudFile" accept=".json,.csv" onchange="handleCloudUpload(this)">
+
+<!-- MOBILE SIDEBAR BACKDROP -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileSidebar()"></div>
 
 <!-- CONTEXT MENU -->
 <div class="ctx-menu" id="ctxMenu">
@@ -530,6 +767,10 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 
   <!-- TOP NAV -->
   <nav class="top-nav">
+    <!-- Mobile hamburger -->
+    <button class="mob-hamburger" id="mobHamburger" onclick="toggleMobileSidebar()" aria-label="Open databases">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <div class="nav-logo-wrap" onclick="goHome()">
       <span class="nav-logo-name">Vasuki <span style="opacity:.55;font-weight:300;">Guppt</span></span>
     </div>
@@ -633,7 +874,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
           </button>
           <button class="panel-tab" id="tabSQL" onclick="switchPanelTab('sql')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            SQL Editor
+            SQL
           </button>
           <button class="panel-tab" id="tabSchema" onclick="switchPanelTab('schema')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="7" height="10" rx="1"/><rect x="15" y="3" width="7" height="8" rx="1"/><rect x="15" y="15" width="7" height="6" rx="1"/></svg>
@@ -678,10 +919,10 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
             Delete selected
           </button>
-          <button class="action-btn" onclick="openRenameSheetModal()">Rename Sheet</button>
+          <button class="action-btn" onclick="openRenameSheetModal()">Rename</button>
           <button class="action-btn danger" onclick="deleteActiveTable()">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-            Delete Sheet
+            Del Sheet
           </button>
         </div>
 
@@ -719,7 +960,7 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
               <button class="action-btn" onclick="clearSQL()">Clear</button>
               <button class="action-btn lemon" onclick="runSQL()">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z"/></svg>
-                Run Query
+                Run
               </button>
             </div>
           </div>
@@ -757,6 +998,31 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
     <div class="status-sep"></div>
     <div class="status-item">Vasuki Guppt v2.1</div>
   </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <div class="mobile-bottom-nav" id="mobileBottomNav">
+    <button class="mob-nav-btn active" id="mobBtnTable" onclick="mobileSwitchView('table')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+      <span>Table</span>
+    </button>
+    <button class="mob-nav-btn" id="mobBtnSql" onclick="mobileSwitchView('sql')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <span>SQL</span>
+    </button>
+    <button class="mob-nav-btn" id="mobBtnSchema" onclick="mobileSwitchView('schema')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="8" height="10" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="14" y="15" width="8" height="6" rx="1"/></svg>
+      <span>Schema</span>
+    </button>
+    <button class="mob-nav-btn" id="mobBtnStats" onclick="mobileSwitchView('stats')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Stats</span>
+    </button>
+    <button class="mob-nav-btn" id="mobBtnNew" onclick="openNewDBModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><line x1="12" y1="13" x2="12" y2="21"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+      <span>New DB</span>
+    </button>
+  </div>
+
 </div>
 
 <!-- ══════════ MODALS ══════════ -->
@@ -926,13 +1192,11 @@ tr.selected td.rn { background: var(--lemon-dark) !important; }
 ══════════════════════════════════════════════════ */
 const API_BASE = "https://adamyakhairwal2011-vasuki-cloud.hf.space";
 
-// Redirect to login if not authenticated
 const currentUser = localStorage.getItem('vcloud_user');
 if (!currentUser) {
   window.location.href = "../login.html";
 }
 
-// Set avatar initials
 const initials = (currentUser || '').split('@')[0].slice(0,2).toUpperCase();
 document.getElementById('navAvatar').textContent = initials;
 document.getElementById('userDisplay').textContent = currentUser || '—';
@@ -952,7 +1216,7 @@ const state = {
   selectedRows: new Set(),
   dirty: false,
   ctxRowIdx: -1,
-  activeView: 'table',   // track current rail/tab view
+  activeView: 'table',
 };
 
 /* ══════════════════════════════════════════════════
@@ -1007,16 +1271,43 @@ function setSyncStatus(s) {
 function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-// Close modals on backdrop click
 document.querySelectorAll('.modal-backdrop').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
 
 /* ══════════════════════════════════════════════════
-   CONFIRM DIALOG (replaces native confirm())
+   MOBILE SIDEBAR TOGGLE
+══════════════════════════════════════════════════ */
+function toggleMobileSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  const isOpen = sidebar.classList.contains('mobile-open');
+  sidebar.classList.toggle('mobile-open', !isOpen);
+  backdrop.classList.toggle('open', !isOpen);
+}
+
+function closeMobileSidebar() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebarBackdrop').classList.remove('open');
+}
+
+/* ══════════════════════════════════════════════════
+   MOBILE BOTTOM NAV SWITCHING
+══════════════════════════════════════════════════ */
+function mobileSwitchView(view) {
+  const btns = { table: 'mobBtnTable', sql: 'mobBtnSql', schema: 'mobBtnSchema', stats: 'mobBtnStats' };
+  Object.values(btns).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  if (btns[view]) document.getElementById(btns[view])?.classList.add('active');
+  if (state.currentDB) switchPanelTab(view);
+}
+
+/* ══════════════════════════════════════════════════
+   CONFIRM DIALOG
 ══════════════════════════════════════════════════ */
 function confirmDialog(title, msg, onConfirm, dangerBtn = 'Confirm') {
-  // Remove any existing
   document.getElementById('_confirmOverlay')?.remove();
   const overlay = document.createElement('div');
   overlay.className = 'confirm-overlay';
@@ -1076,7 +1367,6 @@ function renderSidebar(dbs) {
   });
 }
 
-// Safe CSS id from filename
 function cssId(filename) {
   return filename.replace(/[^a-zA-Z0-9]/g, '_');
 }
@@ -1113,6 +1403,7 @@ function renderSheetItems(filename) {
       renderTable();
       renderStatusBar();
       switchPanelTab('table');
+      closeMobileSidebar(); // auto-close on mobile after picking sheet
     };
     el.appendChild(div);
   });
@@ -1122,7 +1413,6 @@ function handleDBGroupClick(filename, headerEl) {
   if (state.currentDB !== filename) {
     loadDatabase(filename);
   } else {
-    // Toggle collapse
     const group = headerEl.parentElement;
     const tableList = group.querySelector('.table-items');
     const isOpen = group.classList.contains('open');
@@ -1161,7 +1451,6 @@ async function loadDatabase(filename) {
   state.selectedRows = new Set();
   state.dirty = false;
 
-  // Show editor panel
   document.getElementById('welcomePanel').style.display = 'none';
   const ep = document.getElementById('editorPanel');
   ep.style.display = 'flex';
@@ -1176,15 +1465,14 @@ async function loadDatabase(filename) {
   renderFilterChips();
   document.getElementById('rowSearch').value = '';
 
-  // Refresh SQL placeholder
   document.getElementById('sqlTextarea').placeholder = `-- Write your query here\nSELECT * FROM ${state.activeSheet || 'Sheet1'} LIMIT 10;`;
 
   toast(`Loaded "${filename.replace('.json', '')}"`, 'success');
+  closeMobileSidebar();
 }
 
 function goHome() {
   if (!state.currentDB) return;
-  // just deselect table highlight
   updateBreadcrumb();
 }
 
@@ -1322,7 +1610,6 @@ function renderTable() {
 
   // ── Body ──
   const rows = filtered.map((row) => {
-    // Find original index in un-filtered data
     const origIdx = data.indexOf(row);
     const isSelected = state.selectedRows.has(origIdx);
     return `<tr class="${isSelected ? 'selected' : ''}" oncontextmenu="openCtxMenu(event,${origIdx});return false;">
@@ -1350,7 +1637,6 @@ function renderTable() {
 
   tbody.innerHTML = rows.join('');
 
-  // Add-row button
   const addRowTr = document.createElement('tr');
   addRowTr.className = 'add-row-row';
   addRowTr.innerHTML = `
@@ -1363,14 +1649,12 @@ function renderTable() {
     </td>`;
   tbody.appendChild(addRowTr);
 
-  // Select all checkbox state
   const selAll = document.getElementById('selectAll');
   if (selAll) {
     selAll.checked = data.length > 0 && state.selectedRows.size === data.length;
     selAll.indeterminate = state.selectedRows.size > 0 && state.selectedRows.size < data.length;
   }
 
-  // Delete button
   document.getElementById('delRowsBtn').style.display = state.selectedRows.size > 0 ? 'flex' : 'none';
 }
 
@@ -1417,23 +1701,12 @@ function toggleRowSelect(idx, checked) {
   if (checked) state.selectedRows.add(idx);
   else state.selectedRows.delete(idx);
   document.getElementById('delRowsBtn').style.display = state.selectedRows.size > 0 ? 'flex' : 'none';
-  // Update select-all state
   const data = state.currentData[state.activeSheet] || [];
   const selAll = document.getElementById('selectAll');
   if (selAll) {
     selAll.checked = state.selectedRows.size === data.length;
     selAll.indeterminate = state.selectedRows.size > 0 && state.selectedRows.size < data.length;
   }
-  // Toggle row highlight
-  const rows = document.querySelectorAll('#tableBody tr');
-  rows.forEach(tr => {
-    const cb = tr.querySelector('.row-cb');
-    if (cb && cb.onchange) {
-      // Just re-render selection state on this row visually
-    }
-  });
-  // Simple: re-render table to reflect class changes
-  // (small tables only — for large tables we'd do surgical DOM updates)
   const data2 = state.currentData[state.activeSheet] || [];
   const filtered = getFilteredData();
   filtered.forEach((row, i) => {
@@ -1471,7 +1744,6 @@ function ctxDo(action) {
     case 'delete-row':
       data.splice(idx, 1);
       state.selectedRows.delete(idx);
-      // Shift selected indices down
       const newSel = new Set();
       state.selectedRows.forEach(i => newSel.add(i > idx ? i - 1 : i));
       state.selectedRows = newSel;
@@ -1645,11 +1917,9 @@ function renameSheet() {
   if (newName === state.activeSheet) return closeModal('renameSheetModal');
   if (state.currentData[newName]) return toast(`"${newName}" already exists`, 'error');
 
-  // Rename data
   state.currentData[newName] = state.currentData[state.activeSheet];
   delete state.currentData[state.activeSheet];
 
-  // Rename schema
   if (!state.currentData._vasuki_schema) state.currentData._vasuki_schema = {};
   if (state.currentData._vasuki_schema[state.activeSheet]) {
     state.currentData._vasuki_schema[newName] = state.currentData._vasuki_schema[state.activeSheet];
@@ -1708,7 +1978,6 @@ async function createNewDB() {
   const name  = document.getElementById('newDBName').value.trim();
   const sheet = document.getElementById('newDBSheet').value.trim() || 'Sheet1';
   if (!name) return toast('Database name is required', 'error');
-  // Validate name
   if (!/^[a-zA-Z0-9_\-]+$/.test(name)) return toast('Name may only contain letters, numbers, _ and -', 'error');
 
   const initial = {
@@ -1748,7 +2017,6 @@ async function confirmDeleteDB() {
   closeModal('deleteDBModal');
   toast(`Database "${expected}" deleted`, 'warn');
 
-  // Reset state
   state.currentDB = null;
   state.currentData = {};
   state.activeSheet = '';
@@ -1870,7 +2138,6 @@ function runSQL() {
 function interpretSQL(q) {
   const upper = q.toUpperCase().trimStart();
 
-  // ── SELECT ──
   if (upper.startsWith('SELECT')) {
     const fromMatch = /\bFROM\s+(\w+)/i.exec(q);
     if (!fromMatch) throw new Error('Missing FROM clause');
@@ -1879,11 +2146,9 @@ function interpretSQL(q) {
 
     let data = [...state.currentData[table]];
 
-    // WHERE
     const whereMatch = /\bWHERE\s+(.+?)(?:\s+ORDER\s+BY|\s+LIMIT|$)/i.exec(q);
     if (whereMatch) {
       const cond = whereMatch[1].trim();
-      // Handle LIKE
       const likeMatch = /(\w+)\s+(?:NOT\s+)?LIKE\s+'([^']+)'/i.exec(cond);
       if (likeMatch) {
         const col = likeMatch[1];
@@ -1911,7 +2176,6 @@ function interpretSQL(q) {
       }
     }
 
-    // ORDER BY
     const orderMatch = /\bORDER\s+BY\s+(\w+)(?:\s+(ASC|DESC))?/i.exec(q);
     if (orderMatch) {
       const col = orderMatch[1];
@@ -1923,7 +2187,6 @@ function interpretSQL(q) {
       });
     }
 
-    // LIMIT / OFFSET
     const limitMatch = /\bLIMIT\s+(\d+)(?:\s+OFFSET\s+(\d+))?/i.exec(q);
     if (limitMatch) {
       const offset = parseInt(limitMatch[2] || '0');
@@ -1931,11 +2194,9 @@ function interpretSQL(q) {
       data = data.slice(offset, offset + limit);
     }
 
-    // SELECT cols (handle COUNT(*) separately)
     const selPart = /^SELECT\s+([\s\S]+?)\s+FROM/i.exec(q);
     if (selPart && selPart[1].toUpperCase() !== '*') {
       const colsStr = selPart[1].trim();
-      // COUNT(*)
       if (/COUNT\s*\(\s*\*\s*\)/i.test(colsStr)) {
         return { type: 'count', count: data.length };
       }
@@ -1946,7 +2207,6 @@ function interpretSQL(q) {
     return { type: 'select', rows: data, count: data.length };
   }
 
-  // ── INSERT ──
   if (upper.startsWith('INSERT')) {
     const m = /INSERT\s+INTO\s+(\w+)\s*\(([^)]+)\)\s*VALUES\s*\(([^)]+)\)/i.exec(q);
     if (!m) throw new Error('Invalid INSERT syntax.\nExpected: INSERT INTO table (col1, col2) VALUES (val1, val2)');
@@ -1961,7 +2221,6 @@ function interpretSQL(q) {
     return { type: 'write', message: `1 row inserted into "${table}"`, count: 1 };
   }
 
-  // ── UPDATE ──
   if (upper.startsWith('UPDATE')) {
     const m = /UPDATE\s+(\w+)\s+SET\s+(.+?)\s+WHERE\s+(.+)/i.exec(q);
     if (!m) throw new Error('Invalid UPDATE syntax.\nExpected: UPDATE table SET col=val WHERE col=val');
@@ -1989,7 +2248,6 @@ function interpretSQL(q) {
     return { type: 'write', message: `${count} row${count !== 1 ? 's' : ''} updated in "${table}"`, count };
   }
 
-  // ── DELETE ──
   if (upper.startsWith('DELETE')) {
     const m = /DELETE\s+FROM\s+(\w+)(?:\s+WHERE\s+(.+))?/i.exec(q);
     if (!m) throw new Error('Invalid DELETE syntax.\nExpected: DELETE FROM table WHERE col=val');
@@ -2019,7 +2277,6 @@ function interpretSQL(q) {
     return { type: 'write', message: `${deleted} row${deleted !== 1 ? 's' : ''} deleted from "${table}"`, count: deleted };
   }
 
-  // ── SHOW TABLES ──
   if (upper.startsWith('SHOW TABLES') || upper.startsWith('SHOW TABLE')) {
     const sheets = Object.keys(state.currentData).filter(k => k !== '_vasuki_schema');
     const rows = sheets.map(s => ({ table_name: s, rows: (state.currentData[s] || []).length }));
@@ -2197,6 +2454,11 @@ function switchPanelTab(tab) {
   state.activeView = tab;
   if (tab === 'schema') renderSchemaView();
   if (tab === 'stats')  renderStatsView();
+
+  // Sync mobile bottom nav active state
+  const mobMap = { table: 'mobBtnTable', sql: 'mobBtnSql', schema: 'mobBtnSchema', stats: 'mobBtnStats' };
+  Object.values(mobMap).forEach(id => document.getElementById(id)?.classList.remove('active'));
+  if (mobMap[tab]) document.getElementById(mobMap[tab])?.classList.add('active');
 }
 
 function switchRailView(view) {
@@ -2238,7 +2500,6 @@ function exportData() {
 async function handleCloudUpload(input) {
   const file = input.files[0];
   if (!file) return;
-  // Reset input so same file can be re-imported
   input.value = '';
 
   const reader = new FileReader();
@@ -2247,10 +2508,8 @@ async function handleCloudUpload(input) {
       let jsonData;
       if (file.name.endsWith('.json')) {
         jsonData = JSON.parse(e.target.result);
-        // Ensure schema key
         if (!jsonData._vasuki_schema) jsonData._vasuki_schema = {};
       } else {
-        // Parse CSV
         const text = e.target.result;
         const lines = text.split('\n').filter(l => l.trim());
         if (!lines.length) return toast('CSV file is empty', 'error');
@@ -2323,27 +2582,24 @@ function renderStatusBar() {
    KEYBOARD SHORTCUTS
 ══════════════════════════════════════════════════ */
 document.addEventListener('keydown', e => {
-  // Ctrl/Cmd+S → Save
   if ((e.ctrlKey || e.metaKey) && e.key === 's') {
     e.preventDefault();
     saveCurrentDB();
   }
-  // Ctrl/Cmd+Enter → Run SQL (when SQL view active)
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     if (state.activeView === 'sql') {
       e.preventDefault();
       runSQL();
     }
   }
-  // Escape → close modals & menus
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal-backdrop.open').forEach(m => m.classList.remove('open'));
     document.getElementById('ctxMenu').classList.remove('open');
     document.getElementById('_confirmOverlay')?.remove();
+    closeMobileSidebar();
   }
 });
 
-// Modal enter-key submit shortcuts
 document.getElementById('newDBName').addEventListener('keydown',       e => e.key === 'Enter' && createNewDB());
 document.getElementById('newSheetName').addEventListener('keydown',    e => e.key === 'Enter' && createSheet());
 document.getElementById('renameSheetInput').addEventListener('keydown',e => e.key === 'Enter' && renameSheet());
@@ -2351,7 +2607,6 @@ document.getElementById('newColName').addEventListener('keydown',      e => e.ke
 document.getElementById('deleteDBConfirm').addEventListener('keydown', e => e.key === 'Enter' && confirmDeleteDB());
 document.getElementById('filterVal').addEventListener('keydown',       e => e.key === 'Enter' && applyFilter());
 
-// Warn before leaving with unsaved changes
 window.addEventListener('beforeunload', e => {
   if (state.dirty) {
     e.preventDefault();
@@ -2363,7 +2618,6 @@ window.addEventListener('beforeunload', e => {
    INIT
 ══════════════════════════════════════════════════ */
 window.addEventListener('load', async () => {
-  // SQL Ctrl+Enter shortcut
   document.getElementById('sqlTextarea').addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
       e.preventDefault();
