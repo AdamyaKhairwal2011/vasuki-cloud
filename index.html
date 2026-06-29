@@ -9,436 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-    
-    <style>
-        html.lenis, html.lenis body { height: auto; }
-        .lenis.lenis-smooth { scroll-behavior: auto !important; }
-        .lenis.lenis-stopped { overflow: hidden; }
-        .lenis.lenis-scrolling iframe { pointer-events: none; }
-
-        :root {
-            --nav-bg: rgba(15, 15, 15, 0.4);
-            --nav-blur: 20px;
-            --dropdown-bg: rgb(10, 10, 10);
-            --text-primary: #FFFFFF;
-            --text-secondary: #CCCCCC;
-            --text-muted: #777777;
-            --accent-color: #E5E5E5;
-            --font-display: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            --font-serif: 'Cormorant Garamond', serif;
-            --transition-speed: 0.3s;
-            --theme-secondary: rgb(198, 149, 132);
-            --amber: #C69584;
-            --amber-dim: rgba(198, 149, 132, 0.15);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: var(--font-display);
-            background-color: #0a0a0a;
-            color: var(--text-primary);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* ── NAVBAR ── */
-        .navbar-container {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 72px;
-            background: var(--nav-bg);
-            backdrop-filter: blur(var(--nav-blur));
-            -webkit-backdrop-filter: blur(var(--nav-blur));
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            padding: 0 40px;
-            z-index: 1000;
-        }
-
-        .logo { height: 28px; width: auto; object-fit: contain; }
-
-        .nav-left { display: flex; gap: 32px; align-items: center; }
-
-        .nav-link {
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 11px; font-weight: 500;
-            letter-spacing: 2.5px; text-transform: uppercase;
-            padding: 26px 0; cursor: pointer;
-            transition: opacity var(--transition-speed) ease;
-        }
-        .nav-link:hover { opacity: 0.6; }
-
-        .hamburger-trigger {
-            display: none; flex-direction: column;
-            justify-content: space-between;
-            width: 18px; height: 12px;
-            background: transparent; border: none;
-            cursor: pointer; z-index: 1100; padding: 0;
-        }
-        .hamburger-trigger span {
-            width: 100%; height: 1px;
-            background-color: var(--text-primary);
-            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease;
-        }
-        .mobile-menu-active .hamburger-trigger span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
-        .mobile-menu-active .hamburger-trigger span:nth-child(2) { opacity: 0; }
-        .mobile-menu-active .hamburger-trigger span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
-
-        .nav-center { display: flex; justify-content: center; align-items: center; }
-
-        .nav-right { display: flex; justify-content: flex-end; align-items: center; }
-
-        .search-btn {
-            display: flex; align-items: center; gap: 10px;
-            color: var(--text-primary); text-decoration: none;
-            font-size: 11px; font-weight: 500;
-            letter-spacing: 2.5px; text-transform: uppercase;
-            transition: opacity var(--transition-speed) ease;
-        }
-        .search-btn:hover { opacity: 0.6; }
-
-        .nav-item-with-dropdown { position: static; }
-
-        .dropdown-panel {
-            position: fixed; top: 72px; left: 0; width: 100%;
-            background: var(--dropdown-bg);
-            backdrop-filter: blur(35px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding: 60px 80px;
-            display: flex; flex-direction: column; gap: 40px;
-            opacity: 0; visibility: hidden;
-            transition: opacity var(--transition-speed) ease,
-                        transform var(--transition-speed) ease,
-                        visibility var(--transition-speed);
-            z-index: 999;
-        }
-        .nav-item-with-dropdown:hover .dropdown-panel { opacity: 1; visibility: visible; transform: translateY(0); }
-
-        .dropdown-header { border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 24px; }
-        .dropdown-title { font-family: var(--font-display); color: var(--text-primary); font-size: 18px; font-weight: 400; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 8px; }
-        .dropdown-subtitle { color: var(--text-muted); font-size: 12px; letter-spacing: 1px; }
-        .dropdown-body { display: grid; grid-template-columns: 1fr 2.5fr; gap: 80px; }
-        .menu-secondary { display: flex; flex-direction: column; gap: 20px; border-right: 1px solid rgba(255,255,255,0.05); padding-right: 40px; }
-        .menu-secondary-title { color: var(--text-muted); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
-        .menu-secondary a { color: var(--text-secondary); text-decoration: none; font-size: 13px; letter-spacing: 1px; transition: color var(--transition-speed); }
-        .menu-secondary a:hover { color: var(--text-primary); }
-        .menu-primary-container { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; }
-        .menu-primary-links { display: flex; flex-direction: column; gap: 18px; }
-        .menu-primary-links a { color: var(--text-primary); text-decoration: none; font-size: 13px; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; transition: transform var(--transition-speed) ease, color var(--transition-speed) ease; display: inline-block; }
-        .menu-primary-links a:hover { color: var(--text-secondary); transform: translateX(4px); }
-
-        /* ── MOBILE SIDEBAR ── */
-        .mobile-sidebar {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100vh;
-            background: rgba(10,10,10,0.98);
-            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            z-index: 1050; padding: 100px 40px 60px 40px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            transform: translateX(-100%);
-            transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
-            overflow-y: auto;
-        }
-        .mobile-menu-active .mobile-sidebar { transform: translateX(0); }
-        .mobile-links-wrapper { display: flex; flex-direction: column; gap: 28px; }
-        .mobile-links-wrapper a { color: var(--text-primary); text-decoration: none; font-size: 20px; font-weight: 300; letter-spacing: 3px; text-transform: uppercase; transition: color var(--transition-speed); }
-        .mobile-sub-regions { margin-top: 40px; display: flex; flex-direction: column; gap: 14px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; }
-        .mobile-sub-regions span { color: var(--text-muted); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
-        .mobile-sub-regions a { color: var(--text-secondary); font-size: 14px; letter-spacing: 1px; text-decoration: none; }
-
-        /* ── HERO ── */
-        .hero-container {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100dvh;
-            display: flex; align-items: flex-end; justify-content: flex-start;
-            padding: 0 6% 40px 6%; z-index: 1; background-color: #000;
-        }
-        .video-bg-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        .video-bg-element { width: 100%; height: 100%; object-fit: cover; object-position: center; }
-        .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(10,10,10,0.1) 0%, rgba(10,10,10,0.75) 100%); }
-        .hero-content { position: relative; z-index: 2; width: 100%; color: #fff; padding-bottom: 24px; }
-        .hero-title { font-family: var(--font-display); font-size: clamp(34px,4.8vw,68px); font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; text-transform: uppercase; margin-bottom: 30%; max-width: 90%; }
-        .hero-subtitle { font-size: clamp(14px,1.25vw,17px); font-weight: 400; line-height: 1.5; color: #fff; max-width: 520px; }
-
-        /* ── MAIN CONTENT ── */
-        .main-content-wrapper { position: relative; z-index: 5; margin-top: 100vh; background-color: #0a0a0a; }
-
-        .content-section { max-width: 1200px; margin: 0 auto; padding: 120px 40px; }
-        .section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-        .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--text-muted); margin-bottom: 16px; display: block; }
-        .section-heading { font-family: var(--font-display); font-size: clamp(28px,4vw,42px); font-weight: 300; line-height: 1.2; letter-spacing: -0.01em; color: var(--text-primary); }
-        .section-body { font-size: 16px; line-height: 1.7; color: var(--text-secondary); }
-        .section-body p { margin-bottom: 24px; }
-
-        /* ── SECTION DIVIDER ── */
-        .section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.05); }
-
-        /* ── PLATFORM OVERVIEW (3-step) ── */
-        .platform-steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2px;
-            margin-top: 60px;
-        }
-        .step-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
-            padding: 40px 32px;
-            position: relative;
-            transition: background 0.4s ease;
-        }
-        .step-card:hover { background: rgba(198,149,132,0.04); }
-        .step-number {
-            font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-            color: var(--amber); margin-bottom: 24px; display: block;
-        }
-        .step-title { font-size: 15px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; color: var(--text-primary); }
-        .step-desc { font-size: 13px; line-height: 1.65; color: var(--text-muted); }
-
-        /* ── PRODUCTS GRID ── */
-        .products-full { padding: 120px 40px; max-width: 1200px; margin: 0 auto; }
-        .products-header { margin-bottom: 64px; }
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-        .product-card {
-            padding: 40px 32px;
-            border-right: 1px solid rgba(255,255,255,0.06);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            position: relative;
-            overflow: hidden;
-            transition: background 0.4s ease;
-            text-decoration: none;
-            display: block;
-        }
-        .product-card:last-child, .product-card:nth-child(3n) { border-right: none; }
-        .product-card:hover { background: rgba(198,149,132,0.03); }
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--amber), transparent);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-        .product-card:hover::before { opacity: 1; }
-        .product-tag { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber); margin-bottom: 20px; display: block; }
-        .product-name { font-size: 16px; font-weight: 500; letter-spacing: 0.5px; color: var(--text-primary); margin-bottom: 12px; }
-        .product-desc { font-size: 13px; line-height: 1.65; color: var(--text-muted); }
-        .product-arrow { 
-            display: inline-flex; align-items: center; gap: 6px;
-            font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
-            color: var(--text-muted); margin-top: 24px;
-            transition: color 0.3s, gap 0.3s;
-        }
-        .product-card:hover .product-arrow { color: var(--amber); gap: 10px; }
-
-        /* ── VAIMANIKA SECTION ── */
-        .vaimanika-section {
-            position: relative;
-            padding: 140px 40px 180px;
-            overflow: hidden;
-            background: #050505;
-            border-top: 1px solid rgba(255,255,255,0.04);
-        }
-
-        .vaimanika-bg-glow {
-            position: absolute;
-            bottom: -60px; left: 50%; transform: translateX(-50%);
-            width: 900px; height: 500px;
-            background: radial-gradient(ellipse at 50% 100%, rgba(198,149,132,0.07) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .vaimanika-header {
-            text-align: center;
-            max-width: 680px;
-            margin: 0 auto 100px;
-            position: relative; z-index: 2;
-        }
-        .vaimanika-eyebrow {
-            font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
-            color: var(--amber); margin-bottom: 20px; display: block;
-        }
-        .vaimanika-title {
-            font-family: var(--font-serif);
-            font-size: clamp(36px, 5vw, 62px);
-            font-weight: 300; font-style: italic;
-            line-height: 1.1; color: var(--text-primary);
-            margin-bottom: 20px;
-        }
-        .vaimanika-subtitle {
-            font-size: 14px; line-height: 1.7;
-            color: var(--text-muted); font-weight: 300;
-        }
-
-        /* Semicircle arc of capability cards */
-        .vaimanika-arc-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-            height: 540px;
-            z-index: 2;
-        }
-
-        /* SVG arc path indicator */
-        .arc-path-svg {
-            position: absolute;
-            bottom: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .capability-card {
-            position: absolute;
-            width: 190px;
-            background: rgba(12,12,12,0.9);
-            border: 1px solid rgba(255,255,255,0.07);
-            padding: 24px 20px;
-            transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s ease;
-            cursor: default;
-        }
-        .capability-card:hover {
-            border-color: rgba(198,149,132,0.4);
-            background: rgba(198,149,132,0.05);
-            transform: translateY(-6px) !important;
-            z-index: 10;
-        }
-        .capability-icon {
-            font-size: 18px; margin-bottom: 12px; display: block;
-            filter: grayscale(1) brightness(1.4);
-        }
-        .capability-card:hover .capability-icon { filter: none; }
-        .capability-name {
-            font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
-            text-transform: uppercase; color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-        .capability-detail {
-            font-size: 12px; line-height: 1.6;
-            color: var(--text-muted);
-        }
-
-        /* Vaimanika CTA */
-        .vaimanika-cta-row {
-            display: flex; justify-content: center;
-            margin-top: 60px; position: relative; z-index: 2;
-        }
-        .vaimanika-cta {
-            display: inline-flex; align-items: center; gap: 12px;
-            font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-            color: var(--text-primary); text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 16px 36px;
-            transition: border-color 0.3s, background 0.3s;
-        }
-        .vaimanika-cta:hover {
-            border-color: var(--amber);
-            background: rgba(198,149,132,0.06);
-        }
-
-        /* ── DEPLOYMENT STEPS ── */
-        .deploy-section {
-            background: #080808;
-            border-top: 1px solid rgba(255,255,255,0.04);
-            padding: 120px 40px;
-        }
-        .deploy-inner { max-width: 1200px; margin: 0 auto; }
-        .deploy-grid {
-            display: grid;
-            grid-template-columns: 1fr 1.6fr;
-            gap: 80px;
-            align-items: center;
-            margin-top: 64px;
-        }
-        .deploy-steps { display: flex; flex-direction: column; gap: 0; }
-        .deploy-step {
-            display: flex; gap: 28px;
-            padding: 32px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            align-items: flex-start;
-        }
-        .deploy-step:first-child { padding-top: 0; }
-        .deploy-step-num {
-            font-size: 10px; letter-spacing: 2px;
-            color: var(--amber); text-transform: uppercase;
-            min-width: 24px; padding-top: 3px;
-        }
-        .deploy-step-content {}
-        .deploy-step-title { font-size: 14px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--text-primary); margin-bottom: 8px; }
-        .deploy-step-desc { font-size: 13px; line-height: 1.65; color: var(--text-muted); }
-        .deploy-visual {
-            background: rgba(255,255,255,0.015);
-            border: 1px solid rgba(255,255,255,0.06);
-            padding: 48px;
-            display: flex; flex-direction: column; gap: 16px;
-        }
-        .terminal-line {
-            font-family: 'Courier New', monospace;
-            font-size: 12px; color: var(--text-muted);
-            display: flex; align-items: center; gap: 10px;
-        }
-        .terminal-line .prompt { color: var(--amber); }
-        .terminal-line .cmd { color: rgba(255,255,255,0.7); }
-        .terminal-line .out { color: rgba(255,255,255,0.35); }
-        .terminal-blink {
-            display: inline-block; width: 7px; height: 13px;
-            background: var(--amber); animation: blink 1.1s step-end infinite;
-            margin-left: 2px; vertical-align: middle;
-        }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-        /* ── FOOTER STRIP ── */
-        .footer-strip {
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding: 48px 40px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .footer-strip-logo { height: 20px; opacity: 0.5; }
-        .footer-links { display: flex; gap: 32px; }
-        .footer-links a { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
-        .footer-links a:hover { color: var(--text-primary); }
-        .footer-legal { font-size: 10px; letter-spacing: 1px; color: rgba(255,255,255,0.2); }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 1024px) {
-            .navbar-container { padding: 0 24px; }
-            .dropdown-panel { padding: 40px; }
-            .dropdown-body { gap: 40px; }
-            .hero-container { padding: 0 4% 30px 4%; }
-            .products-grid { grid-template-columns: repeat(2,1fr); }
-            .product-card:nth-child(2n) { border-right: none; }
-            .product-card:nth-child(3n) { border-right: 1px solid rgba(255,255,255,0.06); }
-            .vaimanika-arc-wrapper { height: 700px; }
-        }
-
-        @media (max-width: 768px) {
-            .navbar-container { grid-template-columns: auto 1fr auto; padding: 0 24px; }
-            .nav-left, .dropdown-panel { display: none !important; }
-            .hamburger-trigger { display: flex; }
-            .hero-container { padding: 0 24px 24px 24px; }
-            .hero-title { max-width: 100%; margin-bottom: 20px; }
-            .section-grid { grid-template-columns: 1fr; gap: 40px; }
-            .platform-steps { grid-template-columns: 1fr; }
-            .products-grid { grid-template-columns: 1fr; }
-            .product-card, .product-card:nth-child(n) { border-right: none; }
-            .vaimanika-arc-wrapper { height: auto; position: static; display: flex; flex-direction: column; gap: 16px; padding: 0 0 40px; }
-            .capability-card { position: static !important; width: 100% !important; transform: none !important; }
-            .deploy-grid { grid-template-columns: 1fr; }
-            .footer-strip { flex-direction: column; gap: 24px; text-align: center; }
-            .footer-links { flex-wrap: wrap; justify-content: center; gap: 20px; }
-        }
-    </style>
+    <link rel="stylesheet" href="./home.css">
 </head>
 <body>
 
@@ -531,11 +102,33 @@
                 <h2 class="section-heading">Architectural integrity at every level of implementation.</h2>
             </div>
             <div class="section-body">
-                <p>We build layout infrastructures prioritizing direct component responsiveness and system clarity. Leveraging declarative design components guarantees consistent deployment rendering metrics regardless of localized target viewport limits.</p>
-                <p>By treating layout hierarchies as cohesive art-directed grids, workflows expand elegantly while maintaining pixel preservation and fluid spatial distributions.</p>
+                <p>Vasuki Ecosystem is crafted with excellence guiding every step of innovation. We move away from race of corporate bloated infrastructres and introduce a whole new era systems designed exclusively for the next generation of enterprise to promote their smooth transaction processings and greater customer experience.</p>
+                <p>Vasuki Itech, Founded in year 2025, with cuurent valuation of $200,000 is being adopted as the best choice for lightning fast responses and < 1 Latency.</p>
             </div>
         </div>
     </section>
+
+    <section class="content-section slider-sec-margin-root">
+        <!-- Wrap both components in a flex container to keep them side-by-side -->
+        <div class="flex-container">
+            <div class="slider-container">
+                <div class="slider-wrapper">
+                    <div class="slide"><img src="https://png.pngtree.com/thumb_back/fw800/background/20250903/pngtree-server-rack-with-illuminated-orange-network-cables-and-blinking-lights-in-image_18707835.webp" alt="Image 1"></div>
+                    <div class="slide"><img src="https://framerusercontent.com/images/Kc3KM8ZdfNNdUgUD3C5MslzHpAg.png?width=1088&height=750" alt="Image 2"></div>
+                </div>
+                <button class="prev" onclick="moveSlide(-1)">❮</button>
+                <button class="next" onclick="moveSlide(1)">❯</button>
+            </div>
+
+            <!-- Linked Text Component placed right next to the slider -->
+            <div class="text-component">
+                <div class="text-slide active"><h2>Developer-facing DBMS Infrastructure</h2><p>World's first developer centric cloud computing and DBMS infra with just 3 lines of code to get started. Unlimited Storage. Unlimited Possiblity.</p><br><br><a href="./dbms/index.html">Check Vasuki DBMS ⇲</a></div>
+                <div class="text-slide"><h2>Unparalleled Security First Craftsmanship.</h2><p>We Value Your Security. Vasuki Cloud Ecosystem runs on a 7-layer end to end encryption technology. So no one, not even Vasuki can peek into your data. No Data Selling. No Data Breach.</p><br><br><a href="./security.html">Know More ⇲</a></div>
+            </div>
+        </div>
+    </section>
+
+
 
     <!-- Platform for Founders -->
     <section class="content-section" style="border-top:1px solid rgba(255,255,255,0.05); padding-top: 80px; padding-bottom: 80px;">
@@ -550,13 +143,13 @@
         <div class="platform-steps">
             <div class="step-card">
                 <span class="step-number">Step 01</span>
-                <div class="step-title">Claim a Namespace</div>
-                <p class="step-desc">Reserve a unique cloud handle during setup. Your namespace anchors your identity across the entire Vasuki suite and all connected services.</p>
+                <div class="step-title">Claim a Refferal Code</div>
+                <p class="step-desc">Request a Refferal Code from our team, we competetively examine your profile and look mainly for change making Enterpreneurs, Professionals, or Visionary Students.</p>
             </div>
             <div class="step-card">
                 <span class="step-number">Step 02</span>
-                <div class="step-title">Connect Your Tools</div>
-                <p class="step-desc">Integrate Guppt, Argon, Vaimanika, or Vypaar through a single unified API key. No separate credentials, no integration friction.</p>
+                <div class="step-title">Become a Member of The Club</div>
+                <p class="step-desc">Use your Refferal Code to Sign Up @ Vasuki Cloud, Get a complementry Monolith membership and gain points on your usage.</p>
             </div>
             <div class="step-card">
                 <span class="step-number">Step 03</span>
@@ -706,157 +299,59 @@
         </div>
     </section>
 
-    <!-- ── DEPLOYMENT WALKTHROUGH ── -->
-    <section class="deploy-section">
-        <div class="deploy-inner">
-            <span class="section-label">How It Works</span>
-            <h2 class="section-heading" style="max-width:480px;">From namespace to production in three moves.</h2>
-            <div class="deploy-grid">
-                <div class="deploy-steps">
-                    <div class="deploy-step">
-                        <span class="deploy-step-num">01</span>
-                        <div class="deploy-step-content">
-                            <div class="deploy-step-title">Claim a Namespace</div>
-                            <p class="deploy-step-desc">Reserve your unique cloud handle during onboarding. This handle anchors your team's identity across every Vasuki product and sub-service.</p>
-                        </div>
-                    </div>
-                    <div class="deploy-step">
-                        <span class="deploy-step-num">02</span>
-                        <div class="deploy-step-content">
-                            <div class="deploy-step-title">Connect Your Tools</div>
-                            <p class="deploy-step-desc">Integrate Guppt, Argon, Vaimanika, Forms, or Vypaar via a single unified API key. Zero separate credentials. No per-product onboarding loops.</p>
-                        </div>
-                    </div>
-                    <div class="deploy-step">
-                        <span class="deploy-step-num">03</span>
-                        <div class="deploy-step-content">
-                            <div class="deploy-step-title">Scale Automatically</div>
-                            <p class="deploy-step-desc">Push assets and ship. Distribution, redundancy, and security are managed at the platform level — your engineering bandwidth stays on the product.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="deploy-visual">
-                    <div class="terminal-line"><span class="prompt">$</span><span class="cmd">vasuki init --namespace your-brand</span></div>
-                    <div class="terminal-line"><span class="out">✔ Namespace reserved: your-brand.vasuki.cloud</span></div>
-                    <div class="terminal-line" style="height:12px;"></div>
-                    <div class="terminal-line"><span class="prompt">$</span><span class="cmd">vasuki connect guppt argon vaimanika</span></div>
-                    <div class="terminal-line"><span class="out">✔ Guppt storage — linked</span></div>
-                    <div class="terminal-line"><span class="out">✔ Argon OS — linked</span></div>
-                    <div class="terminal-line"><span class="out">✔ Vaimanika AI — linked</span></div>
-                    <div class="terminal-line" style="height:12px;"></div>
-                    <div class="terminal-line"><span class="prompt">$</span><span class="cmd">vasuki deploy --env production</span></div>
-                    <div class="terminal-line"><span class="out">✔ 3 services deployed &nbsp;|&nbsp; 0ms cold-start &nbsp;|&nbsp; CDN active</span></div>
-                    <div class="terminal-line"><span class="prompt">$</span><span class="cmd"><span class="terminal-blink"></span></span></div>
-                </div>
-            </div>
+    <footer class="footer-section">
+    <div class="footer-top">
+        <div class="footer-col">
+            <span class="col-title">SITEMAP</span>
+            <ul class="col-links">
+                <li><a href="./dash.html">Vasuki Neem Cloud</a></li>
+                <li><a href="./manavik.html">Project Manavika</a></li>
+                <li><a href="./dbms/index.html">Vasuki Guppt DBMS</a></li>
+                <li><a href="./ai/index.html">Vaimanika Family Of Models</a></li>
+                <li><a href="./vypaar/index.html">Vypaar</a></li>
+            </ul>
         </div>
-    </section>
+        <div class="footer-col">
+            <span class="col-title">SERVICES</span>
+            <ul class="col-links">
+                <li><a href="https://vasuki.cloud/view-form.html?id=f-iltf8o">Full Stack Development</a></li>
+                <li><a href="https://vasuki.cloud/view-form.html?id=f-scob6i">Technical Partnership</a></li>
+                <li><a href="/leadership/ceo.html">Leadership</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <span class="col-title">CONTACT</span>
+            <ul class="col-links">
+                <li><a href="mailto:codeclutch.adamyarao@gmail.com">Support</a></li>
+            </ul>
+        </div>
+    </div>
 
-    <!-- ── FOOTER STRIP ── -->
-    <footer class="footer-strip">
-        <img src="./logo-new-wht.png" alt="Vasuki Cloud" class="footer-strip-logo">
-        <div class="footer-links">
-            <a href="./ourstory.html">Our Story</a>
-            <a href="./models.html">Models</a>
-            <a href="./ai/index.html">Vaimanika</a>
-            <a href="./dbms/index.html">Guppt</a>
-            <a href="./vypaar/index.html">Vypaar</a>
-            <a href="https://vasuki.cloud/view-form.html?id=f-scob6i">Partner</a>
-            <a href="/leadership/ceo.html">Leadership</a>
-            <a href="./login.html">Login</a>
+    <!-- Massive Background Typography Layer -->
+    <div class="footer-bg-text-container">
+        <span class="bg-brand-text">Vasuki</span>
+        <svg class="bg-star-icon" viewBox="0 0 100 100">
+            <path d="M50 0 L50 100 M0 50 L100 50 M15 15 L85 85 M15 85 L85 15" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="bottom-left">©2026 VASUKI CLOUD B.V. ALL RIGHTS RESERVED.</div>
+        <div class="bottom-center">
+            <a href="https://in.linkedin.com/company/vasuki-itech">LINKEDIN</a>, <a href="https://www.instagram.com/vasuki.itech">INSTAGRAM</a>, <a href="https://x.com/AdamyaKhairwal1">X/TWITTER</a>
         </div>
-        <span class="footer-legal">© 2026 Vasuki Cloud. All rights reserved.</span>
-    </footer>
+        <div class="bottom-right">A THING BY ADAMYA R. KHAIRWAL</div>
+    </div>
+</footer>
+
+ 
+
 
 </div><!-- end main-content-wrapper -->
 
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<script>
-    /* ── LENIS SMOOTH SCROLL ── */
-    const lenis = new Lenis({
-        duration: 1.8,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        direction: 'vertical',
-        gestureDirection: 'vertical',
-        smooth: true,
-        mouseMultiplier: 0.8,
-        smoothTouch: false
-    });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
+<script src="./home.js">
 
-    /* ── MOBILE MENU ── */
-    const menuTrigger = document.getElementById('menuTrigger');
-    const mobileLinks = document.querySelectorAll('.mobile-menu-link');
-    function toggleMenu() { document.body.classList.toggle('mobile-menu-active'); }
-    menuTrigger.addEventListener('click', toggleMenu);
-    mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
-
-    /* ── VAIMANIKA ARC POSITIONING ── */
-    function positionArcCards() {
-        const wrapper = document.getElementById('arcWrapper');
-        if (!wrapper) return;
-
-        // Only run arc positioning on desktop
-        if (window.innerWidth <= 768) return;
-
-        const cards = wrapper.querySelectorAll('.capability-card');
-        const n = cards.length;
-
-        // Arc is a semicircle: from 180° to 0° (left-to-right arc, opening upward)
-        // We use an ellipse: cx = 50%, cy = at bottom, rx wide, ry tall
-        const W = wrapper.offsetWidth;
-        const H = wrapper.offsetHeight;
-        const cx = W / 2;
-        const cy = H + 40;        // Centre below the wrapper bottom
-        const rx = W * 0.48;
-        const ry = H * 0.92;
-
-        // Distribute cards from ~190° to ~350° (bottom-left to bottom-right via top)
-        const startDeg = 196;
-        const endDeg   = 344;
-
-        cards.forEach((card, i) => {
-            const t = i / (n - 1);
-            const deg = startDeg + t * (endDeg - startDeg);
-            const rad = deg * Math.PI / 180;
-
-            const x = cx + rx * Math.cos(rad);
-            const y = cy + ry * Math.sin(rad);
-
-            const cardW = 190;
-            const cardH = card.offsetHeight || 160;
-
-            card.style.position = 'absolute';
-            card.style.left  = (x - cardW / 2) + 'px';
-            card.style.top   = (y - cardH / 2) + 'px';
-            card.style.width = cardW + 'px';
-        });
-    }
-
-    // Run after fonts/layout settle
-    window.addEventListener('load', positionArcCards);
-    window.addEventListener('resize', positionArcCards);
-    setTimeout(positionArcCards, 200);
-
-    /* ── SCROLL REVEAL ── */
-    const revealEls = document.querySelectorAll('.step-card, .product-card, .deploy-step, .capability-card');
-    const io = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-            if (e.isIntersecting) {
-                e.target.style.transition += ', opacity 0.6s ease, transform 0.6s ease';
-                e.target.style.opacity = '1';
-                e.target.style.transform = e.target.style.transform.replace('translateY(24px)','translateY(0)') || 'translateY(0)';
-                io.unobserve(e.target);
-            }
-        });
-    }, { threshold: 0.1 });
-
-    revealEls.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(24px)';
-        io.observe(el);
-    });
 </script>
 
 </body>
