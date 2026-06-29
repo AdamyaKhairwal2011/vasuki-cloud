@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecosystem Suite & Models — Vasuki Cloud</title>
+    <meta name="theme-color" content="#000">
+    
+    <!-- Fonts matching the core brand infrastructure -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --nav-bg: rgba(15, 15, 15, 0.4);
+            --nav-blur: 20px;
+            --text-primary: #FFFFFF;
+            --text-secondary: #CCCCCC;
+            --text-muted: #777777;
+            --accent-color: #E5E5E5;
+            --font-display: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-serif: 'Cormorant Garamond', serif;
+            --transition-speed: 0.3s;
+            --theme-secondary: rgb(198, 149, 132);
+            --amber: #C69584;
+            --amber-dim: rgba(198, 149, 132, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-display);
+            background-color: #0a0a0a;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 72px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(var(--nav-blur));
+            -webkit-backdrop-filter: blur(var(--nav-blur));
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 1000;
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-left { display: flex; gap: 32px; align-items: center; }
+
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 11px; font-weight: 500;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            padding: 26px 0; cursor: pointer;
+            transition: opacity var(--transition-speed) ease;
+        }
+        .nav-link:hover { opacity: 0.6; }
+        .nav-right { display: flex; justify-content: flex-end; align-items: center; }
+
+        /* ── HERO HEADER ── */
+        .models-hero {
+            position: relative;
+            padding-top: 180px;
+            padding-bottom: 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: -20%;
+            right: 10%;
+            width: 700px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(198,149,132,0.04) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--amber);
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .models-title {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            max-width: 900px;
+            margin-bottom: 32px;
+        }
+
+        .models-subtitle {
+            font-size: clamp(15px, 1.5vw, 18px);
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 720px;
+        }
+
+        /* ── PRODUCT REGISTRY MATRIX ── */
+        .matrix-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 40px 120px 40px;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1px;
+            background: var(--glass-border);
+            border: 1px solid var(--glass-border);
+        }
+
+        .matrix-row {
+            background-color: #0a0a0a;
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr 1.5fr 0.5fr;
+            padding: 48px 40px;
+            align-items: start;
+            gap: 40px;
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.4s ease;
+        }
+
+        .matrix-row:hover {
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+
+        .matrix-row:hover .product-arrow {
+            transform: translateX(6px);
+            color: var(--text-primary);
+        }
+
+        .product-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .product-tag {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--amber);
+            font-weight: 500;
+        }
+
+        .product-status {
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .product-name {
+            font-family: var(--font-display);
+            font-size: 22px;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+        }
+
+        .product-desc {
+            font-size: 14.5px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .product-action {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
+        }
+
+        .product-arrow {
+            font-size: 18px;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+
+        /* ── SECTION DIVIDER ARCHITECTURE ── */
+        .architectural-statement {
+            padding: 80px 40px;
+            border-top: 1px solid var(--glass-border);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .statement-serif {
+            font-family: var(--font-serif);
+            font-size: clamp(28px, 3.5vw, 42px);
+            font-style: italic;
+            line-height: 1.25;
+            color: var(--text-primary);
+            font-weight: 300;
+        }
+
+        /* ── FOOTER ── */
+        .footer-section {
+            border-top: 1px solid var(--glass-border);
+            padding: 60px 40px 40px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .footer-bottom a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-bottom a:hover { color: var(--text-primary); }
+
+        /* Responsive Matrix Breakpoints */
+        @media (max-width: 960px) {
+            .matrix-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 32px 24px;
+            }
+            .product-action {
+                justify-content: flex-start;
+                margin-top: 8px;
+            }
+            .architectural-statement {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .navbar-container { padding: 0 20px; }
+            .matrix-wrapper, .models-hero { padding-left: 20px; padding-right: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar-container">
+    <div class="nav-left">
+        <a class="nav-link" href="./index.html">← Ecosystem Overview</a>
+    </div>
+
+    <div class="nav-center">
+        <a href="./home.html" class="logo-text">Vasuki Cloud</a>
+    </div>
+
+    <div class="nav-right">
+        <a class="nav-link" href="./security.html">Security Core</a>
+    </div>
+</nav>
+
+<!-- ── HERO HEADER ── -->
+<header class="models-hero">
+    <div class="hero-glow"></div>
+    <span class="section-label">Ecosystem Suite Registry</span>
+    <h1 class="models-title">Six modular environments.<br>One unified architecture.</h1>
+    <p class="models-subtitle">Explore the modular building blocks of the Vasuki Cloud suite. Engineered to deliver frictionless infrastructure, decentralized data pipelines, and raw localized machine intelligence with zero configuration fog.</p>
+</header>
+
+<!-- ── PRODUCT REGISTRY MATRIX ── -->
+<div class="matrix-wrapper">
+    <div class="matrix-grid">
+
+        <!-- Row 1: Vasuki Neem Cloud -->
+        <a class="matrix-row" href="./dash.html">
+            <div class="product-meta">
+                <span class="product-tag">Cloud OS / Engine</span>
+                <span class="product-status">Production Core</span>
+            </div>
+            <div class="product-name">Vasuki Neem Cloud</div>
+            <div class="product-desc">The high-performance bedrock platform. Sovereign distributed hosting designed to provision sub-millisecond container environments and stateful runtime routing instances entirely on regional node infrastructure.</div>
+            <div class="product-action"><span class="product-arrow">→</span></div>
+        </a>
+
+        <!-- Row 2: Project Manavika -->
+        <a class="matrix-row" href="./manavik.html">
+            <div class="product-meta">
+                <span class="product-tag">In-Code Intelligence</span>
+                <span class="product-status">Active Integration</span>
+            </div>
+            <div class="product-name">Project Manavika</div>
+            <div class="product-desc">An inline humanizer and cognitive optimization abstraction layer. Drop directly into existing code architectures to convert structured parameters into contextual, organically fluid response dynamics.</div>
+            <div class="product-action"><span class="product-arrow">→</span></div>
+        </a>
+
+        <!-- Row 3: Vasuki Guppt DBMS -->
+        <a class="matrix-row" href="./dbms/index.html">
+            <div class="product-meta">
+                <span class="product-tag">Data Infrastructure</span>
+                <span class="product-status">Zero-Knowledge Secure</span>
+            </div>
+            <div class="product-name">Vasuki Guppt DBMS</div>
+            <div class="product-desc">A highly specialized database manager built exclusively for the sub-continent. Bypass external cross-border hops entirely with polymorphic storage blocks protected by end-to-end user-held key states.</div>
+            <div class="product-action"><span class="product-arrow">→</span></div>
+        </a>
+
+        <!-- Row 4: Vaimanika Family Of Models -->
+        <a class="matrix-row" href="./ai/index.html">
+            <div class="product-meta">
+                <span class="product-tag">AI Infrastructure</span>
+                <span class="product-status">Experimental Core</span>
+            </div>
+            <div class="product-name">Vaimanika AI Models</div>
+            <div class="product-desc">A comprehensive, fine-tune ready group of large language models optimized for specialized enterprise workflows. Built with native multilingual infrastructure rather than post-processed patches.</div>
+            <div class="product-action"><span class="product-arrow">→</span></div>
+        </a>
+
+        <!-- Row 5: Vypaar -->
+        <a class="matrix-row" href="./vypaar/index.html">
+            <div class="product-meta">
+                <span class="product-tag">Business Operations</span>
+                <span class="product-status">Live Ecosystem</span>
+            </div>
+            <div class="product-name">Vypaar by Vasuki</div>
+            <div class="product-desc">Digital networking layers crafted for fast commerce orchestration. From high-fidelity digital profile structures to verified firm identity directories, bypassing legacy B2B friction vectors.</div>
+            <div class="product-action"><span class="product-arrow">→</span></div>
+        </a>
+
+        <!-- Row 6: Vasuki Forms -->
+        <a class="matrix-row" href="https://vasuki.cloud/view-form.html?id=f-iltf8o" target="_blank">
+            <div class="product-meta">
+                <span class="product-tag">Digital Campaigns</span>
+                <span class="product-status">Public Interface</span>
+            </div>
+            <div class="product-name">Vasuki Forms</div>
+            <div class="product-desc">A conversion-centric dataset aggregation mechanism. Instantly dispatch structured data matrices, user surveys, and enterprise telemetry feeds via a hyper-lightweight, zero-bloat client footprint.</div>
+            <div class="product-action"><span class="product-arrow">→</span></div>
+        </a>
+
+    </div>
+
+    <!-- Architectural Statement Divider -->
+    <section class="architectural-statement" style="margin-top: 80px;">
+        <h2 class="statement-serif">“Crafted for those who understand that scale requires absolute control over every single execution thread.”</h2>
+        <div style="font-size: 14px; line-height: 1.7; color: var(--text-secondary);">
+            <p>Every deployment environment within Vasuki Cloud functions using a single shared access key. This unified authentication mechanism allows application engineers to build fully decoupled microservices that effortlessly interconnect inside our secure core routing space.</p>
+        </div>
+    </section>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer-section">
+    <div class="footer-bottom">
+        <div>© 2026 VASUKI CLOUD B.V. MONOLITH REGS REGISTERED.</div>
+        <div>
+            <a href="https://in.linkedin.com/company/vasuki-itech" target="_blank">LINKEDIN</a> &nbsp;·&nbsp; 
+            <a href="https://x.com/AdamyaKhairwal1" target="_blank">X</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

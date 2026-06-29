@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Infrastructure — Vasuki Cloud</title>
+    <meta name="theme-color" content="#000">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --nav-bg: rgba(15, 15, 15, 0.4);
+            --nav-blur: 20px;
+            --text-primary: #FFFFFF;
+            --text-secondary: #CCCCCC;
+            --text-muted: #777777;
+            --accent-color: #E5E5E5;
+            --font-display: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-serif: 'Cormorant Garamond', serif;
+            --transition-speed: 0.3s;
+            --theme-secondary: rgb(198, 149, 132);
+            --amber: #C69584;
+            --amber-dim: rgba(198, 149, 132, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-display);
+            background-color: #0a0a0a;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 72px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(var(--nav-blur));
+            -webkit-backdrop-filter: blur(var(--nav-blur));
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 1000;
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-left { display: flex; gap: 32px; align-items: center; }
+
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 11px; font-weight: 500;
+            letter-spacing: 2.5px; text-transform: uppercase;
+            padding: 26px 0; cursor: pointer;
+            transition: opacity var(--transition-speed) ease;
+        }
+        .nav-link:hover { opacity: 0.6; }
+        .nav-right { display: flex; justify-content: flex-end; align-items: center; }
+
+        /* ── HERO HEADER ── */
+        .security-hero {
+            position: relative;
+            padding-top: 180px;
+            padding-bottom: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 40px;
+            padding-right: 40px;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: -10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(198,149,132,0.05) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--amber);
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .security-title {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            max-width: 850px;
+            margin-bottom: 32px;
+        }
+
+        .security-subtitle {
+            font-size: clamp(15px, 1.5vw, 18px);
+            font-weight: 300;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 680px;
+        }
+
+        /* ── MAIN CONTENT GRID ── */
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 40px 120px 40px;
+        }
+
+        .philosophy-block {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            padding: 60px 0;
+            border-top: 1px solid var(--glass-border);
+            align-items: start;
+        }
+
+        .philosophy-heading {
+            font-size: 24px;
+            font-weight: 400;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        .philosophy-body {
+            font-size: 15px;
+            line-height: 1.75;
+            color: var(--text-secondary);
+        }
+        .philosophy-body p { margin-bottom: 20px; }
+
+        /* ── THE 7-LAYER SECURITY PARADIGM ── */
+        .layers-header {
+            padding: 80px 0 40px 0;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .layers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .layer-card {
+            background: rgba(255,255,255,0.01);
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            transition: all 0.4s ease;
+        }
+
+        .layer-card:hover {
+            background: var(--amber-dim);
+            border-color: rgba(198,149,132,0.3);
+        }
+
+        .layer-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .layer-id {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--amber);
+            font-weight: 600;
+        }
+
+        .layer-status {
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 10px;
+            border-radius: 2px;
+            color: var(--text-secondary);
+        }
+
+        .layer-title {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        .layer-desc {
+            font-size: 13.5px;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+
+        /* Full width emphasis block */
+        .sovereign-banner {
+            background: linear-gradient(135deg, rgba(15,15,15,1) 0%, rgba(25,20,18,1) 100%);
+            border: 1px solid var(--glass-border);
+            padding: 60px;
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .banner-title {
+            font-family: var(--font-serif);
+            font-size: 36px;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.2;
+        }
+
+        /* ── FOOTER ── */
+        .footer-section {
+            border-top: 1px solid var(--glass-border);
+            padding: 60px 40px 40px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .footer-bottom a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-bottom a:hover { color: var(--text-primary); }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+            .section-grid, .philosophy-block, .layers-grid, .sovereign-banner {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .navbar-container { padding: 0 20px; }
+            .content-wrapper, .security-hero { padding-left: 20px; padding-right: 20px; }
+            .sovereign-banner { padding: 40px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar-container">
+    <div class="nav-left">
+        <a class="nav-link" href="./home.html">← Back To Core</a>
+    </div>
+
+    <div class="nav-center">
+        <a href="./home.html" class="logo-text">Vasuki Cloud</a>
+    </div>
+
+    <div class="nav-right">
+        <span class="nav-link" style="color: var(--amber); pointer-events: none;">Security Core Verified</span>
+    </div>
+</nav>
+
+<header class="security-hero">
+    <div class="hero-glow"></div>
+    <span class="section-label">Zero-Knowledge Architecture</span>
+    <h1 class="security-title">Unparalleled Security First Craftsmanship.</h1>
+    <p class="security-subtitle">We hold a singular operational conviction: Your data belongs strictly to you. Vasuki Cloud runs on a proprietary, hardened 7-layer end-to-end cryptographic deployment structure. No data selling. No processing intercepts. Absolute algorithmic isolation.</p>
+</header>
+
+<div class="content-wrapper">
+
+    <section class="philosophy-block">
+        <div>
+            <h2 class="philosophy-heading">A fortress designed intentionally to negate the vulnerability of centralized corporate data storage.</h2>
+        </div>
+        <div class="philosophy-body">
+            <p>Traditional public cloud ecosystems scale by processing, scanning, and indexing customer footprints across international boundaries. Vasuki Ecosystem breaks away completely from this paradigm, containing all computations within single-tenant execution envelopes.</p>
+            <p>By integrating absolute physical hardware isolation with zero-knowledge mathematical configurations, we guarantee that not even the operators of Vasuki Cloud can peek inside or capture telemetry from your database stacks or language models.</p>
+        </div>
+    </section>
+
+    <section class="layers-header">
+        <span class="section-label">Technical Proof Grid</span>
+        <h2 class="philosophy-heading" style="font-size: 28px; margin-bottom: 40px;">The Seven Envelopes of Cryptographic Isolation</h2>
+        
+        <div class="layers-grid">
+            
+            <div class="layer-card">
+                <div class="layer-meta">
+                    <span class="layer-id">Layer 01</span>
+                    <span class="layer-status">Edge Terminated</span>
+                </div>
+                <h3 class="layer-title">Zero-Knowledge Client Routing</h3>
+                <p class="layer-desc">Inbound connection payloads are negotiated using custom keys on client systems before transit. Content parameters remain cryptographically invisible to intermediary network switching points.</p>
+            </div>
+
+            <div class="layer-card">
+                <div class="layer-meta">
+                    <span class="layer-id">Layer 02</span>
+                    <span class="layer-status">Active In-Flight</span>
+                </div>
+                <h3 class="layer-title">Mutual TLS End-to-End Encryption</h3>
+                <p class="layer-desc">All platform requests require cryptographically validated client certificates, enforcing strict cryptographic handshakes across every microservice routing loop.</p>
+            </div>
+
+            <div class="layer-card">
+                <div class="layer-meta">
+                    <span class="layer-id">Layer 03</span>
+                    <span class="layer-status">Hardware Level</span>
+                </div>
+                <h3 class="layer-title">Sovereign India Physical Boundaries</h3>
+                <p class="layer-desc">Bypassing insecure external shared servers entirely, data states are localized securely within regional operational nodes, isolating systems from foreign jurisdiction or intercept liabilities.</p>
+            </div>
+
+            <div class="layer-card">
+                <div class="layer-meta">
+                    <span class="layer-id">Layer 04</span>
+                    <span class="layer-status">Guppt Engine Core</span>
+                </div>
+                <h3 class="layer-title">Polymorphic Storage Encryption</h3>
+                <p class="layer-desc">Database partitions running inside Vasuki Guppt DBMS are split and encoded with distinct rotating salt signatures, neutralizing the threat of block-level drive reads.</p>
+            </div>
+
+            <div class="layer-card">
+                <div class="layer-meta">
+                    <span class="layer-id">Layer 05</span>
+                    <span class="layer-status">Ephemeral States</span>
+                </div>
+                <h3 class="layer-title">Zero-Log Execution Envelopes</h3>
+                <p class="layer-desc">Computational environments purge runtime memory tables immediately upon session resolution. Transaction traces are actively destroyed post-execution.</p>
+            </div>
+
+            <div class="layer-card">
+                <div class="layer-meta">
+                    <span class="layer-id">Layer 06</span>
+                    <span class="layer-status">Vaimanika Core</span>
+                </div>
+                <h3 class="layer-title">Model-Layer Weights Isolation</h3>
+                <p class="layer-desc">Fine-tuning pipelines and structural inputs used across our AI infrastructure remain entirely dedicated to your instance. Weights are strictly fenced off from foundational parent model optimization processes.</p>
+            </div>
+
+            <div class="layer-card">
+                <div class="layer-meta">
+                    <span class="layer-id">Layer 07</span>
+                    <span class="layer-status">Continuous Loop</span>
+                </div>
+                <h3 class="layer-title">Automated Structural Attestation</h3>
+                <p class="layer-desc">The stack validates code and routing loop parameters against original state proofs on every request block, dynamically dropping instances showing unexpected config shifts.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="sovereign-banner">
+        <h2 class="banner-title">“We build digital infrastructure that values human agency, engineered directly to respect absolute privacy.”</h2>
+        <div class="philosophy-body" style="font-size: 14px; color: var(--text-primary);">
+            <p style="margin-bottom: 0;">Vasuki Cloud maintains zero relationships with data aggregators or algorithmic ad brokers. By anchoring our stack to zero-knowledge architectures, we ensure compliance not through corporate policy checkboxes, but through rigorous mathematical impossibility.</p>
+        </div>
+    </section>
+
+</div>
+
+<footer class="footer-section">
+    <div class="footer-bottom">
+        <div>© 2026 VASUKI CLOUD B.V. ALL ARCHITECTURAL ASSETS PROTECTED.</div>
+        <div>
+            <a href="https://in.linkedin.com/company/vasuki-itech" target="_blank">LINKEDIN</a> &nbsp;·&nbsp; 
+            <a href="https://x.com/AdamyaKhairwal1" target="_blank">X</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
