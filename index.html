@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./home.css">
 </head>
 <body>
@@ -55,17 +57,19 @@
     </div>
 
     <div class="nav-right">
-        <a class="search-btn" href="./login.html">Login To Dashboard / Signup</a>
+        <a class="search-btn" href="./login.html">Login</a>
     </div>
 </nav>
 
-<!-- ── MOBILE SIDEBAR ── -->
 <div class="mobile-sidebar" id="mobileSidebar">
     <div class="mobile-links-wrapper">
+        <h1 id="closeSidebarBtn" style="cursor: pointer;">X</h1>
+        
         <a href="#ecosystem" class="mobile-menu-link">Ecosystem</a>
         <a href="./models.html" class="mobile-menu-link">Models</a>
         <a href="./ourstory.html" class="mobile-menu-link">Our Story</a>
         <a href="./login.html" class="mobile-menu-link">Login</a>
+        
         <div class="mobile-sub-regions">
             <span>Products</span>
             <a href="./dash.html" class="mobile-menu-link">Neem Cloud</a>
@@ -77,6 +81,21 @@
     </div>
 </div>
 
+<script>
+    const closeBtn = document.getElementById('closeSidebarBtn');
+    
+    closeBtn.addEventListener('click', () => {
+        document.body.classList.remove('mobile-menu-active');
+        document.documentElement.classList.remove('mobile-menu-active');
+    });
+
+    const menuTrigger = document.getElementById('menuTrigger');
+    menuTrigger.addEventListener('click', () => {
+        document.body.classList.toggle('mobile-menu-active');
+        document.documentElement.classList.toggle('mobile-menu-active');
+    });
+</script>
+
 <!-- ── HERO ── -->
 <section class="hero-container">
     <div class="video-bg-wrapper">
@@ -86,75 +105,58 @@
         <div class="video-overlay"></div>
     </div>
     <div class="hero-content">
-        <h1 class="hero-title">Cloud Suite, Crafted<br>Without Compromise</h1>
+        <h1 class="hero-title">Cloud Suite, Crafted Without Compromise</h1>
         <p class="hero-subtitle">Every detail matters. Every interaction is intentional. We build the world's most efficient custom software architectures. Engineered, manufactured, and deployed with absolute precision.</p>
     </div>
 </section>
 
 <!-- ── MAIN CONTENT ── -->
-<div class="main-content-wrapper">
+<div class="main-content-wrapper" >
 
     <!-- Institutional Philosophy -->
     <section class="content-section">
         <div class="section-grid">
             <div>
-                <span class="section-label">Institutional Philosophy</span>
-                <h2 class="section-heading">Architectural integrity at every level of implementation.</h2>
+                <span class="section-label">Our Philosophy</span>
+                <h2 class="section-heading">Built with care, at every level.</h2>
             </div>
             <div class="section-body">
-                <p>Vasuki Ecosystem is crafted with excellence guiding every step of innovation. We move away from race of corporate bloated infrastructres and introduce a whole new era systems designed exclusively for the next generation of enterprise to promote their smooth transaction processings and greater customer experience.</p>
-                <p>Vasuki Itech, Founded in year 2025, with cuurent valuation of $200,000 is being adopted as the best choice for lightning fast responses and < 1 Latency.</p>
+                <p>Vasuki Cloud is built differently. Instead of adding more bloated tools like most big providers, we focus on a few things done really well — so your business runs faster and your customers have a better experience.</p>
+                <p>Founded in 2025, Vasuki is already trusted by early builders who want speed above all else, with response times under 1 millisecond.</p>
             </div>
         </div>
     </section>
 
-    <section class="content-section slider-sec-margin-root">
-        <!-- Wrap both components in a flex container to keep them side-by-side -->
-        <div class="flex-container">
-            <div class="slider-container">
-                <div class="slider-wrapper">
-                    <div class="slide"><img src="https://png.pngtree.com/thumb_back/fw800/background/20250903/pngtree-server-rack-with-illuminated-orange-network-cables-and-blinking-lights-in-image_18707835.webp" alt="Image 1"></div>
-                    <div class="slide"><img src="https://framerusercontent.com/images/Kc3KM8ZdfNNdUgUD3C5MslzHpAg.png?width=1088&height=750" alt="Image 2"></div>
-                </div>
-                <button class="prev" onclick="moveSlide(-1)">❮</button>
-                <button class="next" onclick="moveSlide(1)">❯</button>
-            </div>
-
-            <!-- Linked Text Component placed right next to the slider -->
-            <div class="text-component">
-                <div class="text-slide active"><h2>Developer-facing DBMS Infrastructure</h2><p>World's first developer centric cloud computing and DBMS infra with just 3 lines of code to get started. Unlimited Storage. Unlimited Possiblity.</p><br><br><a href="./dbms/index.html">Check Vasuki DBMS ⇲</a></div>
-                <div class="text-slide"><h2>Unparalleled Security First Craftsmanship.</h2><p>We Value Your Security. Vasuki Cloud Ecosystem runs on a 7-layer end to end encryption technology. So no one, not even Vasuki can peek into your data. No Data Selling. No Data Breach.</p><br><br><a href="./security.html">Know More ⇲</a></div>
-            </div>
-        </div>
-    </section>
-
+<section class="content-section">
+    <img src="./bg.png" alt="" width="100%" style="border-radius: 15px;">
+</section>
 
 
     <!-- Platform for Founders -->
     <section class="content-section" style="border-top:1px solid rgba(255,255,255,0.05); padding-top: 80px; padding-bottom: 80px;">
         <div style="max-width:560px; margin-bottom:64px;">
             <span class="section-label">Built For Builders</span>
-            <h2 class="section-heading">Enterprise-grade infrastructure. Solo-founder economics.</h2>
+            <h2 class="section-heading">Big-company tools. Small-team budget.</h2>
         </div>
         <div class="section-body" style="max-width:680px; margin-bottom:60px;">
-            <p>Vasuki Cloud is a frictionless, invisible digital infrastructure layer — engineered for CEO-led teams and independent founders who demand the same advanced toolkit as enterprise engineering teams, without the associated DevOps overhead, wait times, or prohibitive costs.</p>
-            <p>One platform. One access key. Every tool your stack needs, modular by design.</p>
+            <p>Vasuki Cloud gives independent founders and small teams the same powerful tools that large engineering teams use — without the extra staff, the waiting around, or the high costs.</p>
+            <p>One account. One key. Every tool you need, ready when you are.</p>
         </div>
         <div class="platform-steps">
             <div class="step-card">
                 <span class="step-number">Step 01</span>
-                <div class="step-title">Claim a Refferal Code</div>
-                <p class="step-desc">Request a Refferal Code from our team, we competetively examine your profile and look mainly for change making Enterpreneurs, Professionals, or Visionary Students.</p>
+                <div class="step-title">Get a Referral Code</div>
+                <p class="step-desc">Ask our team for a referral code. We look for driven founders, professionals, and students who are ready to build something new.</p>
             </div>
             <div class="step-card">
                 <span class="step-number">Step 02</span>
-                <div class="step-title">Become a Member of The Club</div>
-                <p class="step-desc">Use your Refferal Code to Sign Up @ Vasuki Cloud, Get a complementry Monolith membership and gain points on your usage.</p>
+                <div class="step-title">Join the Club</div>
+                <p class="step-desc">Sign up with your code and get a free Monolith membership, plus points every time you use the platform.</p>
             </div>
             <div class="step-card">
                 <span class="step-number">Step 03</span>
-                <div class="step-title">Scale Automatically</div>
-                <p class="step-desc">Push assets and ship. The platform handles distribution, redundancy, and security behind the scenes so your team stays focused on the product.</p>
+                <div class="step-title">Grow Without the Hassle</div>
+                <p class="step-desc">Ship your product and we handle the rest — distribution, backups, and security — so you can stay focused on building.</p>
             </div>
         </div>
     </section>
@@ -163,12 +165,12 @@
     <section class="content-section" style="border-top:1px solid rgba(255,255,255,0.05);">
         <div class="section-grid">
             <div>
-                <span class="section-label">Performance Core</span>
-                <h2 class="section-heading">Sub-millisecond computational responses.</h2>
+                <span class="section-label">Performance</span>
+                <h2 class="section-heading">Fast. Every single time.</h2>
             </div>
             <div class="section-body">
-                <p>Experience ultra-low latency interfaces built over hardened system loops. Fluid animation rendering matches hardware vertical synchronizations flawlessly, generating completely organic interaction trajectories.</p>
-                <p>Every request through the Vasuki stack is optimized at the infrastructure level — not just the application layer — so performance gains are compounded across every touchpoint your users experience.</p>
+                <p>Everything feels instant. Pages load quickly, animations run smoothly, and every interaction feels natural — because the speed is built into the platform itself, not bolted on afterward.</p>
+                <p>We optimize every request from the ground up, not just on the surface. That means every part of your product gets faster, automatically.</p>
             </div>
         </div>
     </section>
@@ -177,124 +179,62 @@
     <section style="border-top:1px solid rgba(255,255,255,0.05);">
         <div class="products-full">
             <div class="products-header">
-                <span class="section-label">Ecosystem Suite</span>
-                <h2 class="section-heading">Six modular products.<br>One access key.</h2>
+                <span class="section-label">Our Products</span>
+                <h2 class="section-heading">Six tools.<br>One account.</h2>
             </div>
             <div class="products-grid">
                 <a class="product-card" href="https://vasuki.cloud/view-form.html?id=f-iltf8o">
-                    <span class="product-tag">Digital Campaigns</span>
+                    <span class="product-tag">Forms & Surveys</span>
                     <div class="product-name">Vasuki Forms</div>
-                    <p class="product-desc">Construct forms, deploy targeted surveys, and aggregate leads through a clean interface built for conversion at scale.</p>
+                    <p class="product-desc">Build forms and surveys, and collect leads in one simple, clean tool.</p>
                     <span class="product-arrow">Explore →</span>
                 </a>
                 <a class="product-card" href="./dash.html">
                     <span class="product-tag">Startup OS</span>
                     <div class="product-name">Argon by Vasuki</div>
-                    <p class="product-desc">A central operating layer for early-stage startup coordination — tasks, documentation, and team workflows in one place.</p>
+                    <p class="product-desc">One place for your early-stage startup's tasks, docs, and team workflow.</p>
                     <span class="product-arrow">Explore →</span>
                 </a>
                 <a class="product-card" href="./dbms/index.html">
-                    <span class="product-tag">Data Infrastructure</span>
+                    <span class="product-tag">Database</span>
                     <div class="product-name">Guppt Storage</div>
-                    <p class="product-desc">A regionally optimized database manager built explicitly for India. Data privacy and speed guaranteed by bypassing foreign servers entirely.</p>
+                    <p class="product-desc">A fast, secure database built for India, so your data never has to leave.</p>
                     <span class="product-arrow">Explore →</span>
                 </a>
                 <a class="product-card" href="./ai/index.html">
-                    <span class="product-tag">AI Infrastructure</span>
+                    <span class="product-tag">AI Models</span>
                     <div class="product-name">Vaimanika AI</div>
-                    <p class="product-desc">An experimental AI division facilitating next-generation models for builders who think differently about intelligence.</p>
+                    <p class="product-desc">Our own AI models, built for builders who want something different.</p>
                     <span class="product-arrow">Explore →</span>
                 </a>
                 <a class="product-card" href="./vypaar/index.html">
-                    <span class="product-tag">Business Layer</span>
+                    <span class="product-tag">For Business</span>
                     <div class="product-name">Vypaar</div>
-                    <p class="product-desc">Digital solutioning for ventures — from instant-share QR-code business cards to an integrated networking directory for verified companies.</p>
+                    <p class="product-desc">QR-code business cards and a directory to connect with verified companies.</p>
                     <span class="product-arrow">Explore →</span>
                 </a>
                 <a class="product-card" href="./manavik.html">
-                    <span class="product-tag">In-Code AI</span>
+                    <span class="product-tag">AI Add-on</span>
                     <div class="product-name">Manavik AI</div>
-                    <p class="product-desc">An AI humanizer layer that works as a seamless in-code integration tool, adding natural intelligence to your existing product flows.</p>
+                    <p class="product-desc">Drop straight into your codebase to make your product feel more human.</p>
                     <span class="product-arrow">Explore →</span>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- ── VAIMANIKA AI SECTION ── -->
-    <section class="vaimanika-section" id="vaimanika">
-        <div class="vaimanika-bg-glow"></div>
 
-        <div class="vaimanika-header">
-            <span class="vaimanika-eyebrow">Vasuki AI Labs</span>
-            <h2 class="vaimanika-title">The Vaimanika<br>Family of Models</h2>
-            <p class="vaimanika-subtitle">An experimental AI infrastructure division built for builders who require next-generation intelligence at the infrastructure level — not as an afterthought, but as the foundation.</p>
-        </div>
-
-        <!-- Semicircular arc of capability cards -->
-        <div class="vaimanika-arc-wrapper" id="arcWrapper">
-
-            <!-- SVG arc guide line -->
-            <svg class="arc-path-svg" viewBox="0 0 1100 540" preserveAspectRatio="xMidYMid meet">
-                <path d="M 60 520 Q 550 40 1040 520"
-                    fill="none"
-                    stroke="rgba(198,149,132,0.12)"
-                    stroke-width="1"
-                    stroke-dasharray="4 8"/>
-                <!-- Glow dots on arc -->
-                <circle cx="60"  cy="520" r="3" fill="rgba(198,149,132,0.3)"/>
-                <circle cx="550" cy="60"  r="3" fill="rgba(198,149,132,0.5)"/>
-                <circle cx="1040" cy="520" r="3" fill="rgba(198,149,132,0.3)"/>
-            </svg>
-
-            <!-- Cards are positioned via JS along the arc -->
-            <div class="capability-card" id="cap-0">
-                <div class="capability-name">Edge Inference</div>
-                <p class="capability-detail">Run models at the boundary of your stack. Low-latency responses without round-trips to centralized servers.</p>
-            </div>
-            <div class="capability-card" id="cap-1">
-                <div class="capability-name">Context Retention</div>
-                <p class="capability-detail">Multi-turn memory that persists across sessions, giving Vaimanika models genuine continuity with your users.</p>
-            </div>
-            <div class="capability-card" id="cap-2">
-                <div class="capability-name">Sovereign Data</div>
-                <p class="capability-detail">All inference stays within the Vasuki infrastructure boundary. No training on your data, no foreign servers.</p>
-            </div>
-            <div class="capability-card" id="cap-3">
-                <div class="capability-name">Multilingual Core</div>
-                <p class="capability-detail">Built with Indic language support at the model layer — not as a post-processing patch.</p>
-            </div>
-            <div class="capability-card" id="cap-4">
-                <div class="capability-name">API-First Design</div>
-                <p class="capability-detail">Drop-in model endpoints compatible with your existing stack. One key, all Vaimanika capabilities.</p>
-            </div>
-            <div class="capability-card" id="cap-5">
-                <div class="capability-name">Fine-Tune Ready</div>
-                <p class="capability-detail">Bring your domain-specific datasets and shape Vaimanika to your vertical — without infrastructure overhead.</p>
-            </div>
-            <div class="capability-card" id="cap-6">
-                <div class="capability-name">Builder Tooling</div>
-                <p class="capability-detail">Structured outputs, streaming, function-calling, and embeddings — everything a product engineer actually needs.</p>
-            </div>
-        </div>
-
-        <div class="vaimanika-cta-row">
-            <a class="vaimanika-cta" href="./ai/index.html">
-                Explore Vaimanika Models &nbsp;→
-            </a>
-        </div>
-    </section>
 
     <!-- ── VASUKI LEARNING ── -->
     <section class="content-section" style="border-top:1px solid rgba(255,255,255,0.05);">
         <div class="section-grid">
             <div>
                 <span class="section-label">Vasuki Learning</span>
-                <h2 class="section-heading">Hands-on education. Real infrastructure. Zero theory fog.</h2>
+                <h2 class="section-heading">Learn by building, not by watching.</h2>
             </div>
             <div class="section-body">
-                <p>Structured 12-to-20-week modules focused on first-principles engineering and deployment workflows — built and delivered on actual Vasuki infrastructure. Students don't simulate production; they operate within it.</p>
-                <p>Programs cover full-stack development, data system architecture, AI integration, and startup operations. Designed for builders who learn fastest by shipping.</p>
+                <p>Our 12–20 week programs teach you by putting you to work on real Vasuki infrastructure — not simulations or sandboxes.</p>
+                <p>Learn full-stack development, database design, AI integration, and how to run a startup — all by shipping real projects.</p>
             </div>
         </div>
     </section>
@@ -325,14 +265,6 @@
                 <li><a href="mailto:codeclutch.adamyarao@gmail.com">Support</a></li>
             </ul>
         </div>
-    </div>
-
-    <!-- Massive Background Typography Layer -->
-    <div class="footer-bg-text-container">
-        <span class="bg-brand-text">Vasuki</span>
-        <svg class="bg-star-icon" viewBox="0 0 100 100">
-            <path d="M50 0 L50 100 M0 50 L100 50 M15 15 L85 85 M15 85 L85 15" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
-        </svg>
     </div>
 
     <div class="footer-bottom">
