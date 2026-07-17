@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasuki Tijori — Store any key or password, securely</title>
+<meta name="description" content="Vasuki Tijori is a secure vault for your API keys, passwords, and secrets — synced instantly, everywhere.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #faf9f5;
+    --bg-card: #edc38c55;
+    --ink: #141413;
+    --ink-soft: #5a5850;
+    --ink-faint: #8c897e;
+    --line: #e7e4db;
+    --clay: #c2603f;
+    --clay-soft: #f1e2da;
+    --dark: #141413;
+    --dark-2: #201f1c;
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 8px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3,.display{
+    font-family:'Lora', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+  .mono{ font-family:'serif'; }
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 32px; }
+  ::selection{ background:var(--clay-soft); color:var(--clay); }
+
+  /* NAV */
+  header{
+    position:sticky; top:0; z-index:100;
+    background:rgba(250,249,245,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    max-width:1120px; margin:0 auto; padding:18px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo{
+    display:flex; align-items:center; gap:9px;
+    font-family:'Lora', serif; font-weight:600; font-size:19px;
+  }
+  .logo-mark{
+    width:20px; height:20px; border-radius:50%;
+    background:var(--clay);
+    flex-shrink:0;
+    position:relative;
+  }
+  .logo-mark::after{
+    content:''; position:absolute; inset:5px;
+    border-radius:50%; background:var(--bg);
+  }
+  .nav-links{ display:flex; gap:30px; font-size:14.5px; color:var(--ink-soft); }
+  .nav-links a:hover{ color:var(--ink); }
+  .nav-right{ display:flex; align-items:center; gap:16px; }
+  .btn{
+    display:inline-block; padding:10px 20px; font-size:14px;
+    border-radius:999px; border:1px solid transparent;
+    cursor:pointer; font-family:'Inter',sans-serif; font-weight:500;
+    transition:background .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .btn-primary{ background:var(--clay); color:#fff; }
+  .btn-primary:hover{ background:#a94f32; }
+  .btn-ghost{ color:var(--ink-soft); border-color:var(--line); }
+  .btn-ghost:hover{ color:var(--ink); border-color:var(--ink-faint); }
+  .btn-lg{ padding:13px 26px; font-size:15px; }
+
+  .hamburger{
+    display:none; width:30px; height:30px; background:none; border:none;
+    cursor:pointer; flex-direction:column; justify-content:center; gap:6px; padding:0;
+  }
+  .hamburger span{ display:block; width:100%; height:1.5px; background:var(--ink); transition:transform .25s ease, opacity .2s ease; }
+  .hamburger.active span:nth-child(1){ transform:translateY(7.5px) rotate(45deg); }
+  .hamburger.active span:nth-child(2){ opacity:0; }
+  .hamburger.active span:nth-child(3){ transform:translateY(-7.5px) rotate(-45deg); }
+
+  .sidebar-overlay{
+    position:fixed; inset:0; background:rgba(20,20,19,0.4); z-index:150;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .sidebar-overlay.active{ opacity:1; pointer-events:auto; }
+  .sidebar{
+    position:fixed; top:0; right:0; height:100%; width:78%; max-width:320px;
+    background:var(--bg-card); z-index:200;
+    transform:translateX(100%); transition:transform .3s cubic-bezier(.4,0,.2,1);
+    padding:26px 26px; display:flex; flex-direction:column; gap:4px; overflow-y:auto;
+  }
+  .sidebar.active{ transform:translateX(0); }
+  .sidebar-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
+  .sidebar a{ padding:15px 4px; border-bottom:1px solid var(--line); font-size:16px; color:var(--ink-soft); }
+  .sidebar a:hover{ color:var(--clay); }
+  .sidebar .btn{ margin-top:18px; text-align:center; }
+  .sidebar-close{ background:none; border:none; color:var(--ink-soft); font-size:22px; cursor:pointer; width:30px; height:30px; }
+
+  /* HERO */
+  .hero{ padding:100px 0 80px; text-align:center; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--clay); font-family:'Lora',serif;
+    margin-bottom:24px;
+  }
+  .eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--clay); }
+  .hero h1{
+    font-size:54px; line-height:1.1; max-width:760px; margin:0 auto;
+  }
+  .hero p.sub{
+    margin:22px auto 0; font-size:18px; color:var(--ink-soft); max-width:480px;
+  }
+  .hero-cta{ margin-top:34px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+  /* dashboard preview card, echoing the app screenshot */
+  .preview{
+    max-width:880px; margin:56px auto 0;
+    background:transperent; 
+    border-radius:var(--radius-lg);
+    padding:36px;
+    text-align:left;
+  }
+  .preview-row{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:var(--line); border:5px solid var(--bg); border-radius:var(--radius-md);
+    overflow:hidden; margin-bottom:28px;
+  }
+  .stat{ background:#ffc75f34; padding:22px 24px; }
+  .stat .num{ font-family:'Lora',serif; font-size:28px; font-weight:600; }
+  .stat .lbl{ font-size:13px; color:var(--ink-faint); margin-top:4px; }
+  .entry{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    padding:16px 0;  gap:16px;
+  }
+  .entry:last-child{ border-bottom:none; }
+  .entry .name{ font-weight:600; font-size:15px; }
+  .entry .val{ font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--ink-faint); margin-top:4px; }
+  .entry .when{ font-size:12.5px; color:var(--ink-faint); white-space:nowrap; }
+  .tag-pill{
+    display:inline-block; font-size:10.5px; text-transform:uppercase; letter-spacing:0.05em;
+    background:var(--clay-soft); color:var(--clay); padding:3px 8px; border-radius:999px; margin-left:8px;
+  }
+
+  /* ABOUT (black card, rounded, no shadow) */
+  .about{ padding:0 0 100px; }
+  .about-card{
+    background:var(--dark);
+    color:#f2f1ec;
+    border-radius:var(--radius-lg);
+    padding:64px 56px;
+    display:grid; grid-template-columns:0.9fr 1.1fr; gap:56px; align-items:center;
+  }
+  .about-card .eyebrow{ color:#e8c4b3; }
+  .about-card .eyebrow::before{ background:#e8c4b3; }
+  .about-card h2{ color:#fff; font-size:34px; line-height:1.2; }
+  .about-card p{ color:#c8c6bf; font-size:16px; margin-top:18px; }
+  .about-list{ display:flex; flex-direction:column; gap:20px; }
+  .about-item{
+    background:var(--dark-2);
+    border-radius:var(--radius-md);
+    padding:20px 22px;
+  }
+  .about-item .k{ font-family:'JetBrains Mono',monospace; font-size:12px; color:#e8c4b3; margin-bottom:6px; }
+  .about-item .v{ font-size:14.5px; color:#e7e5df; }
+
+  /* FEATURES */
+  .features{ padding:0 0 110px; }
+  .section-head{ text-align:center; max-width:560px; margin:0 auto 48px; }
+  .section-head h2{ font-size:32px; }
+  .section-head p{ color:var(--ink-soft); margin-top:14px; font-size:16px; }
+  .f-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .f-card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:32px 28px;
+  }
+  .f-icon{
+    width:38px; height:38px; border-radius:var(--radius-sm);
+    background:var(--clay-soft); color:var(--clay);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:14px; margin-bottom:20px;
+  }
+  .f-card h3{ font-size:18px; margin-bottom:10px; }
+  .f-card p{ font-size:14.5px; color:var(--ink-soft); }
+
+  /* CTA */
+  .cta-section{ padding:0 0 110px; text-align:center; }
+  .cta-card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:64px 32px;
+  }
+  .cta-card h2{ font-size:32px; max-width:520px; margin:0 auto 16px; }
+  .cta-card p{ color:var(--ink-soft); font-size:16px; margin-bottom:30px; }
+
+  /* FOOTER */
+  footer{ padding:56px 0 36px; border-top:1px solid var(--line); }
+  .f-top{
+    display:grid; grid-template-columns:1.4fr repeat(3,1fr); gap:36px;
+    padding-bottom:44px;
+  }
+  .f-col h4{ font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--ink-faint); margin-bottom:16px; }
+  .f-col a{ display:block; font-size:14.5px; color:var(--ink-soft); margin-bottom:11px; }
+  .f-col a:hover{ color:var(--clay); }
+  .f-bottom{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-top:24px; border-top:1px solid var(--line);
+    font-size:13px; color:var(--ink-faint); flex-wrap:wrap; gap:14px;
+  }
+  .f-bottom .legal-links{ display:flex; gap:20px; }
+
+  /* RESPONSIVE */
+  @media (max-width:900px){
+    .nav-links{ display:none; }
+    .nav-right .btn-ghost{ display:none; }
+    .hamburger{ display:flex; }
+    .hero h1{ font-size:38px; }
+    .preview{ padding:24px; }
+    .preview-row{ grid-template-columns:1fr; }
+    .about-card{ grid-template-columns:1fr; padding:40px 28px; gap:34px; }
+    .f-grid{ grid-template-columns:1fr; }
+    .f-top{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:520px){
+    .wrap{ padding:0 20px; }
+    nav{ padding:16px 20px; }
+    .hero{ padding:64px 0 50px; }
+    .hero h1{ font-size:30px; }
+    .about-card{ padding:32px 20px; }
+    .about-card h2{ font-size:26px; }
+    .cta-card{ padding:44px 22px; }
+    .f-top{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#" class="logo"><img src="./logo.png" alt="" width="50px"></span>Vasuki Tijori</a>
+    <div class="nav-links">
+      <a href="#preview">Product</a>
+      <a href="#about">About</a>
+      <a href="#features">Features</a>
+    </div>
+    <div class="nav-right">
+      <a href="../login.html" class="btn btn-ghost">Log in</a>
+      <a href="./dashb.html" class="btn btn-primary">Get started</a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<div class="sidebar-overlay" id="overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <span class="logo"><span class="logo-mark"></span>Vasuki Tijori</span>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">×</button>
+  </div>
+  <a href="#preview">Product</a>
+  <a href="#about">About</a>
+  <a href="#features">Features</a>
+  <a href="#">Pricing</a>
+  <a href="../login.html">Log in</a>
+  <a href="./dashb.html" class="btn btn-primary">Get started</a>
+</aside>
+
+<section class="hero" id="preview">
+  <div class="wrap">
+    <div class="eyebrow">Synced from cloud</div>
+    <h1>Store and Get Your Data at the Speed of Thought.</h1>
+    <p class="sub">Synced instantly, everywhere — one vault for every secret your team depends on.</p>
+    <div class="hero-cta">
+      <a href="./dashb.html" class="btn btn-primary btn-lg">Start for free</a>
+      <a href="mailto:codeclutch.adamyarao@gmail.com" class="btn btn-ghost btn-lg">Contact Sales</a>
+    </div>
+
+
+    
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <div class="about-card">
+      <div>
+        <div class="eyebrow">About Vasuki Tijori</div>
+        <h2>One vault, everything you'd otherwise scatter.</h2>
+        <p>Vasuki Tijori started as a simple idea — a place to keep the keys, tokens, and passwords that usually end up in notes apps and chat threads. It grew into a vault that syncs instantly across every device, so the right secret is always where you left it.</p>
+      </div>
+      <div class="about-list">
+        <div class="about-item">
+          <div class="k">Synced from cloud</div>
+          <div class="v">Every entry updates in real time across your devices — no manual export, no stale copies.</div>
+        </div>
+        <div class="about-item">
+          <div class="k">codeclutch.account@vasuki.app</div>
+          <div class="v">Your vault is tied to your account, encrypted end-to-end, and accessible only to you.</div>
+        </div>
+        <div class="about-item">
+          <div class="k">Get code</div>
+          <div class="v">Pull any secret straight into your app with a single line of integration code.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Built for how you actually keep things that <b>Matter.</b></h2>
+      <p>Simple enough for a personal password, solid enough for a production key.</p>
+    </div>
+    <div class="f-grid">
+      <div class="f-card">
+        <h3>Anything, saved instantly</h3>
+        <p>Text, JSON, a link, or full credentials — drop it into a new entry and it's saved and synced right away.</p>
+      </div>
+      <div class="f-card">
+        <h3>Search across everything</h3>
+        <p>Find any entry by label or contents in a moment, however many keys and passwords you've stored.</p>
+      </div>
+      <div class="f-card">
+        <h3>One line to integrate</h3>
+        <p>Grab the code snippet for your vault and pull secrets directly into your app, script, or pipeline.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="wrap">
+    <div class="cta-card">
+      <h2>Your first entry takes ten seconds.</h2>
+      <p>No setup, no config file — just open a vault and start saving.</p>
+      <a href="./dashb.html" class="btn btn-primary btn-lg">Start for free</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div class="f-col">
+        <span class="logo"><img src="./logo.png" width="32px"> Vasuki Tijori</span>
+        <p style="margin-top:14px; font-size:14px; color:var(--ink-faint); max-width:220px;">Store any key or password, securely — synced instantly, everywhere.</p>
+      </div>
+      <div class="f-col">
+        <h4>Product</h4>
+        <a href="../dash.html">Cloud</a>
+        <a href="../forms/forms.html">Forms</a>
+        <a href="../dbms/dashboard.html">Guppt</a>
+      </div>
+      <div class="f-col">
+        <h4>Company</h4>
+        <a href="https://www.vasuki.cloud">About</a>
+        <a href="mailto:codeclutch.adamyarao@gmail.com">Contact</a>
+      </div>
+      <div class="f-col">
+        <h4>Resources</h4>
+        <a href="../documentation.html">Docs</a>
+      </div>
+    </div>
+    <div class="f-bottom">
+      <span>© 2026 Vasuki Tijori. All rights reserved.</span>
+      <div class="legal-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const sidebarClose = document.getElementById('sidebarClose');
+
+  function openSidebar(){
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+    hamburger.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar(){
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    hamburger.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  hamburger.addEventListener('click', () => {
+    sidebar.classList.contains('active') ? closeSidebar() : openSidebar();
+  });
+  overlay.addEventListener('click', closeSidebar);
+  sidebarClose.addEventListener('click', closeSidebar);
+  sidebar.querySelectorAll('a').forEach(a => a.addEventListener('click', closeSidebar));
+</script>
+
+</body>
+</html>
