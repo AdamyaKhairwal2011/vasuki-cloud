@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tijori — Traffic Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle sidebar" aria-expanded="false" aria-controls="sidebar">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="brand">Vasuki Developer / Tijori</span>
+      </div>
+
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search logs…" />
+      </div>
+
+      <div class="sort-box">
+        <select id="sortSelect">
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+        </select>
+      </div>
+
+      <div class="entries-label">VISIT LOG (<span id="entryCount">0</span>)</div>
+
+      <div class="entries-list" id="entriesList">
+        <div class="empty-state">Loading visits…</div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+      <div class="hero">
+        <h1 id="welcomeHeading">Welcome</h1>
+        <p class="hero-sub">Real-time visibility into who's visiting, and where they came from.</p>
+
+        <div class="status-row">
+          <span class="status-pill">
+            <span class="dot"></span>
+            <span id="syncStatus">Connecting…</span>
+          </span>
+          <span class="user-pill">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span id="userEmailLabel">—</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">Total visits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statRegions">0</div>
+          <div class="stat-label">Regions reached</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statDomains">0</div>
+          <div class="stat-label">Domains tracked</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statLast">—</div>
+          <div class="stat-label">Last visit</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+
+        <section class="chart-card wide">
+          <h2>Visits over time</h2>
+          <p class="chart-sub">Hourly traffic volume</p>
+          <div class="chart-wrap"><canvas id="chartTimeline"></canvas></div>
+        </section>
+
+        <section class="chart-card">
+          <h2>Traffic sources</h2>
+          <p class="chart-sub">Where visits originated</p>
+          <div class="chart-wrap"><canvas id="chartSources"></canvas></div>
+        </section>
+
+        <section class="chart-card">
+          <h2>Top regions</h2>
+          <p class="chart-sub">State / province breakdown</p>
+          <div class="chart-wrap"><canvas id="chartRegions"></canvas></div>
+        </section>
+
+        <section class="chart-card">
+          <h2>Top cities</h2>
+          <p class="chart-sub">Where your audience is</p>
+          <div class="chart-wrap"><canvas id="chartCities"></canvas></div>
+        </section>
+
+        <section class="chart-card">
+          <h2>Devices &amp; browsers</h2>
+          <p class="chart-sub">Client breakdown from user agent</p>
+          <div class="chart-wrap"><canvas id="chartDevices"></canvas></div>
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
