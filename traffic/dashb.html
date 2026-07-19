@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css" />
+
 </head>
 <body>
 
@@ -21,7 +22,14 @@
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <span class="brand">Vasuki Developer / Traffic</span>
+        <span class="brand">Vasuki Developer / Tijori</span>
+      </div>
+
+      <div class="domain-switch">
+        <label for="domainSelect">Viewing</label>
+        <select id="domainSelect">
+          <option value="">All domains</option>
+        </select>
       </div>
 
       <div class="search-box">
@@ -29,17 +37,38 @@
         <input type="text" id="searchInput" placeholder="Search logs…" />
       </div>
 
-      <div class="sort-box">
-        <select id="sortSelect">
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-        </select>
+      <div class="sidebar-row">
+        <div class="sort-box">
+          <select id="sortSelect">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="ip">By IP</option>
+          </select>
+        </div>
+        <button class="filters-btn" id="openFiltersBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          Filters
+          <span class="filter-count" id="filterCount" hidden>0</span>
+        </button>
       </div>
+
+      <div class="chip-row" id="activeChips"></div>
 
       <div class="entries-label">VISIT LOG (<span id="entryCount">0</span>)</div>
 
       <div class="entries-list" id="entriesList">
         <div class="empty-state">Loading visits…</div>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="footer-btn" id="exportCsvBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+          Export CSV
+        </button>
+        <button class="footer-btn danger" id="openClearLogsBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6h14z"/></svg>
+          Clear Logs
+        </button>
       </div>
     </aside>
 
@@ -59,6 +88,10 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             <span id="userEmailLabel">—</span>
           </span>
+          <button class="refresh-pill" id="manualRefreshBtn" title="Refresh now">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/></svg>
+            Refresh
+          </button>
         </div>
       </div>
 
@@ -68,12 +101,20 @@
           <div class="stat-label">Total visits</div>
         </div>
         <div class="stat-card">
+          <div class="stat-value" id="statUnique">0</div>
+          <div class="stat-label">Unique visitors (IP)</div>
+        </div>
+        <div class="stat-card">
           <div class="stat-value" id="statRegions">0</div>
           <div class="stat-label">Regions reached</div>
         </div>
         <div class="stat-card">
           <div class="stat-value" id="statDomains">0</div>
           <div class="stat-label">Domains tracked</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statBots">0</div>
+          <div class="stat-label">Bot / crawler hits</div>
         </div>
         <div class="stat-card">
           <div class="stat-value" id="statLast">—</div>
@@ -85,7 +126,7 @@
 
         <section class="chart-card wide">
           <h2>Visits over time</h2>
-          <p class="chart-sub">Hourly traffic volume</p>
+          <p class="chart-sub">Hourly traffic volume (filtered)</p>
           <div class="chart-wrap"><canvas id="chartTimeline"></canvas></div>
         </section>
 
@@ -113,10 +154,159 @@
           <div class="chart-wrap"><canvas id="chartDevices"></canvas></div>
         </section>
 
+        <section class="chart-card">
+          <h2>Visits by hour of day</h2>
+          <p class="chart-sub">Aggregated across all days (filtered)</p>
+          <div class="chart-wrap"><canvas id="chartHourly"></canvas></div>
+        </section>
+
+        <section class="chart-card">
+          <h2>New vs repeat visitors</h2>
+          <p class="chart-sub">By unique IP address</p>
+          <div class="chart-wrap"><canvas id="chartRepeat"></canvas></div>
+        </section>
+
       </div>
 
     </main>
   </div>
+
+  <!-- Filters Modal -->
+  <div class="modal-overlay" id="filtersOverlay">
+    <div class="modal filters-modal">
+      <div class="modal-head">
+        <h3>Filters</h3>
+        <button class="modal-close" id="closeFiltersBtn">&times;</button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="filter-group">
+          <div class="filter-group-title">Quick date</div>
+          <div class="quick-date-row">
+            <button class="qd-btn" data-qd="today">Today</button>
+            <button class="qd-btn" data-qd="yesterday">Yesterday</button>
+            <button class="qd-btn" data-qd="week">This week</button>
+            <button class="qd-btn" data-qd="month">This month</button>
+            <button class="qd-btn" data-qd="all">All time</button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Specific date</div>
+          <div class="field-row">
+            <label>On date <input type="date" id="fSpecificDate"></label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Date range</div>
+          <div class="field-row two">
+            <label>From <input type="date" id="fDateFrom"></label>
+            <label>To <input type="date" id="fDateTo"></label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Hour of day</div>
+          <div class="field-row two">
+            <label>From <input type="number" id="fHourFrom" min="0" max="23" placeholder="0"></label>
+            <label>To <input type="number" id="fHourTo" min="0" max="23" placeholder="23"></label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Location</div>
+          <div class="field-row two">
+            <label>Country <select id="fCountry"><option value="">All</option></select></label>
+            <label>Region <select id="fRegion"><option value="">All</option></select></label>
+          </div>
+          <div class="field-row two">
+            <label>City <select id="fCity"><option value="">All</option></select></label>
+            <label class="checkbox-label"><input type="checkbox" id="fUnknownLocation"> Only unknown location</label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Source &amp; page</div>
+          <div class="field-row two">
+            <label>Source <select id="fSource"><option value="">All</option></select></label>
+            <label>Domain <select id="fDomain"><option value="">All</option></select></label>
+          </div>
+          <div class="field-row">
+            <label>Page / path contains <input type="text" id="fPage" placeholder="/pricing"></label>
+          </div>
+          <div class="field-row three">
+            <label class="checkbox-label"><input type="radio" name="fReferrer" value="" checked> Any</label>
+            <label class="checkbox-label"><input type="radio" name="fReferrer" value="direct"> Direct only</label>
+            <label class="checkbox-label"><input type="radio" name="fReferrer" value="referred"> Has referrer</label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Device &amp; client</div>
+          <div class="field-row two">
+            <label>Browser <select id="fBrowser"><option value="">All</option></select></label>
+            <label>Device <select id="fDevice"><option value="">All</option></select></label>
+          </div>
+          <div class="field-row three">
+            <label class="checkbox-label"><input type="radio" name="fBot" value="" checked> All traffic</label>
+            <label class="checkbox-label"><input type="radio" name="fBot" value="human"> Humans only</label>
+            <label class="checkbox-label"><input type="radio" name="fBot" value="bot"> Bots only</label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Visitor identity (IP-based)</div>
+          <div class="field-row three">
+            <label class="checkbox-label"><input type="radio" name="fVisitorType" value="" checked> All visits</label>
+            <label class="checkbox-label"><input type="radio" name="fVisitorType" value="unique"> Unique visitors (1st visit)</label>
+            <label class="checkbox-label"><input type="radio" name="fVisitorType" value="repeat"> Repeat visits only</label>
+          </div>
+          <div class="field-row two">
+            <label>Exact IP <input type="text" id="fIp" placeholder="114.31.178.148"></label>
+            <label>Min. visits per IP <input type="number" id="fMinVisitsPerIp" min="1" placeholder="1"></label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-foot">
+        <button class="btn-secondary" id="resetFiltersBtn">Reset all</button>
+        <button class="btn-primary" id="applyFiltersBtn">Apply filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear Logs Modal -->
+  <div class="modal-overlay" id="clearLogsOverlay">
+    <div class="modal confirm-modal">
+      <div class="modal-head">
+        <h3>Clear traffic logs</h3>
+        <button class="modal-close" id="closeClearLogsBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text">This permanently deletes traffic rows from Supabase for <b id="clearLogsScopeLabel">this account</b>. This cannot be undone.</p>
+        <div class="field-row">
+          <label>Scope
+            <select id="clearLogsScope">
+              <option value="domain">Current domain filter only</option>
+              <option value="all">All domains on this account</option>
+            </select>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="checkbox-label"><input type="checkbox" id="clearLogsConfirmCheck"> I understand this is permanent</label>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-secondary" id="cancelClearLogsBtn">Cancel</button>
+        <button class="btn-danger" id="confirmClearLogsBtn" disabled>Delete logs</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
   <script src="config.js"></script>
