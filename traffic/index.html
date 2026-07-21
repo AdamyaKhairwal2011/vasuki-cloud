@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasuki Traffic — Precision Traffic Intelligence & Filtering</title>
+<style>
+  :root {
+    --cream: #F4F1EA;
+    --ink: #181818;
+    --black: #0B0B0B;
+    --card: #E7E1D2;
+    --accent: #D98B46;
+    --accent-dark: #A66226;
+    --border-light: rgba(244,241,234,0.12);
+    --border-dark: rgba(0,0,0,0.1);
+    --serif: 'Iowan Old Style', 'Palatino Linotype', 'Georgia', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: var(--sans);
+    overflow-x: hidden;
+    width: 100%;
+    scroll-behavior: smooth;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+
+  /* ---------- NAV ---------- */
+  header.nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: var(--cream);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .nav-left { display: flex; align-items: center; gap: 10px; }
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px;
+    letter-spacing: -0.5px;
+  }
+  .logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    font-size: 15px;
+  }
+  .nav-item { position: relative; }
+  .nav-item > a, .nav-item > button.nav-trigger {
+    display: flex; align-items: center; gap: 4px;
+    opacity: 0.85;
+    transition: opacity .2s ease;
+    background: none; border: none;
+    font-size: 15px;
+    color: var(--ink);
+    cursor: pointer;
+    padding: 6px 0;
+  }
+  .nav-item > a:hover, .nav-item > button.nav-trigger:hover { opacity: 1; }
+  .caret {
+    font-size: 10px;
+    transform: translateY(1px);
+    transition: transform .25s ease;
+  }
+  .nav-item.open .caret { transform: rotate(180deg) translateY(-1px); }
+
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    background: var(--ink);
+    color: var(--cream);
+    min-width: 240px;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .nav-item.open .dropdown {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  .dropdown a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    opacity: 0.85;
+    transition: background .15s ease, opacity .15s ease;
+  }
+  .dropdown a:hover { background: rgba(244,241,234,0.08); opacity: 1; }
+
+  .nav-cta { display: flex; align-items: center; }
+  .try-btn {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s ease;
+  }
+  .try-btn:hover { opacity: 0.9; }
+
+  /* ---------- HAMBURGER ---------- */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 34px; height: 34px;
+    background: none; border: none;
+    cursor: pointer; padding: 0;
+  }
+  .hamburger span {
+    display: block; width: 100%; height: 2px;
+    background: var(--ink);
+    transition: transform .3s ease, opacity .3s ease;
+  }
+  .hamburger.active span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .hamburger.active span:nth-child(2){ opacity:0; }
+  .hamburger.active span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed; top: 0; right: 0;
+    width: min(340px, 82vw); height: 100vh;
+    background: var(--cream); color: var(--ink);
+    z-index: 190;
+    padding: 100px 30px 30px;
+    transform: translateX(100%);
+    transition: transform .35s ease;
+    overflow-y: auto;
+  }
+  .mobile-menu.open { transform: translateX(0); }
+  .mobile-menu a, .mobile-menu button.m-trigger {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; text-align: left; background: none; border: none;
+    font-size: 19px; font-family: var(--sans); color: var(--ink);
+    padding: 16px 0; border-bottom: 1px solid rgba(0,0,0,0.08);
+    cursor: pointer;
+  }
+  .scrim {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 180;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    width: 100%;
+    padding: 160px 40px 80px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    height: 80dvh;
+  }
+  #bg-canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0; opacity: 0.5;
+  }
+  .hero-center {
+    position: relative; z-index: 3;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border-radius: 100px;
+    background: rgba(244,241,234,0.08);
+    border: 1px solid var(--border-light);
+    font-size: 13px; font-weight: 500;
+    margin-bottom: 24px;
+  }
+  .hero-badge .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #10B981;
+    box-shadow: 0 0 10px #10B981;
+  }
+  .hero-title {
+    font-family: var(--serif);
+    font-weight: 100;
+    font-size: clamp(32px, 5.5vw, 64px);
+    line-height: 1.1;
+    max-width: 1000px;
+    letter-spacing: -0.5px;
+  }
+  .hero-sub {
+    margin-top: 24px;
+    max-width: 680px;
+    font-size: 19px; line-height: 1.55;
+    color: rgba(244,241,234,0.82);
+  }
+  .hero-actions {
+    margin-top: 36px;
+    display: flex; align-items: center; gap: 16px;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .btn-primary {
+    background: var(--cream);
+    color: var(--ink);
+    padding: 14px 28px; border-radius: 8px;
+    font-size: 15px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 10px;
+    cursor: pointer; border: none;
+    transition: transform .25s ease, background .2s ease;
+  }
+  .btn-primary:hover { transform: translateY(-2px); background: #ffffff; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--cream);
+    padding: 14px 28px; border-radius: 8px;
+    font-size: 15px; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 10px;
+    cursor: pointer; border: 1px solid var(--border-light);
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .btn-secondary:hover { background: rgba(244,241,234,0.06); border-color: rgba(244,241,234,0.3); }
+
+  /* ---------- APP DEMO MOCKUP ---------- */
+  .app-preview-container {
+    position: relative; z-index: 3;
+    width: 100%; max-width: 1200px;
+    margin-top: 60px;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    background: #121212;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    overflow: hidden;
+  }
+  .app-header-bar {
+    background: #1A1A1A;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .window-dots { display: flex; gap: 8px; }
+  .window-dot { width: 11px; height: 11px; border-radius: 50%; background: #333; }
+  .window-dot.red { background: #FF5F56; }
+  .window-dot.yellow { background: #FFBD2E; }
+  .window-dot.green { background: #27C93F; }
+  .app-title-bar { font-size: 12px; opacity: 0.6; font-family: var(--code); }
+
+  .app-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 580px;
+  }
+  .app-sidebar {
+    background: #151515;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .domain-switch label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.5; display: block; margin-bottom: 6px; }
+  .domain-switch select, .sort-box select {
+    width: 100%; background: #222; border: 1px solid rgba(255,255,255,0.12);
+    color: var(--cream); padding: 8px 12px; border-radius: 6px; font-size: 13px; outline: none;
+  }
+  .search-box {
+    position: relative; display: flex; align-items: center;
+  }
+  .search-box svg { position: absolute; left: 10px; opacity: 0.4; }
+  .search-box input {
+    width: 100%; background: #222; border: 1px solid rgba(255,255,255,0.12);
+    color: var(--cream); padding: 8px 12px 8px 34px; border-radius: 6px; font-size: 13px; outline: none;
+  }
+  .sidebar-row { display: flex; gap: 10px; }
+  .sort-box { flex: 1; }
+  .filters-btn {
+    background: var(--cream); color: var(--ink); border: none;
+    padding: 0 14px; border-radius: 6px; font-size: 13px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .filter-count {
+    background: var(--accent); color: #fff; font-size: 10px;
+    padding: 2px 6px; border-radius: 10px; font-weight: 700;
+  }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    background: rgba(217, 139, 70, 0.15); border: 1px solid var(--accent);
+    color: var(--cream); font-size: 11px; padding: 4px 8px; border-radius: 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .chip-close { cursor: pointer; opacity: 0.6; }
+  .chip-close:hover { opacity: 1; }
+  .entries-label { font-size: 11px; letter-spacing: 0.05em; opacity: 0.5; font-weight: 700; }
+  .entries-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; max-height: 280px; }
+  .entry-item {
+    background: #1E1E1E; border: 1px solid rgba(255,255,255,0.05);
+    padding: 10px 12px; border-radius: 6px; font-size: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .entry-ip { font-family: var(--code); font-weight: 600; }
+  .entry-meta { opacity: 0.5; font-size: 11px; }
+  .sidebar-footer { display: flex; gap: 10px; pt: 10px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .footer-btn {
+    flex: 1; background: #222; border: 1px solid rgba(255,255,255,0.1);
+    color: var(--cream); padding: 8px; border-radius: 6px; font-size: 12px;
+    display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;
+  }
+  .footer-btn.danger { color: #FF5F56; border-color: rgba(255,95,86,0.2); }
+
+  .app-main { padding: 24px; background: #0F0F0F; overflow-y: auto; }
+  .app-hero { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+  .app-hero h1 { font-family: var(--serif); font-size: 28px; font-weight: 400; }
+  .app-hero .hero-sub { font-size: 14px; margin-top: 4px; }
+  .status-row { display: flex; gap: 10px; align-items: center; }
+  .status-pill, .user-pill, .refresh-pill {
+    background: #1E1E1E; border: 1px solid rgba(255,255,255,0.08);
+    padding: 6px 12px; border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 6px;
+  }
+  .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; }
+  .refresh-pill { cursor: pointer; background: #252525; border: none; color: inherit; }
+
+  .stats-row {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px;
+  }
+  .stat-card {
+    background: #181818; border: 1px solid rgba(255,255,255,0.06);
+    padding: 16px 14px; border-radius: 8px;
+  }
+  .stat-value { font-size: 20px; font-weight: 700; font-family: var(--code); }
+  .stat-label { font-size: 11px; opacity: 0.5; margin-top: 4px; }
+
+  .charts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .chart-card {
+    background: #181818; border: 1px solid rgba(255,255,255,0.06);
+    padding: 18px; border-radius: 8px; display: flex; flex-direction: column;
+  }
+  .chart-card.wide { grid-column: span 2; }
+  .chart-card h2 { font-size: 15px; font-weight: 600; }
+  .chart-sub { font-size: 12px; opacity: 0.5; margin-bottom: 14px; }
+  .chart-wrap { flex: 1; min-height: 140px; background: rgba(0,0,0,0.2); border-radius: 4px; position: relative; overflow: hidden; }
+
+  /* Chart Mockup Stubs */
+  .mock-chart-line {
+    position: absolute; inset: 10px; display: flex; align-items: flex-end; gap: 8px;
+  }
+  .mock-bar { flex: 1; background: var(--accent); border-radius: 2px 2px 0 0; opacity: 0.8; transition: height 0.3s ease; }
+  .mock-bar:hover { opacity: 1; }
+
+  /* ---------- FEATURES SECTION ---------- */
+  .features-section {
+    position: relative; z-index: 3;
+    background: var(--cream); color: var(--ink);
+    padding: 120px 60px;
+  }
+  .features-container { max-width: 1200px; margin: 0 auto; }
+  .section-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-dark); margin-bottom: 12px; }
+  .section-title { font-family: var(--serif); font-size: clamp(28px, 4vw, 42px); line-height: 1.2; max-width: 700px; margin-bottom: 60px; }
+  
+  .filters-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  .filter-category-card {
+    background: var(--card); border-radius: 12px; padding: 28px 24px;
+    border: 1px solid var(--border-dark);
+  }
+  .filter-category-card h3 { font-family: var(--serif); font-size: 20px; margin-bottom: 12px; }
+  .filter-category-card p { font-size: 14px; line-height: 1.5; opacity: 0.8; margin-bottom: 20px; }
+  .filter-tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .filter-tag {
+    background: rgba(0,0,0,0.06); font-size: 11px; font-family: var(--code);
+    padding: 4px 8px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+  }
+  .filter-tag:hover { background: rgba(0,0,0,0.12); }
+
+  /* ---------- STATS / IMPACT SECTION ---------- */
+  .impact-section {
+    padding: 120px 60px; background: var(--black);
+    border-top: 1px solid var(--border-light);
+  }
+  .impact-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+  }
+  .impact-card h2 { font-size: 56px; font-family: var(--serif); font-weight: 100; color: var(--cream); }
+  .impact-card p { font-size: 16px; opacity: 0.7; margin-top: 10px; line-height: 1.5; }
+
+  /* ---------- FOOTER ---------- */
+  footer.site-footer {
+    background: #050505; color: var(--cream);
+    padding: 80px 60px 40px;
+    border-top: 1px solid var(--border-light);
+  }
+  .footer-grid {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 40px;
+    margin-bottom: 60px;
+  }
+  .footer-brand .logo-text { font-size: 22px; }
+  .footer-brand p { margin-top: 16px; font-size: 14px; opacity: 0.6; max-width: 300px; line-height: 1.6; }
+  .footer-col h4 { font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .footer-col ul a { font-size: 14px; opacity: 0.6; transition: opacity .2s; }
+  .footer-col ul a:hover { opacity: 1; }
+  .footer-bottom {
+    max-width: 1200px; margin: 0 auto;
+    padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; opacity: 0.5;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1100px) {
+    .app-layout { grid-template-columns: 1fr; }
+    .app-sidebar { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .stats-row { grid-template-columns: repeat(3, 1fr); }
+    .charts-grid { grid-template-columns: 1fr; }
+    .chart-card.wide { grid-column: span 1; }
+    .filters-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    header.nav { padding: 16px 20px; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    .hero { padding: 120px 20px 60px; }
+    .features-section, .impact-section, footer.site-footer { padding: 80px 20px; }
+    .impact-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .filters-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header Nav -->
+<header class="nav">
+  <div class="nav-left">
+    <a href="#" class="logo-text">Vasuki Traffic</a>
+  </div>
+  <nav class="nav-links">
+    <!-- <div class="nav-item"><a href="#features">Documentation</a></div>
+    <div class="nav-item"><a href="#telemetry">Vasuki Tijori</a></div> -->
+
+  </nav>
+  <div class="nav-cta">
+    <button class="try-btn" onclick="window.location.href='./dashb.html'">Launch Console →</button>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<nav class="mobile-menu" id="mobileMenu">
+  <!-- <a href="#features" class="m-link">Documentation</a>
+  <a href="#telemetry" class="m-link">Vasuki Tijori</a> -->
+  <a href="./dashb.html" class="m-link" style="margin-top:20px; font-weight:600;">Launch Console →</a>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <canvas id="bg-canvas"></canvas>
+  
+  <div class="hero-center">
+    <h1 class="hero-title">Complete command over every packet, visit, and domain.</h1>
+    <p class="hero-sub">Vasuki Traffic is an ultra-low latency traffic management platform. Inspect high-frequency logs, and block non-human hits in real time.</p>
+    
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="window.location.href='./dashb.html'">Explore Live Dashboard</button>
+    </div>
+  </div>
+
+  <!-- Live Dashboard Interface Preview -->
+
+
+  </div>
+</section>
+
+<!-- Features & Filters Showcase -->
+<section class="features-section" id="features">
+  <div class="features-container">
+    <div class="section-label">Unmatched Granularity</div>
+    <h2 class="section-title">30+ Filtering Dimensions Built directly into the Engine.</h2>
+
+    <div class="filters-grid">
+      <div class="filter-category-card">
+        <h3>Network & IP</h3>
+        <p>Segment traffic by edge IP characteristics, ASN, and proxy status.</p>
+        <div class="filter-tag-list">
+          <span class="filter-tag" onclick="addFilterChip('CIDR Match')">CIDR Match</span>
+          <span class="filter-tag" onclick="addFilterChip('ASN Lookup')">ASN Lookup</span>
+          <span class="filter-tag" onclick="addFilterChip('VPN / Proxy')">VPN / Proxy</span>
+          <span class="filter-tag" onclick="addFilterChip('Tor Exit Node')">Tor Exit Node</span>
+        </div>
+      </div>
+
+      <div class="filter-category-card">
+        <h3>Geographic</h3>
+        <p>Filter down to postal codes or precise lat/long radiuses.</p>
+        <div class="filter-tag-list">
+          <span class="filter-tag" onclick="addFilterChip('Country Code')">Country Code</span>
+          <span class="filter-tag" onclick="addFilterChip('Region / State')">Region / State</span>
+          <span class="filter-tag" onclick="addFilterChip('Metro Area')">Metro Area</span>
+          <span class="filter-tag" onclick="addFilterChip('ISP Provider')">ISP Provider</span>
+        </div>
+      </div>
+
+      <div class="filter-category-card">
+        <h3>Device & Client</h3>
+        <p>Deep fingerprinting of incoming HTTP user agents and headers.</p>
+        <div class="filter-tag-list">
+          <span class="filter-tag" onclick="addFilterChip('OS Version')">OS Version</span>
+          <span class="filter-tag" onclick="addFilterChip('Browser Engine')">Browser Engine</span>
+          <span class="filter-tag" onclick="addFilterChip('Device Type')">Device Type</span>
+          <span class="filter-tag" onclick="addFilterChip('Client Lang')">Client Lang</span>
+        </div>
+      </div>
+
+      <div class="filter-category-card">
+        <h3>Behavior & Bot</h3>
+        <p>Distinguish genuine users from high-frequency scraping scripts.</p>
+        <div class="filter-tag-list">
+          <span class="filter-tag" onclick="addFilterChip('Known Crawlers')">Known Crawlers</span>
+          <span class="filter-tag" onclick="addFilterChip('Headless Browsers')">Headless Browsers</span>
+          <span class="filter-tag" onclick="addFilterChip('Request Rate')">Request Rate</span>
+          <span class="filter-tag" onclick="addFilterChip('Path Pattern')">Path Pattern</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Impact Metrics -->
+<section class="impact-section" id="telemetry">
+  <div class="impact-grid">
+    <div class="impact-card">
+      <h2>&lt; 2ms</h2>
+      <p>Average evaluation latency per inbound HTTP request across edge locations.</p>
+    </div>
+    <div class="impact-card">
+      <h2>30+</h2>
+      <p>Native dynamic filters ready to be stacked without writing code.</p>
+    </div>
+    <div class="impact-card">
+      <h2>99.99%</h2>
+      <p>Operational uptime engineered for enterprise high-concurrency traffic.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Documentation Section target -->
+<div id="docs" style="scroll-margin-top: 100px;"></div>
+
+<!-- Site Footer -->
+<footer class="site-footer">
+
+  <div class="footer-bottom">
+    <div>&copy; 2026 Vasuki iTech. All rights reserved.</div>
+    <div>Privacy Policy &bull; Terms of Service</div>
+  </div>
+</footer>
+
+<script>
+  // Mobile Navigation Drawer Toggle
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const scrim = document.getElementById('scrim');
+
+  function toggleMenu() {
+    const isOpen = mobileMenu.classList.contains('open');
+    if (isOpen) {
+      mobileMenu.classList.remove('open');
+      scrim.classList.remove('open');
+      hamburger.classList.remove('active');
+    } else {
+      mobileMenu.classList.add('open');
+      scrim.classList.add('open');
+      hamburger.classList.add('active');
+    }
+  }
+
+  hamburger.addEventListener('click', toggleMenu);
+  scrim.addEventListener('click', toggleMenu);
+
+  document.querySelectorAll('.m-link').forEach(link => {
+    link.addEventListener('click', () => {
+      if (mobileMenu.classList.contains('open')) toggleMenu();
+    });
+  });
+
+  // Dropdown Toggle Logic
+  const solutionsBtn = document.getElementById('solutionsBtn');
+  const navItem = solutionsBtn.closest('.nav-item');
+
+  solutionsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navItem.classList.toggle('open');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!navItem.contains(e.target)) {
+      navItem.classList.remove('open');
+    }
+  });
+
+  // Helper smooth scroll functions
+  function scrollToConsole() {
+    document.getElementById('console').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+
+ 
+  // Background Canvas Subtle Wave Animation
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  let step = 0;
+  function animateCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(217, 139, 70, 0.15)';
+    ctx.lineWidth = 1;
+
+    for (let x = 0; x < canvas.width; x += 20) {
+      const y = Math.sin((x + step) * 0.005) * 40 + canvas.height / 2;
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    step += 1;
+    requestAnimationFrame(animateCanvas);
+  }
+  animateCanvas();
+</script>
+</body>
+</html>
