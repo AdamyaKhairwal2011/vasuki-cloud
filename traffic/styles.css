@@ -1,6 +1,6 @@
 :root{
-  --cream:#F7F4EE;
-  --cream-2:#FFFFFF;
+  --cream:#f0eee6;
+  --cream-2:#e3dacc;
   --ink:#211D1A;
   --ink-soft:#6B655D;
   --line:#E7E1D6;
@@ -115,7 +115,7 @@ body{
   padding:9px 10px;
   border:1px solid var(--line);
   border-radius:10px;
-  background:var(--cream-2);
+  background:var(--cream);
   font-family:var(--mono);
   font-size:0.82rem;
   font-weight:600;
@@ -131,6 +131,7 @@ body{
   border-radius:10px;
   padding:10px 12px;
   color:var(--ink-soft);
+  background:var(--cream);
 }
 .search-box input{
   border:none;
@@ -152,7 +153,7 @@ body{
   padding:9px 10px;
   border:1px solid var(--line);
   border-radius:10px;
-  background:var(--cream-2);
+  background:var(--cream);
   font-family:var(--sans);
   font-size:0.85rem;
   color:var(--ink);
@@ -164,7 +165,7 @@ body{
   padding:9px 12px;
   border:1px solid var(--line);
   border-radius:10px;
-  background:var(--cream-2);
+  background:var(--cream);
   font-family:var(--sans);
   font-size:0.85rem;
   font-weight:500;
@@ -194,7 +195,7 @@ body{
   display:inline-flex;
   align-items:center;
   gap:5px;
-  background:#F1EADD;
+  background:var(--cream);
   color:var(--terracotta-deep);
   border-radius:999px;
   padding:4px 9px 4px 10px;
@@ -235,7 +236,7 @@ body{
 .entry-card{
   border:1px solid var(--line);
   padding:14px 14px 12px;
-  background:var(--cream-2);
+  background:var(--cream);
 }
 .entry-top{
   display:flex;
@@ -319,16 +320,16 @@ body{
   padding:10px 8px;
   border:1px solid var(--line);
   border-radius:10px;
-  background:var(--cream-2);
+  background:#141413;
   font-family:var(--sans);
   font-size:0.78rem;
   font-weight:600;
-  color:var(--ink);
+  color:#fff;
   cursor:pointer;
   transition:background .15s ease;
 }
 .footer-btn:hover{background:#F1EADD;}
-.footer-btn.danger{color:var(--red); border-color:#EFD6D0;}
+.footer-btn.danger{color:#f0eee6; border-color:#EFD6D0;}
 .footer-btn.danger:hover{background:#FBEDEA;}
 
 /* ---------- Main ---------- */
@@ -392,7 +393,7 @@ body{
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 12px;
-  background: var(--cream-2);
+  background: var(--cream);
   border-radius: 24px;
   padding: 0;
   overflow: hidden;
@@ -401,7 +402,7 @@ body{
 }
 
 .stat-card {
-  background: #ffffff;
+  background: #e3dacc;
   padding: 22px 20px;
   display: flex;
   flex-direction: column;
@@ -411,7 +412,7 @@ body{
 }
 
 .stat-card:not(:last-child) {
-  border-right: 5px solid var(--cream);
+  border-right: 5px solid #e3dacc;
 }
 
 .stat-value {
@@ -439,7 +440,7 @@ body{
   width:min(90vw, 1200px);
 }
 .chart-card{
-  background:var(--cream-2);
+  background:#ffffff5b;
   border:1px solid var(--line);
   border-radius:var(--radius);
   padding:22px 24px 16px;
