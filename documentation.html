@@ -1,425 +1,612 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vasuki iTech – Executive Onboarding & System Docs</title>
-    <style>
-        :root {
-            --google-blue: #1a73e8;
-            --google-blue-dark: #174ea6;
-            --google-grey-50: #f8f9fa;
-            --google-grey-100: #f1f3f4;
-            --google-grey-200: #e8eaed;
-            --google-grey-300: #dadce0;
-            --google-grey-500: #9aa0a6;
-            --google-grey-700: #5f6368;
-            --google-grey-900: #202124;
-            --google-green: #1e8e3e;
-            --sidebar-width: 280px;
-            --header-height: 64px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vasuki Platform Docs</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #fcfcf9;
+      --bg-sidebar: #f8f8f6;
+      --bg-pill: #eeeeeb;
+      --bg-code: #ffffff;
+      --border-color: #e6e6e2;
+      --text-main: #191918;
+      --text-muted: #6f6f6b;
+      --text-accent: #cc5500;
+      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
 
-        * { box-sizing: border-box; scroll-behavior: smooth; }
-        
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            margin: 0;
-            background-color: #ffffff;
-            color: var(--google-grey-900);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        /* SIDEBAR NAVIGATION */
-        aside {
-            width: var(--sidebar-width);
-            background-color: #fff;
-            border-right: 1px solid var(--google-grey-300);
-            display: flex;
-            flex-direction: column;
-            padding-top: 12px;
-            transition: transform 0.3s ease;
-            z-index: 1001;
-        }
+    html {
+      scroll-behavior: smooth;
+    }
 
-        .brand-container {
-            padding: 0 24px 20px 24px;
-            display: flex;
-            align-items: center;
-        }
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        .brand-logo {
-            font-size: 22px;
-            color: var(--google-grey-700);
-            font-weight: 400;
-        }
+    /* --- TOP NAVBAR --- */
+    .navbar {
+      height: 56px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      background-color: var(--bg-main);
+      z-index: 100;
+    }
 
-        .brand-logo span { font-weight: 500; color: var(--google-grey-900); }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 16px;
+    }
 
-        nav { flex-grow: 1; overflow-y: auto; padding-bottom: 40px; }
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-main);
+    }
 
-        .nav-group-label {
-            padding: 16px 24px 8px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--google-grey-700);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
+    .nav-logo-icon {
+      color: var(--text-accent);
+      font-size: 18px;
+    }
 
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            height: 40px;
-            color: var(--google-grey-700);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 0 20px 20px 0;
-            margin-right: 12px;
-            margin-bottom: 2px;
-            transition: background 0.2s, color 0.2s;
-        }
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .nav-item:hover { background-color: var(--google-grey-100); }
-        .nav-item.active { 
-            background-color: #e8f0fe; 
-            color: var(--google-blue); 
-            font-weight: 600;
-        }
+    .nav-pill {
+      padding: 6px 14px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.15s ease;
+    }
 
-        /* MAIN CONTENT AREA */
-        main {
-            flex-grow: 1;
-            overflow-y: auto;
-            background-color: #fff;
-            position: relative;
-        }
+    .nav-pill.active, .nav-pill:hover {
+      background-color: var(--bg-pill);
+    }
 
-        .top-bar {
-            height: var(--header-height);
-            border-bottom: 1px solid var(--google-grey-300);
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            background: #fff;
-            z-index: 1000;
-        }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
 
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--google-grey-700);
-            padding: 8px;
-        }
+    .nav-right a {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
 
-        .content-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 32px;
-        }
+    /* --- LAYOUT WRAPPER --- */
+    .layout-container {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
 
-        /* TEXT STYLES */
-        h1 { font-size: 28px; font-weight: 400; margin: 0 0 12px 0; color: var(--google-grey-900); }
-        h2 { font-size: 22px; font-weight: 400; margin: 50px 0 20px 0; border-bottom: 1px solid var(--google-grey-200); padding-bottom: 12px; scroll-margin-top: 80px;}
-        h3 { font-size: 18px; font-weight: 500; color: var(--google-grey-900); margin: 32px 0 16px 0; }
-        p { line-height: 1.6; font-size: 15px; color: var(--google-grey-700); margin-bottom: 16px; }
-        ul { padding-left: 20px; color: var(--google-grey-700); }
-        li { margin-bottom: 8px; font-size: 14px; line-height: 1.5; }
+    /* --- LEFT SIDEBAR --- */
+    .sidebar-left {
+      width: 260px;
+      border-right: 1px solid var(--border-color);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      background: var(--bg-main);
+      transition: transform 0.3s ease;
+      z-index: 90;
+    }
 
-        /* COMPONENTS */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin: 24px 0;
-        }
+    .search-box {
+      position: relative;
+    }
 
-        .data-card {
-            border: 1px solid var(--google-grey-300);
-            border-radius: 8px;
-            padding: 24px;
-            transition: box-shadow 0.2s;
-        }
-        .data-card h4 { margin: 0 0 12px 0; font-size: 13px; color: var(--google-blue); text-transform: uppercase; letter-spacing: 0.5px; }
+    .search-input {
+      width: 100%;
+      padding: 6px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: #fff;
+      font-size: 13px;
+      outline: none;
+    }
 
-        .feature-box {
-            background: var(--google-grey-50);
-            border-left: 4px solid var(--google-blue);
-            padding: 16px 20px;
-            margin: 20px 0;
-            border-radius: 0 8px 8px 0;
-        }
+    .search-input:focus {
+      border-color: var(--text-main);
+    }
 
-        .btn-primary {
-            background-color: var(--google-blue);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            display: inline-block;
-            margin-right: 12px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
+    .search-shortcut {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: var(--bg-sidebar);
+      pointer-events: none;
+    }
 
-        .btn-outline {
-            border: 1px solid var(--google-grey-300);
-            color: var(--google-blue);
-            padding: 11px 24px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            display: inline-block;
-        }
+    .menu-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 16px;
+    }
 
-        .status-pill {
-            background: #e6f4ea;
-            color: #137333;
-            padding: 4px 12px;
-            border-radius: 16px;
-            font-size: 12px;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-        }
+    .menu-header {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
 
-        footer { border-top: 1px solid var(--google-grey-200); margin-top: 80px; padding: 32px 0; font-size: 12px; color: var(--google-grey-500); }
+    .menu-item {
+      padding: 6px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      display: block;
+      cursor: pointer;
+    }
 
-        #overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.4);
-            z-index: 1000;
-        }
+    .menu-item.active {
+      background-color: var(--bg-pill);
+      color: var(--text-main);
+      font-weight: 500;
+    }
 
-        @media (max-width: 850px) {
-            .menu-toggle { display: block; }
-            aside { position: fixed; left: 0; top: 0; bottom: 0; transform: translateX(-100%); }
-            aside.open { transform: translateX(0); }
-            #overlay.open { display: block; }
-            .content-container { padding: 24px 20px; }
-        }
-    </style>
+    .menu-item:hover:not(.active) {
+      color: var(--text-main);
+    }
+
+    /* --- MAIN CONTENT AREA --- */
+    .content-area {
+      flex: 1;
+      padding: 40px 48px;
+      max-width: 880px;
+      min-width: 0;
+    }
+
+    .doc-section {
+      margin-bottom: 64px;
+      scroll-margin-top: 80px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .content-title {
+      font-family: var(--font-serif);
+      font-size: 38px;
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .content-subtitle {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 400;
+      margin: 28px 0 16px 0;
+    }
+
+    /* --- TABS --- */
+    .code-tabs {
+      display: flex;
+      gap: 16px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 8px 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .tab-btn.active {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--text-main);
+    }
+
+    /* --- STEPPER BLOCK --- */
+    .step-item {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .step-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: var(--bg-pill);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .step-heading {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .step-description {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    /* --- CODE BLOCK --- */
+    .code-box {
+      background-color: var(--bg-code);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: #24292e;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .code-box .keyword { color: #d73a49; }
+    .code-box .string { color: #032f62; }
+    .code-box .comment { color: #6a737d; }
+    .code-box .tag { color: #22863a; }
+
+    /* --- RIGHT SIDEBAR --- */
+    .sidebar-right {
+      width: 220px;
+      padding: 40px 24px;
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+    }
+
+    .toc-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .toc-item {
+      display: block;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      margin-bottom: 8px;
+      transition: color 0.15s ease;
+    }
+
+    .toc-item:hover {
+      color: var(--text-main);
+    }
+
+    /* --- RESPONSIVE MEDIA QUERIES --- */
+    @media (max-width: 992px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-center {
+        display: none;
+      }
+
+      .sidebar-left {
+        position: fixed;
+        left: 0;
+        top: 56px;
+        transform: translateX(-100%);
+        box-shadow: 4px 0 16px rgba(0,0,0,0.05);
+      }
+
+      .sidebar-left.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-right {
+        display: none;
+      }
+
+      .content-area {
+        padding: 24px 20px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<div id="overlay"></div>
-
-<aside id="sidebar">
-    <div class="brand-container">
-        <div class="brand-logo">Vasuki <span>Documentation</span></div>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-left">
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+      <span>Vasuki Platform Docs</span>
     </div>
-    <nav>
-        <div class="nav-group-label">General</div>
-        <a href="#welcome" class="nav-item active">System Overview</a>
-        <a href="#identity" class="nav-item">Core Philosophy</a>
-        
-        <div class="nav-group-label">Product Modules</div>
-        <a href="#neem" class="nav-item">Vasuki Cloud (Neem)</a>
-        <a href="#vypaar" class="nav-item">Vasuki Vypaar</a>
-        <a href="#argon" class="nav-item">Vasuki Argon</a>
-        <a href="#forms" class="nav-item">Vasuki Forms</a>
-        
-        <div class="nav-group-label">Administration</div>
-        <a href="#management" class="nav-item">Innovator Admin Console</a>
-        <a href="#support" class="nav-item">Network Status</a>
+
+    <nav class="nav-center">
+      <a href="#section-traffic" class="nav-pill active">Traffic Tracker</a>
+      <a href="#section-tijori" class="nav-pill">Vasuki Tijori</a>
+      <a href="#" class="nav-pill">Managed Agents</a>
+      <a href="#" class="nav-pill">Resources ▾</a>
     </nav>
-</aside>
 
-<main id="main-content">
-    <div class="top-bar">
-        <div style="display: flex; align-items: center;">
-            <button class="menu-toggle" id="menuBtn">☰</button>
-            <div style="font-size: 14px; color: var(--google-grey-700);">Admin > Onboarding Guide</div>
-        </div>
-        <div>
-            <a href="https://www.vasuki.cloud/signup" class="btn-primary" style="padding: 8px 16px; font-size: 12px;">Cloud Signup</a>
-        </div>
+    <div class="nav-right">
+      <a href="#">&lt;/&gt; API reference</a>
     </div>
+  </header>
 
-    <div class="content-container">
-        <section id="welcome">
-            <div class="status-pill" style="margin-bottom: 16px;">
-                <span style="height: 8px; width: 8px; background: #1e8e3e; border-radius: 50%; margin-right: 8px;"></span>
-                Enterprise Systems Online
+  <!-- CONTAINER -->
+  <div class="layout-container">
+    
+    <!-- LEFT NAVIGATION SIDEBAR -->
+    <aside class="sidebar-left" id="sidebarLeft">
+      <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search..." />
+        <span class="search-shortcut">⌘K</span>
+      </div>
+
+      <nav id="sidebarMenu">
+        <div class="menu-group">
+          <div class="menu-header">Traffic Tracker</div>
+          <a href="#section-traffic" class="menu-item active">Quickstart</a>
+          <a href="#traffic-setup" class="menu-item">Setup Syntax</a>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-header">Vasuki Tijori</div>
+          <a href="#section-tijori" class="menu-item">Quickstart</a>
+          <a href="#tijori-setup" class="menu-item">Vault Setup</a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- MAIN ARTICLE -->
+    <main class="content-area">
+      
+      <!-- SECTION 1: VASUKI TRAFFIC TRACKER -->
+      <section class="doc-section" id="section-traffic">
+        <div class="breadcrumb">
+          <span>Messages</span> / <span>First steps</span>
+        </div>
+
+        <h1 class="content-title">Get started with Vasuki Traffic</h1>
+        <p class="content-subtitle">Make your first API call to Vasuki and integrate client tracking.</p>
+
+        <h2 class="section-title" id="traffic-setup">Set up Syntax of Your Website</h2>
+
+        <div class="code-tabs" id="tabContainerTraffic">
+          <button class="tab-btn active" data-lang="html">HTML / JS</button>
+          <button class="tab-btn" data-lang="npm">NPM / Module</button>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-heading">Create a project and add the snippet in head tag</div>
+            <div class="code-box" id="codeBlockTraffic"></div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-heading">
+              Visit <a href="https://vasuki.cloud/traffic/dashb.html" target="_blank" style="color: var(--text-accent); text-decoration: underline;">Vasuki.cloud/traffic/dashb.html</a> after logging in to see live metrics of your web ecosystem for free.
             </div>
-            <h1>Vasuki iTech Executive Overview</h1>
-            <p>Welcome, Innovator. Vasuki iTech operates as a sovereign digital ecosystem designed to grant "Unlimited Life" to digital ventures and assets. This guide serves as the technical manual for deploying and managing services within our three primary pillars: Infrastructure, Cloud Storage, and Startup Networking.</p>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <section id="identity">
-            <h2>Core Philosophy: Unlimited Life</h2>
-            <p>Our architecture is built on the principle of digital sovereignty. We provide the tools for Innovators to own their narrative, maintain complete control over their files, and interact with a verified ecosystem of high-growth ventures.</p>
-            <div class="info-grid">
-                <div class="data-card">
-                    <h4>Data Ownership</h4>
-                    <p>Unlike traditional SaaS, Vasuki focuses on file-based sovereignty. Your data is not a product; it is an asset under your direct command.</p>
-                </div>
-                <div class="data-card">
-                    <h4>Executive Control</h4>
-                    <p>Systems are designed for high-level administration, allowing for granular permissioning and instant global deployments.</p>
-                </div>
+      <!-- SECTION 2: VASUKI TIJORI -->
+      <section class="doc-section" id="section-tijori">
+        <div class="breadcrumb">
+          <span>Vault</span> / <span>First steps</span>
+        </div>
+
+        <h1 class="content-title">Get started with Vasuki Tijori</h1>
+        <p class="content-subtitle">Authenticate your vault and load remote configuration directly into your application.</p>
+
+        <h2 class="section-title" id="tijori-setup">Set up Tijori in Your App</h2>
+
+        <div class="code-tabs" id="tabContainerTijori">
+          <button class="tab-btn active" data-lang="html_tij">HTML / JS</button>
+          <button class="tab-btn" data-lang="npm_tij">NPM / Module</button>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-heading">Initialize authentication and fetch configuration</div>
+            <p class="step-description">Authenticate using your account email and password to hydrate remote environment variables into memory.</p>
+            <div class="code-box" id="codeBlockTijori"></div>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-heading">
+              Manage and update your environment variables anytime at <a href="https://vasuki.cloud" target="_blank" style="color: var(--text-accent); text-decoration: underline;">Vasuki Cloud Console</a>.
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <section id="neem">
-            <h2>Vasuki <b>Cloud</b> (Neem)</h2>
-            <p>Neem is our high-performance cloud environment optimized for both simple asset storage and complex application backends. It is engineered to give "life" to static files by making them instantly deployable and interactable.</p>
-            
-            <h3>Technical Capabilities</h3>
-            <ul>
-                <li><strong>Instant Demo Deployment:</strong> Transform source files into live client-facing demos with zero server overhead.</li>
-                <li><strong>Dynamic Permissions:</strong> Manage access at a granular level. Assign specific view or edit rights to internal teams or external clients via secure link generation.</li>
-                <li><strong>Full-Stack Hosting:</strong> Supports multi-terabyte application backends and direct cloud editing for agile development.</li>
-            </ul>
+    </main>
 
-            <div class="feature-box">
-                <strong>Administrative Action Required:</strong> 
-                Executives can provision new cloud instances and manage storage quotas through the signup portal.
-                <div style="margin-top: 15px;">
-                    <a href="https://www.vasuki.cloud/signup" class="btn-primary">Register Cloud Account</a>
-                </div>
-            </div>
-        </section>
+    <!-- RIGHT TABLE OF CONTENTS -->
+    <aside class="sidebar-right">
+      <div class="toc-title">On this page</div>
+      <a href="#section-traffic" class="toc-item">Vasuki Traffic</a>
+      <a href="#traffic-setup" class="toc-item">└ Traffic Setup</a>
+      <a href="#section-tijori" class="toc-item">Vasuki Tijori</a>
+      <a href="#tijori-setup" class="toc-item">└ Vault Setup</a>
+    </aside>
 
-        <section id="vypaar">
-            <h2>Vasuki <b>Vypaar</b></h2>
-            <p>Vasuki Vypaar is the networking and collaboration layer of our ecosystem. It is specifically built to foster a "Google Workspace" environment for startups, where every entity is verified and every connection is high-value.</p>
+  </div>
 
-            <h3>The Vypaar Framework</h3>
-            <div class="info-grid">
-                <div class="data-card">
-                    <h4>Innovator Verification</h4>
-                    <p>All ventures within Vypaar undergo a verification process. This ensures the ecosystem remains free of noise and focused on genuine innovation.</p>
-                </div>
-                <div class="data-card">
-                    <h4>Real-time Sync</h4>
-                    <p>Update your venture's profile or narrative once; the changes propagate across the entire Vasuki network in real-time.</p>
-                </div>
-            </div>
-
-            <h3>Startup Registration</h3>
-            <p>To integrate your venture into the ecosystem, you must register through the dedicated Vypaar portal. This establishes your digital identity within the network.</p>
-            <a href="https://www.vasuki.cloud/vypaar" class="btn-outline">Register Startup in Vypaar</a>
-        </section>
-
-        <section id="argon">
-            <h2>Vasuki <b>Argon</b></h2>
-            <p>The sovereign infrastructure layer. Vasuki Argon is a cloud-native operating system designed to modernize existing hardware with high-security, AI-native capabilities.</p>
-            <div class="data-card" style="border-left: 4px solid var(--google-grey-500); background: var(--google-grey-50);">
-                <h4 style="color: var(--google-grey-700);">Current Phase: Early Evaluation</h4>
-                <p>Argon is currently in a restricted access phase. We are focusing on optimizing the OS for security-first workflows and deep AI integration.</p>
-                <a href="https://www.vasuki.cloud/view-form.html?id=1g580tdmpeh" style="color: var(--google-blue); font-size: 14px; font-weight: 500; text-decoration: none;">Join the Waitlist →</a>
-            </div>
-        </section>
-
-        <section id="forms">
-            <h2>Vasuki <b>Forms</b></h2>
-            <p>Vasuki Forms is a user-friendly, free and interactive platform to manage your digital campaigns and digital form data. Students, Professionals and Founders can use it to get all the submissions decentralised at <b>Vasuki Cloud v1.0.8 7a9xc No_SQL Core</b>. Where user's data is stored securely with AES-6 encryption.</p>
-
-            <h3>The Forms Framework</h3>
-            <div class="info-grid">
-                <div class="data-card">
-                    <h4>One Time Login</h4>
-                    <p>Leave behind the hassle of logging in every time for access, vasuki is reshaping it via automated login systems.</p>
-                </div>
-                <div class="data-card">
-                    <h4>Real-time Sync</h4>
-                    <p>Get instant changes once you edit the form and continuing to serve it at the same endpoint, no URL hassles!</p>
-                </div>
-                <div class="data-card">
-                    <h4>All Forms And Assets At One Place</h4>
-                    <p>Most of the early launch startups fail due to management failures and the cause - it is the spread of data along multiple centres. previews at a singapore server, forms at california server, cloud assets and middle-east server and so on, vasuki provides all these functionalities at one place. just a vasuki account and you're all set.</p>
-                </div>
-            </div>
-
-            <h3>Start Building Efficient And Converting Forms, Today.</h3>
-            <p>To integrate your forms into the ecosystem, you must acess your dashboard through the dedicated Forms portal. This establishes your digital data assets within the network.</p>
-            <a href="https://www.vasuki.cloud/forms" class="btn-outline">Start Creating Forms</a>
-        </section>
-
-        <section id="management">
-            <h2>Innovator Admin Console</h2>
-            <p>The central nerve center for all Vasuki iTech services. Management is handled through a secure, file-based authentication system.</p>
-            <ul>
-                <li><strong>Narrative Management:</strong> Control how your venture is perceived within Vypaar.</li>
-                <li><strong>File Sovereignty:</strong> Direct access to your backend instances and cloud assets.</li>
-                <li><strong>Identity Sync:</strong> Unified login across Neem and Vypaar modules.</li>
-            </ul>
-        </section>
-
-        <section id="support">
-            <h2>Network Status & Support</h2>
-            <div class="status-box">
-                <div class="status-indicator" style="background: var(--google-green);"></div>
-                <p style="margin: 0; font-size: 14px;"><strong>All Services Functional.</strong> Cloud Signup and Vypaar Registration portals are accepting new entries.</p>
-            </div>
-            <p style="margin-top: 20px;">For technical deep-dives or custom enterprise integrations, consult the documentation provided upon account verification.</p>
-        </section>
-
-        <footer>
-            <p>© 2026 Vasuki iTech | Headquarters: Kanina Khas, Mahendragarh (Haryana, India)</p>
-            <p>Primary URL: <a href="https://www.vasuki.cloud" style="color: var(--google-blue); text-decoration: none;">www.vasuki.cloud</a> | Documentation v1.0.8</p>
-        </footer>
-    </div>
-</main>
-
-<script>
-    // MOBILE DRAWER LOGIC
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const menuBtn = document.getElementById('menuBtn');
-
-    function toggleMenu() {
-        sidebar.classList.toggle('open');
-        overlay.classList.toggle('open');
-    }
-
-    menuBtn.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', toggleMenu);
-
-    // SCROLL-SPY ACTIVE STATES
-    const sections = document.querySelectorAll('section');
-    const navItems = document.querySelectorAll('.nav-item');
-    const mainContent = document.getElementById('main-content');
-
-    mainContent.onscroll = () => {
-        let current = "";
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            if (mainContent.scrollTop >= sectionTop - 120) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navItems.forEach(item => {
-            item.classList.remove('active');
-            if (item.getAttribute('href').includes(current)) {
-                item.classList.add('active');
-            }
-        });
+  <!-- JAVASCRIPT FOR INTERACTIVITY -->
+  <script>
+    // 1. Dynamic Code Snippets
+    const codeSnippets = {
+      html: `&lt;<span class="tag">script</span> <span class="keyword">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/vasuki-traffic@1.0.1/index.js"</span>&gt;&lt;/<span class="tag">script</span>&gt;\n&lt;<span class="tag">script</span>&gt;\n  TrafficTracker.init(<span class="string">"codeclutch.adamyarao@gmail.com"</span>);\n&lt;/<span class="tag">script</span>&gt;`,
+      npm: `<span class="comment">// Install via npm</span>\n<span class="comment">// npm install vasuki-traffic</span>\n\n<span class="keyword">import</span> TrafficTracker <span class="keyword">from</span> <span class="string">'vasuki-traffic'</span>;\n\nTrafficTracker.init(<span class="string">"codeclutch.adamyarao@gmail.com"</span>);`,
+      html_tij: `&lt;<span class="tag">script</span> <span class="keyword">type</span>=<span class="string">"module"</span>&gt;\n  <span class="keyword">import</span> { tijori } <span class="keyword">from</span> <span class="string">'https://cdn.jsdelivr.net/npm/vasuki-tijori/index.js'</span>;\n\n  <span class="keyword">async</span> <span class="keyword">function</span> <span class="tok-func">startApp</span>() {\n    <span class="keyword">await</span> tijori.<span class="tok-func">authenticate</span>(<span class="string">'your-email@example.com'</span>, <span class="string">'YOUR_PASSWORD'</span>);\n    <span class="keyword">const</span> dbUrl = tijori.<span class="tok-func">env</span>(<span class="string">'DATABASE_URL'</span>);\n    console.<span class="tok-func">log</span>(<span class="string">'Vault value:'</span>, dbUrl);\n  }\n\n  <span class="tok-func">startApp</span>();\n&lt;/<span class="tag">script</span>&gt;`,
+      npm_tij: `<span class="comment">// 1. Install via npm</span>\n<span class="comment">// npm install vasuki-tijori</span>\n\n<span class="keyword">import</span> { tijori } <span class="keyword">from</span> <span class="string">'vasuki-tijori'</span>;\n\n<span class="keyword">async</span> <span class="keyword">function</span> <span class="tok-func">startApp</span>() {\n  <span class="keyword">await</span> tijori.<span class="tok-func">authenticate</span>(<span class="string">'your-email@example.com'</span>, <span class="string">'YOUR_PASSWORD'</span>);\n  <span class="keyword">const</span> dbUrl = tijori.<span class="tok-func">env</span>(<span class="string">'DATABASE_URL'</span>);\n  console.<span class="tok-func">log</span>(<span class="string">'Vault value:'</span>, dbUrl);\n}\n\n<span class="tok-func">startApp</span>();`
     };
 
-    // Close mobile menu on click
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            if(window.innerWidth <= 850) toggleMenu();
-        });
-    });
-</script>
+    // Tab switcher helper
+    function setupTabSwitching(containerId, blockId, defaultLang) {
+      const container = document.getElementById(containerId);
+      const codeBlock = document.getElementById(blockId);
+      
+      codeBlock.innerHTML = codeSnippets[defaultLang];
 
+      container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('tab-btn')) {
+          container.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+          e.target.classList.add('active');
+          const lang = e.target.getAttribute('data-lang');
+          codeBlock.innerHTML = codeSnippets[lang];
+        }
+      });
+    }
+
+    // Initialize both section tabs
+    setupTabSwitching('tabContainerTraffic', 'codeBlockTraffic', 'html');
+    setupTabSwitching('tabContainerTijori', 'codeBlockTijori', 'html_tij');
+
+    // 2. Sidebar Filter & Keyboard Shortcut (⌘K / Ctrl+K)
+    const searchInput = document.getElementById('searchInput');
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      document.querySelectorAll('.menu-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(term) ? 'block' : 'none';
+      });
+    });
+
+    // 3. Mobile Sidebar Drawer Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebarLeft = document.getElementById('sidebarLeft');
+
+    menuToggle.addEventListener('click', () => {
+      sidebarLeft.classList.toggle('open');
+    });
+
+    // Close menu when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (!sidebarLeft.contains(e.target) && !menuToggle.contains(e.target)) {
+        sidebarLeft.classList.remove('open');
+      }
+    });
+
+    // 4. Sidebar Active Selection Tracking
+    document.getElementById('sidebarMenu').addEventListener('click', (e) => {
+      if (e.target.classList.contains('menu-item')) {
+        document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+        e.target.classList.add('active');
+        sidebarLeft.classList.remove('open');
+      }
+    });
+  </script>
 </body>
 </html>
