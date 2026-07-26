@@ -1,6 +1,6 @@
 :root{
-  --cream:#f0eee6;
-  --cream-2:#e3dacc;
+  --cream:#faf9f5;
+  --cream-2:#f0eee6;
   --ink:#211D1A;
   --ink-soft:#6B655D;
   --line:#E7E1D6;
@@ -8,8 +8,8 @@
   --terracotta-deep:#B85C3F;
   --green:#3E8E5A;
   --red:#C0503E;
-  --mono:'JetBrains Mono', monospace;
-  --serif:'Fraunces', serif;
+  --mono:'Inter', sans-serif;
+  --serif:'pt serif', serif;
   --sans:'Inter', sans-serif;
   --radius:14px;
   --sidebar-w:340px;
@@ -93,7 +93,7 @@ body{
 }
 .brand{
   font-family:var(--serif);
-  font-weight:600;
+  font-weight:100;
   font-size:1.15rem;
   letter-spacing:-0.01em;
 }
@@ -118,7 +118,7 @@ body{
   background:var(--cream);
   font-family:var(--mono);
   font-size:0.82rem;
-  font-weight:600;
+  font-weight:100;
   color:var(--terracotta-deep);
 }
 
@@ -200,7 +200,7 @@ body{
   border-radius:999px;
   padding:4px 9px 4px 10px;
   font-size:0.72rem;
-  font-weight:600;
+  font-weight:100;
   font-family:var(--mono);
 }
 .chip button{
@@ -217,7 +217,7 @@ body{
   margin-top:18px;
   font-size:0.72rem;
   letter-spacing:0.08em;
-  font-weight:600;
+  font-weight:100;
   color:var(--ink-soft);
 }
 .entries-list{
@@ -245,7 +245,7 @@ body{
   gap:8px;
 }
 .entry-title{
-  font-weight:600;
+  font-weight:100;
   font-size:0.92rem;
   display:flex;
   align-items:center;
@@ -260,23 +260,23 @@ body{
 .entry-source-tag{
   font-family:var(--mono);
   font-size:0.62rem;
-  font-weight:600;
+  font-weight:100;
   padding:3px 7px;
   border-radius:6px;
-  background:#F1EADD;
+  background:var(--cream-2);
   color:var(--terracotta-deep);
   white-space:nowrap;
 }
 .entry-tag-unique{
-  background:#E5F0E9;
+  background:var(--cream-2);
   color:var(--green);
 }
 .entry-tag-repeat{
-  background:#FBEDEA;
+  background:var(--cream-2);
   color:var(--red);
 }
 .entry-tag-bot{
-  background:#EDEAE3;
+  background:var(--cream-2);
   color:var(--ink-soft);
 }
 .entry-time{
@@ -291,7 +291,7 @@ body{
   color:var(--ink-soft);
   line-height:1.5;
 }
-.entry-meta b{color:var(--ink); font-weight:600;}
+.entry-meta b{color:var(--ink); font-weight:100;}
 .entry-ip{
   margin-top:4px;
   font-family:var(--mono);
@@ -323,7 +323,7 @@ body{
   background:#141413;
   font-family:var(--sans);
   font-size:0.78rem;
-  font-weight:600;
+  font-weight:100;
   color:#fff;
   cursor:pointer;
   transition:background .15s ease;
@@ -345,7 +345,7 @@ body{
 .hero{text-align:center; padding:20px 0 8px;}
 .hero h1{
   font-family:var(--serif);
-  font-weight:600;
+  font-weight:100;
   font-size:2.6rem;
   margin:0;
   letter-spacing:-0.015em;
@@ -394,7 +394,7 @@ body{
   grid-template-columns: repeat(6, 1fr);
   gap: 12px;
   background: var(--cream);
-  border-radius: 24px;
+  border-radius: 14px;
   padding: 0;
   overflow: hidden;
   margin-top:40px;
@@ -402,7 +402,7 @@ body{
 }
 
 .stat-card {
-  background: #e3dacc;
+  background: var(--cream-2);
   padding: 22px 20px;
   display: flex;
   flex-direction: column;
@@ -412,12 +412,12 @@ body{
 }
 
 .stat-card:not(:last-child) {
-  border-right: 5px solid #e3dacc;
+  border-right: 5px solid var(--cream-2);
 }
 
 .stat-value {
   font-size: 1.9rem;
-  font-weight: 700;
+  font-weight: 300;
   color: var(--ink);
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -450,7 +450,7 @@ body{
 .chart-card h2{
   font-family:var(--serif);
   font-size:1.15rem;
-  font-weight:600;
+  font-weight:100;
   margin:0;
 }
 .chart-sub{
@@ -498,7 +498,7 @@ body{
   margin:0;
   font-family:var(--serif);
   font-size:1.2rem;
-  font-weight:600;
+  font-weight:100;
 }
 .modal-close{
   border:none;
@@ -595,7 +595,7 @@ body{
   border-radius:10px;
   font-family:var(--sans);
   font-size:0.85rem;
-  font-weight:600;
+  font-weight:100;
   cursor:pointer;
   border:1px solid transparent;
 }
