@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasuki for Developers — Build, ship, and share without limits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg: '#faf9f5',
+          ink: '#141413',
+          clay: '#da7758',
+          border: '#e8e6df',
+          muted: '#8e8c85',
+        },
+        fontFamily: {
+          serif: ['"PT Serif"', 'serif'],
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { background-color: #faf9f5; color: #141413; }
+  .serif { font-family: 'PT Serif', serif; }
+  .pill-btn { transition: all .2s ease; }
+  .pill-btn:hover { transform: translateY(-1px); }
+  .card-hover { transition: all .25s ease; }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(20,20,19,0.08); }
+  .hero-canvas {
+    background: radial-gradient(circle at 30% 20%, rgba(218,119,88,0.35), transparent 55%),
+                radial-gradient(circle at 75% 70%, rgba(218,119,88,0.25), transparent 50%),
+                linear-gradient(135deg, #f3ede6 0%, #f7f2ec 100%);
+  }
+  .fade-up { animation: fadeUp .6s ease both; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(12px);} to {opacity:1; transform:translateY(0);} }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-thumb { background:#e8e6df; border-radius: 8px; }
+
+  /* Sliding tab groups */
+  .slide-group { position: relative; }
+  .slide-thumb {
+    position: absolute;
+    top: 4px; bottom: 4px; left: 4px;
+    background: #141413;
+    border-radius: 9999px;
+    transition: left .35s cubic-bezier(.4,0,.2,1), width .35s cubic-bezier(.4,0,.2,1);
+    z-index: 0;
+  }
+  .slide-group button { position: relative; z-index: 1; transition: color .25s ease; }
+  .tab-active { color:#faf9f5; }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #141413; color: #faf9f5; padding: 12px 20px; border-radius: 9999px;
+    font-size: 14px; opacity: 0; pointer-events: none; transition: all .3s ease; z-index: 9999;
+    box-shadow: 0 10px 30px rgba(0,0,0,.2); white-space: nowrap;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Modal */
+  #modalOverlay {
+    position: fixed; inset: 0; background: rgba(20,20,19,.5); display: none;
+    align-items: center; justify-content: center; z-index: 9998; padding: 20px;
+  }
+  #modalOverlay.show { display: flex; }
+  #modalBox {
+    background: #faf9f5; border-radius: 24px; max-width: 420px; width: 100%;
+    padding: 32px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    animation: modalPop .25s ease both;
+  }
+  @keyframes modalPop { from { opacity:0; transform: scale(.95);} to { opacity:1; transform: scale(1);} }
+  .btn-press:active { transform: scale(.96); }
+  html { scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 96px; }
+</style>
+</head>
+<body class="font-sans antialiased">
+
+<!-- ===================== HEADER ===================== -->
+<header class="sticky top-0 z-50 bg-bg/90 backdrop-blur border-b border-border">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="#hero" class="flex items-center gap-2">
+        <span class="serif font-bold text-xl">Vasuki Itech</span>
+      </a>
+
+      <!-- Nav links (desktop) -->
+      <nav class="hidden lg:flex items-center gap-7 text-[15px] text-ink">
+        <a href="#tools" class="hover:text-clay">Tools</a>
+        <a href="#capabilities" class="hover:text-clay">Why Vasuki</a>
+        <a href="#showcase" class="hover:text-clay">Showcase</a>
+        <a href="#ecosystem" class="hover:text-clay">Ecosystem</a>
+        <a href="#pricing" class="hover:text-clay">Pricing</a>
+        <a href="documentation.html" class="hover:text-clay">Docs</a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="hidden md:flex items-center gap-3">
+        <a href="mailto:coideclutch.adamyarao@gmail.com" class="pill-btn btn-press px-4 py-2 rounded-full border border-border text-sm font-medium hover:bg-border/50">Contact us</a>
+        <a href="#tools" class="pill-btn btn-press px-4 py-2 rounded-full bg-ink text-bg text-sm font-medium hover:opacity-85">Get started</a>
+      </div>
+
+      <!-- mobile menu button -->
+      <button id="menuBtn" class="lg:hidden p-2">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#141413" stroke-width="1.8"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- mobile nav -->
+  <div id="mobileNav" class="hidden lg:hidden border-t border-border px-6 py-4 space-y-3 bg-bg">
+    <a href="#tools" class="block text-sm">Tools</a>
+    <a href="#capabilities" class="block text-sm">Why Vasuki</a>
+    <a href="#showcase" class="block text-sm">Showcase</a>
+    <a href="#ecosystem" class="block text-sm">Ecosystem</a>
+    <a href="#pricing" class="block text-sm">Pricing</a>
+    <a href="documentation.html" class="block text-sm">Docs</a>
+    <div class="flex gap-3 pt-2">
+      <a href="mailto:coideclutch.adamyarao@gmail.com" class="btn-press flex-1 text-center px-4 py-2 rounded-full border border-border text-sm">Contact us</a>
+      <a href="#tools" class="btn-press flex-1 text-center px-4 py-2 rounded-full bg-ink text-bg text-sm">Get started</a>
+    </div>
+  </div>
+
+  <!-- breadcrumb sub-bar -->
+  <div class="border-t border-border">
+    <div class="max-w-7xl mx-auto px-6 h-11 flex items-center justify-between text-sm">
+      <div class="text-muted">Organization <span class="mx-1">/</span> <span class="text-ink">Vasuki for Developers</span></div>
+      <a href="documentation.html" class="flex items-center gap-1 text-ink hover:text-clay">Read the docs <span class="text-xs">▾</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section id="hero" class="max-w-5xl mx-auto px-6 pt-16 pb-10 text-center fade-up">
+  <p class="text-muted text-sm font-medium tracking-wide mb-4">Vasuki for Developers</p>
+  <h1 class="serif text-4xl sm:text-5xl md:text-6xl leading-[1.1] mb-6">Connect, share, and ship<br class="hidden sm:block"> without limits</h1>
+  <p class="max-w-2xl mx-auto text-muted text-lg leading-relaxed mb-8">
+    Vasuki is an open platform for developers to connect, share, and build with open-source developer tools — no rate walls, no artificial caps, no gatekeeping. Bring your project, plug into the ecosystem, and ship.
+  </p>
+
+  <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
+    <a href="#tools" class="pill-btn btn-press flex items-center gap-2 px-5 py-3 rounded-full bg-ink text-bg text-sm font-medium hover:opacity-85">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+      Explore the tools
+    </a>
+    <a href="documentation.html" class="pill-btn btn-press flex items-center gap-2 px-5 py-3 rounded-full border border-border text-sm font-medium hover:bg-border/40">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>
+      Read the docs
+    </a>
+    <a href="#community-cta" class="pill-btn btn-press px-5 py-3 rounded-full bg-border text-sm font-medium hover:bg-border/70">Join the community</a>
+  </div>
+
+  <p class="text-xs text-muted mb-12">
+    Free and open source, forever. No paid tiers gating core features.
+    <a href="#pricing" class="underline hover:text-clay">See how we sustain it</a>
+  </p>
+
+  <div class="hero-canvas rounded-3xl h-[320px] sm:h-[420px] md:h-[500px] w-full border border-border shadow-sm"></div>
+</section>
+
+<!-- ===================== TOOLS (formerly Core Capabilities) ===================== -->
+<section id="tools" class="max-w-6xl mx-auto px-6 py-24">
+  <div class="text-center mb-14">
+    <div class="flex justify-center mb-4">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#da7758" stroke-width="1.5"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke-linejoin="round"/></svg>
+    </div>
+    <h2 class="serif text-3xl sm:text-4xl mb-4">Developer tools, no limits</h2>
+    <p class="text-muted max-w-xl mx-auto">Every tool in the Vasuki suite is open source and free to run — self-host it, fork it, or use our hosted version.</p>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Traffic Manager -->
+    <div class="card-hover bg-white/60 border border-border rounded-2xl p-7 flex flex-col">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#141413" stroke-width="1.5" class="mb-5"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/><path d="M10 7h4M7 10v4M17 10v4M10 17h4"/></svg>
+      <h3 class="font-semibold text-lg mb-2">Traffic Manager</h3>
+      <p class="text-muted text-sm leading-relaxed mb-5 flex-1">Route, balance, and monitor traffic across your services in one liner — no config sprawl, no vendor lock-in.</p>
+      <a href="./traffic/" class="pill-btn btn-press self-start px-4 py-2 rounded-full bg-border text-sm font-medium hover:bg-border/70">Open Traffic Manager</a>
+    </div>
+    <!-- Tijori ENV Storer -->
+    <div class="card-hover bg-white/60 border border-border rounded-2xl p-7 flex flex-col">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#141413" stroke-width="1.5" class="mb-5"><rect x="4" y="9" width="16" height="11" rx="2"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/><circle cx="12" cy="14" r="1.5"/><path d="M12 15.5V17"/></svg>
+      <h3 class="font-semibold text-lg mb-2">Tijori — ENV Storer</h3>
+      <p class="text-muted text-sm leading-relaxed mb-5 flex-1">Store, sync, and share environment variables and secrets securely across your team and every environment.</p>
+      <a href="./tijori/" class="pill-btn btn-press self-start px-4 py-2 rounded-full bg-border text-sm font-medium hover:bg-border/70">Open Tijori</a>
+    </div>
+    <!-- Community -->
+    <div class="card-hover bg-white/60 border border-border rounded-2xl p-7 flex flex-col">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#141413" stroke-width="1.5" class="mb-5"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M3 20c0-3 2-5 5-5s5 2 5 5M11 20c0-3 2-5 5-5s5 2 5 5"/></svg>
+      <h3 class="font-semibold text-lg mb-2">Community Hub</h3>
+      <p class="text-muted text-sm leading-relaxed mb-5 flex-1">Find contributors, share your projects, and get help from other developers building on Vasuki.</p>
+      <a href="./community/dev.html" class="pill-btn btn-press self-start px-4 py-2 rounded-full bg-border text-sm font-medium hover:bg-border/70">Visit Community</a>
+    </div>
+    <!-- card 4 -->
+    <div class="card-hover bg-white/60 border border-border rounded-2xl p-7">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#141413" stroke-width="1.5" class="mb-5"><path d="M7 17a4 4 0 1 1 .5-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 17H7z"/></svg>
+      <h3 class="font-semibold text-lg mb-2">Everything stays in sync</h3>
+      <p class="text-muted text-sm leading-relaxed">Your configs, secrets, and traffic rules follow your project across every environment automatically.</p>
+    </div>
+    <!-- card 5 -->
+    <div class="card-hover bg-white/60 border border-border rounded-2xl p-7">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#141413" stroke-width="1.5" class="mb-5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <h3 class="font-semibold text-lg mb-2">Runs while you don't</h3>
+      <p class="text-muted text-sm leading-relaxed">Traffic Manager and Tijori keep working in the background, with alerts if something needs your attention.</p>
+    </div>
+    <!-- card 6 -->
+    <div class="card-hover bg-white/60 border border-border rounded-2xl p-7">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#141413" stroke-width="1.5" class="mb-5"><circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 6h4a4 4 0 0 1 4 4v0M7 18h4a4 4 0 0 0 4-4v0M15 10l2 2M15 14l2-2"/></svg>
+      <h3 class="font-semibold text-lg mb-2">Built for many projects at once</h3>
+      <p class="text-muted text-sm leading-relaxed">Manage traffic and secrets for as many services and repos as you need — no per-project limits.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SHOWCASE ===================== -->
+<section id="showcase" class="max-w-6xl mx-auto px-6 py-24">
+  <div class="text-center mb-12">
+    <div class="flex justify-center mb-4">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#da7758" stroke-width="1.5"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.5h6c0-1.1.4-1.9 1-2.5A6 6 0 0 0 12 2z"/></svg>
+    </div>
+    <h2 class="serif text-3xl sm:text-4xl mb-4 max-w-2xl mx-auto">Vasuki doesn't just host tools, it powers your stack</h2>
+    <p class="text-muted max-w-xl mx-auto mb-6">Spend less time wiring up infrastructure. Vasuki's tools plug straight into your existing services. You stay in control.</p>
+    <a href="documentation.html" class="pill-btn btn-press px-5 py-3 rounded-full bg-ink text-bg text-sm font-medium hover:opacity-85">See more use cases</a>
+  </div>
+
+  <!-- tabs -->
+  <div class="flex justify-center mb-8">
+    <div id="useCaseTabs" class="slide-group inline-flex bg-border/50 rounded-full p-1 gap-1">
+      <div id="useCaseThumb" class="slide-thumb"></div>
+      <button class="tab-btn px-5 py-2 rounded-full text-sm font-medium text-ink" data-tab="traffic">Traffic Manager</button>
+      <button class="tab-btn px-5 py-2 rounded-full text-sm font-medium text-ink" data-tab="tijori">Tijori</button>
+      <button class="tab-btn tab-active px-5 py-2 rounded-full text-sm font-medium" data-tab="community">Community</button>
+    </div>
+  </div>
+
+  <!-- media card -->
+  <div class="bg-white border border-border rounded-3xl overflow-hidden grid md:grid-cols-2">
+    <div class="hero-canvas h-64 md:h-auto"></div>
+    <div class="p-8 md:p-10 flex flex-col justify-center">
+      <h3 id="useCaseTitle" class="font-semibold text-2xl mb-3 serif">Grow with other developers</h3>
+      <p id="useCaseDesc" class="text-muted mb-6 leading-relaxed">Join the Community Hub to share your open source project, find collaborators, and get feedback from developers using Vasuki tools.</p>
+      <a id="useCaseLink" href="./community/dev.html" class="pill-btn btn-press self-start px-5 py-2.5 rounded-full bg-border text-sm font-medium hover:bg-border/70">Open Community</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ECOSYSTEM (formerly Plugins) ===================== -->
+<section id="ecosystem" class="max-w-6xl mx-auto px-6 py-24">
+  <div class="text-center mb-14">
+    <div class="flex justify-center mb-4">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#da7758" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M17 14v7M14 17.5h6"/></svg>
+    </div>
+    <h2 class="serif text-3xl sm:text-4xl mb-4">Extend Vasuki with the ecosystem</h2>
+    <p class="text-muted max-w-xl mx-auto mb-6">Traffic Manager, Tijori, and the Community Hub are built to be extended — bring your own integrations, plugins, and workflows.</p>
+    <a href="documentation.html" class="pill-btn btn-press px-5 py-3 rounded-full bg-ink text-bg text-sm font-medium hover:opacity-85">Browse plugins</a>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-8 items-stretch">
+    <!-- left feature card -->
+    <div class="rounded-3xl p-8 flex flex-col justify-between text-bg" style="background:#da7758;">
+      <div>
+        <h3 class="serif text-2xl mb-4">Build on the Vasuki ecosystem</h3>
+        <p class="text-bg/90 mb-6">Bundle your own integrations, connectors, and automations into a single install so your tools show up ready to go.</p>
+      </div>
+      <a href="documentation.html" class="pill-btn btn-press self-start px-5 py-2.5 rounded-full bg-ink text-bg text-sm font-medium hover:opacity-85">Read the docs</a>
+    </div>
+
+    <!-- right vertical list -->
+    <div class="space-y-4">
+      <div class="card-hover flex items-start gap-4 border border-border rounded-2xl p-6 bg-white/60">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#141413" stroke-width="1.5" class="shrink-0 mt-1"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.5h6c0-1.1.4-1.9 1-2.5A6 6 0 0 0 12 2z"/></svg>
+        <div>
+          <h4 class="font-semibold mb-1">Traffic Manager</h4>
+          <p class="text-muted text-sm mb-2">One-liner routing and load balancing for every service you run</p>
+          <a href="./traffic/" class="text-sm underline hover:text-clay">Open Traffic Manager</a>
+        </div>
+      </div>
+      <div class="card-hover flex items-start gap-4 border border-border rounded-2xl p-6 bg-white/60">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#141413" stroke-width="1.5" class="shrink-0 mt-1"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M6 8v8M18 8v8M8 6h8M8 18h8"/></svg>
+        <div>
+          <h4 class="font-semibold mb-1">Tijori</h4>
+          <p class="text-muted text-sm mb-2">Secure environment variable and secrets storage for your whole team</p>
+          <a href="./tijori/" class="text-sm underline hover:text-clay">Open Tijori</a>
+        </div>
+      </div>
+      <div id="community-cta" class="card-hover flex items-start gap-4 border border-border rounded-2xl p-6 bg-white/60">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#141413" stroke-width="1.5" class="shrink-0 mt-1"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M12 7v6M12 13l-5.5 4M12 13l5.5 4"/></svg>
+        <div>
+          <h4 class="font-semibold mb-1">Community Hub</h4>
+          <p class="text-muted text-sm mb-2">Connect with developers, share your projects, and find contributors</p>
+          <a href="./community/dev.html" class="text-sm underline hover:text-clay">Open Community Hub</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="border-t border-border py-10 text-center text-sm text-muted">
+  <p class="mb-2">
+    <a href="./traffic/" class="underline hover:text-clay mx-2">Traffic Manager</a>
+    <a href="./tijori/" class="underline hover:text-clay mx-2">Tijori</a>
+    <a href="./community/dev.html" class="underline hover:text-clay mx-2">Community</a>
+    <a href="documentation.html" class="underline hover:text-clay mx-2">Documentation</a>
+    <a href="mailto:coideclutch.adamyarao@gmail.com" class="underline hover:text-clay mx-2">Contact</a>
+  </p>
+  <p>© 2026 Vasuki for Developers — open source, without limits.</p>
+</footer>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Modal -->
+<div id="modalOverlay" onclick="if(event.target===this) closeModal()">
+  <div id="modalBox">
+    <h3 id="modalTitle" class="serif text-2xl mb-3"></h3>
+    <p id="modalBody" class="text-muted mb-6 leading-relaxed"></p>
+    <button onclick="closeModal()" class="pill-btn btn-press px-6 py-2.5 rounded-full bg-ink text-bg text-sm font-medium hover:opacity-85">Got it</button>
+  </div>
+</div>
+
+<script>
+  // Mobile nav
+  document.getElementById('menuBtn').addEventListener('click', () => {
+    document.getElementById('mobileNav').classList.toggle('hidden');
+  });
+
+  // ---------- Toast ----------
+  let toastTimer;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+  }
+
+  // ---------- Modal ----------
+  function showModal(title, body) {
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').textContent = body;
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('show');
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+  // ---------- Generic sliding-thumb tab helper ----------
+  function initSlideGroup(groupEl, thumbEl, buttons, onSelect) {
+    function position(activeBtn, animate = true) {
+      const groupRect = groupEl.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+      if (!animate) thumbEl.style.transition = 'none';
+      thumbEl.style.left = (btnRect.left - groupRect.left) + 'px';
+      thumbEl.style.width = btnRect.width + 'px';
+      if (!animate) requestAnimationFrame(() => { thumbEl.style.transition = ''; });
+    }
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('tab-active'));
+        btn.classList.add('tab-active');
+        position(btn);
+        if (onSelect) onSelect(btn);
+      });
+    });
+    const initiallyActive = groupEl.querySelector('.tab-active') || buttons[0];
+    position(initiallyActive, false);
+    window.addEventListener('resize', () => {
+      const active = groupEl.querySelector('.tab-active') || buttons[0];
+      position(active, false);
+    });
+  }
+
+  // ---------- Showcase tabs (Traffic Manager / Tijori / Community) ----------
+  const useCaseCopy = {
+    traffic: {
+      title: 'Route traffic in one line',
+      desc: 'Point Traffic Manager at your services and get load balancing, routing, and monitoring with a single config line.',
+      link: './traffic/',
+      linkText: 'Open Traffic Manager'
+    },
+    tijori: {
+      title: 'Store secrets safely',
+      desc: 'Tijori keeps your environment variables encrypted and synced across every environment your team touches.',
+      link: './tijori/',
+      linkText: 'Open Tijori'
+    },
+    community: {
+      title: 'Grow with other developers',
+      desc: 'Join the Community Hub to share your open source project, find collaborators, and get feedback from developers using Vasuki tools.',
+      link: './community/dev.html',
+      linkText: 'Open Community'
+    }
+  };
+
+  const useCaseGroup = document.getElementById('useCaseTabs');
+  const useCaseThumb = document.getElementById('useCaseThumb');
+  const useCaseBtns = Array.from(document.querySelectorAll('#useCaseTabs .tab-btn'));
+
+  initSlideGroup(useCaseGroup, useCaseThumb, useCaseBtns, (btn) => {
+    const key = btn.dataset.tab;
+    const copy = useCaseCopy[key];
+    document.getElementById('useCaseTitle').textContent = copy.title;
+    document.getElementById('useCaseDesc').textContent = copy.desc;
+    const link = document.getElementById('useCaseLink');
+    link.href = copy.link;
+    link.textContent = copy.linkText;
+  });
+
+  // ---------- Pricing plan toggle (Individual / Team) ----------
+  const planGroup = document.getElementById('planTabs');
+  const planThumb = document.getElementById('planThumb');
+  const planBtns = Array.from(document.querySelectorAll('.plan-tab'));
+
+  initSlideGroup(planGroup, planThumb, planBtns, (btn) => {
+    if (btn.dataset.plan === 'team') {
+      showToast('Team & Enterprise pricing — contact us for a custom quote');
+    } else {
+      showToast('Showing Individual plans');
+    }
+  });
+</script>
+</body>
+</html>
