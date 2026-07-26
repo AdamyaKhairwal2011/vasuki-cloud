@@ -3,7 +3,7 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 .lenis.lenis-scrolling iframe { pointer-events: none; }
 
-:root {
+:root { 
     --nav-bg: #faf9f5ca;
     --nav-blur: 20px;
     --dropdown-bg: #faf9f5;
