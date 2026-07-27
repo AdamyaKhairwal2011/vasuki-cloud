@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vasuki Community</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBFBF9;
+    --panel:#FFFFFF;
+    --panel-2:#F4F4F1;
+    --border:rgba(0,0,0,0.06);
+    --border-strong:rgba(0,0,0,0.09);
+    --text:#1A1A1A;
+    --text-body:#55534F;
+    --muted:#8A887F;
+    --accent:#CC6633;
+    --accent-dim:#F3E2D6;
+    --danger:#B3503A;
+    --radius:20px;
+    --radius-sm:12px;
+    --serif:"Newsreader",Georgia,"Times New Roman",serif;
+    --sans:"Inter",system-ui,-apple-system,sans-serif;
+    --shadow-card:0 4px 20px rgba(0,0,0,0.03),0 1px 3px rgba(0,0,0,0.02);
+    --shadow-card-hover:0 10px 30px rgba(0,0,0,0.06),0 2px 6px rgba(0,0,0,0.03);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    min-height:100vh;
+  }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  ::selection{background:var(--accent-dim);}
+  *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  #app{display:none;max-width:1200px;margin:0 auto;grid-template-columns:240px 1fr 320px;gap:0;min-height:100vh;}
+  #app.show{display:grid;}
+
+  .sidebar{
+    padding:32px 18px;
+    position:sticky;top:0;height:100vh;
+    display:flex;flex-direction:column;
+    gap:4px;
+  }
+  .brand{
+    font-family:var(--serif);
+    font-size:24px;font-weight:600;letter-spacing:-0.01em;
+    color:var(--text);
+    padding:6px 14px 30px 14px;
+  }
+  .nav-item{
+    display:flex;align-items:center;gap:13px;
+    padding:13px 16px;border-radius:999px;
+    font-size:15.5px;color:var(--text);
+    transition:background .15s ease;
+    background:none;border:none;width:100%;text-align:left;
+  }
+  .nav-item:hover{background:var(--panel-2);}
+  .nav-item.active{font-weight:600;background:var(--panel-2);}
+  .nav-icon{width:20px;text-align:center;font-size:16px;}
+  .post-btn{
+    margin-top:20px;
+    background:#1A1A1A;
+    color:#FFFFFF;
+    border:none;
+    padding:14px 0;
+    border-radius:999px;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:0.1px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.12);
+    transition:background .15s ease, transform .15s ease;
+  }
+  .post-btn:hover{background:#000;transform:translateY(-1px);}
+  .sidebar-footer{margin-top:auto;}
+  .me-chip{
+    display:flex;align-items:center;gap:11px;
+    padding:11px;border-radius:999px;
+    cursor:pointer;background:none;border:none;width:100%;text-align:left;
+  }
+  .me-chip:hover{background:var(--panel-2);}
+  .avatar{
+    width:38px;height:38px;border-radius:50%;
+    background:var(--accent-dim);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:600;color:var(--accent);
+    flex-shrink:0;
+    overflow:hidden;
+    font-size:14px;
+    font-family:var(--serif);
+  }
+  .me-chip .who{display:flex;flex-direction:column;overflow:hidden;}
+  .me-chip .who .n{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;}
+  .me-chip .who .e{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;}
+  .signout-link{font-size:13px;color:var(--danger);padding:9px 14px;display:block;background:none;border:none;width:100%;text-align:left;}
+
+  .main{
+    min-height:100vh;
+    background:var(--bg);
+    padding:0 4px;
+  }
+  .main-header{
+    position:sticky;top:0;background:rgba(251,251,249,0.86);
+    backdrop-filter:blur(10px);
+    padding:22px 26px;
+    border-bottom:1px solid var(--border);
+    font-family:var(--serif);
+    font-size:20px;font-weight:600;
+    z-index:5;
+    display:flex;align-items:center;gap:10px;
+  }
+  .back-btn{
+    display:none;
+    width:32px;height:32px;border-radius:50%;
+    align-items:center;justify-content:center;
+    background:transparent;border:none;color:var(--text);
+    font-size:16px;
+  }
+  .back-btn.show{display:flex;}
+
+  .composer{
+    margin:22px 22px 0 22px;
+    padding:22px;border-radius:var(--radius);
+    display:flex;gap:14px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    box-shadow:var(--shadow-card);
+  }
+  .composer textarea{
+    flex:1;background:transparent;border:none;color:var(--text);
+    font-size:17px;resize:none;outline:none;font-family:var(--sans);
+    min-height:60px;line-height:1.6;
+  }
+  .composer textarea::placeholder{color:var(--muted);}
+  .composer-url{
+    width:100%;background:var(--panel-2);border:1px solid var(--border);
+    color:var(--text);padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;
+    margin-top:10px;outline:none;font-family:var(--sans);
+  }
+  .composer-url.invalid{border-color:var(--danger);}
+  .composer-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px;}
+  .composer-counter{font-size:12px;color:var(--muted);}
+  .composer-counter.warn{color:var(--danger);}
+  .composer-submit{
+    background:#1A1A1A;color:#FFFFFF;border:none;
+    padding:10px 24px;border-radius:999px;font-weight:600;font-size:14px;
+    transition:background .15s ease;
+  }
+  .composer-submit:hover:not(:disabled){background:#000;}
+  .composer-submit:disabled{opacity:0.35;cursor:not-allowed;}
+
+  .feed{padding:20px 22px 40px 22px;display:flex;flex-direction:column;gap:16px;}
+  .post{
+    padding:22px 24px;
+    display:flex;gap:14px;
+    animation:fadein .25s ease;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-card);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .post:hover{transform:translateY(-2px);box-shadow:var(--shadow-card-hover);}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  .post-body{flex:1;min-width:0;}
+  .post-head{display:flex;gap:7px;align-items:baseline;font-size:13.5px;flex-wrap:wrap;font-family:var(--sans);}
+  .post-head .pname{font-weight:600;cursor:pointer;font-family:var(--sans);background:none;border:none;padding:0;color:var(--text);font-size:14px;}
+  .post-head .pname:hover{text-decoration:underline;}
+  .post-head .pemail{color:var(--muted);}
+  .post-head .pdot{color:var(--muted);}
+  .post-head .ptime{color:var(--muted);}
+  .post-content{
+    margin-top:8px;font-size:17px;line-height:1.65;white-space:pre-wrap;word-break:break-word;
+    font-family:var(--serif);color:var(--text);
+  }
+  .post-url{
+    margin-top:14px;display:flex;align-items:center;gap:10px;border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:13px 15px;font-size:13px;color:var(--muted);
+    word-break:break-all;background:var(--panel-2);font-family:var(--sans);
+    transition:background .15s ease;
+  }
+  .icon{width:16px;height:16px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .icon-sm{width:14px;height:14px;}
+  .icon-lg{width:20px;height:20px;}
+  .post-url::before{content:"";}
+  .post-url{position:relative;}
+  .post-url .link-icon{width:14px;height:14px;flex-shrink:0;stroke:var(--muted);}
+  .post-owner-actions{display:flex;gap:6px;margin-left:auto;}
+  .post-icon-btn{
+    display:flex;align-items:center;justify-content:center;
+    width:30px;height:30px;border-radius:999px;background:none;border:none;
+    color:var(--muted);transition:background .15s ease,color .15s ease;
+  }
+  .post-icon-btn:hover{background:var(--panel-2);color:var(--text);}
+  .post-icon-btn.danger:hover{background:#FBE9E5;color:var(--danger);}
+  .post-head-row{display:flex;align-items:flex-start;width:100%;}
+  .edit-post-area{margin-top:8px;}
+  .edit-post-area textarea{
+    width:100%;background:var(--panel-2);border:1px solid var(--border);
+    color:var(--text);padding:12px 14px;border-radius:var(--radius-sm);font-size:15px;
+    font-family:var(--serif);resize:vertical;min-height:70px;outline:none;line-height:1.6;
+  }
+  .edit-post-area input{
+    width:100%;background:var(--panel-2);border:1px solid var(--border);
+    color:var(--text);padding:9px 12px;border-radius:var(--radius-sm);font-size:13px;
+    font-family:var(--sans);margin-top:8px;outline:none;
+  }
+  .edit-post-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;}
+  .post-url:hover{background:#EFEFEA;}
+  .post-actions{display:flex;gap:28px;margin-top:16px;color:var(--muted);font-size:13px;font-family:var(--sans);}
+  .post-action{display:flex;align-items:center;gap:7px;cursor:pointer;background:none;border:none;color:inherit;font-size:inherit;padding:6px 10px;border-radius:999px;transition:background .15s ease,color .15s ease;}
+  .post-action:hover{color:var(--accent);background:var(--accent-dim);}
+  .post-action.liked{color:var(--accent);}
+  .post-action:disabled{opacity:0.5;cursor:wait;}
+
+  .comments-box{margin-top:16px;border-top:1px solid var(--border);padding-top:14px;}
+  .comment-row{display:flex;gap:9px;margin-bottom:10px;font-size:13.5px;}
+  .comment-row .cavatar{
+    width:26px;height:26px;border-radius:50%;background:var(--panel-2);
+    display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;color:var(--accent);font-family:var(--serif);
+  }
+  .comment-row .ctext{background:var(--panel-2);padding:8px 13px;border-radius:var(--radius-sm);flex:1;}
+  .comment-row .cname{font-weight:600;margin-right:6px;}
+  .comment-input-row{display:flex;gap:8px;margin-top:10px;}
+  .comment-input-row input{
+    flex:1;background:var(--panel-2);border:1px solid var(--border);
+    color:var(--text);padding:9px 14px;border-radius:999px;font-size:13px;outline:none;font-family:var(--sans);
+  }
+  .comment-input-row button{
+    background:var(--accent-dim);color:var(--accent);border:none;
+    padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;
+  }
+  .comment-input-row button:disabled{opacity:0.5;cursor:not-allowed;}
+
+  .empty-state{padding:70px 30px;text-align:center;color:var(--muted);background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card);}
+  .empty-state h3{color:var(--text);margin-bottom:8px;font-family:var(--serif);font-weight:600;font-size:19px;}
+  .empty-state button{
+    margin-top:16px;background:#1A1A1A;color:#FFFFFF;border:none;
+    padding:10px 22px;border-radius:999px;font-weight:600;font-size:13px;
+  }
+
+  .skeleton{padding:22px 24px;display:flex;gap:14px;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-card);}
+  .skeleton .avatar{background:var(--panel-2);animation:pulse 1.4s ease-in-out infinite;}
+  .skeleton-lines{flex:1;}
+  .skeleton-line{height:12px;border-radius:6px;background:var(--panel-2);margin-bottom:9px;animation:pulse 1.4s ease-in-out infinite;}
+  .skeleton-line.w60{width:60%;}
+  .skeleton-line.w90{width:90%;}
+  .skeleton-line.w40{width:40%;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.45;}}
+
+  .right-col{padding:32px 20px;}
+  .widget{
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:var(--radius);padding:22px;margin-bottom:18px;
+    box-shadow:var(--shadow-card);
+  }
+  .widget h4{margin:0 0 10px 0;font-size:18px;font-family:var(--serif);font-weight:600;}
+  .widget p{color:var(--text-body);font-size:13.5px;line-height:1.65;margin:0;}
+
+  .profile-banner{height:150px;background:linear-gradient(135deg,#F3E2D6,#EAD3C6 45%,#FBFBF9);margin:22px 22px 0 22px;border-radius:var(--radius) var(--radius) 0 0;}
+  .profile-info{padding:0 26px 20px 26px;position:relative;background:var(--panel);margin:0 22px;border:1px solid var(--border);border-top:none;box-shadow:var(--shadow-card);}
+  .profile-avatar-lg{
+    width:92px;height:92px;border-radius:50%;background:var(--panel);
+    border:4px solid var(--panel);
+    display:flex;align-items:center;justify-content:center;
+    font-size:32px;font-weight:600;color:var(--accent);
+    margin-top:-46px;font-family:var(--serif);
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+  }
+  .profile-editbtn{
+    position:absolute;right:26px;top:20px;
+    background:var(--panel);border:1px solid var(--border-strong);color:var(--text);
+    padding:9px 18px;border-radius:999px;font-weight:600;font-size:13px;
+    transition:background .15s ease,color .15s ease;
+  }
+  .profile-editbtn:hover{background:#1A1A1A;color:#FFFFFF;border-color:#1A1A1A;}
+  .profile-name{font-family:var(--serif);font-size:22px;font-weight:600;margin-top:12px;}
+  .profile-email{color:var(--muted);font-size:14px;}
+  .profile-bio{margin-top:12px;font-size:15px;line-height:1.65;color:var(--text-body);}
+  .profile-upi{margin-top:8px;font-size:13px;color:var(--muted);}
+  .profile-tabs{display:flex;border-top:1px solid var(--border);margin:0 22px;background:var(--panel);border-left:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow-card);}
+  .profile-tab{flex:1;text-align:center;padding:15px 0;color:var(--muted);font-weight:600;font-size:14px;cursor:default;}
+  .profile-tab.active{color:var(--text);border-bottom:2px solid var(--accent);}
+
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(26,26,26,0.4);
+    display:none;align-items:center;justify-content:center;z-index:50;
+    padding:16px;backdrop-filter:blur(2px);
+  }
+  .modal-overlay.show{display:flex;}
+  .modal{
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:var(--radius);padding:28px;width:100%;max-width:430px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.15);
+  }
+  .modal h3{margin-top:0;font-family:var(--serif);font-weight:600;font-size:20px;}
+  .modal label{display:block;font-size:12px;color:var(--muted);margin:16px 0 7px 0;font-weight:500;}
+  .modal input,.modal textarea{
+    width:100%;background:var(--panel-2);border:1px solid var(--border);
+    color:var(--text);padding:11px 13px;border-radius:var(--radius-sm);font-size:14px;outline:none;
+    font-family:var(--sans);
+  }
+  .modal textarea{resize:vertical;min-height:74px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;}
+  .btn-secondary{background:transparent;border:1px solid var(--border-strong);color:var(--text);padding:10px 20px;border-radius:999px;font-size:14px;transition:background .15s ease;}
+  .btn-secondary:hover{background:var(--panel-2);}
+  .btn-primary{background:#1A1A1A;border:none;color:#FFFFFF;padding:10px 20px;border-radius:999px;font-weight:600;font-size:14px;transition:background .15s ease;}
+  .btn-primary:hover:not(:disabled){background:#000;}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+  .modal-error{color:var(--danger);font-size:13px;margin-top:12px;min-height:16px;}
+
+  #authScreen{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:20px;
+    background:var(--bg);
+  }
+  .auth-card{
+    width:100%;max-width:410px;background:var(--panel);
+    border:1px solid var(--border);border-radius:24px;padding:38px 34px;
+    box-shadow:var(--shadow-card-hover);
+  }
+  .auth-brand{font-family:var(--serif);font-size:28px;font-weight:600;color:var(--text);margin-bottom:8px;letter-spacing:-0.01em;}
+  .auth-sub{color:var(--text-body);font-size:14.5px;margin-bottom:26px;line-height:1.6;}
+  .auth-tabs{display:flex;background:var(--panel-2);border-radius:999px;padding:4px;margin-bottom:22px;}
+  .auth-tab{flex:1;text-align:center;padding:10px 0;border-radius:999px;font-size:14px;font-weight:600;color:var(--muted);background:none;border:none;transition:background .15s ease,color .15s ease;}
+  .auth-tab.active{background:#1A1A1A;color:#FFFFFF;}
+  .auth-field label{display:block;font-size:12px;color:var(--muted);margin:14px 0 7px 0;font-weight:500;}
+  .auth-field input{
+    width:100%;background:var(--panel-2);border:1px solid var(--border);
+    color:var(--text);padding:12px 14px;border-radius:var(--radius-sm);font-size:14px;outline:none;font-family:var(--sans);
+  }
+  .auth-field input.invalid{border-color:var(--danger);}
+  .auth-field-error{font-size:12px;color:var(--danger);margin-top:5px;min-height:14px;}
+  .auth-submit{
+    width:100%;margin-top:24px;background:#1A1A1A;border:none;
+    color:#FFFFFF;padding:14px 0;border-radius:999px;font-weight:600;font-size:15px;
+    box-shadow:0 4px 14px rgba(0,0,0,0.12);
+    transition:background .15s ease;
+  }
+  .auth-submit:hover:not(:disabled){background:#000;}
+  .auth-submit:disabled{opacity:0.5;cursor:not-allowed;}
+  .auth-msg{margin-top:16px;font-size:13px;text-align:center;min-height:16px;}
+  .auth-msg.error{color:var(--danger);}
+  .auth-msg.info{color:var(--muted);}
+  .auth-msg.notice{color:var(--accent);}
+
+  .spinner{
+    width:16px;height:16px;border-radius:50%;
+    border:2px solid rgba(255,255,255,0.3);border-top-color:#FFFFFF;
+    display:inline-block;animation:spin .6s linear infinite;vertical-align:-3px;margin-right:6px;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .toast-stack{
+    position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;gap:8px;align-items:center;
+    z-index:80;pointer-events:none;
+  }
+  .toast{
+    background:#1A1A1A;color:#FFFFFF;border:1px solid var(--border);
+    padding:13px 22px;border-radius:999px;font-size:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.16);
+    opacity:0;transform:translateY(10px);transition:opacity .2s ease, transform .2s ease;
+  }
+  .toast.error{background:var(--danger);}
+  .toast.show{opacity:1;transform:translateY(0);}
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+
+  @media (max-width:900px){
+    #app.show{grid-template-columns:76px 1fr;}
+    .right-col{display:none;}
+    .brand{font-size:0;}
+    .brand::after{content:"V";font-size:22px;}
+    .nav-item span.label{display:none;}
+    .me-chip .who{display:none;}
+    .composer{margin:16px;}
+    .feed{padding:16px;}
+    .profile-banner,.profile-info,.profile-tabs{margin-left:16px;margin-right:16px;}
+  }
+  @media (max-width:560px){
+    .post{padding:16px;}
+    .composer{padding:16px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= AUTH SCREEN ================= -->
+<div id="authScreen">
+  <div class="auth-card">
+    <div class="auth-brand">Vasuki Community</div>
+    <div class="auth-sub" id="authSubText">Connect, share, and ship without limits.</div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabSignin" onclick="switchAuthTab('signin')">Sign in</div>
+      <div class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Create account</div>
+    </div>
+
+    <div id="authForm">
+      <div class="auth-field" id="fieldName" style="display:none;">
+        <label>Name</label>
+        <input type="text" id="inputName" placeholder="Your name" autocomplete="name">
+      </div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="inputEmail" placeholder="you@example.com" autocomplete="username">
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input type="password" id="inputPassword" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="auth-submit" id="authSubmitBtn" onclick="handleAuthSubmit()">Sign in</button>
+      <div class="auth-msg" id="authMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP SHELL ================= -->
+<div id="app">
+  <div class="sidebar">
+    <div class="brand">Vasuki</div>
+    <div class="nav-item active" id="navHome" onclick="goHome()">
+      <span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg></span><span class="label">Home</span>
+    </div>
+    <div class="nav-item" id="navProfile" onclick="openOwnProfile()">
+      <span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/></svg></span><span class="label">Profile</span>
+    </div>
+    <button class="post-btn" onclick="focusComposer()">Post</button>
+
+    <div class="sidebar-footer">
+      <div class="me-chip" onclick="openOwnProfile()">
+        <div class="avatar" id="sideAvatar">?</div>
+        <div class="who">
+          <div class="n" id="sideName">—</div>
+          <div class="e" id="sideEmail">—</div>
+        </div>
+      </div>
+      <a class="signout-link" onclick="signOut()">Sign out</a>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="main-header">
+      <button class="back-btn" id="backBtn" onclick="goHome()"><svg class="icon" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7"/></svg></button>
+      <span id="mainTitle">Home</span>
+    </div>
+
+    <!-- Home view -->
+    <div id="homeView">
+      <div class="composer">
+        <div class="avatar" id="composerAvatar">?</div>
+        <div style="flex:1;">
+          <textarea id="postContent" placeholder="What's happening in your dev world?" rows="2" oninput="autoGrow(this); toggleSubmit();"></textarea>
+          <input type="url" class="composer-url" id="postUrl" placeholder="Add a link (optional) — https://..." oninput="toggleSubmit()">
+          <div class="composer-bottom">
+            <button class="composer-submit" id="submitPostBtn" disabled onclick="submitPost()">Post</button>
+          </div>
+        </div>
+      </div>
+      <div class="feed" id="feed">
+        <div class="empty-state"><h3>Loading feed…</h3></div>
+      </div>
+    </div>
+
+    <!-- Profile view -->
+    <div id="profileView" style="display:none;">
+      <div class="profile-banner"></div>
+      <div class="profile-info">
+        <button class="profile-editbtn" id="editProfileBtn" style="display:none;" onclick="openEditModal()">Edit profile</button>
+        <div class="profile-avatar-lg" id="profileAvatarLg">?</div>
+        <div class="profile-name" id="profileName">—</div>
+        <div class="profile-email" id="profileEmail">—</div>
+        <div class="profile-bio" id="profileBio"></div>
+        <div class="profile-upi" id="profileUpi"></div>
+      </div>
+      <div class="profile-tabs">
+        <div class="profile-tab active">Posts</div>
+      </div>
+      <div class="feed" id="profileFeed"></div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="widget">
+      <h4>Welcome</h4>
+      <p>Vasuki Community is a standalone dev community — post updates, share links, and connect with other builders. No algorithms, just the feed.</p>
+    </div>
+    <div class="widget">
+      <h4>Tips</h4>
+      <p>Click any name to view their profile. Add a link to your post using the URL field under the composer.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Edit profile modal -->
+<div class="modal-overlay" id="editModalOverlay">
+  <div class="modal">
+    <h3>Edit profile</h3>
+    <label>Name</label>
+    <input type="text" id="editName">
+    <label>Bio</label>
+    <textarea id="editBio" placeholder="Tell people about yourself"></textarea>
+    <label>UPI ID</label>
+    <input type="text" id="editUpi" placeholder="yourname@upi">
+    <div class="modal-error" id="editModalError"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-primary" id="saveProfileBtn" onclick="saveProfile()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   CONFIG
+========================================================= */
+const SUPABASE_URL = "https://aitckloahlwemlekaour.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA";
+const REST_URL = SUPABASE_URL + "/rest/v1";
+
+function sbHeaders(extra){
+  return Object.assign({
+    "apikey": SUPABASE_ANON_KEY,
+    "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+    "Content-Type": "application/json"
+  }, extra || {});
+}
+
+/* =========================================================
+   STATE
+========================================================= */
+let currentUser = null;   // { id, username, name, bio, upi_id, ... }
+let currentView = "home"; // home | profile
+let viewedProfileEmail = null;
+let authMode = "signin";
+
+/* =========================================================
+   HELPERS
+========================================================= */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+function escapeHtml(str){
+  if(str === null || str === undefined) return "";
+  return String(str)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
+
+function initials(nameOrEmail){
+  if(!nameOrEmail) return "?";
+  const clean = nameOrEmail.trim();
+  const parts = clean.split(/\s+/);
+  if(parts.length >= 2){
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return clean.substring(0,2).toUpperCase();
+}
+
+function timeAgo(ts){
+  const d = new Date(ts);
+  const diff = Math.floor((Date.now() - d.getTime())/1000);
+  if(diff < 60) return diff + "s";
+  if(diff < 3600) return Math.floor(diff/60) + "m";
+  if(diff < 86400) return Math.floor(diff/3600) + "h";
+  if(diff < 604800) return Math.floor(diff/86400) + "d";
+  return d.toLocaleDateString();
+}
+
+function autoGrow(el){
+  el.style.height = 'auto';
+  el.style.height = (el.scrollHeight) + 'px';
+}
+
+function isValidUrl(str){
+  if(!str) return true;
+  try{ new URL(str); return true; }catch(e){ return false; }
+}
+
+/* =========================================================
+   AUTH
+========================================================= */
+function switchAuthTab(mode){
+  authMode = mode;
+  document.getElementById('tabSignin').classList.toggle('active', mode==='signin');
+  document.getElementById('tabSignup').classList.toggle('active', mode==='signup');
+  document.getElementById('fieldName').style.display = mode==='signup' ? 'block' : 'none';
+  document.getElementById('authSubmitBtn').textContent = mode==='signup' ? 'Create account' : 'Sign in';
+  document.getElementById('authMsg').textContent = '';
+  document.getElementById('authMsg').className = 'auth-msg';
+}
+
+async function handleAuthSubmit(){
+  const email = document.getElementById('inputEmail').value.trim().toLowerCase();
+  const password = document.getElementById('inputPassword').value;
+  const name = document.getElementById('inputName').value.trim();
+  const msgEl = document.getElementById('authMsg');
+  const btn = document.getElementById('authSubmitBtn');
+
+  msgEl.textContent = '';
+  msgEl.className = 'auth-msg';
+
+  if(!email || !password){
+    msgEl.textContent = 'Email and password are required.';
+    msgEl.className = 'auth-msg error';
+    return;
+  }
+  if(authMode === 'signup' && !name){
+    msgEl.textContent = 'Please enter your name.';
+    msgEl.className = 'auth-msg error';
+    return;
+  }
+
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.innerHTML = '<span class="spinner"></span>Please wait';
+
+  try{
+    if(authMode === 'signup'){
+      await doSignUp(email, password, name);
+    } else {
+      await doSignIn(email, password);
+    }
+  } catch(err){
+    msgEl.textContent = err.message || 'Something went wrong.';
+    msgEl.className = 'auth-msg error';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
+async function doSignUp(email, password, name){
+  // check existing
+  const checkRes = await fetch(`${REST_URL}/users?username=eq.${encodeURIComponent(email)}&select=id`, {
+    headers: sbHeaders()
+  });
+  if(!checkRes.ok) throw new Error('Could not reach server.');
+  const existing = await checkRes.json();
+  if(existing.length > 0){
+    throw new Error('An account with this email already exists. Try signing in.');
+  }
+
+  const createRes = await fetch(`${REST_URL}/users`, {
+    method: 'POST',
+    headers: sbHeaders({ "Prefer": "return=representation" }),
+    body: JSON.stringify({ username: email, password: password, name: name })
+  });
+  if(!createRes.ok){
+    const t = await createRes.text();
+    throw new Error('Could not create account. ' + t);
+  }
+  const rows = await createRes.json();
+  const user = rows[0];
+  localStorage.setItem('vcloud_user', email);
+  currentUser = user;
+  enterApp();
+}
+
+async function doSignIn(email, password){
+  const res = await fetch(`${REST_URL}/users?username=eq.${encodeURIComponent(email)}&select=*`, {
+    headers: sbHeaders()
+  });
+  if(!res.ok) throw new Error('Could not reach server.');
+  const rows = await res.json();
+  if(rows.length === 0){
+    throw new Error('No account found with this email.');
+  }
+  const user = rows[0];
+  if(user.password !== password){
+    throw new Error('Incorrect password.');
+  }
+  localStorage.setItem('vcloud_user', email);
+  currentUser = user;
+  enterApp();
+}
+
+function signOut(){
+  localStorage.removeItem('vcloud_user');
+  currentUser = null;
+  document.getElementById('app').classList.remove('show');
+  document.getElementById('authScreen').style.display = 'flex';
+  document.getElementById('inputEmail').value = '';
+  document.getElementById('inputPassword').value = '';
+  document.getElementById('authMsg').textContent = 'Signed out.';
+  document.getElementById('authMsg').className = 'auth-msg info';
+}
+
+async function checkStoredSession(){
+  const storedEmail = localStorage.getItem('vcloud_user');
+  if(!storedEmail){
+    document.getElementById('authMsg').textContent = 'No email found in localStorage. Please sign in.';
+    document.getElementById('authMsg').className = 'auth-msg notice';
+    return;
+  }
+  try{
+    const res = await fetch(`${REST_URL}/users?username=eq.${encodeURIComponent(storedEmail)}&select=*`, {
+      headers: sbHeaders()
+    });
+    if(!res.ok) throw new Error();
+    const rows = await res.json();
+    if(rows.length === 0){
+      localStorage.removeItem('vcloud_user');
+      document.getElementById('authMsg').textContent = 'Session expired. Please sign in again.';
+      document.getElementById('authMsg').className = 'auth-msg notice';
+      return;
+    }
+    currentUser = rows[0];
+    enterApp();
+  } catch(e){
+    document.getElementById('authMsg').textContent = 'Could not verify session. Please sign in.';
+    document.getElementById('authMsg').className = 'auth-msg notice';
+  }
+}
+
+/* =========================================================
+   APP ENTRY / NAV
+========================================================= */
+function enterApp(){
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('app').classList.add('show');
+  renderIdentityChrome();
+  goHome();
+}
+
+function renderIdentityChrome(){
+  const name = currentUser.name || currentUser.username;
+  document.getElementById('sideName').textContent = currentUser.name || currentUser.username;
+  document.getElementById('sideEmail').textContent = currentUser.username;
+  document.getElementById('sideAvatar').textContent = initials(name);
+  document.getElementById('composerAvatar').textContent = initials(name);
+}
+
+function goHome(){
+  currentView = "home";
+  document.getElementById('homeView').style.display = 'block';
+  document.getElementById('profileView').style.display = 'none';
+  document.getElementById('mainTitle').textContent = 'Home';
+  document.getElementById('backBtn').classList.remove('show');
+  document.getElementById('navHome').classList.add('active');
+  document.getElementById('navProfile').classList.remove('active');
+  loadFeed();
+}
+
+function focusComposer(){
+  goHome();
+  setTimeout(()=>document.getElementById('postContent').focus(), 100);
+}
+
+function openOwnProfile(){
+  openProfile(currentUser.username);
+}
+
+function openProfile(email){
+  currentView = "profile";
+  viewedProfileEmail = email;
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('profileView').style.display = 'block';
+  document.getElementById('backBtn').classList.add('show');
+  document.getElementById('navHome').classList.remove('active');
+  document.getElementById('navProfile').classList.toggle('active', email === currentUser.username);
+  loadProfile(email);
+}
+
+function toggleSubmit(){
+  const content = document.getElementById('postContent').value.trim();
+  const url = document.getElementById('postUrl').value.trim();
+  const btn = document.getElementById('submitPostBtn');
+  const urlValid = isValidUrl(url);
+  btn.disabled = !(content.length > 0 && urlValid);
+}
+
+/* =========================================================
+   POSTS
+========================================================= */
+async function submitPost(){
+  const contentEl = document.getElementById('postContent');
+  const urlEl = document.getElementById('postUrl');
+  const content = contentEl.value.trim();
+  const url = urlEl.value.trim();
+  const btn = document.getElementById('submitPostBtn');
+
+  if(!content) return;
+  if(url && !isValidUrl(url)){
+    showToast('That link doesn\'t look valid.');
+    return;
+  }
+
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.innerHTML = '<span class="spinner"></span>Posting';
+
+  try{
+    const res = await fetch(`${REST_URL}/posts`, {
+      method: 'POST',
+      headers: sbHeaders({ "Prefer": "return=representation" }),
+      body: JSON.stringify({
+        content: content,
+        author_email: currentUser.username,
+        associated_url_with_post_content_by_author: url || null
+      })
+    });
+    if(!res.ok) throw new Error('Failed to post.');
+    contentEl.value = '';
+    contentEl.style.height = 'auto';
+    urlEl.value = '';
+    showToast('Posted!');
+    loadFeed();
+  } catch(err){
+    showToast(err.message || 'Could not post.');
+  } finally {
+    btn.textContent = originalText;
+    toggleSubmit();
+  }
+}
+
+async function loadFeed(){
+  const feedEl = document.getElementById('feed');
+  feedEl.innerHTML = '<div class="empty-state"><h3>Loading feed…</h3></div>';
+  try{
+    const res = await fetch(`${REST_URL}/posts?select=*&order=timestamp.desc`, {
+      headers: sbHeaders()
+    });
+    if(!res.ok) throw new Error();
+    const posts = await res.json();
+    renderPosts(posts, feedEl, false);
+  } catch(e){
+    feedEl.innerHTML = '<div class="empty-state"><h3>Could not load feed</h3><p>Check your connection and try again.</p></div>';
+  }
+}
+
+async function loadProfile(email){
+  const nameCache = {}; // not needed but kept simple
+  const feedEl = document.getElementById('profileFeed');
+  feedEl.innerHTML = '<div class="empty-state"><h3>Loading…</h3></div>';
+
+  try{
+    const userRes = await fetch(`${REST_URL}/users?username=eq.${encodeURIComponent(email)}&select=*`, {
+      headers: sbHeaders()
+    });
+    if(!userRes.ok) throw new Error();
+    const rows = await userRes.json();
+    if(rows.length === 0){
+      document.getElementById('mainTitle').textContent = 'Profile not found';
+      feedEl.innerHTML = '<div class="empty-state"><h3>User not found</h3></div>';
+      return;
+    }
+    const user = rows[0];
+    const displayName = user.name || user.username;
+
+    document.getElementById('mainTitle').textContent = displayName;
+    document.getElementById('profileAvatarLg').textContent = initials(displayName);
+    document.getElementById('profileName').textContent = displayName;
+    document.getElementById('profileEmail').textContent = user.username;
+    document.getElementById('profileBio').textContent = user.bio || '';
+    document.getElementById('profileUpi').textContent = user.upi_id ? ('UPI: ' + user.upi_id) : '';
+
+    const isOwn = user.username === currentUser.username;
+    document.getElementById('editProfileBtn').style.display = isOwn ? 'inline-block' : 'none';
+
+    // store viewed user for edit modal prefill
+    window._viewedUser = user;
+
+    const postsRes = await fetch(`${REST_URL}/posts?author_email=eq.${encodeURIComponent(email)}&select=*&order=timestamp.desc`, {
+      headers: sbHeaders()
+    });
+    if(!postsRes.ok) throw new Error();
+    const posts = await postsRes.json();
+    renderPosts(posts, feedEl, true);
+  } catch(e){
+    feedEl.innerHTML = '<div class="empty-state"><h3>Could not load profile</h3></div>';
+  }
+}
+
+function renderPosts(posts, container, isProfileFeed){
+  if(posts.length === 0){
+    container.innerHTML = `<div class="empty-state"><h3>No posts yet</h3><p>${isProfileFeed ? 'This person hasn\'t posted anything.' : 'Be the first to share something.'}</p></div>`;
+    return;
+  }
+  container.innerHTML = posts.map(p => renderSinglePost(p)).join('');
+}
+
+const ICONS = {
+  link: `<svg class="icon icon-sm link-icon" viewBox="0 0 24 24"><path d="M9 15 15 9"/><path d="M11 6l1.5-1.5a4 4 0 0 1 5.66 5.66L16.5 11.7"/><path d="M13 18l-1.5 1.5a4 4 0 0 1-5.66-5.66L7.5 12.3"/></svg>`,
+  heartOutline: `<svg class="icon" viewBox="0 0 24 24"><path d="M12 20s-7-4.35-9.5-8.5C.7 8.2 2.2 4.5 6 4.5c2 0 3.4 1.1 4 2.3.6-1.2 2-2.3 4-2.3 3.8 0 5.3 3.7 3.5 7C19 15.65 12 20 12 20z"/></svg>`,
+  heartFilled: `<svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 20s-7-4.35-9.5-8.5C.7 8.2 2.2 4.5 6 4.5c2 0 3.4 1.1 4 2.3.6-1.2 2-2.3 4-2.3 3.8 0 5.3 3.7 3.5 7C19 15.65 12 20 12 20z"/></svg>`,
+  comment: `<svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a7.5 7.5 0 0 1-7.5 7.5H8l-4 3 .8-4.2A7.5 7.5 0 1 1 21 11.5z"/></svg>`,
+  edit: `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
+  trash: `<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>`
+};
+
+function renderSinglePost(p){
+  const comments = Array.isArray(p.comments) ? p.comments : [];
+  const likeCount = p.likes || 0;
+  const isOwner = currentUser && p.author_email === currentUser.username;
+  const urlBlock = p.associated_url_with_post_content_by_author
+    ? `<a class="post-url" href="${escapeHtml(p.associated_url_with_post_content_by_author)}" target="_blank" rel="noopener noreferrer">${ICONS.link} ${escapeHtml(p.associated_url_with_post_content_by_author)}</a>`
+    : '';
+
+  const commentsHtml = comments.map(c => `
+    <div class="comment-row">
+      <div class="cavatar">${escapeHtml(initials(c.author || c.author_email || '?'))}</div>
+      <div class="ctext"><span class="cname">${escapeHtml(c.author_name || c.author_email || 'Someone')}</span>${escapeHtml(c.text || '')}</div>
+    </div>
+  `).join('');
+
+  const ownerActions = isOwner ? `
+    <div class="post-owner-actions">
+      <button class="post-icon-btn" title="Edit post" onclick="startEditPost('${p.id}')">${ICONS.edit}</button>
+      <button class="post-icon-btn danger" title="Delete post" onclick="deletePost('${p.id}')">${ICONS.trash}</button>
+    </div>
+  ` : '';
+
+  return `
+    <div class="post" data-post-id="${p.id}">
+      <div class="avatar" data-avatar-for="${escapeHtml(p.author_email)}">${initials(p.author_email)}</div>
+      <div class="post-body">
+        <div class="post-head-row">
+          <div class="post-head">
+            <span class="pname" data-name-for="${escapeHtml(p.author_email)}" onclick="openProfile('${escapeHtml(p.author_email)}')">${escapeHtml(p.author_email)}</span>
+            <span class="pemail" data-handle-for="${escapeHtml(p.author_email)}"></span>
+            <span class="pdot">·</span>
+            <span class="ptime">${timeAgo(p.timestamp)}</span>
+          </div>
+          ${ownerActions}
+        </div>
+        <div id="postView-${p.id}">
+          <div class="post-content">${escapeHtml(p.content)}</div>
+          ${urlBlock}
+        </div>
+        <div class="post-actions">
+          <div class="post-action" onclick="toggleLike('${p.id}', this)">
+            <span class="like-icon">${ICONS.heartOutline}</span><span class="like-count">${likeCount}</span>
+          </div>
+          <div class="post-action" onclick="toggleCommentBox('${p.id}')">
+            ${ICONS.comment} <span>${comments.length}</span>
+          </div>
+        </div>
+        <div class="comments-box" id="comments-${p.id}" style="display:none;">
+          ${commentsHtml}
+          <div class="comment-input-row">
+            <input type="text" placeholder="Write a comment…" id="commentInput-${p.id}" onkeydown="if(event.key==='Enter') addComment('${p.id}')">
+            <button onclick="addComment('${p.id}')">Reply</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------- Post CRUD: edit ---------- */
+function startEditPost(postId){
+  const viewEl = document.getElementById('postView-' + postId);
+  if(!viewEl) return;
+  const postEl = viewEl.closest('.post');
+  const contentEl = postEl.querySelector('.post-content');
+  const urlLink = postEl.querySelector('.post-url');
+  const currentContent = contentEl.textContent;
+  const currentUrl = urlLink ? urlLink.getAttribute('href') : '';
+
+  viewEl.innerHTML = `
+    <div class="edit-post-area">
+      <textarea id="editContent-${postId}">${escapeHtml(currentContent)}</textarea>
+      <input type="url" id="editUrl-${postId}" placeholder="Link (optional) — https://..." value="${escapeHtml(currentUrl || '')}">
+      <div class="edit-post-actions">
+        <button class="btn-secondary" onclick="cancelEditPost('${postId}')">Cancel</button>
+        <button class="btn-primary" onclick="saveEditPost('${postId}')">Save</button>
+      </div>
+    </div>
+  `;
+}
+
+function cancelEditPost(postId){
+  if(currentView === 'home') loadFeed();
+  else loadProfile(viewedProfileEmail);
+}
+
+async function saveEditPost(postId){
+  const contentEl = document.getElementById('editContent-' + postId);
+  const urlEl = document.getElementById('editUrl-' + postId);
+  const content = contentEl.value.trim();
+  const url = urlEl.value.trim();
+
+  if(!content){
+    showToast('Post cannot be empty.');
+    return;
+  }
+  if(url && !isValidUrl(url)){
+    showToast('That link doesn\'t look valid.');
+    return;
+  }
+
+  try{
+    const res = await fetch(`${REST_URL}/posts?id=eq.${postId}`, {
+      method: 'PATCH',
+      headers: sbHeaders({ "Prefer": "return=representation" }),
+      body: JSON.stringify({
+        content: content,
+        associated_url_with_post_content_by_author: url || null
+      })
+    });
+    if(!res.ok) throw new Error('Failed to update post.');
+    showToast('Post updated.');
+    if(currentView === 'home') loadFeed();
+    else loadProfile(viewedProfileEmail);
+  } catch(e){
+    showToast(e.message || 'Could not update post.');
+  }
+}
+
+/* ---------- Post CRUD: delete ---------- */
+async function deletePost(postId){
+  if(!confirm('Delete this post? This cannot be undone.')) return;
+
+  try{
+    const res = await fetch(`${REST_URL}/posts?id=eq.${postId}`, {
+      method: 'DELETE',
+      headers: sbHeaders()
+    });
+    if(!res.ok) throw new Error('Failed to delete post.');
+    showToast('Post deleted.');
+    if(currentView === 'home') loadFeed();
+    else loadProfile(viewedProfileEmail);
+  } catch(e){
+    showToast(e.message || 'Could not delete post.');
+  }
+}
+
+/* resolve display names for post authors after render, so feed loads fast */
+async function resolveAuthorNames(container){
+  const nameEls = container.querySelectorAll('[data-name-for]');
+  const uniqueEmails = [...new Set([...nameEls].map(el => el.getAttribute('data-name-for')))];
+  for(const email of uniqueEmails){
+    try{
+      const res = await fetch(`${REST_URL}/users?username=eq.${encodeURIComponent(email)}&select=name,username`, {
+        headers: sbHeaders()
+      });
+      if(!res.ok) continue;
+      const rows = await res.json();
+      if(rows.length === 0) continue;
+      const u = rows[0];
+      const display = u.name || u.username;
+      container.querySelectorAll(`[data-name-for="${CSS.escape(email)}"]`).forEach(el => el.textContent = display);
+      container.querySelectorAll(`[data-handle-for="${CSS.escape(email)}"]`).forEach(el => el.textContent = '@' + email.split('@')[0]);
+      container.querySelectorAll(`[data-avatar-for="${CSS.escape(email)}"]`).forEach(el => el.textContent = initials(display));
+    } catch(e){ /* ignore individual failures */ }
+  }
+}
+
+/* hook resolution into render calls */
+const _origRenderPosts = renderPosts;
+renderPosts = function(posts, container, isProfileFeed){
+  _origRenderPosts(posts, container, isProfileFeed);
+  resolveAuthorNames(container);
+};
+
+function toggleCommentBox(postId){
+  const box = document.getElementById('comments-' + postId);
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
+async function toggleLike(postId, el){
+  const countEl = el.querySelector('.like-count');
+  const iconEl = el.querySelector('.like-icon');
+  const alreadyLiked = el.classList.contains('liked');
+
+  try{
+    const getRes = await fetch(`${REST_URL}/posts?id=eq.${postId}&select=likes`, { headers: sbHeaders() });
+    if(!getRes.ok) throw new Error();
+    const rows = await getRes.json();
+    if(rows.length === 0) return;
+    const current = rows[0].likes || 0;
+    const newVal = alreadyLiked ? Math.max(0, current - 1) : current + 1;
+
+    const patchRes = await fetch(`${REST_URL}/posts?id=eq.${postId}`, {
+      method: 'PATCH',
+      headers: sbHeaders({ "Prefer": "return=representation" }),
+      body: JSON.stringify({ likes: newVal })
+    });
+    if(!patchRes.ok) throw new Error();
+
+    el.classList.toggle('liked');
+    iconEl.textContent = alreadyLiked ? '🤍' : '❤️';
+    countEl.textContent = newVal;
+  } catch(e){
+    showToast('Could not update like.');
+  }
+}
+
+async function addComment(postId){
+  const input = document.getElementById('commentInput-' + postId);
+  const text = input.value.trim();
+  if(!text) return;
+
+  try{
+    const getRes = await fetch(`${REST_URL}/posts?id=eq.${postId}&select=comments`, { headers: sbHeaders() });
+    if(!getRes.ok) throw new Error();
+    const rows = await getRes.json();
+    if(rows.length === 0) return;
+    const comments = Array.isArray(rows[0].comments) ? rows[0].comments : [];
+    comments.push({
+      author_email: currentUser.username,
+      author_name: currentUser.name || currentUser.username,
+      text: text,
+      ts: new Date().toISOString()
+    });
+
+    const patchRes = await fetch(`${REST_URL}/posts?id=eq.${postId}`, {
+      method: 'PATCH',
+      headers: sbHeaders({ "Prefer": "return=representation" }),
+      body: JSON.stringify({ comments: comments })
+    });
+    if(!patchRes.ok) throw new Error();
+
+    input.value = '';
+    // refresh whichever view we are in
+    if(currentView === 'home') loadFeed();
+    else loadProfile(viewedProfileEmail);
+  } catch(e){
+    showToast('Could not add comment.');
+  }
+}
+
+/* =========================================================
+   PROFILE EDIT
+========================================================= */
+function openEditModal(){
+  const u = window._viewedUser || currentUser;
+  document.getElementById('editName').value = u.name || '';
+  document.getElementById('editBio').value = u.bio || '';
+  document.getElementById('editUpi').value = u.upi_id || '';
+  document.getElementById('editModalError').textContent = '';
+  document.getElementById('editModalOverlay').classList.add('show');
+}
+
+function closeEditModal(){
+  document.getElementById('editModalOverlay').classList.remove('show');
+}
+
+async function saveProfile(){
+  const name = document.getElementById('editName').value.trim();
+  const bio = document.getElementById('editBio').value.trim();
+  const upi = document.getElementById('editUpi').value.trim();
+  const errEl = document.getElementById('editModalError');
+  const btn = document.getElementById('saveProfileBtn');
+
+  if(!name){
+    errEl.textContent = 'Name cannot be empty.';
+    return;
+  }
+
+  btn.disabled = true;
+  const originalText = btn.textContent;
+  btn.innerHTML = '<span class="spinner"></span>Saving';
+
+  try{
+    const res = await fetch(`${REST_URL}/users?username=eq.${encodeURIComponent(currentUser.username)}`, {
+      method: 'PATCH',
+      headers: sbHeaders({ "Prefer": "return=representation" }),
+      body: JSON.stringify({ name: name, bio: bio, upi_id: upi || null })
+    });
+    if(!res.ok) throw new Error('Could not save changes.');
+    const rows = await res.json();
+    currentUser = rows[0];
+    renderIdentityChrome();
+    closeEditModal();
+    showToast('Profile updated.');
+    loadProfile(currentUser.username);
+  } catch(e){
+    errEl.textContent = e.message || 'Something went wrong.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+document.getElementById('inputPassword').addEventListener('keydown', function(e){
+  if(e.key === 'Enter') handleAuthSubmit();
+});
+
+checkStoredSession();
+</script>
+</body>
+</html>
