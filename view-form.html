@@ -4,20 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vasuki Forms</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pt+serif:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --accent: #363636;
-            --accent-rgb: 54, 54, 54;
-            --accent-light: #F4F4F2;
-            --bg: #F0EDE6;
-            --card: #FFFFFF;
-            --text: #202124;
-            --text-secondary: #6B7280;
-            --border: #E2E2DF;
-            --radius: 10px;
-            --shadow: 0 1px 4px rgba(0,0,0,0.08), 0 6px 20px rgba(0,0,0,0.10);
+            --accent: #1A1A1A;
+            --accent-rgb: 26, 26, 26;
+            --accent-light: #F4EFE7;
+            --bg: #faf9f5;
+            --card: #f0eee6;
+            --text: #1A1A1A;
+            --text-secondary: #8A8578;
+            --border: #E5E0D5;
+            --radius: 16px;
+            --shadow: 0 1px 4px rgba(26,26,26,0.05), 0 10px 30px rgba(26,26,26,0.06);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,7 +38,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 3px;
-            background: rgba(0,0,0,0.06);
+            background: rgba(26,26,26,0.06);
             z-index: 100;
         }
 
@@ -60,8 +60,9 @@
         /* ── CARDS ────────────────────────────────────── */
         .step-card {
             background: var(--card);
+            border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 44px 48px;
+            padding: 48px 52px;
             display: none;
             flex-direction: column;
             opacity: 0;
@@ -81,11 +82,13 @@
 
         /* ── TYPOGRAPHY ───────────────────────────────── */
         .form-title {
-            font-size: 26px;
-            font-weight: 600;
+            font-family: 'pt serif', serif;
+            font-size: 30px;
+            font-weight: 100;
             color: var(--text);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             line-height: 1.3;
+            letter-spacing: -0.01em;
         }
 
         .form-desc {
@@ -96,23 +99,24 @@
         }
 
         .q-label {
-            font-size: 20px;
-            font-weight: 500;
+            font-family: 'pt serif', serif;
+            font-size: 22px;
+            font-weight: 100;
             color: var(--text);
             margin-bottom: 28px;
             line-height: 1.45;
         }
 
         .q-label .required-star {
-            color: #E53E3E;
+            color: #C0392B;
             margin-left: 2px;
         }
 
         .step-counter {
-            font-family: 'DM Mono', monospace;
+            font-family: 'inter',arial;
             font-size: 11px;
             color: var(--text-secondary);
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             margin-bottom: 18px;
         }
@@ -135,7 +139,7 @@
         }
 
         .input-field:focus { border-bottom-color: var(--accent); }
-        .input-field::placeholder { color: #B0ADA8; }
+        .input-field::placeholder { color: #C7C2B4; }
 
         /* ── OPTIONS ──────────────────────────────────── */
         .options-list { display: flex; flex-direction: column; gap: 10px; }
@@ -145,13 +149,13 @@
             align-items: center;
             padding: 14px 16px;
             border: 1.5px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             transition: background 0.18s, border-color 0.18s;
             user-select: none;
         }
 
-        .option-row:hover { background: var(--accent-light); border-color: #C8C8C4; }
+        .option-row:hover { background: var(--accent-light); border-color: #D6D0C2; }
 
         .option-row input[type="radio"],
         .option-row input[type="checkbox"] {
@@ -173,12 +177,12 @@
         /* ── VALIDATION ───────────────────────────────── */
         .field-error {
             font-size: 12px;
-            color: #E53E3E;
+            color: #C0392B;
             margin-top: 8px;
             display: none;
         }
         .field-error.show { display: block; }
-        .input-field.error { border-bottom-color: #E53E3E; }
+        .input-field.error { border-bottom-color: #C0392B; }
 
         /* ── BUTTONS ──────────────────────────────────── */
         .controls {
@@ -190,12 +194,12 @@
 
         .btn-next {
             background: var(--accent);
-            color: white;
+            color: #FDFCF8;
             border: none;
-            padding: 11px 28px;
-            border-radius: 6px;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 600;
+            padding:9px 30px;
+            border-radius: 999px;
+            font-family: 'pt serif', sans-serif;
+            font-weight: 100;
             font-size: 14px;
             cursor: pointer;
             transition: opacity 0.2s, transform 0.15s;
@@ -208,23 +212,24 @@
 
         .btn-back {
             background: none;
-            border: none;
+            border: 1px solid var(--border);
             color: var(--text-secondary);
             font-family: 'DM Sans', sans-serif;
             font-weight: 500;
             font-size: 14px;
             cursor: pointer;
-            padding: 11px 8px;
-            transition: color 0.2s;
+            padding: 12px 22px;
+            border-radius: 999px;
+            transition: color 0.2s, border-color 0.2s, background 0.2s;
         }
 
-        .btn-back:hover { color: var(--text); }
+        .btn-back:hover { color: var(--text); border-color: #C7C2B4; background: var(--accent-light); }
 
         .keyboard-hint {
             margin-left: auto;
             font-size: 12px;
-            color: #C0BDB8;
-            font-family: 'DM Mono', monospace;
+            color: #C7C2B4;
+            font-family: 'inter',arial;
         }
 
         /* ── LOADING / STATES ─────────────────────────── */
@@ -240,12 +245,14 @@
         }
 
         .success-icon {
-            width: 52px; height: 52px;
-            background: #F0FDF4;
+            width: 54px; height: 54px;
+            background: var(--accent-light);
+            border: 1px solid var(--border);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 20px;
             font-size: 22px;
+            color: var(--accent);
         }
     </style>
 </head>
@@ -262,7 +269,7 @@
             <h1 class="form-title" id="displayTitle"></h1>
             <p class="form-desc" id="displayDesc"></p>
             <div class="controls">
-                <button class="btn-next" onclick="nextStep()">Start</button>
+                <button class="btn-next" onclick="nextStep()">Start Filling the Details ⇲</button>
                 <span class="keyboard-hint">Press Enter ↵</span>
             </div>
         </div>
