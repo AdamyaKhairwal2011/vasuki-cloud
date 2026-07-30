@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -530,8 +529,12 @@
 
 
 <script type="module">
-    import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
-    let vdb = new Vasuki();
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const SUPABASE_URL = 'https://aitckloahlwemlekaour.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     if (localStorage.getItem("vcloud_user")) {
         window.location.href = './dash.html';
@@ -552,8 +555,8 @@
         loginBtn.disabled = true;
 
         try {
-            await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
-            const data = await vdb.fetchTable('users_rows', 'Sheet1');
+            const { data, error } = await supabase.from('users').select('*');
+            if (error) throw error;
             const user = data.find(u => u && u.username && u.username.toLowerCase() === emailInput && u.password === password);
 
             if (user) {
@@ -602,8 +605,8 @@
 
                     const email = userInfo.email.toLowerCase();
 
-                    await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
-                    const data = await vdb.fetchTable('users_rows', 'Sheet1');
+                    const { data, error } = await supabase.from('users').select('*');
+                    if (error) throw error;
                     const user = data.find(u => u && u.username && u.username.toLowerCase() === email);
 
                     if (user) {
@@ -673,8 +676,8 @@
         // Show loading state on button
 
         try {
-            await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
-            const data = await vdb.fetchTable('users_rows', 'Sheet1');
+            const { data, error } = await supabase.from('users').select('*');
+            if (error) throw error;
             
             // Search database for the given ID text
             const user = data.find(u => u && u.id && u.id.toString() === scannedId.trim());
