@@ -583,7 +583,7 @@
       showSystemStatus();
       try {
         const { data: userRecord, error: fetchError } = await supabase
-          .from('users_rows')
+          .from('users')
           .select('*')
           .eq('username', targetUserEmail)
           .single();
@@ -593,7 +593,7 @@
         }
 
         const { error: updateError } = await supabase
-          .from('users_rows')
+          .from('users')
           .update({
             gender: trackingState.gender.toLowerCase(),
             profession: trackingState.profession.toLowerCase()
