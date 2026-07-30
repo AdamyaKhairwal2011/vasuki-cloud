@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1044,24 +1043,6 @@ main { flex: 1; min-height: 100dvh; display: flex; flex-direction: column; max-w
     }
 </style>
 
-<div class="qr-card">
-      <span class="storage-used" style="color: #ffffff; font-size: 1.45rem;">Referral Code:</span>
-      <div class="storage-header" style="color: #eeeeee;">Allow Your Friends To Join Vasuki Cloud By Scanning The QR</div>
-      <div id="code_review" style="color: #f3f3f3"></div>
-      <button class="btn btn-n-f-d" onclick="copy()" style="border: none; background: #ffffff41; color: #fff;">Copy To Clipboard</button>
-</div>
-
-<script>
-  function copy() {
-    let code = document.querySelector("#code_review").innerHTML.split("<b>")[1].split("</b>")[0]
-    document.querySelector(".btn-n-f-d").innerHTML = 'Copied ✓'
-    navigator.clipboard.writeText(code)
-  }
-</script>
-
-<script type="module">
-
-</script>
 <div id="flex-1"></div>
   <div class="storage-section">
     <div class="storage-header">Storage Used</div>
@@ -1770,36 +1751,27 @@ function resetBaseUrl(){
 
 
 <script type="module">
-  import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
-  let vdb = new Vasuki();
-  window.vdb = vdb
-  await vdb.login('codeclutch.adamyarao@gmail.com','wkmeupb4ugo')
-  let data = await vdb.fetchTable('users_rows','Sheet1')
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-      let access_codes = await vdb.fetchTable('users_rows','access_asked')
-    let randomCode = access_codes[Math.floor(Math.random() * access_codes.length)].value
- 
-    document.getElementById('code_review').innerHTML = `Your referral code is:<b> ${randomCode}</b>`;
+  const SUPABASE_URL = 'https://aitckloahlwemlekaour.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA';
 
-    function generateQR() {
-        if (val.trim()) {
-            qrcode.clear(); // Clear the previous QR
-            qrcode.makeCode(val); // Generate new one
-        }
-    }
-
-   
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  window.supabase = supabase;
 
 async function welcome() {
-  await vdb.login('codeclutch.adamyarao@gmail.com','wkmeupb4ugo')
+  const { data: users, error } = await supabase.from('users').select('*');
+  if (error) {
+    console.error('Supabase error fetching users:', error);
+    return;
+  }
 
-  let users = await vdb.fetchTable('users_rows','Sheet1')
-  let currentUser = users.find(c => c.username == userEmail)
+  let currentUser = users.find(c => c.username == userEmail);
 
   if (localStorage.getItem('vcloud_user')) {
-    if (currentUser.gender == 'male') {
+    if (currentUser && currentUser.gender == 'male') {
       document.getElementById('pageTitle').textContent = `Welcome, Mr. ${currentUser.name.split(" ").reverse()[0]}`;
-    } else {
+    } else if (currentUser) {
       document.getElementById('pageTitle').textContent = `Welcome, Mrs. ${currentUser.name.split(" ").reverse()[0]}`;
     }
   } else {
