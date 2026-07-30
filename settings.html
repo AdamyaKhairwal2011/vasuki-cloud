@@ -519,283 +519,267 @@
     <span id="snack-text">Changes saved</span>
   </div>
 
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+ <script type="module">
+  // Using esm.sh for a stable, zero-config ES module build of Supabase JS
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    const SUPABASE_URL = 'https://aitckloahlwemlekaour.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA';
+  const SUPABASE_URL = 'https://aitckloahlwemlekaour.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA';
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let userRecord = null;
-    let selectedGender = null;
-    let mpinMasked = true;
+  let userRecord = null;
+  let selectedGender = null;
+  let mpinMasked = true;
 
-    const $ = id => document.getElementById(id);
+  const $ = id => document.getElementById(id);
 
-    /* ── Progress / snack ── */
-    function showProgress() { $('prog').classList.add('active'); }
-    function hideProgress() { $('prog').classList.remove('active'); }
+  /* ── Progress / snack ── */
+  function showProgress() { $('prog').classList.add('active'); }
+  function hideProgress() { $('prog').classList.remove('active'); }
 
-    function showSnack(msg, ok = true) {
-      $('snack-text').textContent = msg;
-      $('snack-dot').className = 'snack-dot ' + (ok ? 'snack-ok' : 'snack-err');
-      const bar = $('snackbar');
-      bar.classList.add('show');
-      setTimeout(() => bar.classList.remove('show'), 3200);
+  function showSnack(msg, ok = true) {
+    $('snack-text').textContent = msg;
+    $('snack-dot').className = 'snack-dot ' + (ok ? 'snack-ok' : 'snack-err');
+    const bar = $('snackbar');
+    bar.classList.add('show');
+    setTimeout(() => bar.classList.remove('show'), 3200);
+  }
+
+  function initials(name) {
+    if (!name) return '?';
+    const parts = name.trim().split(/\s+/);
+    return parts.length >= 2
+      ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+      : parts[0].slice(0, 2).toUpperCase();
+  }
+
+  /* ── MPIN logic ── */
+  const mpinInputs = [0,1,2,3].map(i => $('mp' + i));
+
+  function getMpinValue() {
+    return mpinInputs.map(el => el.value).join('');
+  }
+
+  function setMpinValue(val) {
+    const digits = (val || '').toString().padEnd(4, '').slice(0, 4).split('');
+    mpinInputs.forEach((el, i) => {
+      el.value = digits[i] || '';
+      el.classList.toggle('filled', !!el.value);
+      updateMaskClass(el);
+    });
+  }
+
+  function updateMaskClass(el) {
+    if (mpinMasked && el.value) {
+      el.classList.add('masked');
+      el.style.color = '#000';
+    } else {
+      el.classList.remove('masked');
+      el.style.color = '';
     }
+  }
 
-    function initials(name) {
-      if (!name) return '?';
-      const parts = name.trim().split(/\s+/);
-      return parts.length >= 2
-        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-        : parts[0].slice(0, 2).toUpperCase();
-    }
+  window.toggleMpinMask = function() {
+    mpinMasked = !mpinMasked;
+    $('mpinToggleBtn').textContent = mpinMasked ? 'Show' : 'Hide';
+    mpinInputs.forEach(updateMaskClass);
+  };
 
-    /* ── MPIN logic ── */
-    const mpinInputs = [0,1,2,3].map(i => $('mp' + i));
-
-    function getMpinValue() {
-      return mpinInputs.map(el => el.value).join('');
-    }
-
-    function setMpinValue(val) {
-      const digits = (val || '').toString().padEnd(4, '').slice(0, 4).split('');
-      mpinInputs.forEach((el, i) => {
-        el.value = digits[i] || '';
-        el.classList.toggle('filled', !!el.value);
-        updateMaskClass(el);
-      });
-    }
-
-    function updateMaskClass(el) {
-      if (mpinMasked && el.value) {
-        el.classList.add('masked');
-        el.style.color = '#000';
-      } else {
-        el.classList.remove('masked');
-        el.style.color = '';
-      }
-    }
-
-    window.toggleMpinMask = function() {
-      mpinMasked = !mpinMasked;
-      $('mpinToggleBtn').textContent = mpinMasked ? 'Show' : 'Hide';
-      mpinInputs.forEach(updateMaskClass);
-    };
-
-    mpinInputs.forEach((el, idx) => {
-      /* keydown: handle backspace navigation */
-      el.addEventListener('keydown', e => {
-        if (e.key === 'Backspace') {
-          if (el.value === '' && idx > 0) {
-            mpinInputs[idx - 1].value = '';
-            mpinInputs[idx - 1].classList.remove('filled', 'masked');
-            mpinInputs[idx - 1].style.color = '';
-            mpinInputs[idx - 1].focus();
-          } else {
-            el.value = '';
-            el.classList.remove('filled', 'masked');
-            el.style.color = '';
-          }
-          e.preventDefault();
-          validateMpin();
-        } else if (e.key === 'ArrowLeft' && idx > 0) {
+  mpinInputs.forEach((el, idx) => {
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Backspace') {
+        if (el.value === '' && idx > 0) {
+          mpinInputs[idx - 1].value = '';
+          mpinInputs[idx - 1].classList.remove('filled', 'masked');
+          mpinInputs[idx - 1].style.color = '';
           mpinInputs[idx - 1].focus();
-        } else if (e.key === 'ArrowRight' && idx < 3) {
-          mpinInputs[idx + 1].focus();
+        } else {
+          el.value = '';
+          el.classList.remove('filled', 'masked');
+          el.style.color = '';
         }
-      });
-
-      /* input: accept digit and auto-advance */
-      el.addEventListener('input', e => {
-        /* strip non-digits */
-        let raw = el.value.replace(/\D/g, '');
-
-        /* handle paste of full 4-digit code */
-        if (raw.length > 1) {
-          const all = raw.slice(0, 4).split('');
-          all.forEach((d, i) => {
-            if (mpinInputs[i]) mpinInputs[i].value = d;
-          });
-          setMpinValue(raw.slice(0, 4));
-          const nextFocus = Math.min(3, all.length - 1);
-          mpinInputs[nextFocus].focus();
-          validateMpin();
-          return;
-        }
-
-        el.value = raw.slice(0, 1);
-        el.classList.toggle('filled', !!el.value);
-        updateMaskClass(el);
-
-        if (el.value && idx < 3) {
-          mpinInputs[idx + 1].focus();
-        }
+        e.preventDefault();
         validateMpin();
-      });
-
-      /* focus: select existing content for easy replace */
-      el.addEventListener('focus', () => {
-        setTimeout(() => el.select(), 0);
-      });
-
-      /* prevent non-numeric keys (desktop) */
-      el.addEventListener('keypress', e => {
-        if (!/[0-9]/.test(e.key)) e.preventDefault();
-      });
+      } else if (e.key === 'ArrowLeft' && idx > 0) {
+        mpinInputs[idx - 1].focus();
+      } else if (e.key === 'ArrowRight' && idx < 3) {
+        mpinInputs[idx + 1].focus();
+      }
     });
 
-    function validateMpin() {
-      const val = getMpinValue();
-      const hint = $('mpinHint');
-      if (val.length === 0) {
-        hint.textContent = 'Enter a new 4-digit MPIN to change it';
-        hint.classList.remove('error');
-      } else if (val.length < 4) {
-        hint.textContent = `${val.length}/4 digits entered`;
-        hint.classList.remove('error');
-      } else {
-        hint.textContent = 'MPIN ready to save';
-        hint.classList.remove('error');
-      }
-    }
+    el.addEventListener('input', e => {
+      let raw = el.value.replace(/\D/g, '');
 
-    /* ── Gender ── */
-    window.setGender = function(val, el) {
-      selectedGender = val;
-      document.querySelectorAll('#gender-group .radio-item').forEach(r => r.classList.remove('sel'));
-      el.classList.add('sel');
-    };
-
-    /* ── Populate form ── */
-    function populateForm(u) {
-      userRecord = u;
-
-      $('f-username').value  = u.username || '';
-      $('f-name').value      = u.name || '';
-      $('f-upi').value       = u.upi_id || '';
-
-      const displayNameText = u.name || u.username || '';
-      $('displayName').textContent    = displayNameText || 'Your account';
-      $('displayEmail').textContent   = u.username || '';
-      $('avatarInitials').textContent = initials(displayNameText);
-      /* Note: password is intentionally NOT read back into the field.
-         Never round-trip stored passwords to the client. */
-
-      if (u.created_at) {
-        const badge = $('createdBadge');
-        badge.textContent = 'Joined ' + u.created_at;
-        badge.style.display = 'inline-block';
-      }
-
-      if (u.profession) $('f-profession').value = u.profession;
-
-      if (u.gender) {
-        selectedGender = u.gender.toLowerCase();
-        document.querySelectorAll('#gender-group .radio-item').forEach(r => {
-          if (r.dataset.value === selectedGender) r.classList.add('sel');
+      if (raw.length > 1) {
+        const all = raw.slice(0, 4).split('');
+        all.forEach((d, i) => {
+          if (mpinInputs[i]) mpinInputs[i].value = d;
         });
-      }
-
-      /* set mpin if present */
-      if (u.mpin) setMpinValue(u.mpin);
-    }
-
-    /* ── Load ── */
-    window.loadUser = async function() {
-      const email = localStorage.getItem('vcloud_user');
-      if (!email) { showSnack('No active session found.', false); return; }
-      showProgress();
-      try {
-        const { data: u, error } = await supabase
-          .from('users_rows')
-          .select('*')
-          .eq('username', email)
-          .single();
-
-        if (error || !u) throw new Error('Profile not found.');
-        populateForm(u);
-      } catch (e) {
-        showSnack('Failed to load profile: ' + e.message, false);
-      } finally {
-        hideProgress();
-      }
-    };
-
-    /* ── Save ── */
-    window.saveUser = async function() {
-      if (!userRecord) return;
-
-      /* validate mpin if touched */
-      const mpinVal = getMpinValue();
-      if (mpinVal.length > 0 && mpinVal.length < 4) {
-        $('mpinHint').textContent = 'MPIN must be exactly 4 digits';
-        $('mpinHint').classList.add('error');
-        mpinInputs[mpinVal.length]?.focus();
+        setMpinValue(raw.slice(0, 4));
+        const nextFocus = Math.min(3, all.length - 1);
+        mpinInputs[nextFocus].focus();
+        validateMpin();
         return;
       }
 
-      const btn = $('saveBtn');
-      btn.disabled = true;
-      showProgress();
+      el.value = raw.slice(0, 1);
+      el.classList.toggle('filled', !!el.value);
+      updateMaskClass(el);
 
-      try {
-        const payload = {
-          email_notifications:   $('t-email').checked   ? 'true' : 'false',
-          product_announcements: $('t-product').checked ? 'true' : 'false',
-        };
-
-        const name = $('f-name').value.trim();
-        const upi  = $('f-upi').value.trim();
-        const pwd  = $('f-password').value;
-
-        if (name)         payload.name       = name;
-        if (upi)          payload.upi_id     = upi;
-        if (pwd)          payload.password   = pwd;
-        if (selectedGender)   payload.gender     = selectedGender;
-        if ($('f-profession').value) payload.profession = $('f-profession').value;
-        if (mpinVal.length === 4)   payload.mpin = mpinVal;
-
-        const { error } = await supabase
-          .from('users_rows')
-          .update(payload)
-          .eq('id', userRecord.id);
-
-        if (error) throw error;
-
-        /* update avatar display */
-        const displayNameText = name || userRecord.username || '';
-        $('displayName').textContent    = displayNameText;
-        $('avatarInitials').textContent = initials(displayNameText);
-
-        /* clear password field after save */
-        $('f-password').value = '';
-
-        showSnack('Changes saved successfully');
-      } catch (e) {
-        showSnack('Save failed: ' + e.message, false);
-      } finally {
-        hideProgress();
-        btn.disabled = false;
+      if (el.value && idx < 3) {
+        mpinInputs[idx + 1].focus();
       }
-    };
-
-    /* ── Delete ── */
-    window.handleDelete = function() {
-      if (confirm('Permanently delete your account? This cannot be undone.')) {
-        showSnack('Account deletion requested. Contact support to proceed.', false);
-      }
-    };
-
-    /* ── Page loader ── */
-    window.addEventListener('load', () => {
-      setTimeout(() => $('page-loader').classList.add('loaded'), 300);
-      setTimeout(() => $('page-loader').style.display = 'none', 1500);
+      validateMpin();
     });
 
-    window.addEventListener('DOMContentLoaded', loadUser);
-  </script>
-</body>
+    el.addEventListener('focus', () => {
+      setTimeout(() => el.select(), 0);
+    });
+
+    el.addEventListener('keypress', e => {
+      if (!/[0-9]/.test(e.key)) e.preventDefault();
+    });
+  });
+
+  function validateMpin() {
+    const val = getMpinValue();
+    const hint = $('mpinHint');
+    if (val.length === 0) {
+      hint.textContent = 'Enter a new 4-digit MPIN to change it';
+      hint.classList.remove('error');
+    } else if (val.length < 4) {
+      hint.textContent = `${val.length}/4 digits entered`;
+      hint.classList.remove('error');
+    } else {
+      hint.textContent = 'MPIN ready to save';
+      hint.classList.remove('error');
+    }
+  }
+
+  /* ── Gender ── */
+  window.setGender = function(val, el) {
+    selectedGender = val;
+    document.querySelectorAll('#gender-group .radio-item').forEach(r => r.classList.remove('sel'));
+    el.classList.add('sel');
+  };
+
+  /* ── Populate form ── */
+  function populateForm(u) {
+    userRecord = u;
+
+    $('f-username').value  = u.username || '';
+    $('f-name').value      = u.name || '';
+    $('f-upi').value       = u.upi_id || '';
+
+    const displayNameText = u.name || u.username || '';
+    $('displayName').textContent    = displayNameText || 'Your account';
+    $('displayEmail').textContent   = u.username || '';
+    $('avatarInitials').textContent = initials(displayNameText);
+
+    if (u.created_at) {
+      const badge = $('createdBadge');
+      badge.textContent = 'Joined ' + u.created_at;
+      badge.style.display = 'inline-block';
+    }
+
+    if (u.profession) $('f-profession').value = u.profession;
+
+    if (u.gender) {
+      selectedGender = u.gender.toLowerCase();
+      document.querySelectorAll('#gender-group .radio-item').forEach(r => {
+        if (r.dataset.value === selectedGender) r.classList.add('sel');
+      });
+    }
+
+    if (u.mpin) setMpinValue(u.mpin);
+  }
+
+  /* ── Load ── */
+  window.loadUser = async function() {
+    const email = localStorage.getItem('vcloud_user');
+    if (!email) { showSnack('No active session found.', false); return; }
+    showProgress();
+    try {
+      const { data: u, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('username', email)
+        .single();
+
+      if (error || !u) throw new Error('Profile not found.');
+      populateForm(u);
+    } catch (e) {
+      showSnack('Failed to load profile: ' + e.message, false);
+    } finally {
+      hideProgress();
+    }
+  };
+
+  /* ── Save ── */
+  window.saveUser = async function() {
+    if (!userRecord) return;
+
+    const mpinVal = getMpinValue();
+    if (mpinVal.length > 0 && mpinVal.length < 4) {
+      $('mpinHint').textContent = 'MPIN must be exactly 4 digits';
+      $('mpinHint').classList.add('error');
+      mpinInputs[mpinVal.length]?.focus();
+      return;
+    }
+
+    const btn = $('saveBtn');
+    btn.disabled = true;
+    showProgress();
+
+    try {
+      let payload = {}
+
+      const name = $('f-name').value.trim();
+      const upi  = $('f-upi').value.trim();
+      const pwd  = $('f-password').value;
+
+      if (name)           payload.name       = name;
+      if (upi)            payload.upi_id     = upi;
+      if (pwd)            payload.password   = pwd;
+      if (selectedGender) payload.gender     = selectedGender;
+      if ($('f-profession').value) payload.profession = $('f-profession').value;
+      if (mpinVal.length === 4)   payload.mpin = mpinVal;
+
+      const { error } = await supabase
+        .from('users')
+        .update(payload)
+        .eq('id', userRecord.id);
+
+      if (error) throw error;
+
+      const displayNameText = name || userRecord.username || '';
+      $('displayName').textContent    = displayNameText;
+      $('avatarInitials').textContent = initials(displayNameText);
+      $('f-password').value = '';
+
+      showSnack('Changes saved successfully');
+    } catch (e) {
+      showSnack('Save failed: ' + e.message, false);
+    } finally {
+      hideProgress();
+      btn.disabled = false;
+    }
+  };
+
+  /* ── Delete ── */
+  window.handleDelete = function() {
+    if (confirm('Permanently delete your account? This cannot be undone.')) {
+      showSnack('Account deletion requested. Contact support to proceed.', false);
+    }
+  };
+
+  /* ── Page loader & init ── */
+  window.addEventListener('load', () => {
+    setTimeout(() => $('page-loader').classList.add('loaded'), 300);
+    setTimeout(() => $('page-loader').style.display = 'none', 1500);
+  });
+
+  window.addEventListener('DOMContentLoaded', loadUser);
+</script></body>
 </html>
