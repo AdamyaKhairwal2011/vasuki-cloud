@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account Settings - Vasuki</title>
+  <title>Account Settings - Vcloud</title>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -520,9 +520,13 @@
   </div>
 
   <script type="module">
-    import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    const db = new Vasuki();
+    const SUPABASE_URL = 'https://aitckloahlwemlekaour.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     let userRecord = null;
     let selectedGender = null;
     let mpinMasked = true;
@@ -677,7 +681,8 @@
       $('displayName').textContent    = displayNameText || 'Your account';
       $('displayEmail').textContent   = u.username || '';
       $('avatarInitials').textContent = initials(displayNameText);
-      $('f-password').value = u.password
+      /* Note: password is intentionally NOT read back into the field.
+         Never round-trip stored passwords to the client. */
 
       if (u.created_at) {
         const badge = $('createdBadge');
@@ -704,10 +709,13 @@
       if (!email) { showSnack('No active session found.', false); return; }
       showProgress();
       try {
-        await db.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
-        const rows = await db.fetchTable('users_rows', 'Sheet1');
-        const u = rows.find(r => r.username === email);
-        if (!u) throw new Error('Profile not found.');
+        const { data: u, error } = await supabase
+          .from('users_rows')
+          .select('*')
+          .eq('username', email)
+          .single();
+
+        if (error || !u) throw new Error('Profile not found.');
         populateForm(u);
       } catch (e) {
         showSnack('Failed to load profile: ' + e.message, false);
@@ -750,7 +758,12 @@
         if ($('f-profession').value) payload.profession = $('f-profession').value;
         if (mpinVal.length === 4)   payload.mpin = mpinVal;
 
-        await db.updateRow('users_rows', 'Sheet1', userRecord.id, payload);
+        const { error } = await supabase
+          .from('users_rows')
+          .update(payload)
+          .eq('id', userRecord.id);
+
+        if (error) throw error;
 
         /* update avatar display */
         const displayNameText = name || userRecord.username || '';
