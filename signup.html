@@ -272,30 +272,6 @@
         }
         .btn-text:hover { background-color: var(--google-blue-alpha); }
 
-        .btn-referral {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            margin-top: 16px;
-            height: 40px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--google-blue);
-            background: transparent;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-input);
-            cursor: pointer;
-            text-decoration: none;
-            transition: var(--transition-smooth);
-            font-family: var(--font-family);
-        }
-
-        .btn-referral:hover {
-            background: #f8f9fa;
-            border-color: var(--google-blue);
-        }
-
         /* Status Messages Layout */
         #scanFeedback {
             color: var(--success-green);
@@ -453,26 +429,14 @@
             <div class="brand-logo">
                 <img src="./logo.jpg" alt="" width="50px">
             </div>
-            <h1 id="viewTitle">Exclusive Access</h1>
-            <p id="viewSubtitle" class="subtitle">Please verify by using Exclusive Access Code.</p>
+            <h1 id="viewTitle">Create Account</h1>
+            <p id="viewSubtitle" class="subtitle">Complete your Vasuki Cloud profile</p>
         </header>
 
         <form id="masterFormEngine" onsubmit="return false;">
             <div class="step-window" id="stepWindowContainer">
-                
-                <div class="step-view active" id="step0">
-                    <div id="scanFeedback">✔ Referrer Link Authenticated!</div>
 
-                    <div class="input-group">
-                        <input type="text" id="accessCode" placeholder="Enter manual code" style="text-align: center; font-weight: 500; letter-spacing: 1px;">
-                    </div>
-
-                    <button type="button" class="btn-primary" style="width: 100%;" onclick="validateAccess()">Verify & Continue</button>
-                    <a href="https://vasuki.cloud/view-form.html?id=f-evmd3e" target="_blank" class="btn-referral">Request Referral Code</a>
-                    <p id="gateError" class="status-error">Invalid access code. Please try again.</p>
-                </div>
-
-                <div class="step-view" id="step1">
+                <div class="step-view active" id="step1">
                     <div class="input-row">
                         <input type="text" id="firstName" placeholder="First Name" autocomplete="given-name">
                         <input type="text" id="lastName" placeholder="Last Name" autocomplete="family-name">
@@ -509,20 +473,18 @@
     </div>
 
     <script type="module">
-        import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
-        
-        const vdb = new Vasuki();
-        let codes = [];
-        let html5QrCode;
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const SUPABASE_URL = 'https://aitckloahlwemlekaour.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA';
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Graceful System Core Bootstrap
         async function runSystemInit() {
             showLoader();
             try {
-                await vdb.login('codeclutch.adamyarao@gmail.com', 'wkmeupb4ugo');
-                codes = await vdb.fetchTable('users_rows', 'access_asked');
                 hideLoader();
-                initCameraScanner();
             } catch(e) {
                 console.error("Initialization anomaly identified:", e);
                 hideLoader();
@@ -539,57 +501,6 @@
                 // Read exact offset bounding context natively 
                 container.style.height = `${activeStep.offsetHeight}px`;
             }
-        }
-
-        // Thread-Optimized QR Core Hardware Link
-        function initCameraScanner() {
-        }
-
-        // Verification Match Pipeline
-        window.validateAccess = () => {
-            const inputVal = document.getElementById('accessCode').value.trim();
-            if(!inputVal) return;
-
-            showLoader();
-            
-            const matchFound = codes.find(c => c.value === inputVal);
-
-            if (matchFound) {
-                try {
-                    html5QrCode.stop().then(() => html5QrCode.clear());
-                } catch(e){}
-
-                setTimeout(() => {
-                    hideLoader();
-                    transitionToSignupPhase();
-                }, 350);
-            } else {
-                hideLoader();
-                const err = document.getElementById('gateError');
-                if (err) {
-                    err.style.display = 'block';
-                    syncCardHeight();
-                    setTimeout(() => {
-                        err.style.display = 'none';
-                        syncCardHeight();
-                    }, 3500);
-                }
-            }
-        };
-
-        // Window Pagination Controller 
-        function transitionToSignupPhase() {
-            const step0 = document.getElementById('step0');
-            const step1 = document.getElementById('step1');
-
-            document.getElementById('viewTitle').innerText = "Create Account";
-            document.getElementById('viewSubtitle').innerText = "Complete your Vasuki Cloud profile";
-
-            step0.className = "step-view next-out";
-            step1.className = "step-view active";
-            
-            // Re-render bounding values instantly
-            setTimeout(syncCardHeight, 50);
         }
 
         // Commit Signup Pipeline Payload
@@ -616,14 +527,16 @@
 
             try {
                 const name = `${first} ${last}`;
-                await vdb.insertRow('users_rows', 'Sheet1', {
+                const { error } = await supabase.from('users').insert([{
                     username: email,
                     email: email,
                     name: name,
                     password: password,
                     phone_number: phone,
                     mpin: mpin
-                });
+                }]);
+
+                if (error) throw error;
 
                 localStorage.setItem('vcloud_user', email);
                 localStorage.setItem('vcloud_username', name);
