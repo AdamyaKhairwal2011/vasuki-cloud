@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign in - Vasuki Accounts</title>
+  <title>Sign in - Vcloud Accounts</title>
       <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
@@ -475,9 +475,13 @@
   </div>
 
   <script type="module">
-    import Vasuki from 'https://cdn.jsdelivr.net/npm/vasuki-db@1.0.1/index.min.js';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-    let dbInstance = new Vasuki();
+    const SUPABASE_URL = 'https://aitckloahlwemlekaour.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpdGNrbG9haGx3ZW1sZWthb3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyOTQ3MTMsImV4cCI6MjA3MTg3MDcxM30.uQjQLSz0mQuuArPQ_F8u-suQ-6T0e9bF11ahQtSw6yA';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const trackingState = {
       gender: null,
       profession: null
@@ -489,8 +493,6 @@
     async function initDatabaseEngine() {
       showSystemStatus();
       try {
-        await dbInstance.login("codeclutch.adamyarao@gmail.com", "wkmeupb4ugo");
-        
         const userEmail = localStorage.getItem('vcloud_user');
         if (!userEmail) {
           console.error("Session missing: vcloud_user not established inside local storage.");
@@ -526,7 +528,7 @@
       const futureIndex = activeStepIndex + direction;
 
       if (futureIndex === stepsCount) {
-        await commitDataToVasukiDB();
+        await commitDataToSupabase();
         return;
       }
 
@@ -571,9 +573,7 @@
       }
     }
 
-    async function commitDataToVasukiDB() {
-      if (!dbInstance) return;
-
+    async function commitDataToSupabase() {
       const targetUserEmail = localStorage.getItem('vcloud_user');
       if (!targetUserEmail) {
         alert("Session Error: Could not locate active string key 'vcloud_user' inside LocalStorage context.");
@@ -582,17 +582,25 @@
 
       showSystemStatus();
       try {
-        const userTable = await dbInstance.fetchTable("users_rows", "Sheet1");
-        const userRecord = userTable.find(u => u.username === targetUserEmail);
-        
-        if (!userRecord || !userRecord.id) {
+        const { data: userRecord, error: fetchError } = await supabase
+          .from('users_rows')
+          .select('*')
+          .eq('username', targetUserEmail)
+          .single();
+
+        if (fetchError || !userRecord || !userRecord.id) {
           throw new Error(`Profile entry for ${targetUserEmail} could not be successfully loaded.`);
         }
 
-        await dbInstance.updateRow("users_rows", "Sheet1", userRecord.id, {
-          gender: trackingState.gender.toLowerCase(),
-          profession: trackingState.profession.toLowerCase()
-        });
+        const { error: updateError } = await supabase
+          .from('users_rows')
+          .update({
+            gender: trackingState.gender.toLowerCase(),
+            profession: trackingState.profession.toLowerCase()
+          })
+          .eq('id', userRecord.id);
+
+        if (updateError) throw updateError;
 
         setTimeout(() => {
           hideSystemStatus();
