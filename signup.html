@@ -529,7 +529,6 @@
                 const name = `${first} ${last}`;
                 const { error } = await supabase.from('users').insert([{
                     username: email,
-                    email: email,
                     name: name,
                     password: password,
                     phone_number: phone,
