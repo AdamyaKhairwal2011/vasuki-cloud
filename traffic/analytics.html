@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vasuki for Developers: Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* Analytics page styles are inline so they can never fail to load. */
+  :root{
+    --cream:#f7f7f4; --cream-2:#f2f1ed; --ink:#211D1A; --ink-soft:#6B655D;
+    --line:#E7E1D6; --terracotta:#D97757; --terracotta-deep:#B85C3F;
+    --green:#3E8E5A; --red:#C0503E;
+    --mono:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    --serif:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  }
+  body{background:var(--cream);color:var(--ink);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;}
+
+  .an{max-width:1160px;margin:0 auto;padding:0 48px 96px;}
+
+  .an-top{
+    position:sticky;top:0;z-index:5;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:18px 0;
+    background:rgba(247,247,244,.85);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  }
+  .an-top a.back-pill,
+  .an-top a.back-pill:visited{
+    display:inline-flex;align-items:center;gap:7px;
+    padding:7px 14px;border-radius:999px;
+    background:var(--cream-2);color:var(--ink-soft);
+    font-size:.82rem;font-weight:500;text-decoration:none;
+    transition:background .15s ease;
+  }
+  .an-top a.back-pill:hover{background:#F1EADD;color:var(--ink);}
+
+  .an-head{text-align:center;padding:48px 0 0;}
+  .an-head h1{
+    font-weight:400;font-size:2.6rem;margin:0;letter-spacing:-0.015em;
+  }
+  .an-head p{color:var(--ink-soft);font-size:1rem;margin:10px 0 0;}
+
+  .an-filter{display:flex;justify-content:center;margin-top:26px;}
+  .an-filter select{
+    -webkit-appearance:none;appearance:none;
+    padding:9px 38px 9px 18px;
+    border:1px solid var(--line);border-radius:999px;
+    background:var(--cream-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B85C3F' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center;
+    font-family:inherit;font-size:.82rem;color:var(--terracotta-deep);
+    cursor:pointer;outline:none;
+  }
+  .an-filter select:focus{border-color:var(--terracotta);}
+
+  .an-grid{
+    margin-top:64px;
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    column-gap:72px;
+  }
+  .an-sec{border-top:1px solid var(--line);padding:22px 0 44px;min-width:0;}
+  .an-sec.wide{grid-column:1 / -1;}
+  .an-sec-head{display:flex;align-items:baseline;gap:12px;}
+  .an-idx{
+    font-size:.68rem;letter-spacing:.08em;color:var(--terracotta-deep);
+  }
+  .an-sec h2{
+    margin:0;font-size:1rem;font-weight:500;letter-spacing:-0.005em;color:var(--ink);
+  }
+  .an-sec .chart-sub{
+    margin:5px 0 22px;color:var(--ink-soft);font-size:.82rem;
+  }
+  .an-sec .chart-wrap{position:relative;height:240px;}
+  .an-sec.wide .chart-wrap{height:270px;}
+
+  @media (max-width:860px){
+    .an{padding:0 20px 64px;}
+    .an-head{padding-top:32px;}
+    .an-head h1{font-size:1.8rem;}
+    .an-grid{grid-template-columns:1fr;margin-top:40px;}
+    .an-sec{padding-bottom:32px;}
+  }
+</style>
+</head>
+<body>
+  <div class="an">
+    <div class="an-top">
+      <a class="back-pill" href="./dashb.html">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Back
+      </a>
+      <span class="status-pill"><span class="dot"></span><span id="syncStatus">Connecting…</span></span>
+    </div>
+
+    <div class="an-head">
+      <h1>Analytics</h1>
+      <p>Every chart in one place.</p>
+      <div class="an-filter">
+        <select id="domainSelect"><option value="">All domains</option></select>
+      </div>
+    </div>
+
+    <div class="an-grid">
+      <section class="an-sec wide">
+        <div class="an-sec-head"><span class="an-idx">01</span><h2>Visits over time</h2></div>
+        <p class="chart-sub">Hourly traffic volume</p>
+        <div class="chart-wrap"><canvas id="chartTimeline"></canvas></div>
+      </section>
+      <section class="an-sec">
+        <div class="an-sec-head"><span class="an-idx">02</span><h2>Traffic sources</h2></div>
+        <p class="chart-sub">Where visits originated</p>
+        <div class="chart-wrap"><canvas id="chartSources"></canvas></div>
+      </section>
+      <section class="an-sec">
+        <div class="an-sec-head"><span class="an-idx">03</span><h2>Top regions</h2></div>
+        <p class="chart-sub">State / province breakdown</p>
+        <div class="chart-wrap"><canvas id="chartRegions"></canvas></div>
+      </section>
+      <section class="an-sec">
+        <div class="an-sec-head"><span class="an-idx">04</span><h2>Top cities</h2></div>
+        <p class="chart-sub">Where your audience is</p>
+        <div class="chart-wrap"><canvas id="chartCities"></canvas></div>
+      </section>
+      <section class="an-sec">
+        <div class="an-sec-head"><span class="an-idx">05</span><h2>Devices &amp; browsers</h2></div>
+        <p class="chart-sub">Client breakdown from user agent</p>
+        <div class="chart-wrap"><canvas id="chartDevices"></canvas></div>
+      </section>
+      <section class="an-sec">
+        <div class="an-sec-head"><span class="an-idx">06</span><h2>Visits by hour of day</h2></div>
+        <p class="chart-sub">Aggregated across all days</p>
+        <div class="chart-wrap"><canvas id="chartHourly"></canvas></div>
+      </section>
+      <section class="an-sec">
+        <div class="an-sec-head"><span class="an-idx">07</span><h2>New vs repeat visitors</h2></div>
+        <p class="chart-sub">By unique IP address</p>
+        <div class="chart-wrap"><canvas id="chartRepeat"></canvas></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script src="config.js"></script>
+  <script src="analytics.js"></script>
+</body>
+</html>

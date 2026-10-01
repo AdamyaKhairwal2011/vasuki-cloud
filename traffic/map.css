@@ -1,0 +1,216 @@
+/* Vasuki Tijori: map overlay */
+
+:root {
+  --vm-paper: #fbf8f1;
+  --vm-land: #efe7d6;
+  --vm-line: #e6decb;
+  --vm-ink: #2b2620;
+  --vm-muted: #8a7f70;
+  --vm-accent: #d97757;
+  --vm-accent-ink: #7a341c;
+}
+
+/* sidebar button */
+.map-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin: 10px 0 4px;
+  padding: 10px 12px;
+  font: 500 13px/1 Inter, system-ui, sans-serif;
+  color: #fff;
+  background: #2b2a2a;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+/* fullscreen layer */
+body.vm-lock { overflow: hidden; }
+
+.vm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: var(--vm-land);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s linear 0.22s;
+}
+.vm-overlay.open {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.vm-topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 16px;
+  background: var(--vm-paper);
+  border-bottom: 1px solid var(--vm-line);
+}
+.vm-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px 8px 10px;
+  font: 500 13px/1 Inter, system-ui, sans-serif;
+  color: var(--vm-ink);
+  background: #fff;
+  border: 1px solid var(--vm-line);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.vm-back:hover { border-color: var(--vm-accent); background: #fffaf6; }
+.vm-back:focus-visible { outline: 2px solid var(--vm-accent); outline-offset: 2px; }
+.vm-title {
+  margin: 0;
+  font: 500 18px/1 Fraunces, Georgia, serif;
+  color: var(--vm-ink);
+}
+.vm-meta {
+  margin-left: auto;
+  font: 400 12px/1.3 "JetBrains Mono", ui-monospace, monospace;
+  color: var(--vm-muted);
+  text-align: right;
+}
+
+/* map, tinted to paper */
+.vm-map {
+  position: absolute;
+  top: 56px; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  background: var(--vm-land);
+  font-family: Inter, system-ui, sans-serif;
+}
+.vm-map .leaflet-tile-pane {
+  filter: sepia(0.32) saturate(0.7) brightness(1.02) contrast(0.95);
+}
+.vm-map .leaflet-labels-pane {
+  pointer-events: none;
+  filter: sepia(0.5) brightness(0.82) contrast(1.1);
+}
+.vm-map .leaflet-control-zoom {
+  border: 1px solid var(--vm-line);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: none;
+}
+.vm-map .leaflet-control-zoom a {
+  color: var(--vm-ink);
+  background: var(--vm-paper);
+  border-bottom-color: var(--vm-line);
+}
+.vm-map .leaflet-control-zoom a:hover { background: #fff; }
+.vm-map .leaflet-control-attribution {
+  background: rgba(251, 248, 241, 0.85);
+  color: var(--vm-muted);
+}
+
+.vm-empty {
+  position: absolute;
+  z-index: 500;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 320px;
+  padding: 16px 20px;
+  text-align: center;
+  font: 400 14px/1.5 Inter, system-ui, sans-serif;
+  color: var(--vm-ink);
+  background: var(--vm-paper);
+  border: 1px solid var(--vm-line);
+  border-radius: 12px;
+}
+.vm-empty[hidden] { display: none; }
+
+/* pins */
+.vm-marker { background: none; border: 0; }
+.vm-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--vm-accent);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px rgba(122, 52, 28, 0.35), 0 2px 6px rgba(60, 30, 10, 0.25);
+  color: #fff;
+  font: 600 12px/1 Inter, system-ui, sans-serif;
+  transition: transform 0.15s;
+}
+.vm-pin i { font-style: normal; }
+.vm-pin:empty::after {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #fff;
+}
+.vm-marker:hover .vm-pin,
+.vm-marker:focus-visible .vm-pin { transform: scale(1.14); }
+.vm-marker:focus-visible { outline: none; }
+.vm-marker:focus-visible .vm-pin { box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--vm-accent); }
+
+/* popup */
+.vm-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  background: #fffdf8;
+  border: 1px solid var(--vm-line);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(60, 40, 20, 0.18);
+  overflow: hidden;
+}
+.vm-popup .leaflet-popup-content { margin: 0; width: 300px !important; }
+.vm-popup .leaflet-popup-tip { background: #fffdf8; }
+.vm-popup a.leaflet-popup-close-button { top: 10px; right: 10px; color: var(--vm-muted); }
+
+.vm-pop-head { padding: 14px 40px 12px 16px; border-bottom: 1px solid var(--vm-line); }
+.vm-pop-place { font: 500 16px/1.25 Fraunces, Georgia, serif; color: var(--vm-ink); }
+.vm-pop-sub { margin-top: 4px; font: 400 12px/1.3 Inter, system-ui, sans-serif; color: var(--vm-muted); }
+
+.vm-pop-list { max-height: 280px; overflow-y: auto; }
+.vm-visit { padding: 12px 16px; border-bottom: 1px solid #f1ebdd; }
+.vm-visit:last-child { border-bottom: 0; }
+.vm-visit-top { display: flex; align-items: center; gap: 8px; }
+.vm-visit-domain { font: 500 13px/1.3 Inter, system-ui, sans-serif; color: var(--vm-ink); word-break: break-all; }
+.vm-bot {
+  padding: 2px 6px;
+  font: 500 10px/1.2 Inter, system-ui, sans-serif;
+  color: var(--vm-muted);
+  background: #f1ebdd;
+  border-radius: 4px;
+}
+.vm-visit-time { margin: 3px 0 8px; font: 400 12px/1.3 Inter, system-ui, sans-serif; color: var(--vm-muted); }
+.vm-visit-rows {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 4px 10px;
+  margin: 0;
+  font: 400 12px/1.4 Inter, system-ui, sans-serif;
+}
+.vm-visit-rows dt { color: var(--vm-muted); }
+.vm-visit-rows dd { margin: 0; color: var(--vm-ink); word-break: break-all; }
+.vm-visit-rows dd:nth-of-type(3) { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11.5px; }
+.vm-more { padding: 10px 16px; font: 400 12px/1.3 Inter, system-ui, sans-serif; color: var(--vm-muted); background: #faf6ec; }
+
+@media (max-width: 600px) {
+  .vm-topbar { height: 52px; padding: 0 10px; gap: 10px; }
+  .vm-map { top: 52px; }
+  .vm-title { display: none; }
+  .vm-meta { font-size: 11px; }
+  .vm-popup .leaflet-popup-content { width: 260px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vm-overlay, .vm-overlay.open, .vm-pin { transition: none; }
+}
